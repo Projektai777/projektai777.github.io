@@ -16,18 +16,6 @@ body {
   justify-content: center;
 }
 
-/* Subtle full-page photo background — fixed (parallax on scroll), faint so it
-   never steals attention from the card. Set via --page-bg in app.js setTheme(). */
-body::before {
-  content: '';
-  position: fixed;
-  inset: -4%;
-  z-index: -1;
-  background: var(--page-bg, none) center / cover no-repeat;
-  filter: saturate(.9) blur(2px);
-  opacity: .16;
-  pointer-events: none;
-}
 
 #app {
   width: 100%;
@@ -218,6 +206,27 @@ dialog::backdrop { background: rgb(0 0 0 / 0.5); }
 /* ====================================================================
    Enhanced demo / sales features
    ==================================================================== */
+
+/* ---------- hero photo header (šaltibarščiai band behind the logo) ---------- */
+header.has-hero {
+  position: relative;
+  margin: -24px -20px 0;
+  padding: 30px 20px 24px;
+  border-radius: 0 0 26px 26px;
+  overflow: hidden;
+  text-align: center;
+  background: var(--hero) center/cover no-repeat;
+}
+header.has-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--brand) 50%, rgb(0 0 0 / .5)), rgb(0 0 0 / .72));
+}
+header.has-hero .hero-content { position: relative; }
+header.has-hero h1 { color: #fff; text-shadow: 0 2px 12px rgb(0 0 0 / .55); }
+header.has-hero .subtitle { color: rgb(255 255 255 / .85); }
+header.has-hero .logo { box-shadow: 0 8px 22px rgb(0 0 0 / .45); }
 
 /* ---------- milestone tiers ---------- */
 .tiers {

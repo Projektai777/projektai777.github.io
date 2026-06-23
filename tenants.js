@@ -20,6 +20,7 @@ export default {
   berneliai: {
     business_name: 'Bernelių užeiga',
     logo_url: 'logos/berneliai.png',
+    standee_logo: 'logos/berneliai-logo.png', // wordmark shown atop the printed standee (defaults to logo_url)
     hero_url: 'logos/berneliai-hero.jpg', // soft photo header behind the logo
     primary_color: '#b91c1c',
     stamps_needed: 10,

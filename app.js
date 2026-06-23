@@ -175,8 +175,6 @@ let card = null;
 function setTheme() {
   document.getElementById('themeColor').content = tenant.primary_color;
   document.documentElement.style.setProperty('--brand', tenant.primary_color);
-  // subtle full-page photo background (parallax via fixed layer in CSS)
-  document.documentElement.style.setProperty('--page-bg', tenant.hero_url ? `url('${tenant.hero_url}')` : 'none');
   document.title = `${tenant.business_name} — lojalumo kortelė`;
 }
 
@@ -184,7 +182,11 @@ function headerHtml() {
   const logo = tenant.logo_url
     ? `<img class="logo" src="${tenant.logo_url}" alt="">`
     : `<div class="logo logo-fallback">${tenant.business_name.trim()[0].toUpperCase()}</div>`;
-  return `<header>${logo}<h1>${tenant.business_name}</h1><p class="subtitle">Lojalumo kortelė</p></header>`;
+  const inner = `${logo}<h1>${tenant.business_name}</h1><p class="subtitle">Lojalumo kortelė</p>`;
+  if (tenant.hero_url) {
+    return `<header class="has-hero" style="--hero:url('${tenant.hero_url}')"><div class="hero-content">${inner}</div></header>`;
+  }
+  return `<header>${inner}</header>`;
 }
 
 function tiersHtml() {
