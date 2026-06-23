@@ -20,9 +20,16 @@ export default {
   berneliai: {
     business_name: 'Bernelių užeiga',
     logo_url: 'logos/berneliai.png',
+    hero_url: 'logos/berneliai-hero.jpg', // soft photo header behind the logo
     primary_color: '#b91c1c',
     stamps_needed: 10,
     reward_text: '10-as patiekalas nemokamai',
+    // milestones = tarpiniai prizai (rodo, kad sistema lanksti)
+    milestones: [
+      { at: 5, text: 'Nemokamas gardus kompotas' },
+      { at: 10, text: '10-as patiekalas nemokamai' },
+    ],
+    preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
     pin_hash: 'e1bee1f8c7bc8cc8f481f0d9dc9f1e607818850ab96c5910a4537d4788d5dd35', // PIN: 1234
   },
 
