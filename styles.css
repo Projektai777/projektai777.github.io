@@ -216,22 +216,31 @@ dialog::backdrop { background: rgb(0 0 0 / 0.5); }
 header.has-hero {
   position: relative;
   margin: -24px -20px 0;
-  padding: 30px 20px 24px;
-  border-radius: 0 0 26px 26px;
+  padding: 36px 20px 26px;
+  border-radius: 0 0 30px 30px;
   overflow: hidden;
   text-align: center;
-  background: var(--hero) center/cover no-repeat;
+  background: #3a2226; /* fallback under the photo */
+  box-shadow: 0 14px 30px rgb(0 0 0 / .14);
 }
+/* the food photo itself — brightened & lively, not darkened */
 header.has-hero::before {
   content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg,
-    color-mix(in srgb, var(--brand) 50%, rgb(0 0 0 / .5)), rgb(0 0 0 / .72));
+  position: absolute; inset: 0; z-index: 0;
+  background: var(--hero) center/cover no-repeat;
+  filter: brightness(1.16) saturate(1.08) contrast(1.02);
 }
-header.has-hero .hero-content { position: relative; }
-header.has-hero h1 { color: #fff; text-shadow: 0 2px 12px rgb(0 0 0 / .55); }
-header.has-hero .subtitle { color: rgb(255 255 255 / .85); }
-header.has-hero .logo { box-shadow: 0 8px 22px rgb(0 0 0 / .45); }
+/* only a gentle shade at the very bottom so the white subtitle stays readable */
+header.has-hero::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgb(0 0 0 / 0) 52%, rgb(0 0 0 / .38) 100%);
+}
+header.has-hero .hero-content { position: relative; z-index: 2; }
+header.has-hero h1 { color: #fff; text-shadow: 0 2px 12px rgb(0 0 0 / .6); }
+header.has-hero .subtitle { color: #fff; text-shadow: 0 1px 10px rgb(0 0 0 / .7); }
+header.has-hero .logo { box-shadow: 0 14px 30px rgb(0 0 0 / .4); }
+header.has-hero .logo.wide { padding: 16px 22px; }
 
 /* ---------- milestone tiers ---------- */
 .tiers {
