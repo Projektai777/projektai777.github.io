@@ -22,7 +22,7 @@ const isStatic = !!TENANTS[slug] || SUPABASE_URL.includes('YOUR-PROJECT');
 const isDemo = slug === 'demo';
 const view = (params.get('view') || '').toLowerCase(); // ?view=owner -> savininko apžvalga (atskiras puslapis)
 let isPreview = false;       // set after tenant loads: demo OR tenant.preview (rodo pardavimų funkcijas)
-let deferredInstall = null;  // captured 'beforeinstallprompt' (Android "Įdiegti")
+let deferredInstall = null;  // captured 'beforeinstallprompt' (Android "Pridėti")
 
 // Personalized sales demos: /?b=demo&n=Kavinė+Aroma&c=%23064e3b&r=Prizas&s=8
 // lets an outreach email show the prospect THEIR OWN branded card with
@@ -154,8 +154,8 @@ const staticBackend = {
       return { ok: true };
     }
 
-    // demo skips the 60s cooldown so you can click through a full card
-    if (!isDemo && c.last && now - c.last < 60 * 1000) {
+    // demo/preview skip the 60s cooldown so you can click through a full card
+    if (!isPreview && c.last && now - c.last < 60 * 1000) {
       return { ok: false, error: 'too_fast' };
     }
     c.stamps = Math.min(c.stamps + 1, t.stamps_needed);
@@ -175,6 +175,8 @@ let card = null;
 function setTheme() {
   document.getElementById('themeColor').content = tenant.primary_color;
   document.documentElement.style.setProperty('--brand', tenant.primary_color);
+  // subtle full-page photo background (parallax via fixed layer in CSS)
+  document.documentElement.style.setProperty('--page-bg', tenant.hero_url ? `url('${tenant.hero_url}')` : 'none');
   document.title = `${tenant.business_name} — lojalumo kortelė`;
 }
 
@@ -182,12 +184,7 @@ function headerHtml() {
   const logo = tenant.logo_url
     ? `<img class="logo" src="${tenant.logo_url}" alt="">`
     : `<div class="logo logo-fallback">${tenant.business_name.trim()[0].toUpperCase()}</div>`;
-  const inner = `${logo}<h1>${tenant.business_name}</h1><p class="subtitle">Lojalumo kortelė</p>`;
-  if (tenant.hero_url) {
-    return `<header class="has-hero" style="--hero:url('${tenant.hero_url}')">
-      <div class="hero-content">${inner}</div></header>`;
-  }
-  return `<header>${inner}</header>`;
+  return `<header>${logo}<h1>${tenant.business_name}</h1><p class="subtitle">Lojalumo kortelė</p></header>`;
 }
 
 function tiersHtml() {
@@ -204,7 +201,7 @@ function tiersHtml() {
 function installHintHtml() {
   return `<div class="install-hint" id="installHint">
     <span>📲 Pridėkite prie pradžios ekrano — veikia kaip programėlė, be App Store.</span>
-    <button class="install-btn" id="installBtn" hidden>Įdiegti</button></div>`;
+    <button class="install-btn" id="installBtn" hidden>Pridėti</button></div>`;
 }
 function wireInstall() {
   const btn = document.getElementById('installBtn');
@@ -230,10 +227,7 @@ function staffFlowHtml() {
 
 function ctaHtml() {
   const ownerUrl = `?b=${encodeURIComponent(slug)}&view=owner`;
-  const mail = `mailto:projektai777.koduojam@gmail.com?subject=${encodeURIComponent('Lojalumo kortelė — ' + tenant.business_name)}&body=${encodeURIComponent('Laba diena, norėčiau tokią lojalumo kortelę savo svečiams.')}`;
-  return `<div class="pitch">
-    <a class="pitch-owner" href="${ownerUrl}">📊 Kuo tai naudinga verslui? →</a>
-    <a class="cta cta-contact" href="${mail}">Norite tokią kortelę savo svečiams?<span>Įdiegiu per 48 val. →</span></a></div>`;
+  return `<a class="pitch-owner" href="${ownerUrl}">📊 Kuo tai naudinga verslui? →</a>`;
 }
 
 function render() {
@@ -314,16 +308,22 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function autoFill() {
   const btn = document.getElementById('autoFillBtn');
   if (btn) btn.disabled = true;
-  while (card.stamps < tenant.stamps_needed) {
+  // Fill only up to the NEXT milestone; the user clicks again to continue to full.
+  const next = (tenant.milestones || [])
+    .map((m) => m.at).filter((a) => a > card.stamps).sort((a, b) => a - b)[0];
+  const target = next || tenant.stamps_needed;
+  while (card.stamps < target) {
     card.stamps += 1;
     if (backend._save) backend._save({ stamps: card.stamps, last: 0, fails: [], first: card.first, cycles: card.cycles });
-    const m = (tenant.milestones || []).find((x) => x.at === card.stamps);
     render();
-    if (m && card.stamps < tenant.stamps_needed) toast(`🎁 Pasiekta: ${m.text}`);
     await sleep(280);
   }
-  render();
-  celebrate(tenant.reward_text);
+  if (card.stamps >= tenant.stamps_needed) {
+    celebrate(tenant.reward_text);
+  } else {
+    const m = (tenant.milestones || []).find((x) => x.at === card.stamps);
+    if (m) toast(`🎁 Pasiekta: ${m.text}`);
+  }
 }
 
 function resetCard() {
@@ -368,7 +368,6 @@ function renderOwner() {
   setTheme();
   const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}`;
   const standeeUrl = `tools/standee.html?b=${encodeURIComponent(slug)}`;
-  const mail = `mailto:projektai777.koduojam@gmail.com?subject=${encodeURIComponent('Lojalumo kortelė — ' + tenant.business_name)}`;
   app.innerHTML = `
     <a class="back-link" href="?b=${encodeURIComponent(slug)}">← Atgal į kortelę</a>
     ${headerHtml()}
@@ -399,10 +398,33 @@ function renderOwner() {
       <a class="pitch-owner" href="${standeeUrl}">🖨️ Spausdinti stovelį prie kasos →</a>
     </section>
 
-    <a class="cta cta-contact" href="${mail}">Norite tai savo restoranui?<span>Susisiekime →</span></a>
+    <button class="cta cta-contact" id="copyEmailBtn">Norite tai savo restoranui?<span>Susisiekime →</span></button>
     <p class="privacy">🔒 Jokių asmens duomenų — viskas saugoma svečio telefone.</p>
   `;
   drawQr(cardUrl);
+  const ce = document.getElementById('copyEmailBtn');
+  if (ce) ce.onclick = copyEmail;
+}
+
+const CONTACT_EMAIL = 'projektai777.koduojam@gmail.com';
+function copyEmail() {
+  const done = () => toast('📋 El. paštas nukopijuotas');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(CONTACT_EMAIL).then(done).catch(() => fallbackCopy(CONTACT_EMAIL, done));
+  } else {
+    fallbackCopy(CONTACT_EMAIL, done);
+  }
+}
+function fallbackCopy(text, cb) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+  ta.remove();
+  cb();
 }
 
 // ---------- PIN pad ----------

@@ -6,7 +6,7 @@
 // prefer the fresh network copy and only fall back to cache when offline.
 // A cache-first worker once served a stale tenants.js and a new tenant
 // showed "Kortelė nerasta" for everyone who had visited before.
-const CACHE = 'lojalumas-v7';
+const CACHE = 'lojalumas-v8';
 const SHELL = ['./', './index.html', './app.js', './tenants.js', './styles.css', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
