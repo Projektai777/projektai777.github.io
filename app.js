@@ -20,6 +20,9 @@ const slug = (params.get('b') || location.pathname.split('/').filter(Boolean).po
 const app = document.getElementById('app');
 const isStatic = !!TENANTS[slug] || SUPABASE_URL.includes('YOUR-PROJECT');
 const isDemo = slug === 'demo';
+const view = (params.get('view') || '').toLowerCase(); // ?view=owner -> savininko apžvalga
+let isPreview = false;       // set after tenant loads: demo OR tenant.preview (rodo pardavimų funkcijas)
+let deferredInstall = null;  // captured 'beforeinstallprompt' (Android "Įdiegti")
 
 // Personalized sales demos: /?b=demo&n=Kavinė+Aroma&c=%23064e3b&r=Prizas&s=8
 // lets an outreach email show the prospect THEIR OWN branded card with
@@ -169,15 +172,79 @@ let tenant = null;
 let card = null;
 
 // ---------- rendering ----------
-function render() {
-  const full = card.stamps >= tenant.stamps_needed;
+function setTheme() {
   document.getElementById('themeColor').content = tenant.primary_color;
   document.documentElement.style.setProperty('--brand', tenant.primary_color);
   document.title = `${tenant.business_name} — lojalumo kortelė`;
+}
 
-  const grid = Array.from({ length: tenant.stamps_needed }, (_, i) =>
-    `<div class="stamp ${i < card.stamps ? 'filled' : ''}" style="animation-delay:${i * 40}ms">${i < card.stamps ? '★' : ''}</div>`
-  ).join('');
+function headerHtml() {
+  const logo = tenant.logo_url
+    ? `<img class="logo" src="${tenant.logo_url}" alt="">`
+    : `<div class="logo logo-fallback">${tenant.business_name.trim()[0].toUpperCase()}</div>`;
+  const inner = `${logo}<h1>${tenant.business_name}</h1><p class="subtitle">Lojalumo kortelė</p>`;
+  if (tenant.hero_url) {
+    return `<header class="has-hero" style="--hero:url('${tenant.hero_url}')">
+      <div class="hero-content">${inner}</div></header>`;
+  }
+  return `<header>${inner}</header>`;
+}
+
+function tiersHtml() {
+  if (!tenant.milestones || !tenant.milestones.length) return '';
+  const items = tenant.milestones.map((m) => {
+    const done = card.stamps >= m.at;
+    return `<div class="tier ${done ? 'tier-done' : ''}">
+      <span class="tier-badge">${done ? '✓' : m.at}</span>
+      <span class="tier-text"><b>${m.at} antspaudai</b> · ${m.text}</span></div>`;
+  }).join('');
+  return `<div class="tiers"><p class="tiers-title">Prizai pakeliui:</p>${items}</div>`;
+}
+
+function installHintHtml() {
+  return `<div class="install-hint" id="installHint">
+    <span>📲 Pridėkite prie pradžios ekrano — veikia kaip programėlė, be App Store.</span>
+    <button class="install-btn" id="installBtn" hidden>Įdiegti</button></div>`;
+}
+function wireInstall() {
+  const btn = document.getElementById('installBtn');
+  if (!btn || !deferredInstall) return;
+  btn.hidden = false;
+  btn.onclick = async () => { deferredInstall.prompt(); deferredInstall = null; btn.hidden = true; };
+}
+
+function staffFlowHtml() {
+  const steps = [
+    { n: 1, icon: '📱', t: 'Svečias atidaro kortelę', s: 'Nuskaito QR kodą prie kasos arba paspaudžia nuorodą telefone' },
+    { n: 2, icon: '🔢', t: 'Darbuotojas įveda PIN', s: 'Patvirtina pirkimą trumpu 4 skaitmenų kodu' },
+    { n: 3, icon: '⭐', t: 'Pridedamas antspaudas', s: 'Kortelė užsipildo po vieną su kiekvienu apsilankymu' },
+    { n: 4, icon: '🎁', t: 'Surinko — gauna prizą', s: 'Svečias atsiima dovaną ir grįžta vėl jos užsidirbti' },
+  ];
+  const cells = steps.map((st, i) => `
+    <div class="flow-step">
+      <div class="flow-num">${st.n}</div>
+      <div class="flow-body"><span class="flow-icon">${st.icon}</span><b>${st.t}</b><p>${st.s}</p></div>
+    </div>${i < steps.length - 1 ? '<div class="flow-arrow">▼</div>' : ''}`).join('');
+  return `<section class="flow-wrap"><h3 class="flow-title">Kaip tai veikia darbuotojui?</h3><div class="flow">${cells}</div></section>`;
+}
+
+function ctaHtml() {
+  const ownerUrl = `?b=${encodeURIComponent(slug)}&view=owner`;
+  const mail = `mailto:projektai777.koduojam@gmail.com?subject=${encodeURIComponent('Lojalumo kortelė — ' + tenant.business_name)}&body=${encodeURIComponent('Laba diena, norėčiau tokią lojalumo kortelę savo svečiams.')}`;
+  return `<div class="pitch">
+    <a class="pitch-owner" href="${ownerUrl}">📊 Kuo tai naudinga verslui? →</a>
+    <a class="cta cta-contact" href="${mail}">Norite tokią kortelę savo svečiams?<span>Įdiegiu per 48 val. →</span></a></div>`;
+}
+
+function render() {
+  setTheme();
+  const full = card.stamps >= tenant.stamps_needed;
+
+  const grid = Array.from({ length: tenant.stamps_needed }, (_, i) => {
+    const filled = i < card.stamps;
+    const milestone = (tenant.milestones || []).some((m) => m.at === i + 1);
+    return `<div class="stamp ${filled ? 'filled' : ''} ${milestone ? 'stamp-milestone' : ''}" style="animation-delay:${i * 40}ms">${filled ? '★' : (milestone ? '🎁' : '')}</div>`;
+  }).join('');
 
   const remaining = tenant.stamps_needed - card.stamps;
   const statusLine = full
@@ -188,13 +255,7 @@ function render() {
 
   app.innerHTML = `
     ${isDemo ? `<div class="demo-badge">DEMO · darbuotojo PIN: 1234</div>` : ''}
-    <header>
-      ${tenant.logo_url
-        ? `<img class="logo" src="${tenant.logo_url}" alt="">`
-        : `<div class="logo logo-fallback">${tenant.business_name.trim()[0].toUpperCase()}</div>`}
-      <h1>${tenant.business_name}</h1>
-      <p class="subtitle">Lojalumo kortelė</p>
-    </header>
+    ${headerHtml()}
 
     <section class="card-box ${full ? 'card-full' : ''}">
       <div class="card-accent"></div>
@@ -203,18 +264,23 @@ function render() {
       <p class="progress">${card.stamps} / ${tenant.stamps_needed}</p>
       <p class="reward ${full ? 'reward-ready' : ''}">${statusLine}</p>
     </section>
+    ${tiersHtml()}
 
-    <button class="cta" id="actionBtn">
-      ${full ? '🎁 Atsiimti prizą' : 'Gauti antspaudą'}
-    </button>
+    <button class="cta" id="actionBtn">${full ? '🎁 Atsiimti prizą' : 'Gauti antspaudą'}</button>
     <p class="small-print">Mygtuką spaudžia darbuotojas pirkimo metu.</p>
+    ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">✨ Užpildyti kortelę (demonstracija)</button>` : ''}
+    ${isPreview ? `<button class="reset-link" id="resetBtn">↺ Pradėti iš naujo</button>` : ''}
+    ${installHintHtml()}
+    ${isPreview ? staffFlowHtml() : ''}
+    ${isPreview ? ctaHtml() : ''}
+    <p class="privacy">🔒 Jokių asmens duomenų — kortelė saugoma tik Jūsų telefone.</p>
     ${isDemo ? '<p class="small-print">Demonstracinė versija · projektai777.koduojam@gmail.com</p>' : ''}
   `;
 
-  document.getElementById('actionBtn').onclick = () =>
-    openPinPad(full ? 'redeem_reward' : 'add_stamp');
-
-  if (full) confetti();
+  document.getElementById('actionBtn').onclick = () => openPinPad(full ? 'redeem_reward' : 'add_stamp');
+  const af = document.getElementById('autoFillBtn'); if (af) af.onclick = autoFill;
+  const rs = document.getElementById('resetBtn'); if (rs) rs.onclick = resetCard;
+  wireInstall();
 }
 
 // ---------- confetti (no library) ----------
@@ -231,6 +297,113 @@ function confetti() {
     document.body.appendChild(p);
     setTimeout(() => p.remove(), 4500);
   }
+}
+
+// ---------- celebration ----------
+function celebrate(rewardText) {
+  const dlg = document.getElementById('celebrateModal');
+  const txt = document.getElementById('celebrateText');
+  if (txt) txt.innerHTML = `Jūsų prizas:<br><strong>${rewardText}</strong>`;
+  if (dlg && !dlg.open) dlg.showModal();
+  confetti();
+}
+
+// ---------- demo helpers (preview only) ----------
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function autoFill() {
+  const btn = document.getElementById('autoFillBtn');
+  if (btn) btn.disabled = true;
+  while (card.stamps < tenant.stamps_needed) {
+    card.stamps += 1;
+    if (backend._save) backend._save({ stamps: card.stamps, last: 0, fails: [], first: card.first, cycles: card.cycles });
+    const m = (tenant.milestones || []).find((x) => x.at === card.stamps);
+    render();
+    if (m && card.stamps < tenant.stamps_needed) toast(`🎁 Pasiekta: ${m.text}`);
+    await sleep(280);
+  }
+  render();
+  celebrate(tenant.reward_text);
+}
+
+function resetCard() {
+  card.stamps = 0;
+  if (backend._save) backend._save({ stamps: 0, last: 0, fails: [] });
+  render();
+}
+
+// ---------- owner dashboard (?view=owner) ----------
+function loadQrLib() {
+  return new Promise((res, rej) => {
+    if (window.QRCode) return res();
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+    s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+
+function barChart(title, a, b, labelA, labelB, note) {
+  return `<div class="chart">
+    <h4>${title}</h4>
+    <div class="bars">
+      <div class="bar-col"><div class="bar bar-a" style="--h:${a}%"><span>${a}%</span></div><div class="bar-label">${labelA}</div></div>
+      <div class="bar-col"><div class="bar bar-b" style="--h:${b}%"><span>${b}%</span></div><div class="bar-label">${labelB}</div></div>
+    </div>${note ? `<p class="chart-note">${note}</p>` : ''}</div>`;
+}
+
+function sparkline(points) {
+  const w = 280, h = 80, n = points.length;
+  const xy = points.map((p, i) => `${((i / (n - 1)) * w).toFixed(1)},${(h - (p / 100) * h).toFixed(1)}`);
+  const area = `0,${h} ${xy.join(' ')} ${w},${h}`;
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <polygon points="${area}" class="spark-fill"/>
+    <polyline points="${xy.join(' ')}" class="spark-line"/>
+  </svg>`;
+}
+
+function renderOwner() {
+  setTheme();
+  const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}`;
+  const standeeUrl = `tools/standee.html?b=${encodeURIComponent(slug)}`;
+  const mail = `mailto:projektai777.koduojam@gmail.com?subject=${encodeURIComponent('Lojalumo kortelė — ' + tenant.business_name)}`;
+  app.innerHTML = `
+    <a class="back-link" href="?b=${encodeURIComponent(slug)}">← Atgal į kortelę</a>
+    ${headerHtml()}
+    <div class="owner-tag">SAVININKO APŽVALGA · iliustracinis pavyzdys</div>
+
+    <section class="panel">
+      <h3>Kodėl tai apsimoka?</h3>
+      <p class="panel-lead">Lojalumo kortelė duoda svečiui priežastį grįžti būtent pas Jus — kad surinktų antspaudus ir atsiimtų prizą. Daugiau grįžtančių svečių reiškia daugiau pakartotinių apsilankymų.</p>
+      ${barChart('Klientų grįžtamumas', 32, 61, 'Be programos', 'Su programa', '*Iliustracinis pavyzdys, paremtas bendromis lojalumo programų tendencijomis.')}
+    </section>
+
+    <section class="panel">
+      <h3>Apsilankymai per mėnesį</h3>
+      ${sparkline([28, 33, 41, 48, 58, 71])}
+      <p class="chart-note">Svečiai, renkantys antspaudus, grįžta dažniau. *Pavyzdys.</p>
+    </section>
+
+    <section class="panel">
+      <h3>Kaip svečiai prisijungia</h3>
+      <div class="standee-mock">
+        <div class="standee-top"></div>
+        <p class="sm-name">${tenant.business_name}</p>
+        <p class="sm-reward">${tenant.reward_text}</p>
+        <canvas id="standeeQr" width="160" height="160"></canvas>
+        <p class="sm-steps">Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą</p>
+      </div>
+      <a class="pitch-owner" href="${standeeUrl}">🖨️ Peržiūrėti / spausdinti stovelį →</a>
+    </section>
+
+    <a class="cta cta-contact" href="${mail}">Norite tai savo restoranui?<span>Susisiekime →</span></a>
+    <p class="privacy">🔒 Jokių asmens duomenų — viskas saugoma svečio telefone.</p>
+  `;
+  loadQrLib()
+    .then(() => window.QRCode && window.QRCode.toCanvas(
+      document.getElementById('standeeQr'), cardUrl,
+      { width: 160, margin: 1, color: { dark: '#1c1917', light: '#ffffff' } }))
+    .catch(() => {});
 }
 
 // ---------- PIN pad ----------
@@ -276,12 +449,14 @@ async function submitPin() {
       modal.close();
       if (pinAction === 'redeem_reward') {
         card.stamps = 0;
+        render();
         toast('Prizas atsiimtas! Ačiū 🎉');
       } else {
         card.stamps = res.stamps;
-        toast(res.full ? 'Kortelė pilna! 🎉' : 'Antspaudas pridėtas ⭐');
+        render();
+        if (res.full) celebrate(tenant.reward_text);
+        else toast('Antspaudas pridėtas ⭐');
       }
-      render();
     } else {
       const msg = {
         bad_pin: 'Neteisingas PIN',
@@ -308,6 +483,9 @@ function toast(text, isError = false) {
 // ---------- boot ----------
 (async () => {
   buildPad();
+  const celebrateCloseBtn = document.getElementById('celebrateClose');
+  if (celebrateCloseBtn) celebrateCloseBtn.onclick = () => document.getElementById('celebrateModal').close();
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; wireInstall(); });
   try {
     if (!slug && !isDemo) {
       // Installed-PWA launch loses the ?b= param: restore the last card.
@@ -317,9 +495,14 @@ function toast(text, isError = false) {
       return;
     }
     tenant = demoOverrides(await backend.loadTenant());
+    isPreview = isDemo || tenant.preview === true;
     localStorage.setItem('lojalumas_last', slug);
-    card = await backend.loadOrCreateCard(tenant.id);
-    render();
+    if (view === 'owner') {
+      renderOwner();
+    } else {
+      card = await backend.loadOrCreateCard(tenant.id);
+      render();
+    }
   } catch (e) {
     app.innerHTML = `<div class="loading">Kortelė nerasta. Patikrinkite QR kodą.</div>`;
   }
