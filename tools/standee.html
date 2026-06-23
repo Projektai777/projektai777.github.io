@@ -37,6 +37,7 @@
     box-shadow: 0 10px 40px rgb(0 0 0 / .2);
     border-top: 7mm solid var(--brand, #FF5733);
   }
+  .standee-logo { max-width: 74mm; max-height: 30mm; object-fit: contain; margin: 5mm 0 2mm; }
   .standee h2 { font-size: 18pt; margin: 5mm 0 1mm; letter-spacing: -0.01em; }
   .standee .tag { color: var(--brand, #FF5733); font-weight: 800; font-size: 13pt; margin-bottom: 5mm; }
   .standee #qr img { width: 52mm; height: 52mm; display: block; }
@@ -44,8 +45,10 @@
   .standee .steps b { color: var(--brand, #FF5733); }
   .standee .url { margin-top: auto; font-size: 8pt; color: #a8a29e; }
 
+  /* Print: ONLY the standee card (hide the whole editor panel, hint and all). */
   @media print {
-    .panel, .preview { all: unset; }
+    .panel { display: none !important; }
+    .preview { all: unset; display: block; }
     body { background: #fff; display: block; }
     .standee { box-shadow: none; margin: 0 auto; border-radius: 0; }
     @page { size: A6 portrait; margin: 0; }
@@ -59,6 +62,7 @@
     <div><label>Kortelės adresas (URL)</label><input id="fUrl" value="https://lojalumas.vercel.app/demo"></div>
     <div><label>Firminė spalva</label><input id="fColor" type="color" value="#FF5733" style="height:42px"></div>
     <div><label>Prizo tekstas</label><input id="fReward" value="10-a kava nemokamai!"></div>
+    <div><label>Logotipas (viršuje)</label><input id="fLogo" type="file" accept="image/*"></div>
     <button onclick="window.print()">🖨️ Spausdinti (A6)</button>
     <p class="hint">Spausdinkite ant storo popieriaus (200+ g/m²), įdėkite į A6 stovelį
     (~3&nbsp;€ knygyne) ir pastatykite prie kasos.</p>
@@ -66,6 +70,7 @@
 
   <main class="preview">
     <div class="standee" id="standee">
+      <img id="sLogo" class="standee-logo" alt="" hidden>
       <h2 id="sName"></h2>
       <div class="tag" id="sReward"></div>
       <div id="qr"></div>
@@ -79,13 +84,20 @@
   </main>
 
 <script>
+  let logoSrc = '';
   function update() {
     const name = document.getElementById('fName').value;
     const url = document.getElementById('fUrl').value;
     const color = document.getElementById('fColor').value;
     const reward = document.getElementById('fReward').value;
 
-    document.getElementById('sName').textContent = name;
+    const sLogo = document.getElementById('sLogo');
+    const sName = document.getElementById('sName');
+    if (logoSrc) {
+      sLogo.src = logoSrc; sLogo.hidden = false; sName.style.display = 'none';
+    } else {
+      sLogo.hidden = true; sName.style.display = ''; sName.textContent = name;
+    }
     document.getElementById('sReward').textContent = reward;
     document.getElementById('sUrl').textContent = url;
     document.getElementById('standee').style.setProperty('--brand', color);
@@ -94,6 +106,14 @@
       `<img alt="QR kodas" src="https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&margin=0&data=${encodeURIComponent(url)}">`;
   }
   document.querySelectorAll('.panel input').forEach((i) => i.addEventListener('input', update));
+  // Upload a logo to show at the top of the standee (replaces the business name).
+  document.getElementById('fLogo').addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const r = new FileReader();
+    r.onload = () => { logoSrc = r.result; update(); };
+    r.readAsDataURL(file);
+  });
 
   // Pre-fill from ?b=slug (pulls branding from tenants.js) or explicit params.
   (async () => {
@@ -108,6 +128,8 @@
           document.getElementById('fUrl').value = new URL('../?b=' + encodeURIComponent(slug), location.href).href;
           document.getElementById('fColor').value = t.primary_color;
           document.getElementById('fReward').value = t.reward_text;
+          const lg = t.standee_logo || t.logo_url;
+          if (lg) logoSrc = new URL('../' + lg, location.href).href;
         }
       } catch (e) { /* tenants.js unavailable — keep defaults */ }
     }
