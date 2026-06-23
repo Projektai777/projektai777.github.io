@@ -20,7 +20,7 @@ const slug = (params.get('b') || location.pathname.split('/').filter(Boolean).po
 const app = document.getElementById('app');
 const isStatic = !!TENANTS[slug] || SUPABASE_URL.includes('YOUR-PROJECT');
 const isDemo = slug === 'demo';
-const cleanCard = (params.get('v') || '').toLowerCase() === 'card'; // QR target: švari kliento kortelė (be pardavimų sekcijų)
+const view = (params.get('view') || '').toLowerCase(); // ?view=owner -> savininko apžvalga (atskiras puslapis)
 let isPreview = false;       // set after tenant loads: demo OR tenant.preview (rodo pardavimų funkcijas)
 let deferredInstall = null;  // captured 'beforeinstallprompt' (Android "Įdiegti")
 
@@ -229,14 +229,16 @@ function staffFlowHtml() {
 }
 
 function ctaHtml() {
+  const ownerUrl = `?b=${encodeURIComponent(slug)}&view=owner`;
   const mail = `mailto:projektai777.koduojam@gmail.com?subject=${encodeURIComponent('Lojalumo kortelė — ' + tenant.business_name)}&body=${encodeURIComponent('Laba diena, norėčiau tokią lojalumo kortelę savo svečiams.')}`;
-  return `<a class="cta cta-contact" href="${mail}">Norite tokią kortelę savo svečiams?<span>Įdiegiu per 48 val. →</span></a>`;
+  return `<div class="pitch">
+    <a class="pitch-owner" href="${ownerUrl}">📊 Kuo tai naudinga verslui? →</a>
+    <a class="cta cta-contact" href="${mail}">Norite tokią kortelę savo svečiams?<span>Įdiegiu per 48 val. →</span></a></div>`;
 }
 
 function render() {
   setTheme();
   const full = card.stamps >= tenant.stamps_needed;
-  const showSales = isPreview && !cleanCard; // single-page pitch sections (hidden on the QR's clean card)
 
   const grid = Array.from({ length: tenant.stamps_needed }, (_, i) => {
     const filled = i < card.stamps;
@@ -266,13 +268,11 @@ function render() {
 
     <button class="cta" id="actionBtn">${full ? '🎁 Atsiimti prizą' : 'Gauti antspaudą'}</button>
     <p class="small-print">Mygtuką spaudžia darbuotojas pirkimo metu.</p>
-    ${showSales && !full ? `<button class="cta cta-demo" id="autoFillBtn">✨ Užpildyti kortelę (demonstracija)</button>` : ''}
-    ${showSales ? `<button class="reset-link" id="resetBtn">↺ Pradėti iš naujo</button>` : ''}
+    ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">✨ Užpildyti kortelę (demonstracija)</button>` : ''}
+    ${isPreview ? `<button class="reset-link" id="resetBtn">↺ Pradėti iš naujo</button>` : ''}
     ${installHintHtml()}
-    ${showSales ? standeeQrHtml() : ''}
-    ${showSales ? staffFlowHtml() : ''}
-    ${showSales ? pitchHtml() : ''}
-    ${showSales ? ctaHtml() : ''}
+    ${isPreview ? staffFlowHtml() : ''}
+    ${isPreview ? ctaHtml() : ''}
     <p class="privacy">🔒 Jokių asmens duomenų — kortelė saugoma tik Jūsų telefone.</p>
     ${isDemo ? '<p class="small-print">Demonstracinė versija · projektai777.koduojam@gmail.com</p>' : ''}
   `;
@@ -281,7 +281,6 @@ function render() {
   const af = document.getElementById('autoFillBtn'); if (af) af.onclick = autoFill;
   const rs = document.getElementById('resetBtn'); if (rs) rs.onclick = resetCard;
   wireInstall();
-  if (showSales) renderTestQr();
 }
 
 // ---------- confetti (no library) ----------
@@ -333,7 +332,7 @@ function resetCard() {
   render();
 }
 
-// ---------- single-page pitch (QR cross-device test + value charts) ----------
+// ---------- owner dashboard (?view=owner) ----------
 function loadQrLib() {
   return new Promise((res, rej) => {
     if (window.QRCode) return res();
