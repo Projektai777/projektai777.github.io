@@ -179,10 +179,13 @@ function setTheme() {
 }
 
 function headerHtml() {
+  const wide = tenant.logo_wide ? ' wide' : '';
   const logo = tenant.logo_url
-    ? `<img class="logo" src="${tenant.logo_url}" alt="">`
+    ? `<img class="logo${wide}" src="${tenant.logo_url}" alt="${tenant.business_name}">`
     : `<div class="logo logo-fallback">${tenant.business_name.trim()[0].toUpperCase()}</div>`;
-  const inner = `${logo}<h1>${tenant.business_name}</h1><p class="subtitle">Lojalumo kortelė</p>`;
+  // a wordmark logo already contains the name, so skip the redundant <h1>
+  const name = tenant.logo_wide ? '' : `<h1>${tenant.business_name}</h1>`;
+  const inner = `${logo}${name}<p class="subtitle">Lojalumo kortelė</p>`;
   if (tenant.hero_url) {
     return `<header class="has-hero" style="--hero:url('${tenant.hero_url}')"><div class="hero-content">${inner}</div></header>`;
   }
