@@ -333,7 +333,7 @@ function resetCard() {
   render();
 }
 
-// ---------- owner dashboard (?view=owner) ----------
+// ---------- single-page pitch (QR cross-device test + value charts) ----------
 function loadQrLib() {
   return new Promise((res, rej) => {
     if (window.QRCode) return res();
@@ -363,48 +363,47 @@ function sparkline(points) {
   </svg>`;
 }
 
-function renderOwner() {
-  setTheme();
-  const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}`;
+// "Try on another device" — a real, scannable QR that opens the CLEAN customer
+// card (?v=card) on whatever phone scans it. Doubles as the in-store standee preview.
+function standeeQrHtml() {
   const standeeUrl = `tools/standee.html?b=${encodeURIComponent(slug)}`;
-  const mail = `mailto:projektai777.koduojam@gmail.com?subject=${encodeURIComponent('Lojalumo kortelė — ' + tenant.business_name)}`;
-  app.innerHTML = `
-    <a class="back-link" href="?b=${encodeURIComponent(slug)}">← Atgal į kortelę</a>
-    ${headerHtml()}
-    <div class="owner-tag">SAVININKO APŽVALGA · iliustracinis pavyzdys</div>
+  return `<section class="panel qr-test">
+    <h3>📱 Išbandykite kitu telefonu</h3>
+    <p class="panel-lead">Nuskaitykite šį QR kodą kitu telefonu — kortelė atsidarys lygiai taip, kaip ją matys Jūsų svečias.</p>
+    <div class="standee-mock">
+      <div class="standee-top"></div>
+      <p class="sm-name">${tenant.business_name}</p>
+      <p class="sm-reward">${tenant.reward_text}</p>
+      <canvas id="standeeQr" width="200" height="200"></canvas>
+      <p class="sm-steps">Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą</p>
+    </div>
+    <a class="pitch-owner" href="${standeeUrl}">🖨️ Spausdinti stovelį prie kasos →</a>
+  </section>`;
+}
 
-    <section class="panel">
-      <h3>Kodėl tai apsimoka?</h3>
-      <p class="panel-lead">Lojalumo kortelė duoda svečiui priežastį grįžti būtent pas Jus — kad surinktų antspaudus ir atsiimtų prizą. Daugiau grįžtančių svečių reiškia daugiau pakartotinių apsilankymų.</p>
-      ${barChart('Klientų grįžtamumas', 32, 61, 'Be programos', 'Su programa', '*Iliustracinis pavyzdys, paremtas bendromis lojalumo programų tendencijomis.')}
-    </section>
-
-    <section class="panel">
-      <h3>Apsilankymai per mėnesį</h3>
-      ${sparkline([28, 33, 41, 48, 58, 71])}
-      <p class="chart-note">Svečiai, renkantys antspaudus, grįžta dažniau. *Pavyzdys.</p>
-    </section>
-
-    <section class="panel">
-      <h3>Kaip svečiai prisijungia</h3>
-      <div class="standee-mock">
-        <div class="standee-top"></div>
-        <p class="sm-name">${tenant.business_name}</p>
-        <p class="sm-reward">${tenant.reward_text}</p>
-        <canvas id="standeeQr" width="160" height="160"></canvas>
-        <p class="sm-steps">Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą</p>
-      </div>
-      <a class="pitch-owner" href="${standeeUrl}">🖨️ Peržiūrėti / spausdinti stovelį →</a>
-    </section>
-
-    <a class="cta cta-contact" href="${mail}">Norite tai savo restoranui?<span>Susisiekime →</span></a>
-    <p class="privacy">🔒 Jokių asmens duomenų — viskas saugoma svečio telefone.</p>
-  `;
+function renderTestQr() {
+  const canvas = document.getElementById('standeeQr');
+  if (!canvas) return;
+  const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}&v=card`;
   loadQrLib()
     .then(() => window.QRCode && window.QRCode.toCanvas(
-      document.getElementById('standeeQr'), cardUrl,
-      { width: 160, margin: 1, color: { dark: '#1c1917', light: '#ffffff' } }))
+      canvas, cardUrl,
+      { width: 200, margin: 1, color: { dark: '#1c1917', light: '#ffffff' } }))
     .catch(() => {});
+}
+
+// Business-value pitch (illustrative charts — clearly labelled as examples).
+function pitchHtml() {
+  return `<section class="panel">
+    <h3>Kuo tai naudinga verslui?</h3>
+    <p class="panel-lead">Lojalumo kortelė duoda svečiui priežastį grįžti būtent pas Jus — kad surinktų antspaudus ir atsiimtų prizą. Daugiau grįžtančių svečių reiškia daugiau pakartotinių apsilankymų.</p>
+    ${barChart('Klientų grįžtamumas', 32, 61, 'Be programos', 'Su programa', '*Iliustracinis pavyzdys, paremtas bendromis lojalumo programų tendencijomis.')}
+    <div class="spark-block">
+      <h4>Apsilankymai per mėnesį</h4>
+      ${sparkline([28, 33, 41, 48, 58, 71])}
+      <p class="chart-note">Svečiai, renkantys antspaudus, grįžta dažniau. *Pavyzdys.</p>
+    </div>
+  </section>`;
 }
 
 // ---------- PIN pad ----------
@@ -498,12 +497,8 @@ function toast(text, isError = false) {
     tenant = demoOverrides(await backend.loadTenant());
     isPreview = isDemo || tenant.preview === true;
     localStorage.setItem('lojalumas_last', slug);
-    if (view === 'owner') {
-      renderOwner();
-    } else {
-      card = await backend.loadOrCreateCard(tenant.id);
-      render();
-    }
+    card = await backend.loadOrCreateCard(tenant.id);
+    render();
   } catch (e) {
     app.innerHTML = `<div class="loading">Kortelė nerasta. Patikrinkite QR kodą.</div>`;
   }
