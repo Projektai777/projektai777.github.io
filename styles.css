@@ -200,3 +200,172 @@ dialog::backdrop { background: rgb(0 0 0 / 0.5); }
     opacity: .6;
   }
 }
+
+/* ====================================================================
+   Enhanced demo / sales features
+   ==================================================================== */
+
+/* ---------- hero photo header ---------- */
+header.has-hero {
+  position: relative;
+  margin: -24px -20px 0;
+  padding: 30px 20px 24px;
+  border-radius: 0 0 26px 26px;
+  overflow: hidden;
+  text-align: center;
+  background: var(--hero) center/cover no-repeat;
+}
+header.has-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--brand) 50%, rgb(0 0 0 / .5)), rgb(0 0 0 / .72));
+}
+header.has-hero .hero-content { position: relative; }
+header.has-hero h1 { color: #fff; text-shadow: 0 2px 12px rgb(0 0 0 / .55); }
+header.has-hero .subtitle { color: rgb(255 255 255 / .85); }
+header.has-hero .logo { box-shadow: 0 6px 20px rgb(0 0 0 / .45); }
+
+/* ---------- milestone tiers ---------- */
+.tiers {
+  background: #fff; border-radius: 16px; padding: 14px 16px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / .05);
+}
+.tiers-title {
+  font-size: .72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: #78716c; margin-bottom: 10px;
+}
+.tier { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
+.tier-badge {
+  flex: none; width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 800; font-size: .78rem;
+  background: #f5f5f4; color: #a8a29e; border: 2px solid #e7e5e4;
+}
+.tier-done .tier-badge { background: var(--brand); color: #fff; border-color: var(--brand); }
+.tier-text { font-size: .9rem; color: #57534e; }
+.tier-done .tier-text { color: #1c1917; }
+
+.stamp-milestone { border-style: solid; border-color: color-mix(in srgb, var(--brand) 45%, #d6d3d1); }
+
+/* ---------- demo / secondary buttons ---------- */
+.cta-demo {
+  background: color-mix(in srgb, var(--brand) 10%, #fff);
+  color: var(--brand);
+  border: 2px solid color-mix(in srgb, var(--brand) 35%, #fff);
+}
+.cta-demo:disabled { opacity: .6; }
+.reset-link {
+  background: none; border: none; color: #a8a29e;
+  font-size: .85rem; cursor: pointer; padding: 2px; align-self: center;
+}
+
+/* ---------- add-to-home-screen hint ---------- */
+.install-hint {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; flex-wrap: wrap;
+  background: #fff; border-radius: 14px; padding: 12px 14px;
+  font-size: .82rem; color: #57534e; text-align: center;
+  box-shadow: 0 4px 14px rgb(0 0 0 / .04);
+}
+.install-btn {
+  background: var(--brand); color: #fff; border: none;
+  border-radius: 10px; padding: 8px 14px; font-weight: 700; cursor: pointer;
+}
+
+/* ---------- "how it works" staff flow ---------- */
+.flow-wrap {
+  background: #fff; border-radius: 18px; padding: 18px 16px 18px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / .05);
+}
+.flow-title { font-size: 1rem; margin-bottom: 14px; text-align: center; }
+.flow { display: flex; flex-direction: column; }
+.flow-step {
+  display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center;
+  background: #faf9f8; border: 1px solid #f0eeec; border-radius: 14px; padding: 12px 14px;
+}
+.flow-num {
+  flex: none; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--brand); color: #fff; font-weight: 800;
+  display: grid; place-items: center; font-size: .9rem;
+}
+.flow-icon { font-size: 1.15rem; margin-right: 6px; vertical-align: -2px; }
+.flow-body b { font-size: .93rem; }
+.flow-body p { font-size: .82rem; color: #78716c; margin-top: 3px; line-height: 1.4; }
+.flow-arrow {
+  text-align: center; padding: 5px 0; line-height: 1; font-size: 1rem;
+  color: color-mix(in srgb, var(--brand) 55%, #d6d3d1);
+}
+
+/* ---------- sales CTA ---------- */
+.pitch { display: flex; flex-direction: column; gap: 12px; }
+.pitch-owner {
+  text-align: center; color: var(--brand); font-weight: 700;
+  text-decoration: none; font-size: .95rem; padding: 12px; border-radius: 12px;
+  background: color-mix(in srgb, var(--brand) 8%, #fff);
+}
+.cta-contact { display: block; text-decoration: none; text-align: center; line-height: 1.3; }
+.cta-contact span { display: block; font-weight: 500; font-size: .88rem; opacity: .92; margin-top: 3px; }
+
+/* ---------- privacy footer ---------- */
+.privacy {
+  text-align: center; font-size: .8rem; color: #78716c;
+  background: #fff; border-radius: 12px; padding: 10px 14px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / .03);
+}
+
+/* ---------- celebration modal ---------- */
+dialog.celebrate {
+  border-radius: 24px; max-width: 340px; width: calc(100% - 48px);
+  margin: auto; padding: 32px 28px;
+}
+dialog.celebrate::backdrop { background: rgb(0 0 0 / .55); }
+.celebrate-emoji { font-size: 3.5rem; line-height: 1; margin-bottom: 8px; animation: pop .45s ease; }
+dialog.celebrate h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--brand); }
+dialog.celebrate p { color: #44403c; margin-bottom: 22px; font-size: 1rem; }
+dialog.celebrate strong { color: #1c1917; font-size: 1.1rem; }
+
+/* ====================================================================
+   Owner dashboard (?view=owner)
+   ==================================================================== */
+.back-link { color: #78716c; text-decoration: none; font-size: .9rem; font-weight: 600; }
+.owner-tag {
+  align-self: center; background: #1c1917; color: #fbbf24;
+  font-size: .7rem; font-weight: 700; letter-spacing: .05em;
+  padding: 6px 14px; border-radius: 999px;
+}
+.panel {
+  background: #fff; border-radius: 18px; padding: 20px 18px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / .05);
+}
+.panel h3 { font-size: 1.05rem; margin-bottom: 8px; }
+.panel-lead { font-size: .9rem; color: #57534e; line-height: 1.5; margin-bottom: 18px; }
+.chart h4 { font-size: .85rem; color: #57534e; text-align: center; margin-bottom: 6px; }
+.chart-note { font-size: .72rem; color: #a8a29e; margin-top: 10px; line-height: 1.4; text-align: center; }
+
+.bars { display: flex; gap: 28px; justify-content: center; align-items: flex-end; height: 160px; }
+.bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 1; max-width: 110px; height: 100%; }
+.bar {
+  width: 100%; border-radius: 10px 10px 0 0; height: var(--h); min-height: 32px;
+  display: flex; justify-content: center; align-items: flex-start; padding-top: 6px;
+  animation: grow .9s cubic-bezier(.22, 1, .36, 1);
+}
+@keyframes grow { from { height: 0; } }
+.bar span { font-weight: 800; font-size: .85rem; color: #fff; }
+.bar-a { background: #d6d3d1; }
+.bar-a span { color: #57534e; }
+.bar-b { background: var(--brand); }
+.bar-label { font-size: .8rem; color: #57534e; margin-top: 8px; text-align: center; font-weight: 600; }
+
+.spark { width: 100%; height: 90px; display: block; }
+.spark-line { fill: none; stroke: var(--brand); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.spark-fill { fill: color-mix(in srgb, var(--brand) 12%, transparent); stroke: none; }
+
+.standee-mock {
+  background: #fff; border: 1px solid #e7e5e4; border-radius: 14px;
+  padding: 0 18px 18px; text-align: center; overflow: hidden; margin-bottom: 14px;
+}
+.standee-top { height: 8px; background: var(--brand); margin: 0 -18px 16px; }
+.sm-name { font-weight: 800; font-size: 1.05rem; margin-top: 4px; }
+.sm-reward { color: var(--brand); font-weight: 700; font-size: .9rem; margin-bottom: 12px; }
+.standee-mock canvas { width: 160px !important; height: 160px !important; }
+.sm-steps { font-size: .75rem; color: #78716c; margin-top: 12px; line-height: 1.4; }

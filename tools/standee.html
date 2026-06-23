@@ -97,7 +97,29 @@
     });
   }
   document.querySelectorAll('.panel input').forEach((i) => i.addEventListener('input', update));
-  update();
+
+  // Pre-fill from ?b=slug (pulls branding from tenants.js) or explicit params.
+  (async () => {
+    const sp = new URLSearchParams(location.search);
+    const slug = sp.get('b');
+    if (slug) {
+      try {
+        const m = await import('../tenants.js');
+        const t = m.default[slug];
+        if (t) {
+          document.getElementById('fName').value = t.business_name;
+          document.getElementById('fUrl').value = new URL('../?b=' + encodeURIComponent(slug), location.href).href;
+          document.getElementById('fColor').value = t.primary_color;
+          document.getElementById('fReward').value = t.reward_text;
+        }
+      } catch (e) { /* tenants.js unavailable — keep defaults */ }
+    }
+    if (sp.get('name')) document.getElementById('fName').value = sp.get('name');
+    if (sp.get('url')) document.getElementById('fUrl').value = sp.get('url');
+    if (sp.get('color')) document.getElementById('fColor').value = sp.get('color');
+    if (sp.get('reward')) document.getElementById('fReward').value = sp.get('reward');
+    update();
+  })();
 </script>
 </body>
 </html>
