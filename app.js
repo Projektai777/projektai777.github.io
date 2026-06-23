@@ -362,47 +362,68 @@ function sparkline(points) {
   </svg>`;
 }
 
-// "Try on another device" — a real, scannable QR that opens the CLEAN customer
-// card (?v=card) on whatever phone scans it. Doubles as the in-store standee preview.
-function standeeQrHtml() {
-  const standeeUrl = `tools/standee.html?b=${encodeURIComponent(slug)}`;
-  return `<section class="panel qr-test">
-    <h3>📱 Išbandykite kitu telefonu</h3>
-    <p class="panel-lead">Nuskaitykite šį QR kodą kitu telefonu — kortelė atsidarys lygiai taip, kaip ją matys Jūsų svečias.</p>
-    <div class="standee-mock">
-      <div class="standee-top"></div>
-      <p class="sm-name">${tenant.business_name}</p>
-      <p class="sm-reward">${tenant.reward_text}</p>
-      <canvas id="standeeQr" width="200" height="200"></canvas>
-      <p class="sm-steps">Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą</p>
-    </div>
-    <a class="pitch-owner" href="${standeeUrl}">🖨️ Spausdinti stovelį prie kasos →</a>
-  </section>`;
-}
-
-function renderTestQr() {
+// Robust QR: render with the JS lib into the canvas; if the CDN lib fails to load
+// (the bug that left the QR blank), swap in an <img> from a no-JS QR service so a
+// scannable code ALWAYS shows. Both encode the live card URL for cross-device testing.
+function drawQr(targetUrl) {
   const canvas = document.getElementById('standeeQr');
   if (!canvas) return;
-  const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}&v=card`;
+  const fallback = () => {
+    const img = document.createElement('img');
+    img.className = 'qr-img';
+    img.alt = 'QR kodas';
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=12&data=${encodeURIComponent(targetUrl)}`;
+    canvas.replaceWith(img);
+  };
   loadQrLib()
-    .then(() => window.QRCode && window.QRCode.toCanvas(
-      canvas, cardUrl,
-      { width: 200, margin: 1, color: { dark: '#1c1917', light: '#ffffff' } }))
-    .catch(() => {});
+    .then(() => {
+      if (!window.QRCode) return fallback();
+      window.QRCode.toCanvas(canvas, targetUrl,
+        { width: 200, margin: 1, color: { dark: '#1c1917', light: '#ffffff' } },
+        (err) => { if (err) fallback(); });
+    })
+    .catch(fallback);
 }
 
-// Business-value pitch (illustrative charts — clearly labelled as examples).
-function pitchHtml() {
-  return `<section class="panel">
-    <h3>Kuo tai naudinga verslui?</h3>
-    <p class="panel-lead">Lojalumo kortelė duoda svečiui priežastį grįžti būtent pas Jus — kad surinktų antspaudus ir atsiimtų prizą. Daugiau grįžtančių svečių reiškia daugiau pakartotinių apsilankymų.</p>
-    ${barChart('Klientų grįžtamumas', 32, 61, 'Be programos', 'Su programa', '*Iliustracinis pavyzdys, paremtas bendromis lojalumo programų tendencijomis.')}
-    <div class="spark-block">
-      <h4>Apsilankymai per mėnesį</h4>
+function renderOwner() {
+  setTheme();
+  const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}`;
+  const standeeUrl = `tools/standee.html?b=${encodeURIComponent(slug)}`;
+  const mail = `mailto:projektai777.koduojam@gmail.com?subject=${encodeURIComponent('Lojalumo kortelė — ' + tenant.business_name)}`;
+  app.innerHTML = `
+    <a class="back-link" href="?b=${encodeURIComponent(slug)}">← Atgal į kortelę</a>
+    ${headerHtml()}
+    <div class="owner-tag">SAVININKO APŽVALGA · iliustracinis pavyzdys</div>
+
+    <section class="panel">
+      <h3>Kodėl tai apsimoka?</h3>
+      <p class="panel-lead">Lojalumo kortelė duoda svečiui priežastį grįžti būtent pas Jus — kad surinktų antspaudus ir atsiimtų prizą. Daugiau grįžtančių svečių reiškia daugiau pakartotinių apsilankymų.</p>
+      ${barChart('Klientų grįžtamumas', 32, 61, 'Be programos', 'Su programa', '*Iliustracinis pavyzdys, paremtas bendromis lojalumo programų tendencijomis.')}
+    </section>
+
+    <section class="panel">
+      <h3>Apsilankymai per mėnesį</h3>
       ${sparkline([28, 33, 41, 48, 58, 71])}
       <p class="chart-note">Svečiai, renkantys antspaudus, grįžta dažniau. *Pavyzdys.</p>
-    </div>
-  </section>`;
+    </section>
+
+    <section class="panel qr-test">
+      <h3>Išbandykite kitu telefonu</h3>
+      <p class="panel-lead">Nuskaitykite QR kodą kitu telefonu — kortelė atsidarys taip, kaip ją matys Jūsų svečias.</p>
+      <div class="standee-mock">
+        <div class="standee-top"></div>
+        <p class="sm-name">${tenant.business_name}</p>
+        <p class="sm-reward">${tenant.reward_text}</p>
+        <canvas id="standeeQr" width="200" height="200"></canvas>
+        <p class="sm-steps">Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą</p>
+      </div>
+      <a class="pitch-owner" href="${standeeUrl}">🖨️ Spausdinti stovelį prie kasos →</a>
+    </section>
+
+    <a class="cta cta-contact" href="${mail}">Norite tai savo restoranui?<span>Susisiekime →</span></a>
+    <p class="privacy">🔒 Jokių asmens duomenų — viskas saugoma svečio telefone.</p>
+  `;
+  drawQr(cardUrl);
 }
 
 // ---------- PIN pad ----------
@@ -496,8 +517,12 @@ function toast(text, isError = false) {
     tenant = demoOverrides(await backend.loadTenant());
     isPreview = isDemo || tenant.preview === true;
     localStorage.setItem('lojalumas_last', slug);
-    card = await backend.loadOrCreateCard(tenant.id);
-    render();
+    if (view === 'owner') {
+      renderOwner();
+    } else {
+      card = await backend.loadOrCreateCard(tenant.id);
+      render();
+    }
   } catch (e) {
     app.innerHTML = `<div class="loading">Kortelė nerasta. Patikrinkite QR kodą.</div>`;
   }

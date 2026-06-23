@@ -370,8 +370,7 @@ dialog.celebrate strong { color: #1c1917; font-size: 1.1rem; }
 .standee-mock canvas { width: 200px !important; height: 200px !important; max-width: 100%; }
 .sm-steps { font-size: .75rem; color: #78716c; margin-top: 12px; line-height: 1.4; }
 
-/* single-page pitch sections */
+/* QR test section */
 .qr-test { text-align: center; }
 .qr-test .panel-lead { text-align: center; }
-.spark-block { margin-top: 18px; }
-.spark-block h4 { font-size: .85rem; color: #57534e; text-align: center; margin-bottom: 6px; }
+.qr-img { width: 200px; height: 200px; max-width: 100%; display: inline-block; }
