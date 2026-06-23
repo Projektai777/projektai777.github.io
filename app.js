@@ -16,7 +16,7 @@ const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
 // Tenant comes from ?b=slug (works on any host, incl. GitHub Pages
 // subpaths) or, as a fallback, the last URL path segment (Vercel rewrites).
 const params = new URLSearchParams(location.search);
-const slug = params.get('b') || location.pathname.split('/').filter(Boolean).pop() || '';
+const slug = (params.get('b') || location.pathname.split('/').filter(Boolean).pop() || '').toLowerCase();
 const app = document.getElementById('app');
 const isStatic = !!TENANTS[slug] || SUPABASE_URL.includes('YOUR-PROJECT');
 const isDemo = slug === 'demo';
