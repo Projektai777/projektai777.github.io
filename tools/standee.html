@@ -45,13 +45,19 @@
   .standee .steps b { color: var(--brand, #FF5733); }
   .standee .url { margin-top: auto; font-size: 8pt; color: #a8a29e; }
 
-  /* Print: ONLY the standee card (hide the whole editor panel, hint and all). */
+  /* Print: ONLY the standee card, kept as the SAME rounded card you see on
+     screen (rounded corners, red rounded top bar, soft shadow), CENTERED on
+     whatever paper you print. */
   @media print {
     .panel { display: none !important; }
-    .preview { all: unset; display: block; }
-    body { background: #fff; display: block; }
-    .standee { box-shadow: none; margin: 0 auto; border-radius: 0; }
-    @page { size: A6 portrait; margin: 0; }
+    body { display: block; background: #fff; }
+    .preview {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; width: 100%; padding: 0; margin: 0;
+    }
+    /* keep the on-screen look; print background colours exactly */
+    body, .standee { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page { margin: 0; }
   }
 </style>
 </head>
