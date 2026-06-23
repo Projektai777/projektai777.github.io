@@ -17,6 +17,15 @@ export default {
     pin_hash: '88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331', // PIN: 1234
   },
 
+  berneliai: {
+    business_name: 'Bernelių užeiga',
+    logo_url: 'logos/berneliai.png',
+    primary_color: '#b91c1c',
+    stamps_needed: 10,
+    reward_text: '10-as patiekalas nemokamai',
+    pin_hash: 'e1bee1f8c7bc8cc8f481f0d9dc9f1e607818850ab96c5910a4537d4788d5dd35', // PIN: 1234
+  },
+
   // kitasverslas: {
   //   business_name: 'Plovykla PRO',
   //   logo_url: '/logos/plovykla.png',
