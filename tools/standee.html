@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Standee generatorius — Lojalumas</title>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: system-ui, sans-serif; background: #e7e5e4; display: flex; min-height: 100vh; }
@@ -40,7 +39,7 @@
   }
   .standee h2 { font-size: 18pt; margin: 5mm 0 1mm; letter-spacing: -0.01em; }
   .standee .tag { color: var(--brand, #FF5733); font-weight: 800; font-size: 13pt; margin-bottom: 5mm; }
-  .standee canvas { width: 52mm !important; height: 52mm !important; }
+  .standee #qr img { width: 52mm; height: 52mm; display: block; }
   .standee .steps { margin-top: 5mm; font-size: 10pt; color: #44403c; text-align: left; line-height: 1.9; }
   .standee .steps b { color: var(--brand, #FF5733); }
   .standee .url { margin-top: auto; font-size: 8pt; color: #a8a29e; }
@@ -69,7 +68,7 @@
     <div class="standee" id="standee">
       <h2 id="sName"></h2>
       <div class="tag" id="sReward"></div>
-      <canvas id="qr"></canvas>
+      <div id="qr"></div>
       <div class="steps">
         <b>1.</b> Nuskenuokite QR kodą telefonu<br>
         <b>2.</b> Rinkite antspaudus su kiekvienu pirkiniu<br>
@@ -91,10 +90,8 @@
     document.getElementById('sUrl').textContent = url;
     document.getElementById('standee').style.setProperty('--brand', color);
 
-    QRCode.toCanvas(document.getElementById('qr'), url, {
-      width: 400, margin: 1,
-      color: { dark: '#1c1917', light: '#ffffff' },
-    });
+    document.getElementById('qr').innerHTML =
+      `<img alt="QR kodas" src="https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&margin=0&data=${encodeURIComponent(url)}">`;
   }
   document.querySelectorAll('.panel input').forEach((i) => i.addEventListener('input', update));
 

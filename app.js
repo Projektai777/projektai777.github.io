@@ -333,14 +333,9 @@ function resetCard() {
 }
 
 // ---------- owner dashboard (?view=owner) ----------
-function loadQrLib() {
-  return new Promise((res, rej) => {
-    if (window.QRCode) return res();
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-    s.onload = res; s.onerror = rej;
-    document.head.appendChild(s);
-  });
+function qrSrc(url, size) {
+  // qrserver.com renders a scannable QR for any URL — no JS lib, no dead CDN.
+  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&margin=12&data=${encodeURIComponent(url)}`;
 }
 
 function barChart(title, a, b, labelA, labelB, note) {
@@ -362,27 +357,11 @@ function sparkline(points) {
   </svg>`;
 }
 
-// Robust QR: render with the JS lib into the canvas; if the CDN lib fails to load
-// (the bug that left the QR blank), swap in an <img> from a no-JS QR service so a
-// scannable code ALWAYS shows. Both encode the live card URL for cross-device testing.
+// Scannable QR (encodes the live card URL — scan with another phone to test).
 function drawQr(targetUrl) {
-  const canvas = document.getElementById('standeeQr');
-  if (!canvas) return;
-  const fallback = () => {
-    const img = document.createElement('img');
-    img.className = 'qr-img';
-    img.alt = 'QR kodas';
-    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=12&data=${encodeURIComponent(targetUrl)}`;
-    canvas.replaceWith(img);
-  };
-  loadQrLib()
-    .then(() => {
-      if (!window.QRCode) return fallback();
-      window.QRCode.toCanvas(canvas, targetUrl,
-        { width: 200, margin: 1, color: { dark: '#1c1917', light: '#ffffff' } },
-        (err) => { if (err) fallback(); });
-    })
-    .catch(fallback);
+  const el = document.getElementById('standeeQr');
+  if (!el) return;
+  el.innerHTML = `<img class="qr-img" alt="QR kodas — ${tenant.business_name}" src="${qrSrc(targetUrl, 400)}">`;
 }
 
 function renderOwner() {
@@ -414,7 +393,7 @@ function renderOwner() {
         <div class="standee-top"></div>
         <p class="sm-name">${tenant.business_name}</p>
         <p class="sm-reward">${tenant.reward_text}</p>
-        <canvas id="standeeQr" width="200" height="200"></canvas>
+        <div id="standeeQr"></div>
         <p class="sm-steps">Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą</p>
       </div>
       <a class="pitch-owner" href="${standeeUrl}">🖨️ Spausdinti stovelį prie kasos →</a>
