@@ -158,7 +158,7 @@ const STR = {
       ['Kuo skiriatės nuo kitų lojalumo programėlių?',
         '<strong>Jokių mėnesinių mokesčių.</strong> Dauguma lojalumo programėlių — prenumeratos (~25–80 €/mėn., ir taip be galo), įspraudžiančios Jus į griežtą šabloną su svetimu prekės ženklu. Pas mus sumokate <strong>vieną kartą</strong>, o programėlę <strong>pritaikome būtent Jūsų verslui</strong>: prizų pakopas, spalvas, kalbas (LT/EN), gimtadienio dovanas, net visiškai naujas funkcijas. Viskas su <strong>Jūsų prekės ženklu</strong> (ir, jei norite, Jūsų domenu) — produktą naudojate neterminuotai, be priklausomybės nuo svetimos platformos. Palaikymas greitas ir asmeniškas, o klientams nereikia jokios registracijos (privatumas). Rimtos agentūros individualų tokį sprendimą paprastai įkainoja <strong>3 000–8 000 €</strong> (pilna mobilioji iOS/Android programėlė su integracijomis — 15 000 € ir daugiau), dažnai dar su mėnesiniu palaikymo mokesčiu — todėl 1000 € vienkartinė kaina yra itin palanki.'],
       ['Ar tai saugu? Kaip su privatumu ir sukčiavimu?',
-        '<strong>Privatumas:</strong> nerenkame jokių asmens duomenų — kortelė saugoma tik svečio telefone, todėl nelieka ir GDPR rūpesčių dėl klientų sąrašų. <strong>Sukčiavimas:</strong> antspaudą galima pridėti tik nuskaičius darbuotojo QR kodą, kuris keičiasi kas 30 sekundžių (kaip 2FA), tad svečias negali prisidėti jo pats ir negali pakartotinai panaudoti pamatyto kodo; be to, vienam telefonui leidžiamas tik <strong>vienas antspaudas per dieną</strong> (atsistato vidurnaktį). Specialios dovanos (pvz. gimtadienio) atiduodamos tik darbuotojui patikrinus asmens dokumentą ir tik kartą per metus.'],
+        '<strong>Privatumas:</strong> nerenkame jokių asmens duomenų — kortelė saugoma tik svečio telefone, todėl nelieka ir GDPR rūpesčių dėl klientų sąrašų. <strong>Sukčiavimas:</strong> antspaudą galima pridėti tik nuskaičius darbuotojo QR kodą, kuris keičiasi kas 30 sekundžių (kaip 2FA), tad svečias negali prisidėti jo pats ir negali pakartotinai panaudoti pamatyto kodo; be to, vienam telefonui leidžiamas tik <strong>vienas antspaudas per dieną</strong> (atsistato vidurnaktį). Specialios dovanos (pvz. gimtadienio) atiduodamos tik darbuotojui patikrinus asmens dokumentą ir tik kartą per metus. <strong>Saugiausias prizo tipas — nuolaida</strong> (pvz. −20 % sąskaitai): net jei klientas rastų būdą apgauti sistemą, jis vis tiek turi išleisti pinigų, nes nuolaida taikoma tik apmokamam pirkiniui — skirtingai nei visiškai nemokamas prizas.'],
       ['Ar galima naudoti su mano įmonės domenu ir svetaine?',
         'Taip. Kortelę galime paleisti Jūsų pačių adresu, pvz. <em>kortele.jusuimone.lt</em>. Jei jau turite domeną ir svetainę: Jūs (arba Jūsų svetainės administratorius) pridedate vieną mūsų pateiktą DNS įrašą, o mes sutvarkome talpinimą ir saugų HTTPS ryšį. Kortelė veikia atskirai ir nekeičia esamos svetainės — tiesiog galite pridėti mygtuką „Lojalumo kortelė". Viskas su Jūsų prekės ženklu.'],
       ['Ar klientams reikia registruotis? Ką jie gauna?',
@@ -274,7 +274,7 @@ const STR = {
       ['How are you different from other loyalty apps?',
         '<strong>No monthly fees.</strong> Most loyalty apps are subscriptions (~€25–80/month, forever) that squeeze you into a rigid template under someone else’s brand. With us you pay <strong>once</strong>, and we <strong>tailor the app to your business</strong>: reward tiers, colours, languages (LT/EN), birthday gifts, even entirely new features. Everything under <strong>your brand</strong> (and your domain if you like) — you use the product indefinitely, with no dependence on someone else’s platform. Support is fast and personal, and customers need no sign-up (privacy). A serious agency typically prices a comparable custom build at <strong>€3,000–8,000</strong> (a full native iOS/Android app with integrations runs €15,000+), usually plus a monthly maintenance fee — which makes the one-time €1000 exceptional value.'],
       ['Is it safe? What about privacy and cheating?',
-        '<strong>Privacy:</strong> we collect no personal data — the card lives only on the guest’s phone, so there are no GDPR headaches over customer lists. <strong>Cheating:</strong> a stamp can only be added by scanning the staff QR, which changes every 30 seconds (like 2FA), so guests can’t add their own and can’t reuse a code they once saw; on top of that each phone is limited to <strong>one stamp per day</strong> (resets at midnight). Special gifts (e.g. birthday) are released only after staff check an ID, and only once per year.'],
+        '<strong>Privacy:</strong> we collect no personal data — the card lives only on the guest’s phone, so there are no GDPR headaches over customer lists. <strong>Cheating:</strong> a stamp can only be added by scanning the staff QR, which changes every 30 seconds (like 2FA), so guests can’t add their own and can’t reuse a code they once saw; on top of that each phone is limited to <strong>one stamp per day</strong> (resets at midnight). Special gifts (e.g. birthday) are released only after staff check an ID, and only once per year. <strong>The safest type of reward is a discount</strong> (e.g. −20% off the bill): even if a customer found a way to cheat, they still have to spend money, because the discount applies only to a paid purchase — unlike an entirely free reward.'],
       ['Can it run on my own domain and website?',
         'Yes. We can host the card at your own address, e.g. <em>card.yourbusiness.lt</em>. If you already have a domain and website: you (or your web admin) add one DNS record we provide, and we handle hosting and secure HTTPS. The card runs separately and doesn’t change your existing site — you can simply add a “Loyalty card” button. All under your brand.'],
       ['Do customers need to register? What do they get?',
@@ -972,70 +972,110 @@ function fallbackCopy(text, cb) {
   cb();
 }
 
-// ---------- staff-code pad ----------
-// The customer types the rotating 6-digit staff code here (or scans the staff
-// QR, which arrives as ?grant=CODE and is handled on boot — see runGrant).
-const modal = document.getElementById('pinModal');
-const dots = document.getElementById('pinDots');
-let pinBuffer = '';
-let pinAction = 'add_stamp';
+// ---------- staff-QR scanner ----------
+// NO manual code entry: the stamp is authorised purely by SCANNING the rotating
+// staff QR (TOTP, see totp.js / staff.html). Two ways in, same outcome:
+//   1. The customer's NATIVE phone camera scans the staff QR -> opens the card
+//      URL with ?grant=CODE -> auto-applied on boot (see runGrant below).
+//   2. The customer already has the card open (e.g. an installed PWA) and taps
+//      "Open camera" -> this in-page scanner reads the staff QR live.
+// The 30 s rotation is what kills code reuse — same "good-enough" model as before.
+const scanModal = document.getElementById('scanModal');
+let scanStream = null;       // active MediaStream while the camera is on
+let scanning = false;        // true while the detect loop is running
+let scanAction = 'add_stamp';
 
-function buildPad() {
-  // Rebuild the dots to match the code length (6) regardless of the static markup.
-  dots.innerHTML = Array.from({ length: TOTP_DIGITS }, () => '<span></span>').join('');
-  const pad = document.getElementById('pinPad');
-  pad.innerHTML = [1,2,3,4,5,6,7,8,9,'',0,'⌫']
-    .map(k => `<button class="key" data-k="${k}" ${k === '' ? 'disabled' : ''}>${k}</button>`)
-    .join('');
-  pad.onclick = (e) => {
-    const k = e.target.dataset?.k;
-    if (k === undefined) return;
-    if (k === '⌫') pinBuffer = pinBuffer.slice(0, -1);
-    else if (pinBuffer.length < TOTP_DIGITS) pinBuffer += k;
-    updateDots();
-    if (pinBuffer.length === TOTP_DIGITS) submitPin();
-  };
-  document.getElementById('pinCancel').onclick = () => { modal.close(); };
+// Pull the rotating code out of a scanned staff QR. The QR encodes the card URL
+// with ?grant=CODE; we also accept a bare numeric code as a fallback.
+function extractCode(raw) {
+  if (!raw) return null;
+  try {
+    const g = new URL(raw, location.href).searchParams.get('grant');
+    if (g) { const d = g.replace(/\D/g, ''); if (d.length >= TOTP_DIGITS) return d.slice(0, TOTP_DIGITS); }
+  } catch { /* not a URL — fall through to bare digits */ }
+  const digits = String(raw).replace(/\D/g, '');
+  return digits.length >= TOTP_DIGITS ? digits.slice(0, TOTP_DIGITS) : null;
 }
 
-function updateDots() {
-  [...dots.children].forEach((d, i) => d.classList.toggle('on', i < pinBuffer.length));
+// Stop the camera + detect loop (does NOT close the dialog).
+function releaseCamera() {
+  scanning = false;
+  if (scanStream) { scanStream.getTracks().forEach((tr) => tr.stop()); scanStream = null; }
+  const v = document.getElementById('scanVideo');
+  if (v) { try { v.pause(); } catch { /* ignore */ } v.srcObject = null; }
 }
 
-async function openPinPad(action) {
-  pinAction = action;
-  pinBuffer = '';
-  updateDots();
-  const hint = document.querySelector('#pinModal .pin-hint');
+// Browsers without BarcodeDetector or camera access (e.g. iOS Safari): point the
+// customer at their phone's native camera app, which opens the staff QR's URL
+// and stamps on boot.
+function showScanFallback() {
+  const v = document.getElementById('scanVideo');
+  if (v) v.hidden = true;
+  const fb = document.getElementById('scanFallback');
+  if (fb) { fb.hidden = false; fb.textContent = t('scanFallback'); }
+}
+
+async function openScanner(action) {
+  scanAction = action;
+  const hint = scanModal.querySelector('.scan-hint');
+  const fb = document.getElementById('scanFallback');
+  const video = document.getElementById('scanVideo');
   if (hint) {
-    // Birthday gift: remind staff to verify the customer's ID (the real
-    // anti-fraud step). In the DEMO, reveal the live rotating code so a
-    // prospect can type it and see exactly how the 2FA-style flow works.
-    if (action === 'redeem_birthday') {
-      hint.textContent = t('pinHintBday');
-    } else if (isDemo) {
-      hint.innerHTML = t('pinDemoCode', await currentCode(tenant.staff_secret));
-    } else {
-      hint.textContent = t('pinHint');
-    }
+    // Birthday gift: remind staff to check the customer's ID (the real anti-fraud
+    // step) — same warning the old pad showed.
+    hint.textContent = action === 'redeem_birthday' ? t('pinHintBday') : t('scanHint');
     hint.classList.toggle('pin-hint-warn', action === 'redeem_birthday');
   }
-  modal.showModal();
+  if (fb) { fb.hidden = true; fb.textContent = ''; }
+  if (video) video.hidden = false;
+  scanModal.showModal();
+
+  // BarcodeDetector is native (no library) — fits the project's no-dep model.
+  let detector = null;
+  try { if ('BarcodeDetector' in window) detector = new window.BarcodeDetector({ formats: ['qr_code'] }); } catch { detector = null; }
+  if (!detector || !(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) { showScanFallback(); return; }
+
+  try {
+    scanStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+  } catch { showScanFallback(); return; }
+  video.srcObject = scanStream;
+  try { await video.play(); } catch { /* playsinline + muted cover autoplay policies */ }
+
+  scanning = true;
+  const tick = async () => {
+    if (!scanning) return;
+    try {
+      const codes = await detector.detect(video);
+      const code = codes && codes.length ? extractCode(codes[0].rawValue) : null;
+      if (code) { scanModal.close(); await runGrant(scanAction, code); return; }
+    } catch { /* transient decode error (e.g. no frame yet) — keep scanning */ }
+    if (scanning) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 }
 
-function submitPin() {
-  const code = pinBuffer;
-  pinBuffer = '';
-  updateDots();
-  return runGrant(pinAction, code);
+// In a real shop the customer scans the staff QR; in the DEMO there is no staff
+// QR to point at, so simulate a successful scan with the live code — a solo
+// prospect still sees the stamp / celebration.
+async function stampAction(action) {
+  if (isDemo) return runGrant(action, await currentCode(tenant.staff_secret));
+  return openScanner(action);
 }
 
-// Shared by the pad (typed code) and the scanned-QR path (?grant=CODE on boot).
+// Wire the scanner dialog once on boot: cancel closes it; closing ALWAYS frees
+// the camera (covers the cancel button, Esc, and the auto-close after a scan).
+function wireScanner() {
+  if (!scanModal) return;
+  const cancel = document.getElementById('scanCancel');
+  if (cancel) cancel.onclick = () => scanModal.close();
+  scanModal.addEventListener('close', releaseCamera);
+}
+
+// Shared by the in-page scanner and the scanned-QR boot path (?grant=CODE).
 async function runGrant(action, code) {
   try {
     const res = await backend.rpc(action, { p_slug: slug, p_card: card.id, p_code: code });
     if (res.ok) {
-      if (modal.open) modal.close();
       if (action === 'redeem_reward') {
         card.stamps = 0;
         showReview = !!tenant.google_review_url; // nudge a review right after the reward
@@ -1078,15 +1118,10 @@ function toast(text, isError = false) {
 // ---------- boot ----------
 (async () => {
   document.documentElement.lang = lang;
-  buildPad();
+  wireScanner();
   applyStaticStrings();
   const celebrateCloseBtn = document.getElementById('celebrateClose');
   if (celebrateCloseBtn) celebrateCloseBtn.onclick = () => document.getElementById('celebrateModal').close();
-  deferredInstall = window.__bip || null; // event may have fired before this module ran
-  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; window.__bip = e; });
-  window.addEventListener('appinstalled', () => { deferredInstall = null; window.__bip = null; hideInstallHint(); });
-  // If the app gets launched/enters standalone mid-session, drop the prompt too.
-  window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => { if (e.matches) hideInstallHint(); });
   try {
     if (!slug && !isDemo) {
       // Installed-PWA launch loses the ?b= param: restore the last card.

@@ -14,13 +14,13 @@
     <div class="loading">Kraunama…</div>
   </main>
 
-  <!-- Staff-code modal: the CUSTOMER types the rotating staff code on their OWN phone -->
-  <dialog id="pinModal">
-    <h2 id="pinTitle">Darbuotojo kodas</h2>
-    <p class="pin-hint">Darbuotojas parodys kodą arba QR</p>
-    <div class="pin-dots" id="pinDots"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    <div class="pin-pad" id="pinPad"></div>
-    <button class="pin-cancel" id="pinCancel">Atšaukti</button>
+  <!-- Scan modal: the CUSTOMER scans the rotating staff QR with their OWN camera (no typing) -->
+  <dialog id="scanModal">
+    <h2 id="scanTitle">Nuskaitykite darbuotojo QR</h2>
+    <p class="scan-hint">Nukreipkite kamerą į darbuotojo QR kodą.</p>
+    <div class="scan-frame"><video id="scanVideo" playsinline muted></video></div>
+    <p class="scan-fallback" id="scanFallback" hidden></p>
+    <button class="scan-cancel" id="scanCancel">Atšaukti</button>
   </dialog>
 
   <script type="module" src="./app.js"></script>
