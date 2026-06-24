@@ -63,6 +63,7 @@ const STR = {
     autoFill: '✨ Užpildyti kortelę (demonstracija)',
     reset: '↺ Pradėti iš naujo',
     installCta: '📲 Pridėti į pradžios ekraną',
+    installNote: 'Tik piktograma pradžios ekrane — atsidaro kaip programėlė, nieko neatsisiunčiama.',
     installHint: 'Atidarykite naršyklės meniu (⋮ arba ⋯) ir pasirinkite „Pridėti prie pradžios ekrano" / „Įdiegti programėlę". Veikia kaip programėlė, be App Store.',
     installHintIos: 'Paspauskite „Bendrinti" (Share) ⬆️ naršyklės apačioje ir pasirinkite „Įtraukti į pradžios ekraną".',
     installBtn: 'Pridėti',
@@ -152,6 +153,7 @@ const STR = {
     autoFill: '✨ Fill the card (demo)',
     reset: '↺ Start over',
     installCta: '📲 Add to Home Screen',
+    installNote: 'Just a home-screen icon — opens like an app, nothing is downloaded.',
     installHint: 'Open the browser menu (⋮ or ⋯) and choose “Add to Home screen” / “Install app”. Works like an app, no App Store.',
     installHintIos: 'Tap the Share button ⬆️ at the bottom of the browser and choose “Add to Home Screen”.',
     installBtn: 'Add',
@@ -538,6 +540,7 @@ function installHintHtml() {
   // beforeinstallprompt doesn't fire on iOS or right after an uninstall.
   return `<div class="install-hint" id="installHint">
     <button class="install-btn" id="installBtn">${t('installCta')}</button>
+    <p class="install-note">${t('installNote')}</p>
     <p class="install-steps" id="installSteps" hidden>${steps}</p></div>`;
 }
 function wireInstall() {
