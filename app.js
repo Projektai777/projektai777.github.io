@@ -30,7 +30,6 @@ const isStatic = !!TENANTS[slug] || SUPABASE_URL.includes('YOUR-PROJECT');
 const isDemo = slug === 'demo';
 const view = (params.get('view') || '').toLowerCase(); // ?view=owner -> savininko apžvalga (atskiras puslapis)
 let isPreview = false;       // set after tenant loads: demo OR tenant.preview (rodo pardavimų funkcijas)
-let deferredInstall = null;  // captured 'beforeinstallprompt' (Android "Pridėti")
 
 // Personalized sales demos: /?b=demo&n=Kavinė+Aroma&c=%23064e3b&r=Prizas&s=8
 // lets an outreach email show the prospect THEIR OWN branded card with
