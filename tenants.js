@@ -30,6 +30,10 @@ export default {
       { at: 5, text: 'Nemokamas gardus kompotas' },
       { at: 10, text: '10-as patiekalas nemokamai' },
     ],
+    birthday_reward: 'Nemokamas desertas gimtadienio proga', // gimtadienio dovana (rodo kortelėje)
+    // Google atsiliepimo nuoroda — po prizo atsiėmimo svečiui pasiūloma palikti atsiliepimą.
+    // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
+    google_review_url: 'https://www.google.com/maps/search/?api=1&query=Berneli%C5%B3+u%C5%BEeiga',
     preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
     pin_hash: 'e1bee1f8c7bc8cc8f481f0d9dc9f1e607818850ab96c5910a4537d4788d5dd35', // PIN: 1234
   },
