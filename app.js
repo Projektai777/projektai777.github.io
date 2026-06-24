@@ -249,6 +249,29 @@ const STR = {
     ownerContact: 'Want this for your business?',
     ownerContactSub: 'Let’s talk →',
     ownerPrivacy: '🔒 No personal data — everything is stored on the guest’s phone.',
+    faqTitle: 'Frequently asked questions',
+    faq: [
+      ['How does the loyalty card work?',
+        'A guest scans the QR code at the counter or taps a link — your branded card opens on their phone. A staff member confirms the visit with a short PIN and a stamp is added. Once full, the guest claims the reward and comes back to earn it again.'],
+      ['Do I need special hardware or an app from the App Store?',
+        'No. Everything runs in the phone’s browser — no hardware, terminals, or downloads from the App Store / Google Play. The guest can add the card to their home screen in one tap and use it like an app.'],
+      ['How much does it cost?',
+        'A <strong>one-time fee of €1000</strong> for the finished product — <strong>no monthly or yearly fees</strong>. The <strong>first year of support</strong> (bug fixes, small changes) is included. For comparison: most similar tools are subscriptions of ~€25–80/month (~€300–960/year, every year), and versions with your own brand and domain are the priciest tier. Here you pay once and the product stays yours.'],
+      ['Is it safe? What about privacy and cheating?',
+        '<strong>Privacy:</strong> we collect no personal data — the card lives only on the guest’s phone, so there are no GDPR headaches over customer lists. <strong>Cheating:</strong> only staff add stamps with their PIN, so guests can’t add their own; there’s protection against rapid taps and PIN guessing. Special gifts (e.g. birthday) are released only after staff check an ID, and only once per year.'],
+      ['Can it run on my own domain and website?',
+        'Yes. We can host the card at your own address, e.g. <em>card.yourbusiness.lt</em>. If you already have a domain and website: you (or your web admin) add one DNS record we provide, and we handle hosting and secure HTTPS. The card runs separately and doesn’t change your existing site — you can simply add a “Loyalty card” button. All under your brand.'],
+      ['Do customers need to register? What do they get?',
+        'No — no registration, email or phone number. The guest opens the card and starts collecting stamps right away; everything is saved on their phone. Simple and fast, so more guests actually use it.'],
+      ['How fast can we start? What do you need from me?',
+        'Usually within a few days. From you we need: your logo, colours, the reward terms (e.g. “every 10th dish free”), and optionally a header photo. We configure everything, send you the link, and prepare a printable QR standee for the counter.'],
+      ['Can it be customized to my business?',
+        'Yes — everything can be tailored: number of stamps and tiers, colours, texts, language (LT/EN), birthday gifts, review prompts, even entirely new features. Tell us what your business needs and we’ll build it.'],
+      ['How do the contract and payment work?',
+        'I work legally as a registered self-employed individual (Lithuanian “individuali veikla”). We sign a service agreement clearly stating the scope, price, deadlines, support, and that the finished product belongs to you. I issue an invoice; payment is by bank transfer (can be split: deposit + balance on delivery). The invoice is VAT-free and I handle my own taxes — no extra employer obligations for you.'],
+      ['What happens after the first year?',
+        'The first year of support is free. After that the product keeps working with no mandatory fees. If you want changes or new features later, we agree a fixed price for that specific work — no subscriptions.'],
+    ],
     loadingScan: 'Scan the shop’s QR code.',
     loadingNotFound: 'Card not found. Check the QR code.',
   },
@@ -892,6 +915,19 @@ function wireRoi() {
   custEl.oninput = update;
 }
 
+// FAQ accordion for the owner/sales page (native <details>, no JS needed).
+function faqHtml() {
+  const items = t('faq').map(([q, a]) => `
+    <details class="faq-item">
+      <summary>${q}</summary>
+      <div class="faq-a">${a}</div>
+    </details>`).join('');
+  return `<section class="panel faq">
+    <h3>${t('faqTitle')}</h3>
+    ${items}
+  </section>`;
+}
+
 function renderOwner() {
   setTheme();
   const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}`;
@@ -928,6 +964,8 @@ function renderOwner() {
       </div>
       <a class="pitch-owner" href="${standeeUrl}">${t('printStandee')}</a>
     </section>
+
+    ${faqHtml()}
 
     <button class="cta cta-contact" id="copyEmailBtn">${t('ownerContact')}<span>${t('ownerContactSub')}</span></button>
     <p class="privacy">${t('ownerPrivacy')}</p>

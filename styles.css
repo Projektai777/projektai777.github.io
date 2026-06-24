@@ -515,3 +515,28 @@ dialog.celebrate strong { color: #1c1917; font-size: 1.1rem; }
   line-height: 1.1; letter-spacing: -.02em;
 }
 .roi-month { display: block; font-size: .85rem; color: #78716c; margin-top: 4px; }
+
+/* ====================================================================
+   FAQ accordion (owner page)
+   ==================================================================== */
+.faq h3 { margin-bottom: 12px; }
+.faq-item {
+  border-top: 1px solid #f0eeec;
+}
+.faq-item:last-child { border-bottom: 1px solid #f0eeec; }
+.faq-item summary {
+  cursor: pointer; list-style: none; padding: 13px 28px 13px 2px; position: relative;
+  font-weight: 600; font-size: .92rem; color: #1c1917; line-height: 1.4;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: '+'; position: absolute; right: 4px; top: 11px;
+  font-size: 1.3rem; font-weight: 400; color: var(--brand); transition: transform .2s;
+}
+.faq-item[open] summary::after { content: '−'; }
+.faq-item summary:hover { color: var(--brand); }
+.faq-a {
+  padding: 0 4px 15px 2px; font-size: .88rem; color: #57534e; line-height: 1.6;
+}
+.faq-a strong { color: #1c1917; }
+.faq-a em { color: var(--brand); font-style: normal; font-weight: 600; }
