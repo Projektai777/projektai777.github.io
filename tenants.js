@@ -3,7 +3,13 @@
 // Naujo verslo prijungimas: atsidarykite /tools/setup.html,
 // užpildykite formą ir įklijuokite sugeneruotą bloką čia.
 //
-// pin_hash = SHA-256("slug:PIN") — pats PIN niekur nesaugomas.
+// staff_secret    = atsitiktinis raktas, iš kurio /tools/staff.html
+//                   generuoja kas 30 s besikeičiantį 6 skaitmenų kodą
+//                   (kaip 2FA). Klientas jį įveda ar nuskaito QR — telefono
+//                   atiduoti nereikia.
+// staff_pass_hash = SHA-256("slug:slaptažodis") — darbuotojo puslapio
+//                   slaptažodis (atrakina /tools/staff.html). Pats
+//                   slaptažodis niekur nesaugomas.
 // =============================================================
 
 export default {
@@ -15,7 +21,8 @@ export default {
     stamps_needed: 10,
     reward_text: 'Nemokamas didelis kapučinas',
     reward_text_en: 'Free large cappuccino', // EN variantas (rodomas kai įjungtas EN)
-    pin_hash: '88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331', // PIN: 1234
+    staff_secret: '61d7201b3e2e02a883c9e4a42f527949',     // rotating-code raktas
+    staff_pass_hash: 'bac1bc821037abd4cf065a2e2b3f0c524e12c47ef4c8218c69fa9a71bcbe44ba', // /tools/staff.html slaptažodis: demo
   },
 
   berneliai: {
