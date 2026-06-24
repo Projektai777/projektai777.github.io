@@ -6,7 +6,7 @@
 // prefer the fresh network copy and only fall back to cache when offline.
 // A cache-first worker once served a stale tenants.js and a new tenant
 // showed "Kortelė nerasta" for everyone who had visited before.
-const CACHE = 'lojalumas-v13';
+const CACHE = 'lojalumas-v14';
 const SHELL = ['./', './index.html', './app.js', './tenants.js', './styles.css', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
@@ -29,8 +29,12 @@ self.addEventListener('fetch', (e) => {
   if (url.origin !== location.origin) return; // never cache Supabase
   // Network-first: fetch fresh, refresh the cache on success, and fall
   // back to the cached copy only when the network is unavailable.
+  // `cache: 'no-cache'` forces the browser to REVALIDATE with the server
+  // (via ETag) instead of silently serving a stale HTTP-cached copy — GitHub
+  // Pages sets a cache header on app.js/tenants.js, so a plain fetch() could
+  // otherwise return old code even though we're "network-first".
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, { cache: 'no-cache' })
       .then((res) => {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(e.request, copy));
