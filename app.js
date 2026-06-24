@@ -13,7 +13,7 @@
 // =============================================================
 
 import TENANTS from './tenants.js';
-import { verifyCode } from './totp.js';
+import { verifyCode, currentCode, TOTP_DIGITS } from './totp.js';
 
 // Optional paid tier: set these to a Supabase project to get central
 // analytics + server-side PIN security. Leave as-is for the free,
@@ -213,9 +213,9 @@ const STR = {
     toastStamp: 'Stamp added ⭐',
     toastEmail: '📋 Email copied',
     reached: (txt) => `🎁 Reached: ${txt}`,
-    errBadPin: 'Wrong PIN',
+    errBadPin: 'Wrong or expired code',
     errRate: 'Too many attempts. Wait 10 min.',
-    errFast: 'Wait a minute between stamps',
+    errDailyDone: 'You already got a stamp today. Come back tomorrow! 🙂',
     errNotFull: 'The card isn’t full yet',
     errDemoOver: 'The demo has ended. Contact us by email for the full version.',
     errGeneric: 'Something went wrong. Please try again.',
@@ -224,9 +224,9 @@ const STR = {
     errBdayClaimed: 'Birthday gift already claimed this year.',
     flowTitle: 'How does it work for staff?',
     flow: [
-      ['Guest opens the card', 'Scans the QR code at the counter or taps the link on their phone'],
-      ['Staff enters the PIN', 'Confirms the purchase with a short 4-digit code'],
-      ['A stamp is added', 'The card fills up one stamp at a time, visit by visit'],
+      ['Guest opens the card', 'Scans the staff QR or taps the link on their phone'],
+      ['Staff shows a code', 'Opens their code page — the guest types the 6 digits or scans the QR (no phone handover)'],
+      ['A stamp is added', 'The card fills up one stamp at a time, visit by visit (1 per day)'],
       ['Card full — reward earned', 'The guest claims the gift and comes back to earn it again'],
     ],
     reviewTitle: 'Enjoyed your visit?',
@@ -241,7 +241,7 @@ const STR = {
     bdayClaimBtn: '🎁 Claim gift',
     bdayClaimed: '🎂 Birthday gift already claimed this year. See you next year! 🥳',
     bdayChange: 'Change date',
-    pinHintBday: '⚠️ Staff: check the customer’s ID (date of birth), then enter the PIN.',
+    pinHintBday: '⚠️ Staff: check the customer’s ID (date of birth), then show the code.',
     back: '← Back to the card',
     ownerTag: 'OWNER OVERVIEW · illustrative example',
     whyTitle: 'Why does it pay off?',
@@ -277,7 +277,7 @@ const STR = {
     faqTitle: 'Frequently asked questions',
     faq: [
       ['How does the loyalty card work?',
-        'A guest scans the QR code at the counter or taps a link — your branded card opens on their phone. A staff member confirms the visit with a short PIN and a stamp is added. Once full, the guest claims the reward and comes back to earn it again.'],
+        'A guest scans the staff QR or taps a link — your branded card opens on their phone. A staff member confirms the visit with a short code that changes every 30 seconds (like bank 2FA): the guest types it on their own phone or scans the staff QR — the phone never changes hands. A stamp is added (one per day). Once full, the guest claims the reward and comes back to earn it again.'],
       ['Do I need special hardware or an app from the App Store?',
         'No. Everything runs in the phone’s browser — no hardware, terminals, or downloads from the App Store / Google Play. The guest can add the card to their home screen in one tap and use it like an app.'],
       ['How much does it cost?',
@@ -285,7 +285,7 @@ const STR = {
       ['How are you different from other loyalty apps?',
         '<strong>No monthly fees.</strong> Most loyalty apps are subscriptions (~€25–80/month, forever) that squeeze you into a rigid template under someone else’s brand. With us you pay <strong>once</strong>, and we <strong>tailor the app to your business</strong>: reward tiers, colours, languages (LT/EN), birthday gifts, even entirely new features. Everything under <strong>your brand</strong> (and your domain if you like) — you use the product indefinitely, with no dependence on someone else’s platform. Support is fast and personal, and customers need no sign-up (privacy). A serious agency typically prices a comparable custom build at <strong>€3,000–8,000</strong> (a full native iOS/Android app with integrations runs €15,000+), usually plus a monthly maintenance fee — which makes the one-time €1000 exceptional value.'],
       ['Is it safe? What about privacy and cheating?',
-        '<strong>Privacy:</strong> we collect no personal data — the card lives only on the guest’s phone, so there are no GDPR headaches over customer lists. <strong>Cheating:</strong> only staff add stamps with their PIN, so guests can’t add their own; there’s protection against rapid taps and PIN guessing. Special gifts (e.g. birthday) are released only after staff check an ID, and only once per year.'],
+        '<strong>Privacy:</strong> we collect no personal data — the card lives only on the guest’s phone, so there are no GDPR headaches over customer lists. <strong>Cheating:</strong> a stamp can only be added with the staff code, which changes every 30 seconds (like 2FA), so guests can’t add their own and can’t reuse a code they once saw; on top of that each phone is limited to <strong>one stamp per day</strong> (resets at midnight). Special gifts (e.g. birthday) are released only after staff check an ID, and only once per year.'],
       ['Can it run on my own domain and website?',
         'Yes. We can host the card at your own address, e.g. <em>card.yourbusiness.lt</em>. If you already have a domain and website: you (or your web admin) add one DNS record we provide, and we handle hosting and secure HTTPS. The card runs separately and doesn’t change your existing site — you can simply add a “Loyalty card” button. All under your brand.'],
       ['Do customers need to register? What do they get?',
@@ -423,10 +423,6 @@ const staticBackend = {
   _save(c) {
     localStorage.setItem(this._key, JSON.stringify(c));
   },
-  async _hash(text) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-    return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
-  },
   async loadTenant() {
     const t = TENANTS[slug];
     if (!t) throw new Error('tenant_not_found');
@@ -435,7 +431,7 @@ const staticBackend = {
   async loadOrCreateCard() {
     return { id: slug, ...this._load() };
   },
-  async rpc(fn, { p_pin }) {
+  async rpc(fn, { p_code }) {
     const t = TENANTS[slug];
     const c = this._load();
     const now = Date.now();
@@ -450,11 +446,13 @@ const staticBackend = {
       }
     }
 
-    // brute-force gate: 5 wrong PINs in 10 min locks the pad
+    // brute-force gate: 5 wrong codes in 10 min locks the pad
     c.fails = (c.fails || []).filter((ts) => now - ts < 10 * 60 * 1000);
     if (c.fails.length >= 5) return { ok: false, error: 'rate_limited' };
 
-    if (await this._hash(`${slug}:${p_pin}`) !== t.pin_hash) {
+    // The staff code is a rotating TOTP (see totp.js / staff.html). It's
+    // valid only for ~30 s, so a code the customer once saw is useless later.
+    if (!(await verifyCode(t.staff_secret, p_code))) {
       c.fails.push(now);
       this._save(c);
       return { ok: false, error: 'bad_pin' };
@@ -482,12 +480,14 @@ const staticBackend = {
       return { ok: true };
     }
 
-    // demo/preview skip the 60s cooldown so you can click through a full card
-    if (!isPreview && c.last && now - c.last < 60 * 1000) {
-      return { ok: false, error: 'too_fast' };
+    // Daily cooldown: one stamp per phone per LOCAL calendar day, resets at
+    // local midnight. demo/preview skip it so you can click through a full card.
+    if (!isPreview && c.day === todayLocal()) {
+      return { ok: false, error: 'daily_done' };
     }
     c.stamps = Math.min(c.stamps + 1, t.stamps_needed);
     c.last = now;
+    c.day = todayLocal();
     this._save(c);
     return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed };
   },
@@ -682,6 +682,12 @@ function isBirthdayToday(md) {
   return md === today;
 }
 function thisYear() { return new Date().getFullYear(); }
+// Local calendar day (YYYY-MM-DD) — the daily-stamp cooldown resets at LOCAL
+// midnight, so it follows the customer's own timezone, not UTC.
+function todayLocal() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 function saveBday(obj) { localStorage.setItem(bdayKey, JSON.stringify(obj)); }
 
 function birthdayHtml() {
@@ -1038,13 +1044,17 @@ function fallbackCopy(text, cb) {
   cb();
 }
 
-// ---------- PIN pad ----------
+// ---------- staff-code pad ----------
+// The customer types the rotating 6-digit staff code here (or scans the staff
+// QR, which arrives as ?grant=CODE and is handled on boot — see runGrant).
 const modal = document.getElementById('pinModal');
 const dots = document.getElementById('pinDots');
 let pinBuffer = '';
 let pinAction = 'add_stamp';
 
 function buildPad() {
+  // Rebuild the dots to match the code length (6) regardless of the static markup.
+  dots.innerHTML = Array.from({ length: TOTP_DIGITS }, () => '<span></span>').join('');
   const pad = document.getElementById('pinPad');
   pad.innerHTML = [1,2,3,4,5,6,7,8,9,'',0,'⌫']
     .map(k => `<button class="key" data-k="${k}" ${k === '' ? 'disabled' : ''}>${k}</button>`)
@@ -1053,9 +1063,9 @@ function buildPad() {
     const k = e.target.dataset?.k;
     if (k === undefined) return;
     if (k === '⌫') pinBuffer = pinBuffer.slice(0, -1);
-    else if (pinBuffer.length < 4) pinBuffer += k;
+    else if (pinBuffer.length < TOTP_DIGITS) pinBuffer += k;
     updateDots();
-    if (pinBuffer.length === 4) submitPin();
+    if (pinBuffer.length === TOTP_DIGITS) submitPin();
   };
   document.getElementById('pinCancel').onclick = () => { modal.close(); };
 }
@@ -1064,34 +1074,46 @@ function updateDots() {
   [...dots.children].forEach((d, i) => d.classList.toggle('on', i < pinBuffer.length));
 }
 
-function openPinPad(action) {
+async function openPinPad(action) {
   pinAction = action;
   pinBuffer = '';
   updateDots();
-  // For the birthday gift, remind staff to verify the customer's ID — this is
-  // the actual anti-fraud step. Other actions show the normal hint.
   const hint = document.querySelector('#pinModal .pin-hint');
   if (hint) {
-    hint.textContent = action === 'redeem_birthday' ? t('pinHintBday') : t('pinHint');
+    // Birthday gift: remind staff to verify the customer's ID (the real
+    // anti-fraud step). In the DEMO, reveal the live rotating code so a
+    // prospect can type it and see exactly how the 2FA-style flow works.
+    if (action === 'redeem_birthday') {
+      hint.textContent = t('pinHintBday');
+    } else if (isDemo) {
+      hint.innerHTML = t('pinDemoCode', await currentCode(tenant.staff_secret));
+    } else {
+      hint.textContent = t('pinHint');
+    }
     hint.classList.toggle('pin-hint-warn', action === 'redeem_birthday');
   }
   modal.showModal();
 }
 
-async function submitPin() {
-  const pin = pinBuffer;
+function submitPin() {
+  const code = pinBuffer;
   pinBuffer = '';
   updateDots();
+  return runGrant(pinAction, code);
+}
+
+// Shared by the pad (typed code) and the scanned-QR path (?grant=CODE on boot).
+async function runGrant(action, code) {
   try {
-    const res = await backend.rpc(pinAction, { p_slug: slug, p_card: card.id, p_pin: pin });
+    const res = await backend.rpc(action, { p_slug: slug, p_card: card.id, p_code: code });
     if (res.ok) {
-      modal.close();
-      if (pinAction === 'redeem_reward') {
+      if (modal.open) modal.close();
+      if (action === 'redeem_reward') {
         card.stamps = 0;
         showReview = !!tenant.google_review_url; // nudge a review right after the reward
         render();
         toast(t('toastRedeemed'));
-      } else if (pinAction === 'redeem_birthday') {
+      } else if (action === 'redeem_birthday') {
         render();                 // re-render -> banner switches to "claimed this year"
         celebrate(birthdayReward());
       } else {
@@ -1104,7 +1126,7 @@ async function submitPin() {
       const msg = {
         bad_pin: t('errBadPin'),
         rate_limited: t('errRate'),
-        too_fast: t('errFast'),
+        daily_done: t('errDailyDone'),
         card_not_full: t('errNotFull'),
         demo_over: t('errDemoOver'),
         not_birthday: t('errNotBday'),
@@ -1153,6 +1175,15 @@ function toast(text, isError = false) {
     } else {
       card = await backend.loadOrCreateCard(tenant.id);
       render();
+      // Customer scanned the staff QR -> ?grant=CODE. Auto-apply it: redeem if
+      // the card is already full, otherwise add a stamp. Then strip the code
+      // from the URL so a refresh/bookmark can't replay it.
+      const grant = params.get('grant');
+      if (grant) {
+        const full = card.stamps >= tenant.stamps_needed;
+        history.replaceState({}, '', `?b=${encodeURIComponent(slug)}${lang === 'en' ? '&lang=en' : ''}`);
+        await runGrant(full ? 'redeem_reward' : 'add_stamp', grant);
+      }
     }
   } catch (e) {
     app.innerHTML = `<div class="loading">${t('loadingNotFound')}</div>`;
