@@ -695,6 +695,8 @@ function wireReview() {
 function render() {
   setTheme();
   const full = card.stamps >= tenant.stamps_needed;
+  // Running as an installed PWA? Then "no install needed" is moot — skip that hint.
+  const installed = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
   const stampIcon = tenant.stamp_icon || '🍴'; // restaurant-flavored default; per-tenant override
   const grid = Array.from({ length: tenant.stamps_needed }, (_, i) => {
@@ -728,6 +730,7 @@ function render() {
 
     <button class="cta" id="actionBtn">${full ? t('redeem') : t('getStamp')}</button>
     <p class="small-print">${isDemo ? t('staffPressDemo') : t('staffPress')}</p>
+    ${installed ? '' : `<p class="small-print">${t('savedHint')}</p>`}
     ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
     ${isPreview ? `<button class="reset-link" id="resetBtn">${t('reset')}</button>` : ''}
     ${birthdayHtml()}
