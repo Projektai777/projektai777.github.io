@@ -26,7 +26,7 @@ export default {
     primary_color: '#b91c1c',
     stamps_needed: 10,
     reward_text: '10-as patiekalas nemokamai',
-    stamp_icon: '🍽️',                     // restaurant-flavored stamp (default for any tenant; override per business)
+    stamp_icon: '🍴',                     // restaurant-flavored stamp (default for any tenant; override per business)
     // milestones = tarpiniai prizai (rodo, kad sistema lanksti)
     milestones: [
       { at: 5, text: 'Nemokamas gardus kompotas' },

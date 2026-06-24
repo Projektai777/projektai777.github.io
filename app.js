@@ -593,7 +593,7 @@ function render() {
   setTheme();
   const full = card.stamps >= tenant.stamps_needed;
 
-  const stampIcon = tenant.stamp_icon || '🍽️'; // restaurant-flavored default; per-tenant override
+  const stampIcon = tenant.stamp_icon || '🍴'; // restaurant-flavored default; per-tenant override
   const grid = Array.from({ length: tenant.stamps_needed }, (_, i) => {
     const filled = i < card.stamps;
     const milestone = (tenant.milestones || []).some((m) => m.at === i + 1);

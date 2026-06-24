@@ -109,8 +109,11 @@ h1 { font-size: 1.6rem; letter-spacing: -0.01em; }
 .stamp.filled {
   background: var(--brand);
   border-color: var(--brand);
+  font-size: 1.5rem;
   animation: pop .3s ease;
 }
+/* emoji stamps are multicolor; a soft white halo lifts them off the brand fill */
+.stamp.filled { text-shadow: 0 1px 2px rgb(0 0 0 / .25); }
 
 @keyframes pop {
   0% { transform: scale(.5); }
