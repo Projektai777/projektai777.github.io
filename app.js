@@ -108,13 +108,8 @@ const STR = {
     reviewLater: 'Kitą kartą',
     // birthday
     bdayPromptTitle: '🎂 Gimtadienio dovana',
-    bdayPromptLead: 'Įveskite gimtadienį ir gaukite dovaną tą dieną — be jokių registracijų.',
-    bdaySave: 'Išsaugoti',
-    bdaySaved: (r) => `🎂 Jūsų gimtadienio dovana paruošta: <strong>${r}</strong>. Pasimatysime tą dieną!`,
-    bdayShowId: (r) => `🎉 Su gimtadieniu! Jūsų dovana: <strong>${r}</strong>. Parodykite asmens dokumentą darbuotojui ir paspauskite „Atsiimti dovaną".`,
+    bdayShowId: (r) => `Gimtadienio proga Jūsų laukia <strong>${r}</strong>. Tą dieną parodykite asmens dokumentą darbuotojui ir paspauskite „Atsiimti dovaną" — jokių registracijų ar sąlygų.`,
     bdayClaimBtn: '🎁 Atsiimti dovaną',
-    bdayClaimed: '🎂 Gimtadienio dovana jau atsiimta šiemet. Iki kitų metų! 🥳',
-    bdayChange: 'Pakeisti datą',
     pinHintBday: '⚠️ Darbuotojas: patikrinkite kliento asmens dokumentą (gimimo datą), tada parodykite kodą.',
     // owner page
     back: '← Atgal į kortelę',
@@ -227,13 +222,8 @@ const STR = {
     reviewBtn: '⭐ Leave a review',
     reviewLater: 'Maybe later',
     bdayPromptTitle: '🎂 Birthday gift',
-    bdayPromptLead: 'Add your birthday and get a gift on the day — no sign-up needed.',
-    bdaySave: 'Save',
-    bdaySaved: (r) => `🎂 Your birthday gift is ready: <strong>${r}</strong>. See you on the day!`,
-    bdayShowId: (r) => `🎉 Happy birthday! Your gift: <strong>${r}</strong>. Show your ID to a staff member, then tap “Claim gift”.`,
+    bdayShowId: (r) => `On your birthday you get <strong>${r}</strong>. On the day, just show your ID to a staff member and tap “Claim gift” — no sign-up, no conditions.`,
     bdayClaimBtn: '🎁 Claim gift',
-    bdayClaimed: '🎂 Birthday gift already claimed this year. See you next year! 🥳',
-    bdayChange: 'Change date',
     pinHintBday: '⚠️ Staff: check the customer’s ID (date of birth), then show the code.',
     back: '← Back to the card',
     ownerTag: 'OWNER OVERVIEW · illustrative example',
@@ -459,17 +449,11 @@ const staticBackend = {
       return { ok: true };
     }
 
-    // Birthday gift: staff-released (staff code already verified above). Only on the
-    // actual birthday, and at most once per calendar year per device. Staff are
-    // told to check the customer's ID first (see pinHintBday) — that's the real
-    // anti-fraud control; the device limit just stops repeat taps.
+    // Birthday gift: NO app-side conditions. The staff ID check (staff verify the
+    // customer's document before scanning the QR — see pinHintBday) is the sole
+    // gate; the rotating staff code is already verified above. We don't store or
+    // check the birthday date, and there's no per-device once-a-year limit.
     if (fn === 'redeem_birthday') {
-      const b = loadBday();
-      if (!b || !b.md) return { ok: false, error: 'no_bday' };
-      if (!isBirthdayToday(b.md)) return { ok: false, error: 'not_birthday' };
-      // Already claimed this year on this device -> tell staff (works in demo too).
-      if (b.claimedYear === thisYear()) return { ok: false, error: 'bday_claimed' };
-      b.claimedYear = thisYear(); saveBday(b);
       return { ok: true };
     }
 
@@ -606,73 +590,28 @@ function ctaHtml() {
   return `<a class="pitch-owner" href="${ownerUrl}">${t('ownerLink')}</a>`;
 }
 
-// ---------- birthday reward ----------
-const bdayKey = `lojalumas_bday_${slug}`;
-function loadBday() {
-  try { return JSON.parse(localStorage.getItem(bdayKey) || 'null'); } catch { return null; }
-}
-function isBirthdayToday(md) {
-  if (!md) return false;
-  const d = new Date();
-  const today = `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  return md === today;
-}
-function thisYear() { return new Date().getFullYear(); }
 // Local calendar day (YYYY-MM-DD) — the daily-stamp cooldown resets at LOCAL
 // midnight, so it follows the customer's own timezone, not UTC.
 function todayLocal() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
-function saveBday(obj) { localStorage.setItem(bdayKey, JSON.stringify(obj)); }
 
+// ---------- birthday reward ----------
+// No conditions, no birthday capture: on their birthday the customer taps "Claim
+// gift", staff check their ID (the sole anti-fraud gate) and scan the QR. We never
+// store the birthday — showing the document is enough.
 function birthdayHtml() {
   if (!tenant.birthday_reward) return '';
-  const saved = loadBday();
-  const reward = birthdayReward();
-  if (saved && saved.md) {
-    if (isBirthdayToday(saved.md)) {
-      // Already used this year -> show the claimed notice (no claim button). In
-      // preview the "↺ Pradėti iš naujo" button clears this so it can be re-shown.
-      if (saved.claimedYear === thisYear()) {
-        return `<div class="bday-card bday-today">${t('bdayClaimed')}</div>`;
-      }
-      // The gift is released by STAFF (staff code) after checking the customer's ID —
-      // that ID check, not the device, is what stops fake birthdays.
-      return `<div class="bday-card bday-today">
-        <p>${t('bdayShowId', reward)}</p>
-        <button class="bday-claim" id="bdayClaim">${t('bdayClaimBtn')}</button></div>`;
-    }
-    return `<div class="bday-card">
-      <p>${t('bdaySaved', reward)}</p>
-      <button class="bday-change" id="bdayChange">${t('bdayChange')}</button></div>`;
-  }
-  return `<div class="bday-card bday-prompt">
+  return `<div class="bday-card bday-today">
     <h3>${t('bdayPromptTitle')}</h3>
-    <p>${t('bdayPromptLead')}</p>
-    <div class="bday-row">
-      <input type="date" id="bdayInput" class="bday-input" aria-label="${t('bdayPromptTitle')}">
-      <button class="bday-save" id="bdaySave">${t('bdaySave')}</button>
-    </div></div>`;
+    <p>${t('bdayShowId', birthdayReward())}</p>
+    <button class="bday-claim" id="bdayClaim">${t('bdayClaimBtn')}</button></div>`;
 }
 function wireBirthday() {
-  const save = document.getElementById('bdaySave');
-  if (save) {
-    save.onclick = () => {
-      const val = document.getElementById('bdayInput')?.value; // yyyy-mm-dd
-      if (!val || val.length < 10) return;
-      const md = val.slice(5); // mm-dd — store only month+day, never the year (less data, still no PII)
-      const prev = loadBday() || {};
-      // keep claimedYear across date edits, so changing the date can't reset the
-      // once-a-year limit (a full data wipe still can — the ID check covers that).
-      saveBday({ md, claimedYear: prev.claimedYear });
-      render();
-    };
-  }
-  const change = document.getElementById('bdayChange');
-  if (change) change.onclick = () => { const prev = loadBday() || {}; saveBday({ claimedYear: prev.claimedYear }); render(); };
   const claim = document.getElementById('bdayClaim');
-  if (claim) claim.onclick = () => stampAction('redeem_birthday'); // staff QR releases the gift
+  // Staff check the customer's ID, then scan the staff QR to release the gift.
+  if (claim) claim.onclick = () => stampAction('redeem_birthday');
 }
 
 // ---------- review nudge (after redeeming a reward) ----------
@@ -801,9 +740,6 @@ function resetCard() {
   card.stamps = 0;
   showReview = false;
   if (backend._save) backend._save({ stamps: 0, last: 0, fails: [] });
-  // demo only: also clear the birthday claim so the whole flow can be re-shown
-  const b = loadBday();
-  if (b && b.claimedYear) { delete b.claimedYear; saveBday(b); }
   render();
 }
 
@@ -1130,8 +1066,6 @@ async function runGrant(action, code) {
         daily_done: t('errDailyDone'),
         card_not_full: t('errNotFull'),
         demo_over: t('errDemoOver'),
-        not_birthday: t('errNotBday'),
-        bday_claimed: t('errBdayClaimed'),
       }[res.error] || t('errGeneric');
       toast(msg, true);
     }
