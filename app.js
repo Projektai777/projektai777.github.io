@@ -254,7 +254,15 @@ const STR = {
     qrLead: 'Scan the QR code with another phone — the card opens exactly as your guest will see it.',
     qrSteps: 'Scan the QR · collect stamps · claim your reward',
     printStandee: '🖨️ Print a counter standee →',
-    ownerContact: 'Want this for your business?',
+    startTitle: 'How we start',
+    startSteps: [
+      ['📩', 'You reach out', 'Drop us a line — we reply within 1 business day.'],
+      ['🎨', 'We tailor it to you', 'We adjust the design, rewards and features to your business — no commitment.'],
+      ['📄', 'We sign a clear contract', 'Fixed €1000, 1 year of support, no subscriptions.'],
+      ['✅', 'You pay', 'Once the result matches what your business needs.'],
+    ],
+    ctaLead: 'A one-time investment that works every day — no monthly fees.',
+    ownerContact: 'Ready to start?',
     ownerContactSub: 'Let’s talk →',
     ownerPrivacy: '🔒 No personal data — everything is stored on the guest’s phone.',
     faqTitle: 'Frequently asked questions',
@@ -923,6 +931,16 @@ function wireRoi() {
   custEl.oninput = update;
 }
 
+// "How we start" 4-step process — sets the flow: reach out -> we tailor -> sign -> pay.
+function startHtml() {
+  const steps = t('startSteps').map(([icon, title, desc], i) => `
+    <div class="start-step">
+      <div class="start-num">${i + 1}</div>
+      <div class="start-body"><span class="start-icon">${icon}</span><b>${title}</b><p>${desc}</p></div>
+    </div>`).join('');
+  return `<section class="panel start"><h3>${t('startTitle')}</h3><div class="start-steps">${steps}</div></section>`;
+}
+
 // FAQ accordion for the owner/sales page (native <details>, no JS needed).
 function faqHtml() {
   const items = t('faq').map(([q, a]) => `
@@ -975,6 +993,9 @@ function renderOwner() {
 
     ${faqHtml()}
 
+    ${startHtml()}
+
+    <p class="cta-lead">${t('ctaLead')}</p>
     <button class="cta cta-contact" id="copyEmailBtn">${t('ownerContact')}<span>${t('ownerContactSub')}</span></button>
     <p class="privacy">${t('ownerPrivacy')}</p>
   `;
