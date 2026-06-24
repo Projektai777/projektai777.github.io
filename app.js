@@ -92,8 +92,6 @@ const STR = {
     errDemoOver: 'Demonstracija baigėsi. Dėl pilnos versijos susisiekite el. paštu.',
     errGeneric: 'Klaida. Bandykite dar kartą.',
     errNet: 'Ryšio klaida. Patikrinkite internetą.',
-    errNotBday: 'Dovaną galima atsiimti tik gimtadienio dieną.',
-    errBdayClaimed: 'Gimtadienio dovana šiemet jau atsiimta.',
     flowTitle: 'Kaip tai veikia darbuotojui?',
     flow: [
       ['Darbuotojas parodo QR', 'Atsidaro savo kodų puslapį — QR keičiasi kas 30 s'],
@@ -208,8 +206,6 @@ const STR = {
     errDemoOver: 'The demo has ended. Contact us by email for the full version.',
     errGeneric: 'Something went wrong. Please try again.',
     errNet: 'Connection error. Check your internet.',
-    errNotBday: 'The gift can only be claimed on your birthday.',
-    errBdayClaimed: 'Birthday gift already claimed this year.',
     flowTitle: 'How does it work for staff?',
     flow: [
       ['Staff shows the QR', 'Opens their code page — the QR changes every 30 s'],
