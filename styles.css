@@ -436,6 +436,8 @@ dialog.celebrate strong { color: #1c1917; font-size: 1.1rem; }
 }
 .bday-claimed h3 { opacity: .7; }
 .bday-done { color: #57534e; font-weight: 600; margin-bottom: 0; }
+/* fine print under the birthday card: daily reset + no birthday stored */
+.bday-note { font-size: .72rem; color: #a8a29e; font-weight: 400; line-height: 1.4; margin: 10px 0 0; }
 /* staff ID-check warning inside the scan modal (birthday gift) */
 .pin-hint-warn {
   color: #b45309; font-weight: 600;

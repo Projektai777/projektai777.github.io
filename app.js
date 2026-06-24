@@ -113,6 +113,8 @@ const STR = {
     agoNow: 'ką tik',
     agoMin: (n) => `prieš ${n} min`,
     agoHour: (n) => `prieš ${n} val.`,
+    bdayNote: 'Atnaujinama kasdien (vidurnaktį); gimimo datos nesaugome.',
+    bdayNoteDemo: ' Demo režime galima kartoti.',
     // owner page
     back: '← Atgal į kortelę',
     ownerTag: 'SAVININKO APŽVALGA · iliustracinis pavyzdys',
@@ -229,6 +231,8 @@ const STR = {
     agoNow: 'just now',
     agoMin: (n) => `${n} min ago`,
     agoHour: (n) => `${n} h ago`,
+    bdayNote: 'Resets daily at midnight; your date of birth is never stored.',
+    bdayNoteDemo: ' Demo/preview can replay it.',
     back: '← Back to the card',
     ownerTag: 'OWNER OVERVIEW · illustrative example',
     whyTitle: 'Why does it pay off?',
@@ -640,16 +644,20 @@ function bdayAgo(ts) {
 // X ago" (at every restaurant) until local midnight; we never store a birthday date.
 function birthdayHtml() {
   if (!tenant.birthday_reward) return '';
+  // Small print: daily reset + no birthday stored (the demo-replay note only in preview).
+  const note = `<p class="bday-note">${t('bdayNote')}${isPreview ? t('bdayNoteDemo') : ''}</p>`;
   const claimedAt = birthdayClaimedAt();
   if (claimedAt) {
     return `<div class="bday-card bday-claimed">
       <h3>${t('bdayPromptTitle')}</h3>
-      <p class="bday-done" data-bday-since="${claimedAt}">${t('bdayClaimed', bdayAgo(claimedAt))}</p></div>`;
+      <p class="bday-done" data-bday-since="${claimedAt}">${t('bdayClaimed', bdayAgo(claimedAt))}</p>
+      ${note}</div>`;
   }
   return `<div class="bday-card bday-today">
     <h3>${t('bdayPromptTitle')}</h3>
     <p>${t('bdayShowId', birthdayReward())}</p>
-    <button class="bday-claim" id="bdayClaim">${t('bdayClaimBtn')}</button></div>`;
+    <button class="bday-claim" id="bdayClaim">${t('bdayClaimBtn')}</button>
+    ${note}</div>`;
 }
 let bdayTimer = null;
 function wireBirthday() {
