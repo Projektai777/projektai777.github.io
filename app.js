@@ -948,6 +948,13 @@ function openPinPad(action) {
   pinAction = action;
   pinBuffer = '';
   updateDots();
+  // For the birthday gift, remind staff to verify the customer's ID — this is
+  // the actual anti-fraud step. Other actions show the normal hint.
+  const hint = document.querySelector('#pinModal .pin-hint');
+  if (hint) {
+    hint.textContent = action === 'redeem_birthday' ? t('pinHintBday') : t('pinHint');
+    hint.classList.toggle('pin-hint-warn', action === 'redeem_birthday');
+  }
   modal.showModal();
 }
 
@@ -964,6 +971,9 @@ async function submitPin() {
         showReview = !!tenant.google_review_url; // nudge a review right after the reward
         render();
         toast(t('toastRedeemed'));
+      } else if (pinAction === 'redeem_birthday') {
+        render();                 // re-render -> banner switches to "claimed this year"
+        celebrate(birthdayReward());
       } else {
         card.stamps = res.stamps;
         render();
@@ -977,6 +987,8 @@ async function submitPin() {
         too_fast: t('errFast'),
         card_not_full: t('errNotFull'),
         demo_over: t('errDemoOver'),
+        not_birthday: t('errNotBday'),
+        bday_claimed: t('errBdayClaimed'),
       }[res.error] || t('errGeneric');
       toast(msg, true);
     }
