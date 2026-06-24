@@ -4,9 +4,9 @@
 // užpildykite formą ir įklijuokite sugeneruotą bloką čia.
 //
 // staff_secret    = atsitiktinis raktas, iš kurio /tools/staff.html
-//                   generuoja kas 30 s besikeičiantį 6 skaitmenų kodą
-//                   (kaip 2FA). Klientas jį įveda ar nuskaito QR — telefono
-//                   atiduoti nereikia.
+//                   generuoja kas 30 s besikeičiantį QR kodą (kaip 2FA).
+//                   Klientas jį nuskaito sava kamera — antspaudas užsiskaito
+//                   automatiškai, telefono atiduoti nereikia.
 // staff_pass_hash = SHA-256("slug:slaptažodis") — darbuotojo puslapio
 //                   slaptažodis (atrakina /tools/staff.html). Pats
 //                   slaptažodis niekur nesaugomas.

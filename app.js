@@ -1009,8 +1009,8 @@ function releaseCamera() {
 // customer at their phone's native camera app, which opens the staff QR's URL
 // and stamps on boot.
 function showScanFallback() {
-  const v = document.getElementById('scanVideo');
-  if (v) v.hidden = true;
+  const frame = scanModal && scanModal.querySelector('.scan-frame');
+  if (frame) frame.hidden = true; // hide the empty camera box
   const fb = document.getElementById('scanFallback');
   if (fb) { fb.hidden = false; fb.textContent = t('scanFallback'); }
 }
@@ -1028,6 +1028,8 @@ async function openScanner(action) {
   }
   if (fb) { fb.hidden = true; fb.textContent = ''; }
   if (video) video.hidden = false;
+  const frame = scanModal.querySelector('.scan-frame');
+  if (frame) frame.hidden = false; // reset after a previous fallback
   scanModal.showModal();
 
   // BarcodeDetector is native (no library) — fits the project's no-dep model.
