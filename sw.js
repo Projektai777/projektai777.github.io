@@ -6,8 +6,8 @@
 // prefer the fresh network copy and only fall back to cache when offline.
 // A cache-first worker once served a stale tenants.js and a new tenant
 // showed "Kortelė nerasta" for everyone who had visited before.
-const CACHE = 'lojalumas-v29';
-const SHELL = ['./', './index.html', './app.js', './tenants.js', './styles.css', './manifest.webmanifest'];
+const CACHE = 'lojalumas-v30';
+const SHELL = ['./', './index.html', './app.js', './tenants.js', './totp.js', './styles.css', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)));
