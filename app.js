@@ -62,8 +62,8 @@ const STR = {
     staffPress: 'Mygtuką spaudžia darbuotojas pirkimo metu.',
     autoFill: '✨ Užpildyti kortelę (demonstracija)',
     reset: '↺ Pradėti iš naujo',
-    installCta: '📲 Įdiegti į telefoną',
-    installHint: 'Atidarykite naršyklės meniu (⋮ arba ⋯) ir pasirinkite „Įdiegti programėlę" / „Pridėti prie pradžios ekrano". Veikia kaip programėlė, be App Store.',
+    installCta: '📲 Pridėti į pradžios ekraną',
+    installHint: 'Atidarykite naršyklės meniu (⋮ arba ⋯) ir pasirinkite „Pridėti prie pradžios ekrano" / „Įdiegti programėlę". Veikia kaip programėlė, be App Store.',
     installHintIos: 'Paspauskite „Bendrinti" (Share) ⬆️ naršyklės apačioje ir pasirinkite „Įtraukti į pradžios ekraną".',
     installBtn: 'Pridėti',
     ownerLink: '📊 Kuo tai naudinga verslui? →',
@@ -146,8 +146,8 @@ const STR = {
     staffPress: 'A staff member taps this button at checkout.',
     autoFill: '✨ Fill the card (demo)',
     reset: '↺ Start over',
-    installCta: '📲 Install on your phone',
-    installHint: 'Open the browser menu (⋮ or ⋯) and choose “Install app” / “Add to Home screen”. Works like an app, no App Store.',
+    installCta: '📲 Add to Home Screen',
+    installHint: 'Open the browser menu (⋮ or ⋯) and choose “Add to Home screen” / “Install app”. Works like an app, no App Store.',
     installHintIos: 'Tap the Share button ⬆️ at the bottom of the browser and choose “Add to Home Screen”.',
     installBtn: 'Add',
     ownerLink: '📊 How does this help the business? →',
@@ -521,15 +521,26 @@ function wireInstall() {
   const btn = document.getElementById('installBtn');
   if (!btn) return;
   btn.onclick = async () => {
-    const prompt = deferredInstall || window.__bip;
-    if (prompt) {
-      prompt.prompt();
-      try { await prompt.userChoice; } catch { /* ignore */ }
+    // Best case (Android Chrome/Edge): fire the real Add-to-Home-Screen dialog.
+    const evt = deferredInstall || window.__bip;
+    if (evt) {
+      evt.prompt();
+      let outcome = null;
+      try { ({ outcome } = await evt.userChoice); } catch { /* ignore */ }
       deferredInstall = null; window.__bip = null;
+      if (outcome === 'accepted') {
+        const hint = document.getElementById('installHint');
+        if (hint) hint.remove(); // installed — no longer needed
+      }
       return;
     }
+    // No programmatic dialog (iPhone Safari, or Chrome not offering it right
+    // now): reveal the manual steps and scroll them into view so they're found.
     const steps = document.getElementById('installSteps');
-    if (steps) steps.hidden = !steps.hidden; // reveal the manual instructions
+    if (steps) {
+      steps.hidden = false;
+      steps.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 }
 
@@ -649,8 +660,8 @@ function render() {
     <p class="small-print">${t('staffPress')}</p>
     ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
     ${isPreview ? `<button class="reset-link" id="resetBtn">${t('reset')}</button>` : ''}
-    ${birthdayHtml()}
     ${installHintHtml()}
+    ${birthdayHtml()}
     ${isPreview ? staffFlowHtml() : ''}
     ${isPreview ? ctaHtml() : ''}
     <p class="privacy">${t('privacy')}</p>
