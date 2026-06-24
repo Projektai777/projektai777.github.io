@@ -411,8 +411,8 @@ const supabaseBackend = {
 };
 
 // Static mode: no server at all. Stamps live in the phone's
-// localStorage; the PIN is verified against a SHA-256 hash from
-// tenants.js, so it never appears in the source in readable form.
+// localStorage; each one is authorised with a rotating staff code
+// (TOTP) verified against the tenant's staff_secret (see totp.js).
 const staticBackend = {
   _key: `lojalumas_card_${slug}`,
   _load() {
@@ -434,7 +434,7 @@ const staticBackend = {
     const c = this._load();
     const now = Date.now();
 
-    // Demo abuse guard: the demo PIN is public, so each device gets ONE
+    // Demo abuse guard: the demo code is effectively public, so each device gets ONE
     // full card cycle and 14 days — enough for any sales demo, useless
     // as a free production card (every customer's phone locks itself).
     if (isDemo) {
@@ -464,7 +464,7 @@ const staticBackend = {
       return { ok: true };
     }
 
-    // Birthday gift: staff-released (PIN already verified above). Only on the
+    // Birthday gift: staff-released (staff code already verified above). Only on the
     // actual birthday, and at most once per calendar year per device. Staff are
     // told to check the customer's ID first (see pinHintBday) — that's the real
     // anti-fraud control; the device limit just stops repeat taps.
@@ -699,7 +699,7 @@ function birthdayHtml() {
       if (saved.claimedYear === thisYear()) {
         return `<div class="bday-card bday-today">${t('bdayClaimed')}</div>`;
       }
-      // The gift is released by STAFF (PIN) after checking the customer's ID —
+      // The gift is released by STAFF (staff code) after checking the customer's ID —
       // that ID check, not the device, is what stops fake birthdays.
       return `<div class="bday-card bday-today">
         <p>${t('bdayShowId', reward)}</p>
@@ -734,7 +734,7 @@ function wireBirthday() {
   const change = document.getElementById('bdayChange');
   if (change) change.onclick = () => { const prev = loadBday() || {}; saveBday({ claimedYear: prev.claimedYear }); render(); };
   const claim = document.getElementById('bdayClaim');
-  if (claim) claim.onclick = () => openPinPad('redeem_birthday'); // staff PIN releases the gift
+  if (claim) claim.onclick = () => openPinPad('redeem_birthday'); // staff code releases the gift
 }
 
 // ---------- review nudge (after redeeming a reward) ----------

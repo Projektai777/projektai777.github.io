@@ -35,13 +35,13 @@ export default {
     hero_url: 'logos/berneliai-hero.jpg', // soft photo header behind the logo
     primary_color: '#b91c1c',
     stamps_needed: 10,
-    reward_text: '10-as patiekalas nemokamai',
-    reward_text_en: 'Free 10th dish',     // EN variantas (rodomas kai įjungtas EN)
+    reward_text: '25% nuolaida sąskaitai',
+    reward_text_en: '25% off your bill',  // EN variantas (rodomas kai įjungtas EN)
     stamp_icon: '🍴',                     // restaurant-flavored stamp (default for any tenant; override per business)
     // milestones = tarpiniai prizai (rodo, kad sistema lanksti); text_en = EN variantas
     milestones: [
-      { at: 5, text: 'Nemokamas gardus kompotas', text_en: 'Free fruit drink (kompotas)' },
-      { at: 10, text: '10-as patiekalas nemokamai', text_en: 'Free 10th dish' },
+      { at: 5, text: '10% nuolaida sąskaitai', text_en: '10% off your bill' },
+      { at: 10, text: '25% nuolaida sąskaitai', text_en: '25% off your bill' },
     ],
     birthday_reward: 'Nemokamas desertas gimtadienio proga', // gimtadienio dovana (rodo kortelėje)
     birthday_reward_en: 'Free birthday dessert',
