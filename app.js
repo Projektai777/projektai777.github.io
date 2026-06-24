@@ -62,8 +62,9 @@ const STR = {
     staffPress: 'Mygtuką spaudžia darbuotojas pirkimo metu.',
     autoFill: '✨ Užpildyti kortelę (demonstracija)',
     reset: '↺ Pradėti iš naujo',
-    installHint: '📲 Pridėkite prie pradžios ekrano — veikia kaip programėlė, be App Store.',
-    installHintIos: '📲 Pridėti prie pradžios ekrano: paspauskite „Bendrinti" (Share) ⬆️ ir pasirinkite „Į pradžios ekraną".',
+    installCta: '📲 Įdiegti į telefoną',
+    installHint: 'Atidarykite naršyklės meniu (⋮ arba ⋯) ir pasirinkite „Įdiegti programėlę" / „Pridėti prie pradžios ekrano". Veikia kaip programėlė, be App Store.',
+    installHintIos: 'Paspauskite „Bendrinti" (Share) ⬆️ naršyklės apačioje ir pasirinkite „Įtraukti į pradžios ekraną".',
     installBtn: 'Pridėti',
     ownerLink: '📊 Kuo tai naudinga verslui? →',
     privacy: '🔒 Jokių asmens duomenų — kortelė saugoma tik Jūsų telefone.',
@@ -145,8 +146,9 @@ const STR = {
     staffPress: 'A staff member taps this button at checkout.',
     autoFill: '✨ Fill the card (demo)',
     reset: '↺ Start over',
-    installHint: '📲 Add to your home screen — works like an app, no App Store.',
-    installHintIos: '📲 Add to home screen: tap the Share button ⬆️ and choose “Add to Home Screen”.',
+    installCta: '📲 Install on your phone',
+    installHint: 'Open the browser menu (⋮ or ⋯) and choose “Install app” / “Add to Home screen”. Works like an app, no App Store.',
+    installHintIos: 'Tap the Share button ⬆️ at the bottom of the browser and choose “Add to Home Screen”.',
     installBtn: 'Add',
     ownerLink: '📊 How does this help the business? →',
     privacy: '🔒 No personal data — the card is stored only on your phone.',
@@ -218,6 +220,14 @@ function t(key, ...args) {
   const v = (STR[lang] && STR[lang][key] !== undefined) ? STR[lang][key] : STR.lt[key];
   return typeof v === 'function' ? v(...args) : v;
 }
+
+// Tenant CONTENT (reward/milestone/birthday text) is authored in Lithuanian.
+// Show the optional *_en variant when the UI is in English; otherwise the LT
+// original. Business names stay as-is (proper nouns).
+function tc(ltVal, enVal) { return (lang === 'en' && enVal) ? enVal : ltVal; }
+const rewardText = () => tc(tenant.reward_text, tenant.reward_text_en);
+const milestoneText = (m) => tc(m.text, m.text_en);
+const birthdayReward = () => tc(tenant.birthday_reward, tenant.birthday_reward_en);
 
 function setLang(next) {
   lang = next === 'en' ? 'en' : 'lt';
@@ -499,16 +509,28 @@ const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
 
 function installHintHtml() {
   if (isStandalone) return ''; // already installed — nothing to prompt
-  const text = isIos ? t('installHintIos') : t('installHint');
+  const steps = isIos ? t('installHintIos') : t('installHint');
+  // The button is ALWAYS shown (the app is installable): if Chrome gave us the
+  // native prompt we fire it on tap; otherwise we reveal the menu steps, since
+  // beforeinstallprompt doesn't fire on iOS or right after an uninstall.
   return `<div class="install-hint" id="installHint">
-    <span>${text}</span>
-    <button class="install-btn" id="installBtn" hidden>${t('installBtn')}</button></div>`;
+    <button class="install-btn" id="installBtn">${t('installCta')}</button>
+    <p class="install-steps" id="installSteps" hidden>${steps}</p></div>`;
 }
 function wireInstall() {
   const btn = document.getElementById('installBtn');
-  if (!btn || !deferredInstall) return;
-  btn.hidden = false;
-  btn.onclick = async () => { deferredInstall.prompt(); deferredInstall = null; btn.hidden = true; };
+  if (!btn) return;
+  btn.onclick = async () => {
+    const prompt = deferredInstall || window.__bip;
+    if (prompt) {
+      prompt.prompt();
+      try { await prompt.userChoice; } catch { /* ignore */ }
+      deferredInstall = null; window.__bip = null;
+      return;
+    }
+    const steps = document.getElementById('installSteps');
+    if (steps) steps.hidden = !steps.hidden; // reveal the manual instructions
+  };
 }
 
 function staffFlowHtml() {
@@ -928,7 +950,9 @@ function toast(text, isError = false) {
   applyStaticStrings();
   const celebrateCloseBtn = document.getElementById('celebrateClose');
   if (celebrateCloseBtn) celebrateCloseBtn.onclick = () => document.getElementById('celebrateModal').close();
-  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; wireInstall(); });
+  deferredInstall = window.__bip || null; // event may have fired before this module ran
+  window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; window.__bip = e; });
+  window.addEventListener('appinstalled', () => { deferredInstall = null; window.__bip = null; });
   try {
     if (!slug && !isDemo) {
       // Installed-PWA launch loses the ?b= param: restore the last card.

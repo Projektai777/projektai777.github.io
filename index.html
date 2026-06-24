@@ -8,6 +8,13 @@
   <link rel="manifest" href="./manifest.webmanifest" id="manifest">
   <link rel="stylesheet" href="./styles.css">
   <link rel="apple-touch-icon" href="./icon-192.png" id="appleIcon">
+  <!-- Capture the install prompt AS EARLY AS POSSIBLE: Chrome can fire
+       beforeinstallprompt before the module script finishes loading, and a
+       missed event means no one-tap install. app.js reads window.__bip. -->
+  <script>
+    window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); window.__bip = e; });
+    window.addEventListener('appinstalled', function () { window.__bip = null; });
+  </script>
 </head>
 <body>
   <main id="app">
