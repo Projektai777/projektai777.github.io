@@ -39,6 +39,220 @@ function demoOverrides(t) {
   };
 }
 
+// =============================================================
+// i18n — Lithuanian default, English toggle (LT | EN).
+// Customer-facing card + owner pitch are fully translated so a
+// tourist-facing venue can show the card in English. Choice is
+// remembered per device (and overridable with ?lang=en).
+// =============================================================
+let lang = (params.get('lang') || localStorage.getItem('lojalumas_lang') || 'lt').toLowerCase();
+if (lang !== 'en') lang = 'lt';
+
+const STR = {
+  lt: {
+    subtitle: 'Lojalumo kortelė',
+    demoBadge: 'DEMO · darbuotojo PIN: 1234',
+    tiersTitle: 'Prizai pakeliui:',
+    tierStamps: (n) => `${n} antspaudai`,
+    prizeReady: (r) => `🎉 Jūsų prizas: <strong>${r}</strong>!`,
+    oneLeft: 'Liko <strong>1 antspaudas</strong> iki prizo!',
+    prizeIs: (r) => `Prizas: ${r}`,
+    redeem: '🎁 Atsiimti prizą',
+    getStamp: 'Gauti antspaudą',
+    staffPress: 'Mygtuką spaudžia darbuotojas pirkimo metu.',
+    autoFill: '✨ Užpildyti kortelę (demonstracija)',
+    reset: '↺ Pradėti iš naujo',
+    installHint: '📲 Pridėkite prie pradžios ekrano — veikia kaip programėlė, be App Store.',
+    installBtn: 'Pridėti',
+    ownerLink: '📊 Kuo tai naudinga verslui? →',
+    privacy: '🔒 Jokių asmens duomenų — kortelė saugoma tik Jūsų telefone.',
+    demoFooter: 'Demonstracinė versija · projektai777.koduojam@gmail.com',
+    celebrateTitle: 'Sveikiname!',
+    celebrateBtn: 'Puiku!',
+    celebratePrize: (r) => `Jūsų prizas:<br><strong>${r}</strong>`,
+    pinTitle: 'Darbuotojo PIN',
+    pinHint: 'Parodykite telefoną darbuotojui',
+    pinCancel: 'Atšaukti',
+    toastRedeemed: 'Prizas atsiimtas! Ačiū 🎉',
+    toastStamp: 'Antspaudas pridėtas ⭐',
+    toastEmail: '📋 El. paštas nukopijuotas',
+    reached: (txt) => `🎁 Pasiekta: ${txt}`,
+    errBadPin: 'Neteisingas PIN',
+    errRate: 'Per daug bandymų. Palaukite 10 min.',
+    errFast: 'Palaukite minutę tarp antspaudų',
+    errNotFull: 'Kortelė dar nepilna',
+    errDemoOver: 'Demonstracija baigėsi. Dėl pilnos versijos susisiekite el. paštu.',
+    errGeneric: 'Klaida. Bandykite dar kartą.',
+    errNet: 'Ryšio klaida. Patikrinkite internetą.',
+    flowTitle: 'Kaip tai veikia darbuotojui?',
+    flow: [
+      ['Svečias atidaro kortelę', 'Nuskaito QR kodą prie kasos arba paspaudžia nuorodą telefone'],
+      ['Darbuotojas įveda PIN', 'Patvirtina pirkimą trumpu 4 skaitmenų kodu'],
+      ['Pridedamas antspaudas', 'Kortelė užsipildo po vieną su kiekvienu apsilankymu'],
+      ['Surinko — gauna prizą', 'Svečias atsiima dovaną ir grįžta vėl jos užsidirbti'],
+    ],
+    // review nudge
+    reviewTitle: 'Patiko pas mus?',
+    reviewLead: 'Jūsų atsiliepimas labai padėtų. Tai užtruks vos minutę.',
+    reviewBtn: '⭐ Palikite atsiliepimą',
+    reviewLater: 'Kitą kartą',
+    // birthday
+    bdayPromptTitle: '🎂 Gimtadienio dovana',
+    bdayPromptLead: 'Įveskite gimtadienį ir gaukite dovaną tą dieną — be jokių registracijų.',
+    bdaySave: 'Išsaugoti',
+    bdaySaved: (r) => `🎂 Jūsų gimtadienio dovana paruošta: <strong>${r}</strong>. Pasimatysime tą dieną!`,
+    bdayToday: (r) => `🎉 Su gimtadieniu! Jūsų dovana: <strong>${r}</strong> — parodykite šį ekraną darbuotojui.`,
+    bdayChange: 'Pakeisti datą',
+    // owner page
+    back: '← Atgal į kortelę',
+    ownerTag: 'SAVININKO APŽVALGA · iliustracinis pavyzdys',
+    whyTitle: 'Kodėl tai apsimoka?',
+    whyLead: 'Lojalumo kortelė duoda svečiui priežastį grįžti būtent pas Jus — kad surinktų antspaudus ir atsiimtų prizą. Daugiau grįžtančių svečių reiškia daugiau pakartotinių apsilankymų.',
+    chartReturn: 'Klientų grįžtamumas',
+    chartNoApp: 'Be programos',
+    chartApp: 'Su programa',
+    chartNote: '*Iliustracinis pavyzdys, paremtas bendromis lojalumo programų tendencijomis.',
+    visitsTitle: 'Apsilankymai per mėnesį',
+    visitsNote: 'Svečiai, renkantys antspaudus, grįžta dažniau. *Pavyzdys.',
+    roiTitle: 'Kiek tai gali uždirbti?',
+    roiLead: 'Pastumkite slankiklius pagal savo verslą — pamatysite apytikslį papildomų pajamų potencialą.',
+    roiSpend: 'Vidutinis čekis',
+    roiCustomers: 'Klientų per dieną',
+    roiResultLabel: 'Papildomos pajamos per metus*',
+    roiPerMonth: (v) => `≈ ${v} per mėnesį`,
+    roiAssume: '*Skaičiuojama atsargiai: ~25% svečių naudoja kortelę ir grįžta vidutiniškai 1 kartą per mėnesį dažniau. Realūs skaičiai priklauso nuo verslo.',
+    qrTitle: 'Išbandykite kitu telefonu',
+    qrLead: 'Nuskaitykite QR kodą kitu telefonu — kortelė atsidarys taip, kaip ją matys Jūsų svečias.',
+    qrSteps: 'Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą',
+    printStandee: '🖨️ Spausdinti stovelį prie kasos →',
+    ownerContact: 'Norite to savo restoranui?',
+    ownerContactSub: 'Susisiekime →',
+    ownerPrivacy: '🔒 Jokių asmens duomenų — viskas saugoma svečio telefone.',
+    loadingScan: 'Nuskenuokite parduotuvės QR kodą.',
+    loadingNotFound: 'Kortelė nerasta. Patikrinkite QR kodą.',
+  },
+  en: {
+    subtitle: 'Loyalty card',
+    demoBadge: 'DEMO · staff PIN: 1234',
+    tiersTitle: 'Rewards along the way:',
+    tierStamps: (n) => `${n} stamps`,
+    prizeReady: (r) => `🎉 Your reward: <strong>${r}</strong>!`,
+    oneLeft: '<strong>1 stamp</strong> left until your reward!',
+    prizeIs: (r) => `Reward: ${r}`,
+    redeem: '🎁 Claim reward',
+    getStamp: 'Get a stamp',
+    staffPress: 'A staff member taps this button at checkout.',
+    autoFill: '✨ Fill the card (demo)',
+    reset: '↺ Start over',
+    installHint: '📲 Add to your home screen — works like an app, no App Store.',
+    installBtn: 'Add',
+    ownerLink: '📊 How does this help the business? →',
+    privacy: '🔒 No personal data — the card is stored only on your phone.',
+    demoFooter: 'Demo version · projektai777.koduojam@gmail.com',
+    celebrateTitle: 'Congratulations!',
+    celebrateBtn: 'Great!',
+    celebratePrize: (r) => `Your reward:<br><strong>${r}</strong>`,
+    pinTitle: 'Staff PIN',
+    pinHint: 'Show your phone to a staff member',
+    pinCancel: 'Cancel',
+    toastRedeemed: 'Reward claimed! Thank you 🎉',
+    toastStamp: 'Stamp added ⭐',
+    toastEmail: '📋 Email copied',
+    reached: (txt) => `🎁 Reached: ${txt}`,
+    errBadPin: 'Wrong PIN',
+    errRate: 'Too many attempts. Wait 10 min.',
+    errFast: 'Wait a minute between stamps',
+    errNotFull: 'The card isn’t full yet',
+    errDemoOver: 'The demo has ended. Contact us by email for the full version.',
+    errGeneric: 'Something went wrong. Please try again.',
+    errNet: 'Connection error. Check your internet.',
+    flowTitle: 'How does it work for staff?',
+    flow: [
+      ['Guest opens the card', 'Scans the QR code at the counter or taps the link on their phone'],
+      ['Staff enters the PIN', 'Confirms the purchase with a short 4-digit code'],
+      ['A stamp is added', 'The card fills up one stamp at a time, visit by visit'],
+      ['Card full — reward earned', 'The guest claims the gift and comes back to earn it again'],
+    ],
+    reviewTitle: 'Enjoyed your visit?',
+    reviewLead: 'A quick review would mean a lot. It takes less than a minute.',
+    reviewBtn: '⭐ Leave a review',
+    reviewLater: 'Maybe later',
+    bdayPromptTitle: '🎂 Birthday gift',
+    bdayPromptLead: 'Add your birthday and get a gift on the day — no sign-up needed.',
+    bdaySave: 'Save',
+    bdaySaved: (r) => `🎂 Your birthday gift is ready: <strong>${r}</strong>. See you on the day!`,
+    bdayToday: (r) => `🎉 Happy birthday! Your gift: <strong>${r}</strong> — show this screen to a staff member.`,
+    bdayChange: 'Change date',
+    back: '← Back to the card',
+    ownerTag: 'OWNER OVERVIEW · illustrative example',
+    whyTitle: 'Why does it pay off?',
+    whyLead: 'A loyalty card gives guests a reason to come back to you specifically — to collect stamps and claim a reward. More returning guests means more repeat visits.',
+    chartReturn: 'Customer return rate',
+    chartNoApp: 'Without app',
+    chartApp: 'With app',
+    chartNote: '*Illustrative example based on general loyalty-program trends.',
+    visitsTitle: 'Visits per month',
+    visitsNote: 'Guests collecting stamps come back more often. *Example.',
+    roiTitle: 'How much could it earn?',
+    roiLead: 'Drag the sliders to match your business — see the rough extra-revenue potential.',
+    roiSpend: 'Average bill',
+    roiCustomers: 'Customers per day',
+    roiResultLabel: 'Extra revenue per year*',
+    roiPerMonth: (v) => `≈ ${v} per month`,
+    roiAssume: '*Calculated conservatively: ~25% of guests use the card and return on average 1 extra time per month. Real numbers depend on your business.',
+    qrTitle: 'Try it on another phone',
+    qrLead: 'Scan the QR code with another phone — the card opens exactly as your guest will see it.',
+    qrSteps: 'Scan the QR · collect stamps · claim your reward',
+    printStandee: '🖨️ Print a counter standee →',
+    ownerContact: 'Want this for your business?',
+    ownerContactSub: 'Let’s talk →',
+    ownerPrivacy: '🔒 No personal data — everything is stored on the guest’s phone.',
+    loadingScan: 'Scan the shop’s QR code.',
+    loadingNotFound: 'Card not found. Check the QR code.',
+  },
+};
+
+function t(key, ...args) {
+  const v = (STR[lang] && STR[lang][key] !== undefined) ? STR[lang][key] : STR.lt[key];
+  return typeof v === 'function' ? v(...args) : v;
+}
+
+function setLang(next) {
+  lang = next === 'en' ? 'en' : 'lt';
+  localStorage.setItem('lojalumas_lang', lang);
+  document.documentElement.lang = lang;
+  applyStaticStrings();
+  rerender();
+}
+
+function langToggleHtml() {
+  const on = (l) => l === lang ? ' lang-on' : '';
+  return `<div class="lang-toggle" id="langToggle" role="group" aria-label="Language">
+    <button class="lang-btn${on('lt')}" data-lang="lt">LT</button>
+    <button class="lang-btn${on('en')}" data-lang="en">EN</button>
+  </div>`;
+}
+function wireLangToggle() {
+  const el = document.getElementById('langToggle');
+  if (!el) return;
+  el.onclick = (e) => { const l = e.target.dataset?.lang; if (l && l !== lang) setLang(l); };
+}
+
+// Static strings that live in index.html (modals) — keep them in sync with lang.
+function applyStaticStrings() {
+  const set = (sel, val) => { const n = document.querySelector(sel); if (n) n.textContent = val; };
+  set('#pinTitle', t('pinTitle'));
+  set('.pin-hint', t('pinHint'));
+  set('#pinCancel', t('pinCancel'));
+  set('#celebrateModal h2', t('celebrateTitle'));
+  set('#celebrateClose', t('celebrateBtn'));
+}
+
+function rerender() {
+  if (view === 'owner') renderOwner();
+  else if (card) render();
+}
+
 // ---------- tiny Supabase REST helpers (no SDK needed) ----------
 async function sbSelect(view, query) {
   const r = await fetch(`${SUPABASE_URL}/rest/v1/${view}?${query}`, {
@@ -170,12 +384,13 @@ const backend = isStatic ? staticBackend : supabaseBackend;
 // ---------- state ----------
 let tenant = null;
 let card = null;
+let showReview = false; // set right after a reward is redeemed -> review nudge banner
 
 // ---------- rendering ----------
 function setTheme() {
   document.getElementById('themeColor').content = tenant.primary_color;
   document.documentElement.style.setProperty('--brand', tenant.primary_color);
-  document.title = `${tenant.business_name} — lojalumo kortelė`;
+  document.title = `${tenant.business_name} — ${t('subtitle').toLowerCase()}`;
   setAppIcon();
 }
 
@@ -218,7 +433,7 @@ function headerHtml() {
     : `<div class="logo logo-fallback">${tenant.business_name.trim()[0].toUpperCase()}</div>`;
   // a wordmark logo already contains the name, so skip the redundant <h1>
   const name = tenant.logo_wide ? '' : `<h1>${tenant.business_name}</h1>`;
-  const inner = `${logo}${name}<p class="subtitle">Lojalumo kortelė</p>`;
+  const inner = `${logo}${name}<p class="subtitle">${t('subtitle')}</p>`;
   if (tenant.hero_url) {
     return `<header class="has-hero" style="--hero:url('${tenant.hero_url}')"><div class="hero-content">${inner}</div></header>`;
   }
@@ -231,15 +446,15 @@ function tiersHtml() {
     const done = card.stamps >= m.at;
     return `<div class="tier ${done ? 'tier-done' : ''}">
       <span class="tier-badge">${done ? '✓' : m.at}</span>
-      <span class="tier-text"><b>${m.at} antspaudai</b> · ${m.text}</span></div>`;
+      <span class="tier-text"><b>${t('tierStamps', m.at)}</b> · ${m.text}</span></div>`;
   }).join('');
-  return `<div class="tiers"><p class="tiers-title">Prizai pakeliui:</p>${items}</div>`;
+  return `<div class="tiers"><p class="tiers-title">${t('tiersTitle')}</p>${items}</div>`;
 }
 
 function installHintHtml() {
   return `<div class="install-hint" id="installHint">
-    <span>📲 Pridėkite prie pradžios ekrano — veikia kaip programėlė, be App Store.</span>
-    <button class="install-btn" id="installBtn" hidden>Pridėti</button></div>`;
+    <span>${t('installHint')}</span>
+    <button class="install-btn" id="installBtn" hidden>${t('installBtn')}</button></div>`;
 }
 function wireInstall() {
   const btn = document.getElementById('installBtn');
@@ -249,23 +464,81 @@ function wireInstall() {
 }
 
 function staffFlowHtml() {
-  const steps = [
-    { n: 1, icon: '📱', t: 'Svečias atidaro kortelę', s: 'Nuskaito QR kodą prie kasos arba paspaudžia nuorodą telefone' },
-    { n: 2, icon: '🔢', t: 'Darbuotojas įveda PIN', s: 'Patvirtina pirkimą trumpu 4 skaitmenų kodu' },
-    { n: 3, icon: '⭐', t: 'Pridedamas antspaudas', s: 'Kortelė užsipildo po vieną su kiekvienu apsilankymu' },
-    { n: 4, icon: '🎁', t: 'Surinko — gauna prizą', s: 'Svečias atsiima dovaną ir grįžta vėl jos užsidirbti' },
-  ];
-  const cells = steps.map((st, i) => `
+  const icons = ['📱', '🔢', '⭐', '🎁'];
+  const cells = t('flow').map(([title, sub], i) => `
     <div class="flow-step">
-      <div class="flow-num">${st.n}</div>
-      <div class="flow-body"><span class="flow-icon">${st.icon}</span><b>${st.t}</b><p>${st.s}</p></div>
-    </div>${i < steps.length - 1 ? '<div class="flow-arrow">▼</div>' : ''}`).join('');
-  return `<section class="flow-wrap"><h3 class="flow-title">Kaip tai veikia darbuotojui?</h3><div class="flow">${cells}</div></section>`;
+      <div class="flow-num">${i + 1}</div>
+      <div class="flow-body"><span class="flow-icon">${icons[i]}</span><b>${title}</b><p>${sub}</p></div>
+    </div>${i < 3 ? '<div class="flow-arrow">▼</div>' : ''}`).join('');
+  return `<section class="flow-wrap"><h3 class="flow-title">${t('flowTitle')}</h3><div class="flow">${cells}</div></section>`;
 }
 
 function ctaHtml() {
   const ownerUrl = `?b=${encodeURIComponent(slug)}&view=owner`;
-  return `<a class="pitch-owner" href="${ownerUrl}">📊 Kuo tai naudinga verslui? →</a>`;
+  return `<a class="pitch-owner" href="${ownerUrl}">${t('ownerLink')}</a>`;
+}
+
+// ---------- birthday reward ----------
+const bdayKey = `lojalumas_bday_${slug}`;
+function loadBday() {
+  try { return JSON.parse(localStorage.getItem(bdayKey) || 'null'); } catch { return null; }
+}
+function isBirthdayToday(md) {
+  if (!md) return false;
+  const d = new Date();
+  const today = `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return md === today;
+}
+function birthdayHtml() {
+  if (!tenant.birthday_reward) return '';
+  const saved = loadBday();
+  const reward = tenant.birthday_reward;
+  if (saved && saved.md) {
+    if (isBirthdayToday(saved.md)) {
+      return `<div class="bday-card bday-today">${t('bdayToday', reward)}</div>`;
+    }
+    return `<div class="bday-card">
+      <p>${t('bdaySaved', reward)}</p>
+      <button class="bday-change" id="bdayChange">${t('bdayChange')}</button></div>`;
+  }
+  return `<div class="bday-card bday-prompt">
+    <h3>${t('bdayPromptTitle')}</h3>
+    <p>${t('bdayPromptLead')}</p>
+    <div class="bday-row">
+      <input type="date" id="bdayInput" class="bday-input" aria-label="${t('bdayPromptTitle')}">
+      <button class="bday-save" id="bdaySave">${t('bdaySave')}</button>
+    </div></div>`;
+}
+function wireBirthday() {
+  const save = document.getElementById('bdaySave');
+  if (save) {
+    save.onclick = () => {
+      const val = document.getElementById('bdayInput')?.value; // yyyy-mm-dd
+      if (!val || val.length < 10) return;
+      const md = val.slice(5); // mm-dd — store only month+day, never the year (less data, still no PII)
+      localStorage.setItem(bdayKey, JSON.stringify({ md }));
+      render();
+    };
+  }
+  const change = document.getElementById('bdayChange');
+  if (change) change.onclick = () => { localStorage.removeItem(bdayKey); render(); };
+}
+
+// ---------- review nudge (after redeeming a reward) ----------
+function reviewBannerHtml() {
+  if (!showReview || !tenant.google_review_url) return '';
+  return `<div class="review-nudge" id="reviewNudge">
+    <h3>${t('reviewTitle')}</h3>
+    <p>${t('reviewLead')}</p>
+    <a class="review-go" href="${tenant.google_review_url}" target="_blank" rel="noopener">${t('reviewBtn')}</a>
+    <button class="review-later" id="reviewLater">${t('reviewLater')}</button>
+  </div>`;
+}
+function wireReview() {
+  const later = document.getElementById('reviewLater');
+  if (later) later.onclick = () => { showReview = false; render(); };
+  const go = document.querySelector('#reviewNudge .review-go');
+  if (go) go.addEventListener('click', () => { showReview = false; });
 }
 
 function render() {
@@ -280,14 +553,16 @@ function render() {
 
   const remaining = tenant.stamps_needed - card.stamps;
   const statusLine = full
-    ? `🎉 Jūsų prizas: <strong>${tenant.reward_text}</strong>!`
+    ? t('prizeReady', tenant.reward_text)
     : remaining === 1
-      ? `Liko <strong>1 antspaudas</strong> iki prizo!`
-      : `Prizas: ${tenant.reward_text}`;
+      ? t('oneLeft')
+      : t('prizeIs', tenant.reward_text);
 
   app.innerHTML = `
-    ${isDemo ? `<div class="demo-badge">DEMO · darbuotojo PIN: 1234</div>` : ''}
+    ${langToggleHtml()}
+    ${isDemo ? `<div class="demo-badge">${t('demoBadge')}</div>` : ''}
     ${headerHtml()}
+    ${reviewBannerHtml()}
 
     <section class="card-box ${full ? 'card-full' : ''}">
       <div class="card-accent"></div>
@@ -298,20 +573,24 @@ function render() {
     </section>
     ${tiersHtml()}
 
-    <button class="cta" id="actionBtn">${full ? '🎁 Atsiimti prizą' : 'Gauti antspaudą'}</button>
-    <p class="small-print">Mygtuką spaudžia darbuotojas pirkimo metu.</p>
-    ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">✨ Užpildyti kortelę (demonstracija)</button>` : ''}
-    ${isPreview ? `<button class="reset-link" id="resetBtn">↺ Pradėti iš naujo</button>` : ''}
+    <button class="cta" id="actionBtn">${full ? t('redeem') : t('getStamp')}</button>
+    <p class="small-print">${t('staffPress')}</p>
+    ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
+    ${isPreview ? `<button class="reset-link" id="resetBtn">${t('reset')}</button>` : ''}
+    ${birthdayHtml()}
     ${installHintHtml()}
     ${isPreview ? staffFlowHtml() : ''}
     ${isPreview ? ctaHtml() : ''}
-    <p class="privacy">🔒 Jokių asmens duomenų — kortelė saugoma tik Jūsų telefone.</p>
-    ${isDemo ? '<p class="small-print">Demonstracinė versija · projektai777.koduojam@gmail.com</p>' : ''}
+    <p class="privacy">${t('privacy')}</p>
+    ${isDemo ? `<p class="small-print">${t('demoFooter')}</p>` : ''}
   `;
 
   document.getElementById('actionBtn').onclick = () => openPinPad(full ? 'redeem_reward' : 'add_stamp');
   const af = document.getElementById('autoFillBtn'); if (af) af.onclick = autoFill;
   const rs = document.getElementById('resetBtn'); if (rs) rs.onclick = resetCard;
+  wireLangToggle();
+  wireBirthday();
+  wireReview();
   wireInstall();
 }
 
@@ -335,7 +614,7 @@ function confetti() {
 function celebrate(rewardText) {
   const dlg = document.getElementById('celebrateModal');
   const txt = document.getElementById('celebrateText');
-  if (txt) txt.innerHTML = `Jūsų prizas:<br><strong>${rewardText}</strong>`;
+  if (txt) txt.innerHTML = t('celebratePrize', rewardText);
   if (dlg && !dlg.open) dlg.showModal();
   confetti();
 }
@@ -360,12 +639,13 @@ async function autoFill() {
     celebrate(tenant.reward_text);
   } else {
     const m = (tenant.milestones || []).find((x) => x.at === card.stamps);
-    if (m) toast(`🎁 Pasiekta: ${m.text}`);
+    if (m) toast(t('reached', m.text));
   }
 }
 
 function resetCard() {
   card.stamps = 0;
+  showReview = false;
   if (backend._save) backend._save({ stamps: 0, last: 0, fails: [] });
   render();
 }
@@ -399,7 +679,53 @@ function sparkline(points) {
 function drawQr(targetUrl) {
   const el = document.getElementById('standeeQr');
   if (!el) return;
-  el.innerHTML = `<img class="qr-img" alt="QR kodas — ${tenant.business_name}" src="${qrSrc(targetUrl, 400)}">`;
+  el.innerHTML = `<img class="qr-img" alt="QR — ${tenant.business_name}" src="${qrSrc(targetUrl, 400)}">`;
+}
+
+// ---------- ROI calculator (owner page) ----------
+const euro = (n) => '€' + Math.round(n).toLocaleString('lt-LT');
+function roiYearly(spend, customers) {
+  // Conservative model: a share of guests join the card and come back ~1
+  // extra time per month. Extra annual revenue = customers/day * adoption
+  // * 12 extra visits/yr * average bill. Adoption fixed at 25% (defensible).
+  const adoption = 0.25;
+  return customers * adoption * 12 * spend;
+}
+function roiHtml() {
+  const spend = 12, customers = 80; // sensible starting point for a café/restaurant
+  return `<section class="panel roi">
+    <h3>${t('roiTitle')}</h3>
+    <p class="panel-lead">${t('roiLead')}</p>
+    <label class="roi-field">
+      <span class="roi-label">${t('roiSpend')}: <b id="roiSpendVal">${euro(spend)}</b></span>
+      <input type="range" id="roiSpend" min="3" max="60" step="1" value="${spend}">
+    </label>
+    <label class="roi-field">
+      <span class="roi-label">${t('roiCustomers')}: <b id="roiCustVal">${customers}</b></span>
+      <input type="range" id="roiCust" min="10" max="400" step="5" value="${customers}">
+    </label>
+    <div class="roi-result">
+      <span class="roi-result-label">${t('roiResultLabel')}</span>
+      <span class="roi-amount" id="roiYear">${euro(roiYearly(spend, customers))}</span>
+      <span class="roi-month" id="roiMonth">${t('roiPerMonth', euro(roiYearly(spend, customers) / 12))}</span>
+    </div>
+    <p class="chart-note">${t('roiAssume')}</p>
+  </section>`;
+}
+function wireRoi() {
+  const spendEl = document.getElementById('roiSpend');
+  const custEl = document.getElementById('roiCust');
+  if (!spendEl || !custEl) return;
+  const update = () => {
+    const spend = +spendEl.value, customers = +custEl.value;
+    document.getElementById('roiSpendVal').textContent = euro(spend);
+    document.getElementById('roiCustVal').textContent = customers;
+    const yearly = roiYearly(spend, customers);
+    document.getElementById('roiYear').textContent = euro(yearly);
+    document.getElementById('roiMonth').textContent = t('roiPerMonth', euro(yearly / 12));
+  };
+  spendEl.oninput = update;
+  custEl.oninput = update;
 }
 
 function renderOwner() {
@@ -407,46 +733,51 @@ function renderOwner() {
   const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}`;
   const standeeUrl = `tools/standee.html?b=${encodeURIComponent(slug)}`;
   app.innerHTML = `
-    <a class="back-link" href="?b=${encodeURIComponent(slug)}">← Atgal į kortelę</a>
+    ${langToggleHtml()}
+    <a class="back-link" href="?b=${encodeURIComponent(slug)}">${t('back')}</a>
     ${headerHtml()}
-    <div class="owner-tag">SAVININKO APŽVALGA · iliustracinis pavyzdys</div>
+    <div class="owner-tag">${t('ownerTag')}</div>
 
     <section class="panel">
-      <h3>Kodėl tai apsimoka?</h3>
-      <p class="panel-lead">Lojalumo kortelė duoda svečiui priežastį grįžti būtent pas Jus — kad surinktų antspaudus ir atsiimtų prizą. Daugiau grįžtančių svečių reiškia daugiau pakartotinių apsilankymų.</p>
-      ${barChart('Klientų grįžtamumas', 32, 61, 'Be programos', 'Su programa', '*Iliustracinis pavyzdys, paremtas bendromis lojalumo programų tendencijomis.')}
+      <h3>${t('whyTitle')}</h3>
+      <p class="panel-lead">${t('whyLead')}</p>
+      ${barChart(t('chartReturn'), 32, 61, t('chartNoApp'), t('chartApp'), t('chartNote'))}
     </section>
 
     <section class="panel">
-      <h3>Apsilankymai per mėnesį</h3>
+      <h3>${t('visitsTitle')}</h3>
       ${sparkline([28, 33, 41, 48, 58, 71])}
-      <p class="chart-note">Svečiai, renkantys antspaudus, grįžta dažniau. *Pavyzdys.</p>
+      <p class="chart-note">${t('visitsNote')}</p>
     </section>
+
+    ${roiHtml()}
 
     <section class="panel qr-test">
-      <h3>Išbandykite kitu telefonu</h3>
-      <p class="panel-lead">Nuskaitykite QR kodą kitu telefonu — kortelė atsidarys taip, kaip ją matys Jūsų svečias.</p>
+      <h3>${t('qrTitle')}</h3>
+      <p class="panel-lead">${t('qrLead')}</p>
       <div class="standee-mock">
         <div class="standee-top"></div>
         <p class="sm-name">${tenant.business_name}</p>
         <p class="sm-reward">${tenant.reward_text}</p>
         <div id="standeeQr"></div>
-        <p class="sm-steps">Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą</p>
+        <p class="sm-steps">${t('qrSteps')}</p>
       </div>
-      <a class="pitch-owner" href="${standeeUrl}">🖨️ Spausdinti stovelį prie kasos →</a>
+      <a class="pitch-owner" href="${standeeUrl}">${t('printStandee')}</a>
     </section>
 
-    <button class="cta cta-contact" id="copyEmailBtn">Norite to savo restoranui?<span>Susisiekime →</span></button>
-    <p class="privacy">🔒 Jokių asmens duomenų — viskas saugoma svečio telefone.</p>
+    <button class="cta cta-contact" id="copyEmailBtn">${t('ownerContact')}<span>${t('ownerContactSub')}</span></button>
+    <p class="privacy">${t('ownerPrivacy')}</p>
   `;
   drawQr(cardUrl);
+  wireLangToggle();
+  wireRoi();
   const ce = document.getElementById('copyEmailBtn');
   if (ce) ce.onclick = copyEmail;
 }
 
 const CONTACT_EMAIL = 'projektai777.koduojam@gmail.com';
 function copyEmail() {
-  const done = () => toast('📋 El. paštas nukopijuotas');
+  const done = () => toast(t('toastEmail'));
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(CONTACT_EMAIL).then(done).catch(() => fallbackCopy(CONTACT_EMAIL, done));
   } else {
@@ -508,40 +839,43 @@ async function submitPin() {
       modal.close();
       if (pinAction === 'redeem_reward') {
         card.stamps = 0;
+        showReview = !!tenant.google_review_url; // nudge a review right after the reward
         render();
-        toast('Prizas atsiimtas! Ačiū 🎉');
+        toast(t('toastRedeemed'));
       } else {
         card.stamps = res.stamps;
         render();
         if (res.full) celebrate(tenant.reward_text);
-        else toast('Antspaudas pridėtas ⭐');
+        else toast(t('toastStamp'));
       }
     } else {
       const msg = {
-        bad_pin: 'Neteisingas PIN',
-        rate_limited: 'Per daug bandymų. Palaukite 10 min.',
-        too_fast: 'Palaukite minutę tarp antspaudų',
-        card_not_full: 'Kortelė dar nepilna',
-        demo_over: 'Demonstracija baigėsi. Dėl pilnos versijos susisiekite el. paštu.',
-      }[res.error] || 'Klaida. Bandykite dar kartą.';
+        bad_pin: t('errBadPin'),
+        rate_limited: t('errRate'),
+        too_fast: t('errFast'),
+        card_not_full: t('errNotFull'),
+        demo_over: t('errDemoOver'),
+      }[res.error] || t('errGeneric');
       toast(msg, true);
     }
   } catch {
-    toast('Ryšio klaida. Patikrinkite internetą.', true);
+    toast(t('errNet'), true);
   }
 }
 
 function toast(text, isError = false) {
-  const t = document.createElement('div');
-  t.className = `toast ${isError ? 'toast-err' : ''}`;
-  t.textContent = text;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2500);
+  const el = document.createElement('div');
+  el.className = `toast ${isError ? 'toast-err' : ''}`;
+  el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2500);
 }
 
 // ---------- boot ----------
 (async () => {
+  document.documentElement.lang = lang;
   buildPad();
+  applyStaticStrings();
   const celebrateCloseBtn = document.getElementById('celebrateClose');
   if (celebrateCloseBtn) celebrateCloseBtn.onclick = () => document.getElementById('celebrateModal').close();
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; wireInstall(); });
@@ -550,7 +884,7 @@ function toast(text, isError = false) {
       // Installed-PWA launch loses the ?b= param: restore the last card.
       const last = localStorage.getItem('lojalumas_last');
       if (last) { location.replace(`?b=${encodeURIComponent(last)}`); return; }
-      app.innerHTML = '<div class="loading">Nuskenuokite parduotuvės QR kodą.</div>';
+      app.innerHTML = `<div class="loading">${t('loadingScan')}</div>`;
       return;
     }
     tenant = demoOverrides(await backend.loadTenant());
@@ -563,7 +897,7 @@ function toast(text, isError = false) {
       render();
     }
   } catch (e) {
-    app.innerHTML = `<div class="loading">Kortelė nerasta. Patikrinkite QR kodą.</div>`;
+    app.innerHTML = `<div class="loading">${t('loadingNotFound')}</div>`;
   }
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 })();
