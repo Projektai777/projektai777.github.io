@@ -460,45 +460,34 @@ function makeSquareIcon(src) {
   });
 }
 
-// Point the "add to home screen" shortcut (Android manifest + iOS apple-touch)
-// at the tenant's own logo. icon_url (a square asset) is preferred; otherwise we
-// square-pad logo_url; if neither works we fall back to the bundled icon so the
-// app stays installable no matter what.
+// Point the "add to home screen" shortcut at the tenant's own logo.
+//
+// IMPORTANT: Android installs a PWA by minting a WebAPK on Google's servers,
+// which must FETCH the manifest + icon from real web URLs. A blob:/data: manifest
+// is local to the browser, so the mint hangs forever ("Installing…" never
+// finishes). So the manifest must be a REAL hosted file: each branded tenant ships
+// `manifests/<slug>.webmanifest` (a real file, real icon URL). Tenants without one
+// keep the default static manifest.webmanifest (generic icon, but still installs).
+// The apple-touch-icon (iOS) is set client-side and can be a data: URL safely —
+// iOS "Add to Home Screen" has no server-side minting step.
 async function setAppIcon() {
-  const source = tenant.icon_url || tenant.logo_url;
-  const absSource = source ? new URL(source, location.href).href : null;
-  const icon = (await makeSquareIcon(absSource)) || new URL('./icon-512.png', location.href).href;
-
+  // iOS icon: prefer a ready-made square icon file (app_icon); else square-pad the
+  // logo on the fly (data URL is fine on iOS — no server minting). Else fall back.
+  let appleIconUrl;
+  if (tenant.app_icon) {
+    appleIconUrl = new URL(tenant.app_icon, location.href).href;
+  } else {
+    const source = tenant.icon_url || tenant.logo_url;
+    const absSource = source ? new URL(source, location.href).href : null;
+    appleIconUrl = (await makeSquareIcon(absSource)) || new URL('./icon-512.png', location.href).href;
+  }
   const apple = document.getElementById('appleIcon');
-  if (apple) apple.href = icon;
+  if (apple) apple.href = appleIconUrl;
 
-  // Rewrite the PWA manifest so the installed icon + label match the tenant.
-  // NOTE: a blob: manifest has no path, so start_url/scope MUST be absolute
-  // URLs (relative ones would resolve against the blob and break installability).
-  const base = `${location.origin}${location.pathname}`;
-  const manifest = {
-    id: slug ? `${base}?b=${encodeURIComponent(slug)}` : base,
-    name: tenant.business_name,
-    short_name: tenant.business_name,
-    start_url: slug ? `${base}?b=${encodeURIComponent(slug)}` : base,
-    scope: base,
-    display: 'standalone',
-    background_color: '#ffffff',
-    theme_color: tenant.primary_color || '#1f2937',
-    icons: [
-      { src: icon, sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: icon, sizes: '512x512', type: 'image/png', purpose: 'any' },
-      { src: icon, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
-    ],
-  };
-  const link = document.getElementById('manifest');
-  if (link) {
-    if (link.dataset.blob) URL.revokeObjectURL(link.dataset.blob);
-    const url = URL.createObjectURL(
-      new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' })
-    );
-    link.href = url;
-    link.dataset.blob = url;
+  // Android/desktop install: swap to the tenant's real manifest file if it has one.
+  if (tenant.app_manifest) {
+    const link = document.getElementById('manifest');
+    if (link) link.href = tenant.app_manifest; // resolves against the page URL
   }
 }
 
@@ -532,6 +521,24 @@ const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
   window.navigator.standalone === true;
 
+// Pull the add-to-home-screen UI the moment we know the app is installed.
+function hideInstallHint() {
+  const h = document.getElementById('installHint');
+  if (h) h.remove();
+}
+// Best-effort: detect an existing install even while running in a browser tab
+// (Chrome's getInstalledRelatedApps), on top of the display-mode/appinstalled
+// signals handled elsewhere.
+async function detectInstalled() {
+  if (isStandalone) { hideInstallHint(); return; }
+  try {
+    if (navigator.getInstalledRelatedApps) {
+      const apps = await navigator.getInstalledRelatedApps();
+      if (apps && apps.length) hideInstallHint();
+    }
+  } catch { /* ignore */ }
+}
+
 function installHintHtml() {
   if (isStandalone) return ''; // already installed — nothing to prompt
   const steps = isIos ? t('installHintIos') : t('installHint');
@@ -546,6 +553,7 @@ function installHintHtml() {
 function wireInstall() {
   const btn = document.getElementById('installBtn');
   if (!btn) return;
+  detectInstalled(); // hide right away if it's already installed on this machine
   btn.onclick = async () => {
     // Best case (Android Chrome/Edge): fire the real Add-to-Home-Screen dialog.
     const evt = deferredInstall || window.__bip;

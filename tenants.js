@@ -22,7 +22,9 @@ export default {
     business_name: 'Bernelių užeiga',
     logo_url: 'logos/berneliai-logo.png', // official wordmark logo
     logo_wide: true,                      // wordmark -> show as a wide plate, hide the redundant name heading
-    icon_url: 'logos/berneliai.png',      // square emblem -> home-screen / app icon (better than the wide wordmark)
+    icon_url: 'logos/berneliai.png',      // square brand image
+    app_icon: 'logos/berneliai-icon-512.png',          // real 512² PNG used as the home-screen icon (iOS + Android)
+    app_manifest: 'manifests/berneliai.webmanifest',   // real manifest file -> Android WebAPK install actually completes
     hero_url: 'logos/berneliai-hero.jpg', // soft photo header behind the logo
     primary_color: '#b91c1c',
     stamps_needed: 10,

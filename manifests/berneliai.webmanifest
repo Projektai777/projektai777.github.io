@@ -1,0 +1,14 @@
+{
+  "id": "../?b=berneliai",
+  "name": "Bernelių užeiga",
+  "short_name": "Bernelių užeiga",
+  "start_url": "../?b=berneliai",
+  "scope": "../",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#b91c1c",
+  "icons": [
+    { "src": "../logos/berneliai-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "../logos/berneliai-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
