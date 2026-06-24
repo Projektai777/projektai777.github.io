@@ -86,6 +86,8 @@ const STR = {
     errDemoOver: 'Demonstracija baigėsi. Dėl pilnos versijos susisiekite el. paštu.',
     errGeneric: 'Klaida. Bandykite dar kartą.',
     errNet: 'Ryšio klaida. Patikrinkite internetą.',
+    errNotBday: 'Dovaną galima atsiimti tik gimtadienio dieną.',
+    errBdayClaimed: 'Gimtadienio dovana šiemet jau atsiimta.',
     flowTitle: 'Kaip tai veikia darbuotojui?',
     flow: [
       ['Svečias atidaro kortelę', 'Nuskaito QR kodą prie kasos arba paspaudžia nuorodą telefone'],
@@ -103,8 +105,11 @@ const STR = {
     bdayPromptLead: 'Įveskite gimtadienį ir gaukite dovaną tą dieną — be jokių registracijų.',
     bdaySave: 'Išsaugoti',
     bdaySaved: (r) => `🎂 Jūsų gimtadienio dovana paruošta: <strong>${r}</strong>. Pasimatysime tą dieną!`,
-    bdayToday: (r) => `🎉 Su gimtadieniu! Jūsų dovana: <strong>${r}</strong> — parodykite šį ekraną darbuotojui.`,
+    bdayShowId: (r) => `🎉 Su gimtadieniu! Jūsų dovana: <strong>${r}</strong>. Parodykite asmens dokumentą darbuotojui ir paspauskite „Atsiimti dovaną".`,
+    bdayClaimBtn: '🎁 Atsiimti dovaną',
+    bdayClaimed: '🎂 Gimtadienio dovana jau atsiimta šiemet. Iki kitų metų! 🥳',
     bdayChange: 'Pakeisti datą',
+    pinHintBday: '⚠️ Darbuotojas: patikrinkite kliento asmens dokumentą (gimimo datą), tada įveskite PIN.',
     // owner page
     back: '← Atgal į kortelę',
     ownerTag: 'SAVININKO APŽVALGA · iliustracinis pavyzdys',
@@ -170,6 +175,8 @@ const STR = {
     errDemoOver: 'The demo has ended. Contact us by email for the full version.',
     errGeneric: 'Something went wrong. Please try again.',
     errNet: 'Connection error. Check your internet.',
+    errNotBday: 'The gift can only be claimed on your birthday.',
+    errBdayClaimed: 'Birthday gift already claimed this year.',
     flowTitle: 'How does it work for staff?',
     flow: [
       ['Guest opens the card', 'Scans the QR code at the counter or taps the link on their phone'],
@@ -185,8 +192,11 @@ const STR = {
     bdayPromptLead: 'Add your birthday and get a gift on the day — no sign-up needed.',
     bdaySave: 'Save',
     bdaySaved: (r) => `🎂 Your birthday gift is ready: <strong>${r}</strong>. See you on the day!`,
-    bdayToday: (r) => `🎉 Happy birthday! Your gift: <strong>${r}</strong> — show this screen to a staff member.`,
+    bdayShowId: (r) => `🎉 Happy birthday! Your gift: <strong>${r}</strong>. Show your ID to a staff member, then tap “Claim gift”.`,
+    bdayClaimBtn: '🎁 Claim gift',
+    bdayClaimed: '🎂 Birthday gift already claimed this year. See you next year! 🥳',
     bdayChange: 'Change date',
+    pinHintBday: '⚠️ Staff: check the customer’s ID (date of birth), then enter the PIN.',
     back: '← Back to the card',
     ownerTag: 'OWNER OVERVIEW · illustrative example',
     whyTitle: 'Why does it pay off?',
@@ -380,6 +390,19 @@ const staticBackend = {
       return { ok: true };
     }
 
+    // Birthday gift: staff-released (PIN already verified above). Only on the
+    // actual birthday, and at most once per calendar year per device. Staff are
+    // told to check the customer's ID first (see pinHintBday) — that's the real
+    // anti-fraud control; the device limit just stops repeat taps.
+    if (fn === 'redeem_birthday') {
+      const b = loadBday();
+      if (!b || !b.md) return { ok: false, error: 'no_bday' };
+      if (!isBirthdayToday(b.md)) return { ok: false, error: 'not_birthday' };
+      if (!isPreview && b.claimedYear === thisYear()) return { ok: false, error: 'bday_claimed' };
+      if (!isPreview) { b.claimedYear = thisYear(); saveBday(b); }
+      return { ok: true };
+    }
+
     // demo/preview skip the 60s cooldown so you can click through a full card
     if (!isPreview && c.last && now - c.last < 60 * 1000) {
       return { ok: false, error: 'too_fast' };
@@ -570,13 +593,24 @@ function isBirthdayToday(md) {
   const today = `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   return md === today;
 }
+function thisYear() { return new Date().getFullYear(); }
+function saveBday(obj) { localStorage.setItem(bdayKey, JSON.stringify(obj)); }
+
 function birthdayHtml() {
   if (!tenant.birthday_reward) return '';
   const saved = loadBday();
   const reward = birthdayReward();
   if (saved && saved.md) {
     if (isBirthdayToday(saved.md)) {
-      return `<div class="bday-card bday-today">${t('bdayToday', reward)}</div>`;
+      // Already used this year? (preview/demo skips so it can be shown again.)
+      if (!isPreview && saved.claimedYear === thisYear()) {
+        return `<div class="bday-card bday-today">${t('bdayClaimed')}</div>`;
+      }
+      // The gift is released by STAFF (PIN) after checking the customer's ID —
+      // that ID check, not the device, is what stops fake birthdays.
+      return `<div class="bday-card bday-today">
+        <p>${t('bdayShowId', reward)}</p>
+        <button class="bday-claim" id="bdayClaim">${t('bdayClaimBtn')}</button></div>`;
     }
     return `<div class="bday-card">
       <p>${t('bdaySaved', reward)}</p>
@@ -597,12 +631,17 @@ function wireBirthday() {
       const val = document.getElementById('bdayInput')?.value; // yyyy-mm-dd
       if (!val || val.length < 10) return;
       const md = val.slice(5); // mm-dd — store only month+day, never the year (less data, still no PII)
-      localStorage.setItem(bdayKey, JSON.stringify({ md }));
+      const prev = loadBday() || {};
+      // keep claimedYear across date edits, so changing the date can't reset the
+      // once-a-year limit (a full data wipe still can — the ID check covers that).
+      saveBday({ md, claimedYear: prev.claimedYear });
       render();
     };
   }
   const change = document.getElementById('bdayChange');
-  if (change) change.onclick = () => { localStorage.removeItem(bdayKey); render(); };
+  if (change) change.onclick = () => { const prev = loadBday() || {}; saveBday({ claimedYear: prev.claimedYear }); render(); };
+  const claim = document.getElementById('bdayClaim');
+  if (claim) claim.onclick = () => openPinPad('redeem_birthday'); // staff PIN releases the gift
 }
 
 // ---------- review nudge (after redeeming a reward) ----------
