@@ -438,6 +438,14 @@ dialog.celebrate strong { color: #1c1917; font-size: 1.1rem; }
 .bday-done { color: #57534e; font-weight: 600; margin-bottom: 0; }
 /* fine print under the birthday card: daily reset + no birthday stored */
 .bday-note { font-size: .72rem; color: #a8a29e; font-weight: 400; line-height: 1.4; margin: 10px 0 0; }
+/* two-step confirm before the once-a-day claim */
+.bday-confirm { margin-top: 12px; }
+.bday-confirm-q { color: #b45309; font-weight: 600; font-size: .88rem; margin-bottom: 10px; }
+.bday-cancel {
+  display: block; width: 100%; margin-top: 8px; border: 0; cursor: pointer;
+  background: transparent; color: #78716c; font-weight: 600; font-size: .92rem;
+  padding: 8px; text-decoration: underline;
+}
 /* staff ID-check warning inside the scan modal (birthday gift) */
 .pin-hint-warn {
   color: #b45309; font-weight: 600;
