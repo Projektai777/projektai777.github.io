@@ -58,32 +58,28 @@ if (lang !== 'en') lang = 'lt';
 const STR = {
   lt: {
     subtitle: 'Lojalumo kortelė',
-    demoBadge: 'DEMO · darbuotojo kodas keičiasi kas 30 s',
+    demoBadge: 'DEMO · darbuotojo QR keičiasi kas 30 s',
     tiersTitle: 'Prizai pakeliui:',
     tierStamps: (n) => `${n} antspaudai`,
     prizeReady: (r) => `🎉 Jūsų prizas: <strong>${r}</strong>!`,
     oneLeft: 'Liko <strong>1 antspaudas</strong> iki prizo!',
     prizeIs: (r) => `Prizas: ${r}`,
     redeem: '🎁 Atsiimti prizą',
-    getStamp: 'Gauti antspaudą',
-    staffPress: 'Darbuotojas parodys kodą arba QR — įveskite jį arba nuskaitykite.',
+    getStamp: '📷 Atidaryti kamerą',
+    staffPress: 'Darbuotojas parodys QR kodą — nuskaitykite jį telefonu, kad gautumėte antspaudą.',
+    staffPressDemo: 'Demonstracija: palieskite, kad pamatytumėte, kaip svečias nuskaito darbuotojo QR ir gauna antspaudą.',
     autoFill: '✨ Užpildyti kortelę (demonstracija)',
     reset: '↺ Pradėti iš naujo',
-    installCta: '📲 Pridėti į pradžios ekraną',
-    installNote: 'Tik piktograma pradžios ekrane — atsidaro kaip programėlė, nieko neatsisiunčiama.',
-    installHint: 'Atidarykite naršyklės meniu (⋮ arba ⋯) ir pasirinkite „Pridėti prie pradžios ekrano" / „Įdiegti programėlę". Veikia kaip programėlė, be App Store.',
-    installHintIos: 'Paspauskite „Bendrinti" (Share) ⬆️ naršyklės apačioje ir pasirinkite „Įtraukti į pradžios ekraną".',
-    installBtn: 'Pridėti',
     ownerLink: '📊 Kuo tai naudinga verslui? →',
     privacy: '🔒 Jokių asmens duomenų — kortelė saugoma tik Jūsų telefone.',
     demoFooter: 'Demonstracinė versija · projektai777.koduojam@gmail.com',
     celebrateTitle: 'Sveikiname!',
     celebrateBtn: 'Puiku!',
     celebratePrize: (r) => `Jūsų prizas:<br><strong>${r}</strong>`,
-    pinTitle: 'Darbuotojo kodas',
-    pinHint: 'Darbuotojas parodys kodą arba QR',
-    pinDemoCode: (c) => `Demonstracija · šios sekundės kodas: <strong>${c}</strong>`,
-    pinCancel: 'Atšaukti',
+    scanTitle: 'Nuskaitykite darbuotojo QR',
+    scanHint: 'Nukreipkite kamerą į darbuotojo QR kodą — antspaudas užsiskaitys automatiškai.',
+    scanFallback: 'Atidarykite telefono kameros programėlę ir nukreipkite ją į darbuotojo QR kodą — kortelė atsidarys ir antspaudas užsiskaitys pats.',
+    scanCancel: 'Atšaukti',
     toastRedeemed: 'Prizas atsiimtas! Ačiū 🎉',
     toastStamp: 'Antspaudas pridėtas ⭐',
     toastEmail: '📋 El. paštas nukopijuotas',
@@ -100,8 +96,8 @@ const STR = {
     flowTitle: 'Kaip tai veikia darbuotojui?',
     flow: [
       ['Svečias atidaro kortelę', 'Nuskaito QR kodą prie kasos arba paspaudžia nuorodą telefone'],
-      ['Darbuotojas parodo kodą', 'Atsidaro savo kodų puslapį — svečias įveda 6 skaitmenis arba nuskaito QR (telefono atiduoti nereikia)'],
-      ['Pridedamas antspaudas', 'Kortelė užsipildo po vieną su kiekvienu apsilankymu (1 per dieną)'],
+      ['Darbuotojas parodo QR', 'Atsidaro savo kodų puslapį su QR — svečias nuskaito jį sava kamera (telefono atiduoti nereikia)'],
+      ['Pridedamas antspaudas', 'Antspaudas užsiskaito automatiškai, po vieną su kiekvienu apsilankymu (1 per dieną)'],
       ['Surinko — gauna prizą', 'Svečias atsiima dovaną ir grįžta vėl jos užsidirbti'],
     ],
     // review nudge
@@ -154,7 +150,7 @@ const STR = {
     faqTitle: 'Dažniausiai užduodami klausimai',
     faq: [
       ['Kaip veikia lojalumo kortelė?',
-        'Svečias telefonu nuskaito QR kodą prie kasos arba paspaudžia nuorodą — atsidaro Jūsų prekės ženklo kortelė. Darbuotojas patvirtina apsilankymą trumpu kodu, kuris keičiasi kas 30 sekundžių (kaip banko 2FA): svečias jį įveda savo telefone arba nuskaito darbuotojo QR — telefono atiduoti nereikia. Pridedamas antspaudas (vienas per dieną). Surinkęs reikiamą skaičių, svečias atsiima prizą ir grįžta vėl jo užsidirbti.'],
+        'Svečias telefonu nuskaito QR kodą prie kasos arba paspaudžia nuorodą — atsidaro Jūsų prekės ženklo kortelė. Darbuotojas parodo QR kodą, kuris keičiasi kas 30 sekundžių (kaip banko 2FA); svečias nuskaito jį savo telefono kamera — antspaudas užsiskaito automatiškai, telefono atiduoti nereikia. Pridedamas antspaudas (vienas per dieną). Surinkęs reikiamą skaičių, svečias atsiima prizą ir grįžta vėl jo užsidirbti.'],
       ['Ar reikia specialios įrangos ar programėlės iš App Store?',
         'Ne. Viskas veikia telefono naršyklėje — nereikia jokios įrangos, terminalų ar atsisiuntimų iš App Store / Google Play. Svečias gali pridėti kortelę į pradžios ekraną vienu paspaudimu ir naudoti ją kaip programėlę.'],
       ['Kiek tai kainuoja?',
@@ -162,7 +158,7 @@ const STR = {
       ['Kuo skiriatės nuo kitų lojalumo programėlių?',
         '<strong>Jokių mėnesinių mokesčių.</strong> Dauguma lojalumo programėlių — prenumeratos (~25–80 €/mėn., ir taip be galo), įspraudžiančios Jus į griežtą šabloną su svetimu prekės ženklu. Pas mus sumokate <strong>vieną kartą</strong>, o programėlę <strong>pritaikome būtent Jūsų verslui</strong>: prizų pakopas, spalvas, kalbas (LT/EN), gimtadienio dovanas, net visiškai naujas funkcijas. Viskas su <strong>Jūsų prekės ženklu</strong> (ir, jei norite, Jūsų domenu) — produktą naudojate neterminuotai, be priklausomybės nuo svetimos platformos. Palaikymas greitas ir asmeniškas, o klientams nereikia jokios registracijos (privatumas). Rimtos agentūros individualų tokį sprendimą paprastai įkainoja <strong>3 000–8 000 €</strong> (pilna mobilioji iOS/Android programėlė su integracijomis — 15 000 € ir daugiau), dažnai dar su mėnesiniu palaikymo mokesčiu — todėl 1000 € vienkartinė kaina yra itin palanki.'],
       ['Ar tai saugu? Kaip su privatumu ir sukčiavimu?',
-        '<strong>Privatumas:</strong> nerenkame jokių asmens duomenų — kortelė saugoma tik svečio telefone, todėl nelieka ir GDPR rūpesčių dėl klientų sąrašų. <strong>Sukčiavimas:</strong> antspaudą galima pridėti tik su darbuotojo kodu, kuris keičiasi kas 30 sekundžių (kaip 2FA), tad svečias negali prisidėti jo pats ir negali pakartotinai panaudoti pamatyto kodo; be to, vienam telefonui leidžiamas tik <strong>vienas antspaudas per dieną</strong> (atsistato vidurnaktį). Specialios dovanos (pvz. gimtadienio) atiduodamos tik darbuotojui patikrinus asmens dokumentą ir tik kartą per metus.'],
+        '<strong>Privatumas:</strong> nerenkame jokių asmens duomenų — kortelė saugoma tik svečio telefone, todėl nelieka ir GDPR rūpesčių dėl klientų sąrašų. <strong>Sukčiavimas:</strong> antspaudą galima pridėti tik nuskaičius darbuotojo QR kodą, kuris keičiasi kas 30 sekundžių (kaip 2FA), tad svečias negali prisidėti jo pats ir negali pakartotinai panaudoti pamatyto kodo; be to, vienam telefonui leidžiamas tik <strong>vienas antspaudas per dieną</strong> (atsistato vidurnaktį). Specialios dovanos (pvz. gimtadienio) atiduodamos tik darbuotojui patikrinus asmens dokumentą ir tik kartą per metus.'],
       ['Ar galima naudoti su mano įmonės domenu ir svetaine?',
         'Taip. Kortelę galime paleisti Jūsų pačių adresu, pvz. <em>kortele.jusuimone.lt</em>. Jei jau turite domeną ir svetainę: Jūs (arba Jūsų svetainės administratorius) pridedate vieną mūsų pateiktą DNS įrašą, o mes sutvarkome talpinimą ir saugų HTTPS ryšį. Kortelė veikia atskirai ir nekeičia esamos svetainės — tiesiog galite pridėti mygtuką „Lojalumo kortelė". Viskas su Jūsų prekės ženklu.'],
       ['Ar klientams reikia registruotis? Ką jie gauna?',
@@ -181,32 +177,28 @@ const STR = {
   },
   en: {
     subtitle: 'Loyalty card',
-    demoBadge: 'DEMO · staff code rotates every 30 s',
+    demoBadge: 'DEMO · staff QR rotates every 30 s',
     tiersTitle: 'Rewards along the way:',
     tierStamps: (n) => `${n} stamps`,
     prizeReady: (r) => `🎉 Your reward: <strong>${r}</strong>!`,
     oneLeft: '<strong>1 stamp</strong> left until your reward!',
     prizeIs: (r) => `Reward: ${r}`,
     redeem: '🎁 Claim reward',
-    getStamp: 'Get a stamp',
-    staffPress: 'A staff member shows a code or QR — enter or scan it.',
+    getStamp: '📷 Open camera',
+    staffPress: 'Staff will show a QR code — scan it with your phone to get a stamp.',
+    staffPressDemo: 'Demo: tap to see how a guest scans the staff QR and gets a stamp.',
     autoFill: '✨ Fill the card (demo)',
     reset: '↺ Start over',
-    installCta: '📲 Add to Home Screen',
-    installNote: 'Just a home-screen icon — opens like an app, nothing is downloaded.',
-    installHint: 'Open the browser menu (⋮ or ⋯) and choose “Add to Home screen” / “Install app”. Works like an app, no App Store.',
-    installHintIos: 'Tap the Share button ⬆️ at the bottom of the browser and choose “Add to Home Screen”.',
-    installBtn: 'Add',
     ownerLink: '📊 How does this help the business? →',
     privacy: '🔒 No personal data — the card is stored only on your phone.',
     demoFooter: 'Demo version · projektai777.koduojam@gmail.com',
     celebrateTitle: 'Congratulations!',
     celebrateBtn: 'Great!',
     celebratePrize: (r) => `Your reward:<br><strong>${r}</strong>`,
-    pinTitle: 'Staff code',
-    pinHint: 'Staff will show you a code or QR',
-    pinDemoCode: (c) => `Demo · code for this moment: <strong>${c}</strong>`,
-    pinCancel: 'Cancel',
+    scanTitle: 'Scan the staff QR',
+    scanHint: 'Point your camera at the staff QR code — the stamp is added automatically.',
+    scanFallback: 'Open your phone’s camera app and point it at the staff QR code — the card opens and the stamp is added for you.',
+    scanCancel: 'Cancel',
     toastRedeemed: 'Reward claimed! Thank you 🎉',
     toastStamp: 'Stamp added ⭐',
     toastEmail: '📋 Email copied',
@@ -223,8 +215,8 @@ const STR = {
     flowTitle: 'How does it work for staff?',
     flow: [
       ['Guest opens the card', 'Scans the staff QR or taps the link on their phone'],
-      ['Staff shows a code', 'Opens their code page — the guest types the 6 digits or scans the QR (no phone handover)'],
-      ['A stamp is added', 'The card fills up one stamp at a time, visit by visit (1 per day)'],
+      ['Staff shows a QR', 'Opens their code page — the guest scans it with their own camera (no phone handover)'],
+      ['A stamp is added', 'It’s added automatically, one stamp per visit (1 per day)'],
       ['Card full — reward earned', 'The guest claims the gift and comes back to earn it again'],
     ],
     reviewTitle: 'Enjoyed your visit?',
@@ -274,7 +266,7 @@ const STR = {
     faqTitle: 'Frequently asked questions',
     faq: [
       ['How does the loyalty card work?',
-        'A guest scans the staff QR or taps a link — your branded card opens on their phone. A staff member confirms the visit with a short code that changes every 30 seconds (like bank 2FA): the guest types it on their own phone or scans the staff QR — the phone never changes hands. A stamp is added (one per day). Once full, the guest claims the reward and comes back to earn it again.'],
+        'A guest scans the staff QR or taps a link — your branded card opens on their phone. A staff member shows a QR code that changes every 30 seconds (like bank 2FA); the guest scans it with their own phone camera — the stamp is added automatically and the phone never changes hands. A stamp is added (one per day). Once full, the guest claims the reward and comes back to earn it again.'],
       ['Do I need special hardware or an app from the App Store?',
         'No. Everything runs in the phone’s browser — no hardware, terminals, or downloads from the App Store / Google Play. The guest can add the card to their home screen in one tap and use it like an app.'],
       ['How much does it cost?',
@@ -282,7 +274,7 @@ const STR = {
       ['How are you different from other loyalty apps?',
         '<strong>No monthly fees.</strong> Most loyalty apps are subscriptions (~€25–80/month, forever) that squeeze you into a rigid template under someone else’s brand. With us you pay <strong>once</strong>, and we <strong>tailor the app to your business</strong>: reward tiers, colours, languages (LT/EN), birthday gifts, even entirely new features. Everything under <strong>your brand</strong> (and your domain if you like) — you use the product indefinitely, with no dependence on someone else’s platform. Support is fast and personal, and customers need no sign-up (privacy). A serious agency typically prices a comparable custom build at <strong>€3,000–8,000</strong> (a full native iOS/Android app with integrations runs €15,000+), usually plus a monthly maintenance fee — which makes the one-time €1000 exceptional value.'],
       ['Is it safe? What about privacy and cheating?',
-        '<strong>Privacy:</strong> we collect no personal data — the card lives only on the guest’s phone, so there are no GDPR headaches over customer lists. <strong>Cheating:</strong> a stamp can only be added with the staff code, which changes every 30 seconds (like 2FA), so guests can’t add their own and can’t reuse a code they once saw; on top of that each phone is limited to <strong>one stamp per day</strong> (resets at midnight). Special gifts (e.g. birthday) are released only after staff check an ID, and only once per year.'],
+        '<strong>Privacy:</strong> we collect no personal data — the card lives only on the guest’s phone, so there are no GDPR headaches over customer lists. <strong>Cheating:</strong> a stamp can only be added by scanning the staff QR, which changes every 30 seconds (like 2FA), so guests can’t add their own and can’t reuse a code they once saw; on top of that each phone is limited to <strong>one stamp per day</strong> (resets at midnight). Special gifts (e.g. birthday) are released only after staff check an ID, and only once per year.'],
       ['Can it run on my own domain and website?',
         'Yes. We can host the card at your own address, e.g. <em>card.yourbusiness.lt</em>. If you already have a domain and website: you (or your web admin) add one DNS record we provide, and we handle hosting and secure HTTPS. The card runs separately and doesn’t change your existing site — you can simply add a “Loyalty card” button. All under your brand.'],
       ['Do customers need to register? What do they get?',
@@ -338,9 +330,9 @@ function wireLangToggle() {
 // Static strings that live in index.html (modals) — keep them in sync with lang.
 function applyStaticStrings() {
   const set = (sel, val) => { const n = document.querySelector(sel); if (n) n.textContent = val; };
-  set('#pinTitle', t('pinTitle'));
-  set('.pin-hint', t('pinHint'));
-  set('#pinCancel', t('pinCancel'));
+  set('#scanTitle', t('scanTitle'));
+  set('.scan-hint', t('scanHint'));
+  set('#scanCancel', t('scanCancel'));
   set('#celebrateModal h2', t('celebrateTitle'));
   set('#celebrateClose', t('celebrateBtn'));
 }
@@ -590,70 +582,13 @@ function tiersHtml() {
   return `<div class="tiers"><p class="tiers-title">${t('tiersTitle')}</p>${items}</div>`;
 }
 
-const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
-  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-  window.navigator.standalone === true;
-
-// Pull the add-to-home-screen UI the moment we know the app is installed.
-function hideInstallHint() {
-  const h = document.getElementById('installHint');
-  if (h) h.remove();
-}
-// Best-effort: detect an existing install even while running in a browser tab
-// (Chrome's getInstalledRelatedApps), on top of the display-mode/appinstalled
-// signals handled elsewhere.
-async function detectInstalled() {
-  if (isStandalone) { hideInstallHint(); return; }
-  try {
-    if (navigator.getInstalledRelatedApps) {
-      const apps = await navigator.getInstalledRelatedApps();
-      if (apps && apps.length) hideInstallHint();
-    }
-  } catch { /* ignore */ }
-}
-
-function installHintHtml() {
-  if (isStandalone) return ''; // already installed — nothing to prompt
-  const steps = isIos ? t('installHintIos') : t('installHint');
-  // The button is ALWAYS shown (the app is installable): if Chrome gave us the
-  // native prompt we fire it on tap; otherwise we reveal the menu steps, since
-  // beforeinstallprompt doesn't fire on iOS or right after an uninstall.
-  return `<div class="install-hint" id="installHint">
-    <button class="install-btn" id="installBtn">${t('installCta')}</button>
-    <p class="install-note">${t('installNote')}</p>
-    <p class="install-steps" id="installSteps" hidden>${steps}</p></div>`;
-}
-function wireInstall() {
-  const btn = document.getElementById('installBtn');
-  if (!btn) return;
-  detectInstalled(); // hide right away if it's already installed on this machine
-  btn.onclick = async () => {
-    // Best case (Android Chrome/Edge): fire the real Add-to-Home-Screen dialog.
-    const evt = deferredInstall || window.__bip;
-    if (evt) {
-      evt.prompt();
-      let outcome = null;
-      try { ({ outcome } = await evt.userChoice); } catch { /* ignore */ }
-      deferredInstall = null; window.__bip = null;
-      if (outcome === 'accepted') {
-        const hint = document.getElementById('installHint');
-        if (hint) hint.remove(); // installed — no longer needed
-      }
-      return;
-    }
-    // No programmatic dialog (iPhone Safari, or Chrome not offering it right
-    // now): reveal the manual steps and scroll them into view so they're found.
-    const steps = document.getElementById('installSteps');
-    if (steps) {
-      steps.hidden = false;
-      steps.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  };
-}
+// NOTE: there is deliberately NO proactive "add to home screen" banner. The app
+// is still fully installable (real manifest + icons, see setAppIcon), so the
+// browser's own "Install app" menu works; we just don't nag. Customers who want
+// one-tap re-scanning install it themselves — the camera button is the hook.
 
 function staffFlowHtml() {
-  const icons = ['📱', '🔢', '⭐', '🎁'];
+  const icons = ['📱', '📷', '⭐', '🎁'];
   const cells = t('flow').map(([title, sub], i) => `
     <div class="flow-step">
       <div class="flow-num">${i + 1}</div>
@@ -733,7 +668,7 @@ function wireBirthday() {
   const change = document.getElementById('bdayChange');
   if (change) change.onclick = () => { const prev = loadBday() || {}; saveBday({ claimedYear: prev.claimedYear }); render(); };
   const claim = document.getElementById('bdayClaim');
-  if (claim) claim.onclick = () => openPinPad('redeem_birthday'); // staff code releases the gift
+  if (claim) claim.onclick = () => stampAction('redeem_birthday'); // staff QR releases the gift
 }
 
 // ---------- review nudge (after redeeming a reward) ----------
@@ -788,10 +723,9 @@ function render() {
     ${tiersHtml()}
 
     <button class="cta" id="actionBtn">${full ? t('redeem') : t('getStamp')}</button>
-    <p class="small-print">${t('staffPress')}</p>
+    <p class="small-print">${isDemo ? t('staffPressDemo') : t('staffPress')}</p>
     ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
     ${isPreview ? `<button class="reset-link" id="resetBtn">${t('reset')}</button>` : ''}
-    ${installHintHtml()}
     ${birthdayHtml()}
     ${isPreview ? staffFlowHtml() : ''}
     ${isPreview ? ctaHtml() : ''}
@@ -799,13 +733,12 @@ function render() {
     ${isDemo ? `<p class="small-print">${t('demoFooter')}</p>` : ''}
   `;
 
-  document.getElementById('actionBtn').onclick = () => openPinPad(full ? 'redeem_reward' : 'add_stamp');
+  document.getElementById('actionBtn').onclick = () => stampAction(full ? 'redeem_reward' : 'add_stamp');
   const af = document.getElementById('autoFillBtn'); if (af) af.onclick = autoFill;
   const rs = document.getElementById('resetBtn'); if (rs) rs.onclick = resetCard;
   wireLangToggle();
   wireBirthday();
   wireReview();
-  wireInstall();
 }
 
 // ---------- confetti (no library) ----------
