@@ -109,6 +109,10 @@ const STR = {
     bdayShowId: (r) => `Gimtadienio proga Jūsų laukia <strong>${r}</strong>. Tą dieną parodykite asmens dokumentą darbuotojui ir paspauskite „Atsiimti dovaną" — jokių registracijų ar sąlygų.`,
     bdayClaimBtn: '🎁 Atsiimti dovaną',
     pinHintBday: '⚠️ Darbuotojas: patikrinkite kliento asmens dokumentą (gimimo datą), tada parodykite kodą.',
+    bdayClaimed: (ago) => `✅ Gimtadienio dovana jau atsiimta ${ago}. Kitą galėsite atsiimti rytoj.`,
+    agoNow: 'ką tik',
+    agoMin: (n) => `prieš ${n} min`,
+    agoHour: (n) => `prieš ${n} val.`,
     // owner page
     back: '← Atgal į kortelę',
     ownerTag: 'SAVININKO APŽVALGA · iliustracinis pavyzdys',
@@ -221,6 +225,10 @@ const STR = {
     bdayShowId: (r) => `On your birthday you get <strong>${r}</strong>. On the day, just show your ID to a staff member and tap “Claim gift” — no sign-up, no conditions.`,
     bdayClaimBtn: '🎁 Claim gift',
     pinHintBday: '⚠️ Staff: check the customer’s ID (date of birth), then show the code.',
+    bdayClaimed: (ago) => `✅ Birthday gift already claimed ${ago}. You can claim again tomorrow.`,
+    agoNow: 'just now',
+    agoMin: (n) => `${n} min ago`,
+    agoHour: (n) => `${n} h ago`,
     back: '← Back to the card',
     ownerTag: 'OWNER OVERVIEW · illustrative example',
     whyTitle: 'Why does it pay off?',
@@ -445,12 +453,21 @@ const staticBackend = {
       return { ok: true };
     }
 
-    // Birthday gift: NO app-side conditions. The staff ID check (staff verify the
-    // customer's document before scanning the QR — see pinHintBday) is the sole
-    // gate; the rotating staff code is already verified above. We don't store or
-    // check the birthday date, and there's no per-device once-a-year limit.
+    // Birthday gift: claimed by the SAME staff-QR scan that grants a stamp (tied to
+    // a real, rotating-code-verified visit). The staff ID check (see pinHintBday) is
+    // the only anti-fraud gate — we never store/check the birthday date. We record a
+    // DEVICE-GLOBAL claim time so any tenant card on this device shows "already
+    // claimed X ago" until local midnight (can't farm the gift across restaurants).
     if (fn === 'redeem_birthday') {
-      return { ok: true };
+      markBirthdayClaimed(now);
+      // Also grant the day's stamp, unless one was already added today.
+      if (isPreview || c.day !== todayLocal()) {
+        c.stamps = Math.min(c.stamps + 1, t.stamps_needed);
+        c.last = now;
+        c.day = todayLocal();
+        this._save(c);
+      }
+      return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed };
     }
 
     // Daily cooldown: one stamp per phone per LOCAL calendar day, resets at
@@ -588,26 +605,68 @@ function ctaHtml() {
 
 // Local calendar day (YYYY-MM-DD) — the daily-stamp cooldown resets at LOCAL
 // midnight, so it follows the customer's own timezone, not UTC.
-function todayLocal() {
-  const d = new Date();
+function localDay(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+function todayLocal() { return localDay(new Date()); }
+
+// ---- Birthday gift: one claim PER DEVICE PER LOCAL DAY, shared across ALL tenants
+// on this origin (anti-cheat: the gift can't be farmed at several restaurants the
+// same day). We store ONLY the claim time — never a birthday date. Resets at local
+// midnight. Demo/preview are exempt so a prospect can replay the flow.
+const BDAY_KEY = 'lojalumas_bday';
+function markBirthdayClaimed(ts) {
+  try { localStorage.setItem(BDAY_KEY, String(ts)); } catch { /* storage blocked/full */ }
+}
+// Claim timestamp if the gift was already taken earlier TODAY (local), else null.
+function birthdayClaimedAt() {
+  if (isPreview) return null;
+  const raw = Number(localStorage.getItem(BDAY_KEY) || 0);
+  if (!raw) return null;
+  return localDay(new Date(raw)) === todayLocal() ? raw : null;
+}
+// Localized "x ago" for the claim timer (same-day, so minutes/hours only).
+function bdayAgo(ts) {
+  const mins = Math.max(0, Math.floor((Date.now() - ts) / 60000));
+  if (mins < 1) return t('agoNow');
+  if (mins < 60) return t('agoMin', mins);
+  return t('agoHour', Math.floor(mins / 60));
 }
 
 // ---------- birthday reward ----------
-// No conditions, no birthday capture: on their birthday the customer taps "Claim
-// gift", staff check their ID (the sole anti-fraud gate) and scan the QR. We never
-// store the birthday — showing the document is enough.
+// No birthday capture: staff check the customer's ID (the sole anti-fraud gate) and
+// scan the staff QR — the SAME scan grants the stamp AND claims the gift, recorded
+// with a device-global timestamp. Once claimed, the banner shows "already claimed
+// X ago" (at every restaurant) until local midnight; we never store a birthday date.
 function birthdayHtml() {
   if (!tenant.birthday_reward) return '';
+  const claimedAt = birthdayClaimedAt();
+  if (claimedAt) {
+    return `<div class="bday-card bday-claimed">
+      <h3>${t('bdayPromptTitle')}</h3>
+      <p class="bday-done" data-bday-since="${claimedAt}">${t('bdayClaimed', bdayAgo(claimedAt))}</p></div>`;
+  }
   return `<div class="bday-card bday-today">
     <h3>${t('bdayPromptTitle')}</h3>
     <p>${t('bdayShowId', birthdayReward())}</p>
     <button class="bday-claim" id="bdayClaim">${t('bdayClaimBtn')}</button></div>`;
 }
+let bdayTimer = null;
 function wireBirthday() {
   const claim = document.getElementById('bdayClaim');
-  // Staff check the customer's ID, then scan the staff QR to release the gift.
+  // Staff check the customer's ID, then scan the staff QR: one scan stamps + claims.
   if (claim) claim.onclick = () => stampAction('redeem_birthday');
+  // Keep the "claimed X ago" timer live (render() rebuilds the DOM, so re-arm here).
+  if (bdayTimer) { clearInterval(bdayTimer); bdayTimer = null; }
+  const done = document.querySelector('.bday-done[data-bday-since]');
+  if (done) {
+    const ts = Number(done.getAttribute('data-bday-since'));
+    bdayTimer = setInterval(() => {
+      const el = document.querySelector('.bday-done[data-bday-since]');
+      if (!el) { clearInterval(bdayTimer); bdayTimer = null; return; }
+      el.textContent = t('bdayClaimed', bdayAgo(ts));
+    }, 60000);
+  }
 }
 
 // ---------- review nudge (after redeeming a reward) ----------
@@ -1047,7 +1106,8 @@ async function runGrant(action, code) {
         render();
         toast(t('toastRedeemed'));
       } else if (action === 'redeem_birthday') {
-        render();                 // re-render -> banner switches to "claimed this year"
+        if (typeof res.stamps === 'number') card.stamps = res.stamps; // one scan also stamped
+        render();                 // banner switches to "already claimed X ago"
         celebrate(birthdayReward());
       } else {
         card.stamps = res.stamps;
