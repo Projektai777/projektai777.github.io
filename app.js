@@ -63,6 +63,7 @@ const STR = {
     autoFill: '✨ Užpildyti kortelę (demonstracija)',
     reset: '↺ Pradėti iš naujo',
     installHint: '📲 Pridėkite prie pradžios ekrano — veikia kaip programėlė, be App Store.',
+    installHintIos: '📲 Pridėti prie pradžios ekrano: paspauskite „Bendrinti" (Share) ⬆️ ir pasirinkite „Į pradžios ekraną".',
     installBtn: 'Pridėti',
     ownerLink: '📊 Kuo tai naudinga verslui? →',
     privacy: '🔒 Jokių asmens duomenų — kortelė saugoma tik Jūsų telefone.',
@@ -145,6 +146,7 @@ const STR = {
     autoFill: '✨ Fill the card (demo)',
     reset: '↺ Start over',
     installHint: '📲 Add to your home screen — works like an app, no App Store.',
+    installHintIos: '📲 Add to home screen: tap the Share button ⬆️ and choose “Add to Home Screen”.',
     installBtn: 'Add',
     ownerLink: '📊 How does this help the business? →',
     privacy: '🔒 No personal data — the card is stored only on your phone.',
@@ -394,25 +396,64 @@ function setTheme() {
   setAppIcon();
 }
 
-// Make the "add to home screen" shortcut use the SAME logo as the card page,
-// per tenant. Falls back to the static icon when a tenant has no logo.
-function setAppIcon() {
-  // absolute, so it resolves correctly inside the blob-URL manifest below
-  const icon = new URL(tenant.logo_url || './icon-192.png', location.href).href;
+// Build a SQUARE home-screen icon from the tenant's logo. The logo (often a
+// wide wordmark) is drawn centered on a white square, so it (a) looks right as
+// an app icon and (b) satisfies Chrome's install rule that needs a real >=192
+// square PNG icon. Returns a data: URL, or null if it can't be drawn.
+function makeSquareIcon(src) {
+  return new Promise((resolve) => {
+    if (!src) { resolve(null); return; }
+    const img = new Image();
+    img.crossOrigin = 'anonymous'; // harmless for our same-origin logos; avoids taint
+    img.onload = () => {
+      try {
+        const S = 512, pad = Math.round(S * 0.12);
+        const c = document.createElement('canvas');
+        c.width = S; c.height = S;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, S, S);
+        const box = S - pad * 2;
+        const r = Math.min(box / img.naturalWidth, box / img.naturalHeight, 1);
+        const w = img.naturalWidth * r, h = img.naturalHeight * r;
+        ctx.drawImage(img, (S - w) / 2, (S - h) / 2, w, h);
+        resolve(c.toDataURL('image/png'));
+      } catch { resolve(null); }
+    };
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+// Point the "add to home screen" shortcut (Android manifest + iOS apple-touch)
+// at the tenant's own logo. icon_url (a square asset) is preferred; otherwise we
+// square-pad logo_url; if neither works we fall back to the bundled icon so the
+// app stays installable no matter what.
+async function setAppIcon() {
+  const source = tenant.icon_url || tenant.logo_url;
+  const absSource = source ? new URL(source, location.href).href : null;
+  const icon = (await makeSquareIcon(absSource)) || new URL('./icon-512.png', location.href).href;
+
   const apple = document.getElementById('appleIcon');
   if (apple) apple.href = icon;
 
   // Rewrite the PWA manifest so the installed icon + label match the tenant.
+  // NOTE: a blob: manifest has no path, so start_url/scope MUST be absolute
+  // URLs (relative ones would resolve against the blob and break installability).
+  const base = `${location.origin}${location.pathname}`;
   const manifest = {
+    id: slug ? `${base}?b=${encodeURIComponent(slug)}` : base,
     name: tenant.business_name,
     short_name: tenant.business_name,
-    start_url: location.pathname + location.search,
+    start_url: slug ? `${base}?b=${encodeURIComponent(slug)}` : base,
+    scope: base,
     display: 'standalone',
-    background_color: '#f5f5f4',
+    background_color: '#ffffff',
     theme_color: tenant.primary_color || '#1f2937',
     icons: [
       { src: icon, sizes: '192x192', type: 'image/png', purpose: 'any' },
       { src: icon, sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: icon, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
   };
   const link = document.getElementById('manifest');
@@ -451,9 +492,16 @@ function tiersHtml() {
   return `<div class="tiers"><p class="tiers-title">${t('tiersTitle')}</p>${items}</div>`;
 }
 
+const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+  window.navigator.standalone === true;
+
 function installHintHtml() {
+  if (isStandalone) return ''; // already installed — nothing to prompt
+  const text = isIos ? t('installHintIos') : t('installHint');
   return `<div class="install-hint" id="installHint">
-    <span>${t('installHint')}</span>
+    <span>${text}</span>
     <button class="install-btn" id="installBtn" hidden>${t('installBtn')}</button></div>`;
 }
 function wireInstall() {
@@ -545,10 +593,12 @@ function render() {
   setTheme();
   const full = card.stamps >= tenant.stamps_needed;
 
+  const stampIcon = tenant.stamp_icon || '🍽️'; // restaurant-flavored default; per-tenant override
   const grid = Array.from({ length: tenant.stamps_needed }, (_, i) => {
     const filled = i < card.stamps;
     const milestone = (tenant.milestones || []).some((m) => m.at === i + 1);
-    return `<div class="stamp ${filled ? 'filled' : ''} ${milestone ? 'stamp-milestone' : ''}" style="animation-delay:${i * 40}ms">${filled ? '★' : (milestone ? '🎁' : '')}</div>`;
+    const glyph = filled ? stampIcon : (milestone ? '🎁' : '');
+    return `<div class="stamp ${filled ? 'filled' : ''} ${milestone ? 'stamp-milestone' : ''}" style="animation-delay:${i * 40}ms">${glyph}</div>`;
   }).join('');
 
   const remaining = tenant.stamps_needed - card.stamps;

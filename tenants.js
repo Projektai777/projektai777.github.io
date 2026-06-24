@@ -21,10 +21,12 @@ export default {
     business_name: 'Bernelių užeiga',
     logo_url: 'logos/berneliai-logo.png', // official wordmark logo
     logo_wide: true,                      // wordmark -> show as a wide plate, hide the redundant name heading
+    icon_url: 'logos/berneliai.png',      // square emblem -> home-screen / app icon (better than the wide wordmark)
     hero_url: 'logos/berneliai-hero.jpg', // soft photo header behind the logo
     primary_color: '#b91c1c',
     stamps_needed: 10,
     reward_text: '10-as patiekalas nemokamai',
+    stamp_icon: '🍽️',                     // restaurant-flavored stamp (default for any tenant; override per business)
     // milestones = tarpiniai prizai (rodo, kad sistema lanksti)
     milestones: [
       { at: 5, text: 'Nemokamas gardus kompotas' },
