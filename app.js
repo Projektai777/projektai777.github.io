@@ -2,13 +2,18 @@
 // Lojalumas — multi-tenant PWA stamp card
 // Tenant is resolved from the URL path:  kortele.lt/coffeebox
 // All branding/config comes from the tenant_public view.
-// The PIN is NEVER in this file — it is verified server-side.
+//
+// Stamps are authorised with a ROTATING staff code (TOTP, see totp.js):
+// staff read a 6-digit code / QR off the password-gated /tools/staff.html
+// and the customer enters or scans it on their OWN phone — the phone never
+// changes hands. The code rotates every 30 s, so it can't be reused.
 //
 // © 2026 Lojalumas. All rights reserved. Proprietary — see LICENSE.
 // Unauthorized copying, hosting, or redistribution is prohibited.
 // =============================================================
 
 import TENANTS from './tenants.js';
+import { verifyCode } from './totp.js';
 
 // Optional paid tier: set these to a Supabase project to get central
 // analytics + server-side PIN security. Leave as-is for the free,
@@ -54,7 +59,7 @@ if (lang !== 'en') lang = 'lt';
 const STR = {
   lt: {
     subtitle: 'Lojalumo kortelė',
-    demoBadge: 'DEMO · darbuotojo PIN: 1234',
+    demoBadge: 'DEMO · darbuotojo kodas keičiasi kas 30 s',
     tiersTitle: 'Prizai pakeliui:',
     tierStamps: (n) => `${n} antspaudai`,
     prizeReady: (r) => `🎉 Jūsų prizas: <strong>${r}</strong>!`,
@@ -62,7 +67,7 @@ const STR = {
     prizeIs: (r) => `Prizas: ${r}`,
     redeem: '🎁 Atsiimti prizą',
     getStamp: 'Gauti antspaudą',
-    staffPress: 'Mygtuką spaudžia darbuotojas pirkimo metu.',
+    staffPress: 'Darbuotojas parodys kodą arba QR — įveskite jį arba nuskaitykite.',
     autoFill: '✨ Užpildyti kortelę (demonstracija)',
     reset: '↺ Pradėti iš naujo',
     installCta: '📲 Pridėti į pradžios ekraną',
@@ -76,16 +81,17 @@ const STR = {
     celebrateTitle: 'Sveikiname!',
     celebrateBtn: 'Puiku!',
     celebratePrize: (r) => `Jūsų prizas:<br><strong>${r}</strong>`,
-    pinTitle: 'Darbuotojo PIN',
-    pinHint: 'Parodykite telefoną darbuotojui',
+    pinTitle: 'Darbuotojo kodas',
+    pinHint: 'Darbuotojas parodys kodą arba QR',
+    pinDemoCode: (c) => `Demonstracija · šios sekundės kodas: <strong>${c}</strong>`,
     pinCancel: 'Atšaukti',
     toastRedeemed: 'Prizas atsiimtas! Ačiū 🎉',
     toastStamp: 'Antspaudas pridėtas ⭐',
     toastEmail: '📋 El. paštas nukopijuotas',
     reached: (txt) => `🎁 Pasiekta: ${txt}`,
-    errBadPin: 'Neteisingas PIN',
+    errBadPin: 'Neteisingas arba pasenęs kodas',
     errRate: 'Per daug bandymų. Palaukite 10 min.',
-    errFast: 'Palaukite minutę tarp antspaudų',
+    errDailyDone: 'Šiandien antspaudas jau gautas. Užsukite rytoj! 🙂',
     errNotFull: 'Kortelė dar nepilna',
     errDemoOver: 'Demonstracija baigėsi. Dėl pilnos versijos susisiekite el. paštu.',
     errGeneric: 'Klaida. Bandykite dar kartą.',
@@ -95,8 +101,8 @@ const STR = {
     flowTitle: 'Kaip tai veikia darbuotojui?',
     flow: [
       ['Svečias atidaro kortelę', 'Nuskaito QR kodą prie kasos arba paspaudžia nuorodą telefone'],
-      ['Darbuotojas įveda PIN', 'Patvirtina pirkimą trumpu 4 skaitmenų kodu'],
-      ['Pridedamas antspaudas', 'Kortelė užsipildo po vieną su kiekvienu apsilankymu'],
+      ['Darbuotojas parodo kodą', 'Atsidaro savo kodų puslapį — svečias įveda 6 skaitmenis arba nuskaito QR (telefono atiduoti nereikia)'],
+      ['Pridedamas antspaudas', 'Kortelė užsipildo po vieną su kiekvienu apsilankymu (1 per dieną)'],
       ['Surinko — gauna prizą', 'Svečias atsiima dovaną ir grįžta vėl jos užsidirbti'],
     ],
     // review nudge
@@ -113,7 +119,7 @@ const STR = {
     bdayClaimBtn: '🎁 Atsiimti dovaną',
     bdayClaimed: '🎂 Gimtadienio dovana jau atsiimta šiemet. Iki kitų metų! 🥳',
     bdayChange: 'Pakeisti datą',
-    pinHintBday: '⚠️ Darbuotojas: patikrinkite kliento asmens dokumentą (gimimo datą), tada įveskite PIN.',
+    pinHintBday: '⚠️ Darbuotojas: patikrinkite kliento asmens dokumentą (gimimo datą), tada parodykite kodą.',
     // owner page
     back: '← Atgal į kortelę',
     ownerTag: 'SAVININKO APŽVALGA · iliustracinis pavyzdys',
@@ -150,7 +156,7 @@ const STR = {
     faqTitle: 'Dažniausiai užduodami klausimai',
     faq: [
       ['Kaip veikia lojalumo kortelė?',
-        'Svečias telefonu nuskaito QR kodą prie kasos arba paspaudžia nuorodą — atsidaro Jūsų prekės ženklo kortelė. Darbuotojas patvirtina apsilankymą trumpu PIN kodu ir pridedamas antspaudas. Surinkęs reikiamą skaičių, svečias atsiima prizą ir grįžta vėl jo užsidirbti.'],
+        'Svečias telefonu nuskaito QR kodą prie kasos arba paspaudžia nuorodą — atsidaro Jūsų prekės ženklo kortelė. Darbuotojas patvirtina apsilankymą trumpu kodu, kuris keičiasi kas 30 sekundžių (kaip banko 2FA): svečias jį įveda savo telefone arba nuskaito darbuotojo QR — telefono atiduoti nereikia. Pridedamas antspaudas (vienas per dieną). Surinkęs reikiamą skaičių, svečias atsiima prizą ir grįžta vėl jo užsidirbti.'],
       ['Ar reikia specialios įrangos ar programėlės iš App Store?',
         'Ne. Viskas veikia telefono naršyklėje — nereikia jokios įrangos, terminalų ar atsisiuntimų iš App Store / Google Play. Svečias gali pridėti kortelę į pradžios ekraną vienu paspaudimu ir naudoti ją kaip programėlę.'],
       ['Kiek tai kainuoja?',
@@ -158,7 +164,7 @@ const STR = {
       ['Kuo skiriatės nuo kitų lojalumo programėlių?',
         '<strong>Jokių mėnesinių mokesčių.</strong> Dauguma lojalumo programėlių — prenumeratos (~25–80 €/mėn., ir taip be galo), įspraudžiančios Jus į griežtą šabloną su svetimu prekės ženklu. Pas mus sumokate <strong>vieną kartą</strong>, o programėlę <strong>pritaikome būtent Jūsų verslui</strong>: prizų pakopas, spalvas, kalbas (LT/EN), gimtadienio dovanas, net visiškai naujas funkcijas. Viskas su <strong>Jūsų prekės ženklu</strong> (ir, jei norite, Jūsų domenu) — produktą naudojate neterminuotai, be priklausomybės nuo svetimos platformos. Palaikymas greitas ir asmeniškas, o klientams nereikia jokios registracijos (privatumas). Rimtos agentūros individualų tokį sprendimą paprastai įkainoja <strong>3 000–8 000 €</strong> (pilna mobilioji iOS/Android programėlė su integracijomis — 15 000 € ir daugiau), dažnai dar su mėnesiniu palaikymo mokesčiu — todėl 1000 € vienkartinė kaina yra itin palanki.'],
       ['Ar tai saugu? Kaip su privatumu ir sukčiavimu?',
-        '<strong>Privatumas:</strong> nerenkame jokių asmens duomenų — kortelė saugoma tik svečio telefone, todėl nelieka ir GDPR rūpesčių dėl klientų sąrašų. <strong>Sukčiavimas:</strong> antspaudus prideda tik darbuotojas savo PIN kodu, tad svečias negali jų prisidėti pats; veikia apsauga nuo per dažno spaudimo ir nuo PIN spėliojimo. Specialios dovanos (pvz. gimtadienio) atiduodamos tik darbuotojui patikrinus asmens dokumentą ir tik kartą per metus.'],
+        '<strong>Privatumas:</strong> nerenkame jokių asmens duomenų — kortelė saugoma tik svečio telefone, todėl nelieka ir GDPR rūpesčių dėl klientų sąrašų. <strong>Sukčiavimas:</strong> antspaudą galima pridėti tik su darbuotojo kodu, kuris keičiasi kas 30 sekundžių (kaip 2FA), tad svečias negali prisidėti jo pats ir negali pakartotinai panaudoti pamatyto kodo; be to, vienam telefonui leidžiamas tik <strong>vienas antspaudas per dieną</strong> (atsistato vidurnaktį). Specialios dovanos (pvz. gimtadienio) atiduodamos tik darbuotojui patikrinus asmens dokumentą ir tik kartą per metus.'],
       ['Ar galima naudoti su mano įmonės domenu ir svetaine?',
         'Taip. Kortelę galime paleisti Jūsų pačių adresu, pvz. <em>kortele.jusuimone.lt</em>. Jei jau turite domeną ir svetainę: Jūs (arba Jūsų svetainės administratorius) pridedate vieną mūsų pateiktą DNS įrašą, o mes sutvarkome talpinimą ir saugų HTTPS ryšį. Kortelė veikia atskirai ir nekeičia esamos svetainės — tiesiog galite pridėti mygtuką „Lojalumo kortelė". Viskas su Jūsų prekės ženklu.'],
       ['Ar klientams reikia registruotis? Ką jie gauna?',
@@ -177,7 +183,7 @@ const STR = {
   },
   en: {
     subtitle: 'Loyalty card',
-    demoBadge: 'DEMO · staff PIN: 1234',
+    demoBadge: 'DEMO · staff code rotates every 30 s',
     tiersTitle: 'Rewards along the way:',
     tierStamps: (n) => `${n} stamps`,
     prizeReady: (r) => `🎉 Your reward: <strong>${r}</strong>!`,
@@ -185,7 +191,7 @@ const STR = {
     prizeIs: (r) => `Reward: ${r}`,
     redeem: '🎁 Claim reward',
     getStamp: 'Get a stamp',
-    staffPress: 'A staff member taps this button at checkout.',
+    staffPress: 'A staff member shows a code or QR — enter or scan it.',
     autoFill: '✨ Fill the card (demo)',
     reset: '↺ Start over',
     installCta: '📲 Add to Home Screen',
@@ -199,8 +205,9 @@ const STR = {
     celebrateTitle: 'Congratulations!',
     celebrateBtn: 'Great!',
     celebratePrize: (r) => `Your reward:<br><strong>${r}</strong>`,
-    pinTitle: 'Staff PIN',
-    pinHint: 'Show your phone to a staff member',
+    pinTitle: 'Staff code',
+    pinHint: 'Staff will show you a code or QR',
+    pinDemoCode: (c) => `Demo · code for this moment: <strong>${c}</strong>`,
     pinCancel: 'Cancel',
     toastRedeemed: 'Reward claimed! Thank you 🎉',
     toastStamp: 'Stamp added ⭐',

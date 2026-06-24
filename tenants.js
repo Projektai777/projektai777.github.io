@@ -49,7 +49,8 @@ export default {
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
     google_review_url: 'https://www.google.com/maps/search/?api=1&query=Berneli%C5%B3+u%C5%BEeiga',
     preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
-    pin_hash: 'e1bee1f8c7bc8cc8f481f0d9dc9f1e607818850ab96c5910a4537d4788d5dd35', // PIN: 1234
+    staff_secret: '3798bc6a93d45c798242d999ea43b6bf',     // rotating-code raktas
+    staff_pass_hash: 'ae4964eeffe94ad8cbd2ec334814ec1b6b9b568d4729fadd74daf9caf7209ab1', // /tools/staff.html slaptažodis: berneliai2026
   },
 
   // kitasverslas: {
@@ -58,7 +59,8 @@ export default {
   //   primary_color: '#0ea5e9',
   //   stamps_needed: 5,
   //   reward_text: 'Nemokamas plovimas',
-  //   pin_hash: '...',
+  //   staff_secret: '...',
+  //   staff_pass_hash: '...',
   // },
 
 };
