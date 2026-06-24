@@ -14,6 +14,7 @@ export default {
     primary_color: '#FF5733',
     stamps_needed: 10,
     reward_text: 'Nemokamas didelis kapučinas',
+    reward_text_en: 'Free large cappuccino', // EN variantas (rodomas kai įjungtas EN)
     pin_hash: '88bf6316a604b0e00e239641f1e554ac86271ec4be44757ac87edb4269e0c331', // PIN: 1234
   },
 
@@ -26,13 +27,15 @@ export default {
     primary_color: '#b91c1c',
     stamps_needed: 10,
     reward_text: '10-as patiekalas nemokamai',
+    reward_text_en: 'Free 10th dish',     // EN variantas (rodomas kai įjungtas EN)
     stamp_icon: '🍴',                     // restaurant-flavored stamp (default for any tenant; override per business)
-    // milestones = tarpiniai prizai (rodo, kad sistema lanksti)
+    // milestones = tarpiniai prizai (rodo, kad sistema lanksti); text_en = EN variantas
     milestones: [
-      { at: 5, text: 'Nemokamas gardus kompotas' },
-      { at: 10, text: '10-as patiekalas nemokamai' },
+      { at: 5, text: 'Nemokamas gardus kompotas', text_en: 'Free fruit drink (kompotas)' },
+      { at: 10, text: '10-as patiekalas nemokamai', text_en: 'Free 10th dish' },
     ],
     birthday_reward: 'Nemokamas desertas gimtadienio proga', // gimtadienio dovana (rodo kortelėje)
+    birthday_reward_en: 'Free birthday dessert',
     // Google atsiliepimo nuoroda — po prizo atsiėmimo svečiui pasiūloma palikti atsiliepimą.
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
     google_review_url: 'https://www.google.com/maps/search/?api=1&query=Berneli%C5%B3+u%C5%BEeiga',

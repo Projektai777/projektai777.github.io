@@ -497,7 +497,7 @@ function tiersHtml() {
     const done = card.stamps >= m.at;
     return `<div class="tier ${done ? 'tier-done' : ''}">
       <span class="tier-badge">${done ? '✓' : m.at}</span>
-      <span class="tier-text"><b>${t('tierStamps', m.at)}</b> · ${m.text}</span></div>`;
+      <span class="tier-text"><b>${t('tierStamps', m.at)}</b> · ${milestoneText(m)}</span></div>`;
   }).join('');
   return `<div class="tiers"><p class="tiers-title">${t('tiersTitle')}</p>${items}</div>`;
 }
@@ -562,7 +562,7 @@ function isBirthdayToday(md) {
 function birthdayHtml() {
   if (!tenant.birthday_reward) return '';
   const saved = loadBday();
-  const reward = tenant.birthday_reward;
+  const reward = birthdayReward();
   if (saved && saved.md) {
     if (isBirthdayToday(saved.md)) {
       return `<div class="bday-card bday-today">${t('bdayToday', reward)}</div>`;
@@ -625,10 +625,10 @@ function render() {
 
   const remaining = tenant.stamps_needed - card.stamps;
   const statusLine = full
-    ? t('prizeReady', tenant.reward_text)
+    ? t('prizeReady', rewardText())
     : remaining === 1
       ? t('oneLeft')
-      : t('prizeIs', tenant.reward_text);
+      : t('prizeIs', rewardText());
 
   app.innerHTML = `
     ${langToggleHtml()}
@@ -708,10 +708,10 @@ async function autoFill() {
     await sleep(280);
   }
   if (card.stamps >= tenant.stamps_needed) {
-    celebrate(tenant.reward_text);
+    celebrate(rewardText());
   } else {
     const m = (tenant.milestones || []).find((x) => x.at === card.stamps);
-    if (m) toast(t('reached', m.text));
+    if (m) toast(t('reached', milestoneText(m)));
   }
 }
 
@@ -830,7 +830,7 @@ function renderOwner() {
       <div class="standee-mock">
         <div class="standee-top"></div>
         <p class="sm-name">${tenant.business_name}</p>
-        <p class="sm-reward">${tenant.reward_text}</p>
+        <p class="sm-reward">${rewardText()}</p>
         <div id="standeeQr"></div>
         <p class="sm-steps">${t('qrSteps')}</p>
       </div>
@@ -917,7 +917,7 @@ async function submitPin() {
       } else {
         card.stamps = res.stamps;
         render();
-        if (res.full) celebrate(tenant.reward_text);
+        if (res.full) celebrate(rewardText());
         else toast(t('toastStamp'));
       }
     } else {
