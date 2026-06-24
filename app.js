@@ -141,7 +141,6 @@ const STR = {
     qrTitle: 'Išbandykite kitu telefonu',
     qrLead: 'Nuskaitykite QR kodą kitu telefonu — kortelė atsidarys taip, kaip ją matys Jūsų svečias.',
     qrSteps: 'Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą',
-    printStandee: '🖨️ Spausdinti stovelį prie kasos →',
     startTitle: 'Kaip pradedame?',
     startSteps: [
       ['📩', 'Paliekate užklausą', 'Parašote mums — atsakome per 1 darbo dieną.'],
@@ -170,7 +169,7 @@ const STR = {
       ['Ar klientams reikia registruotis? Ką jie gauna?',
         'Ne — jokios registracijos, el. pašto ar telefono numerio. Svečias atidaro kortelę ir iškart pradeda rinkti antspaudus, viskas išsaugoma jo telefone. Paprasta ir greita, todėl kortele naudojasi daugiau svečių.'],
       ['Kaip greitai galima pradėti? Ko reikia iš manęs?',
-        'Paprastai per kelias dienas. Iš Jūsų reikia: logotipo, spalvų, prizo sąlygų (pvz. „10-as patiekalas nemokamai") ir, jei norite, nuotraukos antraštei. Mes viską sukonfigūruojame, atsiunčiame nuorodą ir paruošiame spausdinamą QR stovelį prie kasos.'],
+        'Paprastai per kelias dienas. Iš Jūsų reikia: logotipo, spalvų, prizo sąlygų (pvz. „10-as patiekalas nemokamai") ir, jei norite, nuotraukos antraštei. Mes viską sukonfigūruojame, atsiunčiame kortelės nuorodą ir darbuotojų kodų puslapį, kurį atsidaro personalas.'],
       ['Ar galima pritaikyti pagal mano verslo poreikius?',
         'Taip — viską galima pritaikyti: prizų skaičių ir pakopas, spalvas, tekstus, kalbą (LT/EN), gimtadienio dovanas, atsiliepimų skatinimą, net visiškai naujas funkcijas. Pasakykite, ko reikia Jūsų verslui, ir tai įgyvendinsime.'],
       ['Kaip vyksta sutartis ir atsiskaitymas?',
@@ -262,7 +261,6 @@ const STR = {
     qrTitle: 'Try it on another phone',
     qrLead: 'Scan the QR code with another phone — the card opens exactly as your guest will see it.',
     qrSteps: 'Scan the QR · collect stamps · claim your reward',
-    printStandee: '🖨️ Print a counter standee →',
     startTitle: 'How we start',
     startSteps: [
       ['📩', 'You reach out', 'Drop us a line — we reply within 1 business day.'],
@@ -291,7 +289,7 @@ const STR = {
       ['Do customers need to register? What do they get?',
         'No — no registration, email or phone number. The guest opens the card and starts collecting stamps right away; everything is saved on their phone. Simple and fast, so more guests actually use it.'],
       ['How fast can we start? What do you need from me?',
-        'Usually within a few days. From you we need: your logo, colours, the reward terms (e.g. “every 10th dish free”), and optionally a header photo. We configure everything, send you the link, and prepare a printable QR standee for the counter.'],
+        'Usually within a few days. From you we need: your logo, colours, the reward terms (e.g. “every 10th dish free”), and optionally a header photo. We configure everything and send you the card link plus a staff code page for your team to open.'],
       ['Can it be customized to my business?',
         'Yes — everything can be tailored: number of stamps and tiers, colours, texts, language (LT/EN), birthday gifts, review prompts, even entirely new features. Tell us what your business needs and we’ll build it.'],
       ['How do the contract and payment work?',
@@ -974,7 +972,6 @@ function faqHtml() {
 function renderOwner() {
   setTheme();
   const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}`;
-  const standeeUrl = `tools/standee.html?b=${encodeURIComponent(slug)}`;
   app.innerHTML = `
     ${langToggleHtml()}
     <a class="back-link" href="?b=${encodeURIComponent(slug)}">${t('back')}</a>
@@ -1005,7 +1002,6 @@ function renderOwner() {
         <div id="standeeQr"></div>
         <p class="sm-steps">${t('qrSteps')}</p>
       </div>
-      <a class="pitch-owner" href="${standeeUrl}">${t('printStandee')}</a>
     </section>
 
     ${faqHtml()}

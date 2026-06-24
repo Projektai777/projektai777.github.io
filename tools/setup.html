@@ -31,7 +31,7 @@
     <h1>➕ Naujo verslo prijungimas</h1>
     <div class="row">
       <div><label>Slug (URL dalis, be tarpų)</label><input id="fSlug" value="coffeebox" pattern="[a-z0-9-]+"></div>
-      <div><label>Darbuotojo PIN (4 skaitmenys)</label><input id="fPin" value="" maxlength="4" inputmode="numeric" placeholder="pvz. 4482"></div>
+      <div><label>Darbuotojo puslapio slaptažodis</label><input id="fPass" value="" placeholder="pvz. kava2026"></div>
     </div>
     <div><label>Verslo pavadinimas</label><input id="fName" value="Coffee Box Kaunas"></div>
     <div class="row">
@@ -48,8 +48,8 @@
     <pre id="out"></pre>
     <button id="copy">Kopijuoti</button>
     <p class="hint">Įklijavę bloką į <b>public/tenants.js</b> ir įkėlę pakeitimą,
-    kortelė veiks adresu <b id="urlPreview"></b>. Tada sugeneruokite QR standą:
-    <a href="/tools/standee.html">standee generatorius</a>.</p>
+    kortelė veiks adresu <b id="urlPreview"></b>. Darbuotojai antspaudus dalins per
+    <b>/tools/staff.html?b=slug</b> (rodo kas 30 s besikeičiantį kodą ir QR; saugo įvestu slaptažodžiu).</p>
   </div>
 </div>
 
@@ -59,13 +59,20 @@
     return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
   }
 
+  // Atsitiktinis raktas rotacijai (kaip 2FA) — generuojamas naršyklėje.
+  function randSecret() {
+    const a = crypto.getRandomValues(new Uint8Array(16));
+    return [...a].map((b) => b.toString(16).padStart(2, '0')).join('');
+  }
+
   document.getElementById('gen').onclick = async () => {
     const slug = document.getElementById('fSlug').value.trim().toLowerCase();
-    const pin = document.getElementById('fPin').value.trim();
+    const pass = document.getElementById('fPass').value.trim();
     if (!/^[a-z0-9-]+$/.test(slug)) return alert('Slug gali turėti tik mažąsias raides, skaičius ir brūkšnelius.');
-    if (!/^\d{4}$/.test(pin)) return alert('PIN turi būti 4 skaitmenys.');
+    if (pass.length < 4) return alert('Slaptažodis turi būti bent 4 simbolių.');
 
-    const hash = await sha256(`${slug}:${pin}`);
+    const passHash = await sha256(`${slug}:${pass}`);
+    const secret = randSecret();
     const snippet =
 `  ${slug}: {
     business_name: '${document.getElementById('fName').value.replace(/'/g, "\\'")}',
@@ -73,7 +80,8 @@
     primary_color: '${document.getElementById('fColor').value}',
     stamps_needed: ${parseInt(document.getElementById('fStamps').value, 10) || 10},
     reward_text: '${document.getElementById('fReward').value.replace(/'/g, "\\'")}',
-    pin_hash: '${hash}', // PIN žinokite tik jūs ir verslo savininkas
+    staff_secret: '${secret}',     // rotating-code raktas
+    staff_pass_hash: '${passHash}', // /tools/staff.html slaptažodis: ${pass}
   },`;
 
     document.getElementById('out').textContent = snippet;

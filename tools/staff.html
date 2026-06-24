@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>Darbuotojo kodas — Lojalumas</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif; background: #0f172a; color: #e2e8f0;
+    min-height: 100dvh; display: grid; place-items: center; padding: 20px;
+  }
+  .wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 18px; align-items: center; text-align: center; }
+  h1 { font-size: 1.05rem; font-weight: 800; letter-spacing: .02em; }
+  .biz { font-size: .85rem; color: #94a3b8; }
+  /* login */
+  .card { background: #1e293b; border-radius: 18px; padding: 24px; width: 100%; box-shadow: 0 10px 40px rgb(0 0 0 / .4); }
+  label { display: block; font-size: .8rem; font-weight: 700; color: #94a3b8; text-align: left; margin-bottom: 8px; }
+  input {
+    width: 100%; padding: 14px; border: 1px solid #334155; border-radius: 12px; font-size: 1.1rem;
+    background: #0f172a; color: #f1f5f9; text-align: center; letter-spacing: .05em;
+  }
+  button {
+    margin-top: 16px; width: 100%; padding: 14px; border: none; border-radius: 12px;
+    background: #22c55e; color: #06280f; font-weight: 800; font-size: 1rem; cursor: pointer;
+  }
+  .err { color: #fca5a5; font-size: .85rem; margin-top: 10px; min-height: 1em; }
+  /* code view */
+  .qr-box { background: #fff; border-radius: 20px; padding: 16px; width: 100%; display: grid; place-items: center; }
+  .qr-box img { width: 100%; max-width: 320px; aspect-ratio: 1; display: block; border-radius: 6px; }
+  .qr-cap { font-size: .8rem; color: #94a3b8; }
+  .code {
+    font-size: clamp(2.6rem, 16vw, 3.4rem); font-weight: 800; letter-spacing: .18em;
+    font-variant-numeric: tabular-nums; color: #f8fafc; padding-left: .18em;
+  }
+  .code-label { font-size: .8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .08em; }
+  .timer { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: .85rem; color: #cbd5e1; }
+  .ring { --p: 100; width: 22px; height: 22px; border-radius: 50%;
+    background: conic-gradient(#22c55e calc(var(--p) * 1%), #334155 0); }
+  .hint { font-size: .82rem; color: #94a3b8; line-height: 1.5; }
+  .lock { font-size: .78rem; color: #64748b; background: none; border: 1px solid #334155; padding: 8px 14px; width: auto; margin: 6px auto 0; border-radius: 10px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- LOGIN -->
+  <div id="login" class="card hidden">
+    <h1>🔒 Darbuotojo prisijungimas</h1>
+    <p class="biz" id="bizLogin" style="margin:6px 0 18px"></p>
+    <label for="pass">Slaptažodis</label>
+    <input id="pass" type="password" autocomplete="current-password" inputmode="text" placeholder="••••••">
+    <button id="enter">Atrakinti</button>
+    <p class="err" id="loginErr"></p>
+  </div>
+
+  <!-- CODE -->
+  <div id="codeView" class="hidden">
+    <h1 id="bizName"></h1>
+    <p class="biz">Parodykite QR svečiui arba padiktuokite kodą</p>
+    <div class="qr-box"><img id="qr" alt="QR"></div>
+    <p class="qr-cap">Svečias nuskaito → antspaudas pridedamas jo telefone</p>
+    <div>
+      <div class="code-label">arba padiktuokite kodą</div>
+      <div class="code" id="code">······</div>
+    </div>
+    <div class="timer"><span class="ring" id="ring"></span><span id="secs"></span></div>
+    <p class="hint">Kodas keičiasi kas 30 sekundžių. Vienas svečias gali gauti 1 antspaudą per dieną.</p>
+    <button class="lock" id="lockBtn">Užrakinti</button>
+  </div>
+
+  <p id="fatal" class="biz hidden"></p>
+</div>
+
+<script type="module">
+import TENANTS from '../tenants.js';
+import { currentCode, secondsLeft, TOTP_PERIOD } from '../totp.js';
+
+const params = new URLSearchParams(location.search);
+const slug = (params.get('b') || '').toLowerCase();
+const tenant = TENANTS[slug];
+
+const $ = (id) => document.getElementById(id);
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Absolute URL of the card the guest lands on after scanning (parent of /tools/).
+function cardBase() {
+  return new URL('../', location.href).href; // e.g. https://host/
+}
+
+if (!tenant || !tenant.staff_secret) {
+  $('fatal').textContent = slug
+    ? `Verslas „${slug}" nerastas arba neturi darbuotojo kodo.`
+    : 'Trūksta verslo nuorodos. Atidarykite: /tools/staff.html?b=slug';
+  $('fatal').classList.remove('hidden');
+} else {
+  $('bizLogin').textContent = tenant.business_name;
+  $('bizName').textContent = tenant.business_name;
+  const unlockKey = `lojalumas_staff_${slug}`;
+
+  function showCode() {
+    $('login').classList.add('hidden');
+    $('codeView').classList.remove('hidden');
+    tick();
+  }
+
+  async function tick() {
+    const code = await currentCode(tenant.staff_secret);
+    $('code').textContent = code;
+    const url = `${cardBase()}?b=${encodeURIComponent(slug)}&grant=${code}`;
+    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=10&data=${encodeURIComponent(url)}`;
+    if ($('qr').dataset.code !== code) { $('qr').src = qrSrc; $('qr').dataset.code = code; }
+    const left = secondsLeft();
+    $('secs').textContent = `${left} s`;
+    $('ring').style.setProperty('--p', String((left / TOTP_PERIOD) * 100));
+  }
+  setInterval(() => { if (!$('codeView').classList.contains('hidden')) tick(); }, 1000);
+
+  async function tryUnlock() {
+    const pass = $('pass').value.trim();
+    if (!pass) return;
+    const ok = (await sha256(`${slug}:${pass}`)) === tenant.staff_pass_hash;
+    if (ok) {
+      sessionStorage.setItem(unlockKey, '1');
+      showCode();
+    } else {
+      $('loginErr').textContent = 'Neteisingas slaptažodis.';
+      $('pass').value = '';
+    }
+  }
+
+  $('enter').onclick = tryUnlock;
+  $('pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
+  $('lockBtn').onclick = () => { sessionStorage.removeItem(unlockKey); location.reload(); };
+
+  if (sessionStorage.getItem(unlockKey) === '1') showCode();
+  else { $('login').classList.remove('hidden'); $('pass').focus(); }
+}
+</script>
+</body>
+</html>
