@@ -176,6 +176,39 @@ function setTheme() {
   document.getElementById('themeColor').content = tenant.primary_color;
   document.documentElement.style.setProperty('--brand', tenant.primary_color);
   document.title = `${tenant.business_name} — lojalumo kortelė`;
+  setAppIcon();
+}
+
+// Make the "add to home screen" shortcut use the SAME logo as the card page,
+// per tenant. Falls back to the static icon when a tenant has no logo.
+function setAppIcon() {
+  // absolute, so it resolves correctly inside the blob-URL manifest below
+  const icon = new URL(tenant.logo_url || './icon-192.png', location.href).href;
+  const apple = document.getElementById('appleIcon');
+  if (apple) apple.href = icon;
+
+  // Rewrite the PWA manifest so the installed icon + label match the tenant.
+  const manifest = {
+    name: tenant.business_name,
+    short_name: tenant.business_name,
+    start_url: location.pathname + location.search,
+    display: 'standalone',
+    background_color: '#f5f5f4',
+    theme_color: tenant.primary_color || '#1f2937',
+    icons: [
+      { src: icon, sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: icon, sizes: '512x512', type: 'image/png', purpose: 'any' },
+    ],
+  };
+  const link = document.getElementById('manifest');
+  if (link) {
+    if (link.dataset.blob) URL.revokeObjectURL(link.dataset.blob);
+    const url = URL.createObjectURL(
+      new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' })
+    );
+    link.href = url;
+    link.dataset.blob = url;
+  }
 }
 
 function headerHtml() {
