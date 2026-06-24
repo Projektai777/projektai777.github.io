@@ -95,9 +95,9 @@ const STR = {
     errBdayClaimed: 'Gimtadienio dovana šiemet jau atsiimta.',
     flowTitle: 'Kaip tai veikia darbuotojui?',
     flow: [
-      ['Svečias atidaro kortelę', 'Nuskaito QR kodą prie kasos arba paspaudžia nuorodą telefone'],
-      ['Darbuotojas parodo QR', 'Atsidaro savo kodų puslapį su QR — svečias nuskaito jį sava kamera (telefono atiduoti nereikia)'],
-      ['Pridedamas antspaudas', 'Antspaudas užsiskaito automatiškai, po vieną su kiekvienu apsilankymu (1 per dieną)'],
+      ['Darbuotojas parodo QR', 'Atsidaro savo kodų puslapį — QR keičiasi kas 30 s'],
+      ['Svečias nuskaito sava kamera', 'Tuo pačiu nuskaitymu iškart atsidaro kortelė IR pridedamas antspaudas (telefono atiduoti nereikia)'],
+      ['Antspaudas pridėtas', 'Po vieną su kiekvienu apsilankymu (1 per dieną)'],
       ['Surinko — gauna prizą', 'Svečias atsiima dovaną ir grįžta vėl jos užsidirbti'],
     ],
     // review nudge
@@ -151,7 +151,7 @@ const STR = {
     faqTitle: 'Dažniausiai užduodami klausimai',
     faq: [
       ['Kaip veikia lojalumo kortelė?',
-        'Svečias telefonu nuskaito QR kodą prie kasos arba paspaudžia nuorodą — atsidaro Jūsų prekės ženklo kortelė. Darbuotojas parodo QR kodą, kuris keičiasi kas 30 sekundžių (kaip banko 2FA); svečias nuskaito jį savo telefono kamera — antspaudas užsiskaito automatiškai, telefono atiduoti nereikia. Pridedamas antspaudas (vienas per dieną). Surinkęs reikiamą skaičių, svečias atsiima prizą ir grįžta vėl jo užsidirbti.'],
+        'Darbuotojas parodo QR kodą (jis keičiasi kas 30 sekundžių, kaip banko 2FA). Svečias jį nuskaito savo telefono kamera — ir iškart, tuo pačiu nuskaitymu, atsidaro Jūsų prekės ženklo kortelė ir pridedamas antspaudas. Nieko diegti ar atidaryti iš anksto nereikia, telefono atiduoti taip pat. Kitą kartą svečias atsidaro tą pačią kortelę ir vėl nuskaito darbuotojo QR (vienas antspaudas per dieną). Surinkęs reikiamą skaičių, atsiima prizą ir grįžta vėl jo užsidirbti.'],
       ['Ar reikia specialios įrangos ar programėlės iš App Store?',
         'Ne. Viskas veikia telefono naršyklėje — nereikia jokios įrangos, terminalų ar atsisiuntimų iš App Store / Google Play. Svečias gali pridėti kortelę į pradžios ekraną vienu paspaudimu ir naudoti ją kaip programėlę.'],
       ['Kiek tai kainuoja?',
@@ -215,9 +215,9 @@ const STR = {
     errBdayClaimed: 'Birthday gift already claimed this year.',
     flowTitle: 'How does it work for staff?',
     flow: [
-      ['Guest opens the card', 'Scans the staff QR or taps the link on their phone'],
-      ['Staff shows a QR', 'Opens their code page — the guest scans it with their own camera (no phone handover)'],
-      ['A stamp is added', 'It’s added automatically, one stamp per visit (1 per day)'],
+      ['Staff shows the QR', 'Opens their code page — the QR changes every 30 s'],
+      ['Guest scans with their camera', 'That one scan opens the card AND adds the stamp (no phone handover)'],
+      ['Stamp added', 'One stamp per visit (1 per day)'],
       ['Card full — reward earned', 'The guest claims the gift and comes back to earn it again'],
     ],
     reviewTitle: 'Enjoyed your visit?',
@@ -268,7 +268,7 @@ const STR = {
     faqTitle: 'Frequently asked questions',
     faq: [
       ['How does the loyalty card work?',
-        'A guest scans the staff QR or taps a link — your branded card opens on their phone. A staff member shows a QR code that changes every 30 seconds (like bank 2FA); the guest scans it with their own phone camera — the stamp is added automatically and the phone never changes hands. A stamp is added (one per day). Once full, the guest claims the reward and comes back to earn it again.'],
+        'A staff member shows a QR code (it changes every 30 seconds, like bank 2FA). The guest scans it with their phone camera — and in that single scan your branded card opens AND a stamp is added straight away. Nothing to install or open beforehand, and the phone never changes hands. On the next visit the guest reopens the same card and scans the staff QR again (one stamp per day). Once full, they claim the reward and come back to earn it again.'],
       ['Do I need special hardware or an app from the App Store?',
         'No. Everything runs in the phone’s browser — no hardware, terminals, or downloads from the App Store / Google Play. The guest can add the card to their home screen in one tap and use it like an app.'],
       ['How much does it cost?',
