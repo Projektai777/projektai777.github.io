@@ -436,7 +436,7 @@ function renderOwner() {
       <a class="pitch-owner" href="${standeeUrl}">🖨️ Spausdinti stovelį prie kasos →</a>
     </section>
 
-    <button class="cta cta-contact" id="copyEmailBtn">Norite tai savo restoranui?<span>Susisiekime →</span></button>
+    <button class="cta cta-contact" id="copyEmailBtn">Norite to savo restoranui?<span>Susisiekime →</span></button>
     <p class="privacy">🔒 Jokių asmens duomenų — viskas saugoma svečio telefone.</p>
   `;
   drawQr(cardUrl);
