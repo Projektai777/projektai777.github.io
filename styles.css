@@ -511,12 +511,6 @@ dialog.celebrate strong { color: #1c1917; font-size: 1.1rem; }
 }
 .faq-a strong { color: #1c1917; }
 .faq-a em { color: var(--brand); font-style: normal; font-weight: 600; }
-.faq-pdf {
-  display: inline-block; margin-top: 12px; text-decoration: none;
-  background: color-mix(in srgb, var(--brand) 8%, #fff); color: var(--brand);
-  font-weight: 700; font-size: .85rem; padding: 9px 14px; border-radius: 10px;
-  border: 1px solid color-mix(in srgb, var(--brand) 25%, #fff);
-}
 
 /* ====================================================================
    "How we start" steps + closing CTA lead
