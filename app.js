@@ -135,6 +135,7 @@ const STR = {
     roiAssume: '*Skaičiuojama atsargiai: ~25% svečių naudoja kortelę ir grįžta vidutiniškai 1 kartą per mėnesį dažniau. Realūs skaičiai priklauso nuo verslo.',
     qrTitle: 'Išbandykite kitu telefonu',
     qrLead: 'Nuskaitykite QR kodą kitu telefonu — kortelė atsidarys taip, kaip ją matys Jūsų svečias.',
+    qrLeadDemo: 'Nuskaitykite šį QR kitu telefonu — šiame demonstraciniame režime jis veikia kaip darbuotojo kodas: kortelė atsidarys ir iškart bus pridėtas antspaudas, lygiai kaip tikram svečiui.',
     qrSteps: 'Nuskaitykite QR · rinkite antspaudus · atsiimkite prizą',
     startTitle: 'Kaip pradedame?',
     startSteps: [
@@ -251,6 +252,7 @@ const STR = {
     roiAssume: '*Calculated conservatively: ~25% of guests use the card and return on average 1 extra time per month. Real numbers depend on your business.',
     qrTitle: 'Try it on another phone',
     qrLead: 'Scan the QR code with another phone — the card opens exactly as your guest will see it.',
+    qrLeadDemo: 'Scan this QR with another phone — in this demo it acts as the staff code: the card opens and a stamp is added right away, exactly like a real guest.',
     qrSteps: 'Scan the QR · collect stamps · claim your reward',
     startTitle: 'How we start',
     startSteps: [
@@ -825,11 +827,35 @@ function sparkline(points) {
   </svg>`;
 }
 
-// Scannable QR (encodes the live card URL — scan with another phone to test).
+// Scannable QR (scan with another phone). drawQr just paints whatever URL it's
+// given; wireOwnerQr decides WHAT to encode (plain link vs. live staff grant).
 function drawQr(targetUrl) {
   const el = document.getElementById('standeeQr');
   if (!el) return;
   el.innerHTML = `<img class="qr-img" alt="QR — ${tenant.business_name}" src="${qrSrc(targetUrl, 400)}">`;
+}
+
+// Owner-page "try on another phone" QR.
+//   - Real client (not preview): just the card link — opening it grants nothing.
+//   - DEMO/preview: it doubles as the STAFF QR. It carries the live rotating
+//     staff code (?grant=CODE), so scanning it on another phone actually adds a
+//     stamp — the whole flow, hands-free, with no separate staff page open. The
+//     code expires in 30 s, so we refresh the QR as it rotates (same TOTP as
+//     /tools/staff.html), only re-fetching the image when the code changes.
+let ownerQrTimer = null;
+function wireOwnerQr(cardUrl) {
+  clearInterval(ownerQrTimer); ownerQrTimer = null; // re-render (e.g. lang toggle) -> reset
+  if (!isPreview || !tenant.staff_secret) { drawQr(cardUrl); return; }
+  let lastCode = null;
+  const paint = async () => {
+    if (!document.getElementById('standeeQr')) { clearInterval(ownerQrTimer); ownerQrTimer = null; return; }
+    const code = await currentCode(tenant.staff_secret);
+    if (code === lastCode) return;            // only redraw when the code actually rotates
+    lastCode = code;
+    drawQr(`${cardUrl}&grant=${code}`);
+  };
+  paint();
+  ownerQrTimer = setInterval(paint, 1000);
 }
 
 // ---------- ROI calculator (owner page) ----------
@@ -926,7 +952,7 @@ function renderOwner() {
 
     <section class="panel qr-test">
       <h3>${t('qrTitle')}</h3>
-      <p class="panel-lead">${t('qrLead')}</p>
+      <p class="panel-lead">${t(isPreview ? 'qrLeadDemo' : 'qrLead')}</p>
       <div class="standee-mock">
         <div class="standee-top"></div>
         <p class="sm-name">${tenant.business_name}</p>
@@ -944,7 +970,7 @@ function renderOwner() {
     <button class="cta cta-contact" id="copyEmailBtn">${t('ownerContact')}<span>${t('ownerContactSub')}</span></button>
     <p class="privacy">${t('ownerPrivacy')}</p>
   `;
-  drawQr(cardUrl);
+  wireOwnerQr(cardUrl);
   wireLangToggle();
   wireRoi();
   const ce = document.getElementById('copyEmailBtn');
