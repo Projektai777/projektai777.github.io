@@ -3,6 +3,9 @@
 // Tenant is resolved from the URL path:  kortele.lt/coffeebox
 // All branding/config comes from the tenant_public view.
 // The PIN is NEVER in this file — it is verified server-side.
+//
+// © 2026 Lojalumas. All rights reserved. Proprietary — see LICENSE.
+// Unauthorized copying, hosting, or redistribution is prohibited.
 // =============================================================
 
 import TENANTS from './tenants.js';
@@ -400,8 +403,9 @@ const staticBackend = {
       const b = loadBday();
       if (!b || !b.md) return { ok: false, error: 'no_bday' };
       if (!isBirthdayToday(b.md)) return { ok: false, error: 'not_birthday' };
-      if (!isPreview && b.claimedYear === thisYear()) return { ok: false, error: 'bday_claimed' };
-      if (!isPreview) { b.claimedYear = thisYear(); saveBday(b); }
+      // Already claimed this year on this device -> tell staff (works in demo too).
+      if (b.claimedYear === thisYear()) return { ok: false, error: 'bday_claimed' };
+      b.claimedYear = thisYear(); saveBday(b);
       return { ok: true };
     }
 
@@ -613,8 +617,9 @@ function birthdayHtml() {
   const reward = birthdayReward();
   if (saved && saved.md) {
     if (isBirthdayToday(saved.md)) {
-      // Already used this year? (preview/demo skips so it can be shown again.)
-      if (!isPreview && saved.claimedYear === thisYear()) {
+      // Already used this year -> show the claimed notice (no claim button). In
+      // preview the "↺ Pradėti iš naujo" button clears this so it can be re-shown.
+      if (saved.claimedYear === thisYear()) {
         return `<div class="bday-card bday-today">${t('bdayClaimed')}</div>`;
       }
       // The gift is released by STAFF (PIN) after checking the customer's ID —
@@ -780,6 +785,9 @@ function resetCard() {
   card.stamps = 0;
   showReview = false;
   if (backend._save) backend._save({ stamps: 0, last: 0, fails: [] });
+  // demo only: also clear the birthday claim so the whole flow can be re-shown
+  const b = loadBday();
+  if (b && b.claimedYear) { delete b.claimedYear; saveBday(b); }
   render();
 }
 
@@ -1025,7 +1033,9 @@ function toast(text, isError = false) {
   if (celebrateCloseBtn) celebrateCloseBtn.onclick = () => document.getElementById('celebrateModal').close();
   deferredInstall = window.__bip || null; // event may have fired before this module ran
   window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; window.__bip = e; });
-  window.addEventListener('appinstalled', () => { deferredInstall = null; window.__bip = null; });
+  window.addEventListener('appinstalled', () => { deferredInstall = null; window.__bip = null; hideInstallHint(); });
+  // If the app gets launched/enters standalone mid-session, drop the prompt too.
+  window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => { if (e.matches) hideInstallHint(); });
   try {
     if (!slug && !isDemo) {
       // Installed-PWA launch loses the ?b= param: restore the last card.
