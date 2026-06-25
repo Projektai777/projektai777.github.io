@@ -136,6 +136,23 @@
   .au-col-l { font-size: .62rem; color: #a8a29e; margin-top: 6px; font-weight: 600; white-space: nowrap; }
   .au-col-v { font-size: .58rem; color: #57534e; margin-top: 1px; font-variant-numeric: tabular-nums; font-weight: 700; }
   .au-empty { font-size: .76rem; color: #a8a29e; padding: 8px 2px; }
+  /* ---------- branch filter ---------- */
+  .branch-bar { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; margin: 14px 0 4px; }
+  .branch-bar.hidden { display: none; }
+  .branch-label { font-size: .74rem; font-weight: 700; color: #78716c; }
+  .branch-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .branch-chip {
+    margin: 0; width: auto; border: 1px solid #e7e5e4; background: #faf9f8; color: #57534e;
+    padding: 7px 13px; border-radius: 999px; font-size: .78rem; font-weight: 700; cursor: pointer;
+    transition: background .2s ease, color .2s ease, border-color .2s ease, transform .12s ease;
+  }
+  .branch-chip:active { transform: scale(.95); }
+  .branch-chip.on { background: var(--brand); color: #fff; border-color: var(--brand); box-shadow: 0 3px 10px color-mix(in srgb, var(--brand) 30%, transparent); }
+  /* active branch highlighted in the list */
+  .au-dev.on { border-color: color-mix(in srgb, var(--brand) 45%, #fff); background: color-mix(in srgb, var(--brand) 7%, #fff); }
+  /* animated swap of the whole stats body when changing branch */
+  .au-stats-body { transition: opacity .2s ease, transform .25s cubic-bezier(.22,1,.36,1); }
+  .au-stats-body.swapping { opacity: 0; transform: translateY(8px); }
   .au-reset { margin-top: 14px; color: #b91c1c; border-color: #fecaca; }
   .hidden { display: none; }
 </style>
@@ -180,6 +197,13 @@
       <button class="geo-btn" id="geoBtn" data-i18n="setVenue">📍 Nustatyti šią vietą kaip įstaigą</button>
       <p class="geo-state" id="geoState"></p>
 
+      <!-- branch filter: pick a filialas to scope ALL stats below to it -->
+      <div class="branch-bar" id="branchBar">
+        <span class="branch-label" data-i18n="viewBranch">Rodyti filialą:</span>
+        <div class="branch-chips" id="branchChips"></div>
+      </div>
+
+      <div class="au-stats-body" id="auStatsBody">
       <div class="stats-nums stats-nums-3">
         <div class="stat"><span class="stat-val" id="auToday">–</span><span class="stat-lbl" data-i18n="lblToday">Šiandien</span></div>
         <div class="stat"><span class="stat-val" id="auWeek">–</span><span class="stat-lbl" data-i18n="lbl7d">7 d.</span></div>
@@ -210,6 +234,7 @@
         <div class="au-sub-head" data-i18n="headTrend">📈 Savaitės tendencija</div>
         <div id="auTrend"></div>
       </div>
+      </div><!-- /au-stats-body -->
 
       <button class="lock au-reset hidden" id="auReset" data-i18n="clearSample">🗑️ Išvalyti pavyzdinę statistiką</button>
     </details>
@@ -518,8 +543,33 @@ if (!tenant || !tenant.staff_secret) {
     });
   }
 
-  async function renderAudit(base) {
-    let j; try { j = await (await fetch(`${base}/audit?b=${encodeURIComponent(slug)}`, { cache: 'no-store' })).json(); } catch { return; }
+  let branchFilter = '';   // '' = all branches; otherwise a device/branch label
+  let auditBase = null;     // remembered for branch-swap re-fetches
+  let knownBranches = [];   // existing branch labels (for the "this device is" picker)
+
+  // Render the branch filter chips from the FULL (unfiltered) branch list. The active
+  // chip is highlighted; clicking one scopes all stats to that branch.
+  function renderBranchChips(devices) {
+    const bar = $('branchBar'); const chips = $('branchChips');
+    if (!devices || devices.length <= 1) { bar.classList.add('hidden'); return; } // no point with 0-1 branch
+    bar.classList.remove('hidden');
+    const all = `<button class="branch-chip ${branchFilter === '' ? 'on' : ''}" data-dev="">${tr('branchAll')}</button>`;
+    chips.innerHTML = all + devices.map((d) =>
+      `<button class="branch-chip ${branchFilter === d.device ? 'on' : ''}" data-dev="${d.device}">${d.device}</button>`).join('');
+    chips.querySelectorAll('.branch-chip').forEach((b) => {
+      b.onclick = () => {
+        if (b.dataset.dev === branchFilter) return;
+        branchFilter = b.dataset.dev;
+        chips.querySelectorAll('.branch-chip').forEach((x) => x.classList.toggle('on', x.dataset.dev === branchFilter));
+        swapStats(); // animated re-fetch of the filtered stats
+      };
+    });
+  }
+
+  // Fetch + paint the stats body (everything that responds to the branch filter).
+  async function paintStats(base) {
+    const url = `${base}/audit?b=${encodeURIComponent(slug)}${branchFilter ? `&device=${encodeURIComponent(branchFilter)}` : ''}`;
+    let j; try { j = await (await fetch(url, { cache: 'no-store' })).json(); } catch { return; }
     if (!j || !j.ok) return;
     const T = j.totals;
     $('auToday').textContent = T.stampsToday;
@@ -528,20 +578,34 @@ if (!tenant || !tenant.staff_secret) {
     $('auRate').textContent = T.redemptionRate + '%';
     $('auLogins').textContent = T.logins;
     $('auOffsite').textContent = T.offsite;
-    // anomaly flags
     if (j.flags.length) {
       $('auFlagsWrap').classList.remove('hidden');
       $('auFlags').innerHTML = j.flags.map((f) =>
         `<div class="au-flag">🚩 ${f.day} ${f.time} · ${f.device} · ${f.city || f.region || '?'}</div>`).join('');
     } else { $('auFlagsWrap').classList.add('hidden'); }
-    // per device / branch
+    // branch list is ALWAYS the full set (j.devices isn't filtered server-side)
+    knownBranches = j.devices.map((d) => d.device);
     $('auDevices').innerHTML = j.devices.map((d) =>
-      `<div class="au-dev"><b>${d.device}</b><span>${d.stamps} ${tr('stamps')} · ${d.redeems} ${tr('prizes')}${d.city ? ' · ' + d.city : ''}${d.offsite ? ' · 🚩' + d.offsite : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
-    // busy hours — stacked stamps + redemptions
+      `<div class="au-dev ${d.device === branchFilter ? 'on' : ''}"><b>${d.device}</b><span>${d.stamps} ${tr('stamps')} · ${d.redeems} ${tr('prizes')}${d.city ? ' · ' + d.city : ''}${d.offsite ? ' · 🚩' + d.offsite : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
     $('auHours').innerHTML = barChart(j.hours, (h) => `${h.hh}`);
-    // weekly trend — stacked stamps + redemptions
     $('auTrend').innerHTML = barChart(j.trend, (w) => `${w.wk.split('-')[1] || ''} sav.`);
     animateBars($('auHours')); animateBars($('auTrend'));
+    return j;
+  }
+
+  // Animated branch swap: fade/slide the stats body out, repaint, fade in.
+  async function swapStats() {
+    const body = $('auStatsBody');
+    body.classList.add('swapping');
+    await new Promise((r) => setTimeout(r, 180));
+    await paintStats(auditBase);
+    body.classList.remove('swapping');
+  }
+
+  async function renderAudit(base) {
+    auditBase = base;
+    const j = await paintStats(base);
+    if (j) renderBranchChips(j.devices);
     $('audit').classList.remove('hidden');
   }
 
