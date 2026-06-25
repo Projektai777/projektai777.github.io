@@ -43,7 +43,7 @@ export default {
       { at: 5, text: '10% nuolaida sąskaitai', text_en: '10% off your bill' },
       { at: 10, text: '25% nuolaida sąskaitai', text_en: '25% off your bill' },
     ],
-    birthday_reward: 'Nemokamas desertas gimtadienio proga', // gimtadienio dovana (rodo kortelėje)
+    birthday_reward: 'Nemokamas desertas', // gimtadienio dovana (rodo kortelėje)
     birthday_reward_en: 'Free birthday dessert',
     // Google atsiliepimo nuoroda — po prizo atsiėmimo svečiui pasiūloma palikti atsiliepimą.
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
