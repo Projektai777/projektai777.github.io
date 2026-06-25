@@ -106,14 +106,15 @@ const STR = {
     reviewLater: 'Kitą kartą',
     // birthday
     bdayPromptTitle: '🎂 Gimtadienio dovana',
-    bdayShowId: (r) => `Gimtadienio proga Jūsų laukia <strong>${r}</strong>. Tą dieną parodykite asmens dokumentą darbuotojui ir paspauskite „Atsiimti dovaną" — jokių registracijų ar sąlygų.`,
+    bdayShowId: (r) => `Gimtadienio proga Jūsų laukia <strong>${r}</strong>. Tą dieną parodykite asmens dokumentą darbuotojui ir paspauskite „Atsiimti dovaną" — jokių registracijų ar sąlygų. <strong>⚠️ Dovaną atsiimkite tik vietoje, restorane, darbuotojo akivaizdoje</strong> — atsiėmus iš anksto, tą dieną jos nebegalėsite panaudoti.`,
     bdayClaimBtn: '🎁 Atsiimti dovaną',
-    bdayConfirmQ: 'Dovaną galima atsiimti tik kartą per dieną. Atsiimti dabar?',
+    bdayConfirmQ: 'Dovaną galima atsiimti tik kartą per dieną ir tik vietoje, restorane, darbuotojo akivaizdoje. Atsiimti dabar?',
     bdayConfirmYes: '✓ Taip, atsiimti',
     bdayConfirmNo: 'Atšaukti',
     pinHintBday: '⚠️ Darbuotojas: patikrinkite kliento asmens dokumentą (gimimo datą), tada parodykite kodą.',
     bdayClaimed: (ago) => `✅ Gimtadienio dovana jau atsiimta ${ago}. Kitą galėsite atsiimti rytoj.`,
     agoNow: 'ką tik',
+    agoSec: (n) => `prieš ${n} s`,
     agoMin: (n) => `prieš ${n} min`,
     agoHour: (n) => `prieš ${n} val.`,
     bdayNote: 'Atnaujinama kasdien (vidurnaktį); gimimo datos nesaugome.',
@@ -229,14 +230,15 @@ const STR = {
     reviewBtn: '⭐ Leave a review',
     reviewLater: 'Maybe later',
     bdayPromptTitle: '🎂 Birthday gift',
-    bdayShowId: (r) => `On your birthday you get <strong>${r}</strong>. On the day, just show your ID to a staff member and tap “Claim gift” — no sign-up, no conditions.`,
+    bdayShowId: (r) => `On your birthday you get <strong>${r}</strong>. On the day, just show your ID to a staff member and tap “Claim gift” — no sign-up, no conditions. <strong>⚠️ Claim the gift only at the restaurant, in front of staff</strong> — if you claim it early, you won’t be able to use it that day.`,
     bdayClaimBtn: '🎁 Claim gift',
-    bdayConfirmQ: 'The gift can be claimed only once a day. Claim now?',
+    bdayConfirmQ: 'The gift can be claimed only once a day, and only at the restaurant in front of staff. Claim now?',
     bdayConfirmYes: '✓ Yes, claim',
     bdayConfirmNo: 'Cancel',
     pinHintBday: '⚠️ Staff: check the customer’s ID (date of birth), then show the code.',
     bdayClaimed: (ago) => `✅ Birthday gift already claimed ${ago}. You can claim again tomorrow.`,
     agoNow: 'just now',
+    agoSec: (n) => `${n} s ago`,
     agoMin: (n) => `${n} min ago`,
     agoHour: (n) => `${n} h ago`,
     bdayNote: 'Resets daily at midnight; your date of birth is never stored.',
@@ -642,10 +644,13 @@ function birthdayClaimedAt() {
   if (!raw) return null;
   return localDay(new Date(raw)) === todayLocal() ? raw : null;
 }
-// Localized "x ago" for the claim timer (same-day, so minutes/hours only).
+// Localized "x ago" for the claim timer — ticks by the SECOND in the first minute
+// (so it visibly counts), then minutes/hours (same-day only).
 function bdayAgo(ts) {
-  const mins = Math.max(0, Math.floor((Date.now() - ts) / 60000));
-  if (mins < 1) return t('agoNow');
+  const secs = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+  if (secs < 3) return t('agoNow');
+  if (secs < 60) return t('agoSec', secs);
+  const mins = Math.floor(secs / 60);
   if (mins < 60) return t('agoMin', mins);
   return t('agoHour', Math.floor(mins / 60));
 }
@@ -706,7 +711,7 @@ function wireBirthday() {
       const el = document.querySelector('.bday-done[data-bday-since]');
       if (!el) { clearInterval(bdayTimer); bdayTimer = null; return; }
       el.textContent = t('bdayClaimed', bdayAgo(ts));
-    }, 60000);
+    }, 1000);
   }
 }
 
