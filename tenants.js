@@ -21,6 +21,7 @@ export default {
     stamps_needed: 10,
     reward_text: 'Nemokamas didelis kapučinas',
     reward_text_en: 'Free large cappuccino', // EN variantas (rodomas kai įjungtas EN)
+    staff_demo_pass: '123456', // PREVIEW-ONLY: rodomas savininko puslapyje (darbuotojo pusės peržiūrai)
     staff_secret: '61d7201b3e2e02a883c9e4a42f527949',     // rotating-code raktas
     staff_pass_hash: 'a1634fed17a756915fbda189de23ab9626c1badaf3785bbb790951f25b72ccea', // /tools/staff.html slaptažodis: 123456
   },

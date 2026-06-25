@@ -1185,6 +1185,21 @@ function faqHtml() {
   </section>`;
 }
 
+// Staff-page preview for the owner/sales page: lets a prospect open the actual
+// password-gated staff page (rotating QR + stats) so they see "the staff side".
+// PREVIEW/DEMO only — needs tenant.staff_demo_pass (a sales-only field removed on
+// go-live, since a real client's staff password must stay private).
+function ownerStaffHtml() {
+  if (!isPreview || !tenant.staff_demo_pass) return '';
+  const staffUrl = new URL('tools/staff.html', new URL('./', location.href)).href + `?b=${encodeURIComponent(slug)}`;
+  return `<section class="panel demo-staff">
+    <h3>${t('ownerStaffTitle')}</h3>
+    <p class="panel-lead">${t('ownerStaffLead')}</p>
+    <a class="cta cta-demo" href="${staffUrl}" target="_blank" rel="noopener">${t('ownerStaffOpen')}</a>
+    <p class="demo-pass">${t('ownerStaffPass')}: <code>${tenant.staff_demo_pass}</code></p>
+  </section>`;
+}
+
 // NOTE: real anonymous stats are NOT shown on this PUBLIC owner/sales page (it
 // keeps the illustrative demo charts, since a prospect's real numbers would be
 // empty). Real per-tenant stats live ONLY on the password-protected staff page
@@ -1227,11 +1242,14 @@ function renderOwner() {
 
     ${faqHtml()}
 
+    ${ownerStaffHtml()}
+
     ${startHtml()}
 
     <p class="cta-lead">${t('ctaLead')}</p>
     <button class="cta cta-contact" id="copyEmailBtn">${t('ownerContact')}<span>${t('ownerContactSub')}</span></button>
     <p class="privacy">${t('ownerPrivacy')}</p>
+    <a class="back-link back-link-bottom" href="?b=${encodeURIComponent(slug)}">${t('back')}</a>
   `;
   wireOwnerQr(cardUrl);
   wireLangToggle();
