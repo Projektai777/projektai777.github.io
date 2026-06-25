@@ -311,17 +311,39 @@ if (!tenant || !tenant.staff_secret) {
     await renderAudit(base);
   }
 
-  // Seed sample audit events for the CURRENT preview tenant (two branches + one
-  // off-site anomaly), so the staff dashboard demos as a real multi-location view.
+  // Seed REALISTIC sample audit events for the CURRENT preview tenant, spread over
+  // ~3 weeks at believable meal-time hours across two branches (with a couple of
+  // off-site anomalies), so the dashboard demos like a real multi-location, multi-day
+  // operation — not a single-hour blob. Backdated via &ts= (preview-only on the worker).
   async function seedSample(base) {
-    const ev = (device, action, geofar) =>
-      fetch(`${base}/log?b=${encodeURIComponent(slug)}&device=${encodeURIComponent(device)}&action=${action}${geofar ? '&geofar=1' : ''}`, { method: 'POST' }).catch(() => {});
+    const ev = (device, action, ts, geofar) =>
+      fetch(`${base}/log?b=${encodeURIComponent(slug)}&device=${encodeURIComponent(device)}`
+        + `&action=${action}&preview=1&ts=${encodeURIComponent(ts)}${geofar ? '&geofar=1' : ''}`,
+        { method: 'POST' }).catch(() => {});
+    // Deterministic pseudo-random so each demo looks the same (no Math.random).
+    let s = 1337; const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+    const pick = (arr) => arr[Math.floor(rnd() * arr.length)];
+    // Busy meal hours: lunch + dinner peaks (local Vilnius time -> we send UTC ts,
+    // but a fixed hour-of-day spread reads fine on the busy-hours chart).
+    const hours = [11, 12, 12, 13, 13, 13, 14, 18, 19, 19, 20, 20, 20, 21];
+    const isoAt = (daysAgo, hour, min) => {
+      const d = new Date(Date.now() - daysAgo * 86400000);
+      d.setHours(hour, min, 0, 0);
+      return d.toISOString();
+    };
     const tasks = [];
-    for (let i = 0; i < 9; i++) tasks.push(ev('Baras', 'stamp'));
-    tasks.push(ev('Baras', 'redeem'));
-    for (let i = 0; i < 5; i++) tasks.push(ev('Senamiestis', 'stamp'));
-    tasks.push(ev('Senamiestis', 'redeem'));
-    tasks.push(ev('Baras', 'stamp', 1)); // one off-site anomaly to showcase the 🚩
+    // 21 days of activity; Baras (~2x busier) + Senamiestis. A redeem now and then.
+    for (let day = 20; day >= 0; day--) {
+      const visitsBaras = 1 + Math.floor(rnd() * 3);        // 1–3/day
+      const visitsSenam = Math.floor(rnd() * 2);            // 0–1/day
+      for (let k = 0; k < visitsBaras; k++) tasks.push(ev('Baras', 'stamp', isoAt(day, pick(hours), Math.floor(rnd() * 60))));
+      for (let k = 0; k < visitsSenam; k++) tasks.push(ev('Senamiestis', 'stamp', isoAt(day, pick(hours), Math.floor(rnd() * 60))));
+      if (rnd() < 0.18) tasks.push(ev('Baras', 'redeem', isoAt(day, pick(hours), Math.floor(rnd() * 60))));
+      if (rnd() < 0.08) tasks.push(ev('Senamiestis', 'redeem', isoAt(day, pick(hours), Math.floor(rnd() * 60))));
+    }
+    // Two rare off-site anomalies (recent) to showcase the 🚩, not a flood.
+    tasks.push(ev('Baras', 'stamp', isoAt(2, 23, 40), 1));
+    tasks.push(ev('Baras', 'stamp', isoAt(6, 1, 15), 1));
     await Promise.all(tasks);
   }
 
