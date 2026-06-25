@@ -644,10 +644,15 @@ function bdayAgo(ts) {
 }
 
 // ---------- birthday reward ----------
-// No birthday capture: staff check the customer's ID (the sole anti-fraud gate) and
-// scan the staff QR — the SAME scan grants the stamp AND claims the gift, recorded
-// with a device-global timestamp. Once claimed, the banner shows "already claimed
-// X ago" (at every restaurant) until local midnight; we never store a birthday date.
+// No birthday capture: staff check the customer's ID (the sole anti-fraud gate); the
+// customer then taps "Atsiimti dovaną" + confirms, which records a device-global claim
+// timestamp directly (NO QR scan, NO stamp). Once claimed, the banner shows "already
+// claimed X ago" (at every restaurant) until local midnight; we never store a birthday date.
+function claimBirthday() {
+  if (!isPreview) markBirthdayClaimed(Date.now()); // demo/preview never pollutes the real cross-tenant flag → replayable
+  render();                  // banner switches to "already claimed X ago"
+  celebrate(birthdayReward());
+}
 function birthdayHtml() {
   if (!tenant.birthday_reward) return '';
   // Small print: daily reset + no birthday stored (the demo-replay note only in preview).
@@ -669,7 +674,9 @@ let bdayTimer = null;
 function wireBirthday() {
   const claim = document.getElementById('bdayClaim');
   // Two-step confirm: the gift is once-a-day, so guard against an accidental tap.
-  // Only after "Taip, atsiimti" does the staff-ID scan (stampAction) start.
+  // After "Taip, atsiimti" the claim is recorded immediately (no QR scan) — the
+  // staff ID check (see bdayShowId) is the anti-fraud gate, and the banner flips
+  // straight to the "already claimed X ago" timer.
   if (claim) claim.onclick = () => {
     if (document.getElementById('bdayConfirm')) return; // already confirming
     claim.style.display = 'none'; // (not [hidden]: .bday-claim sets display:block, which wins)
@@ -681,7 +688,7 @@ function wireBirthday() {
       </div>`);
     const reset = () => { const c = document.getElementById('bdayConfirm'); if (c) c.remove(); claim.style.display = ''; };
     document.getElementById('bdayConfirmNo').onclick = reset;
-    document.getElementById('bdayConfirmYes').onclick = () => { reset(); stampAction('redeem_birthday'); };
+    document.getElementById('bdayConfirmYes').onclick = () => { reset(); claimBirthday(); };
   };
   // Keep the "claimed X ago" timer live (render() rebuilds the DOM, so re-arm here).
   if (bdayTimer) { clearInterval(bdayTimer); bdayTimer = null; }
