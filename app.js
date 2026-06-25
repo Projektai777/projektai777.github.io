@@ -627,14 +627,17 @@ function todayLocal() { return localDay(new Date()); }
 // ---- Birthday gift: one claim PER DEVICE PER LOCAL DAY, shared across ALL tenants
 // on this origin (anti-cheat: the gift can't be farmed at several restaurants the
 // same day). We store ONLY the claim time — never a birthday date. Resets at local
-// midnight. Demo/preview are exempt so a prospect can replay the flow.
+// midnight. Demo/preview behave exactly like live (claim → timer); the "Pradėti iš
+// naujo" reset button (preview only) clears the flag so a prospect can replay the flow.
 const BDAY_KEY = 'lojalumas_bday';
 function markBirthdayClaimed(ts) {
   try { localStorage.setItem(BDAY_KEY, String(ts)); } catch { /* storage blocked/full */ }
 }
+function clearBirthdayClaim() {
+  try { localStorage.removeItem(BDAY_KEY); } catch { /* storage blocked */ }
+}
 // Claim timestamp if the gift was already taken earlier TODAY (local), else null.
 function birthdayClaimedAt() {
-  if (isPreview) return null;
   const raw = Number(localStorage.getItem(BDAY_KEY) || 0);
   if (!raw) return null;
   return localDay(new Date(raw)) === todayLocal() ? raw : null;
@@ -832,6 +835,7 @@ async function autoFill() {
 function resetCard() {
   card.stamps = 0;
   showReview = false;
+  clearBirthdayClaim(); // replay the birthday flow too (reset only shows in preview)
   if (backend._save) backend._save({ stamps: 0, last: 0, fails: [] });
   render();
 }
