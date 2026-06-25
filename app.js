@@ -81,14 +81,17 @@ const Counter = {
 // =============================================================
 const Recovery = {
   _codeKey: `lojalumas_rcode_${slug}`,
-  async available() { return !isPreview && !!(await Counter._resolve()); }, // off in demo/preview
+  // Available whenever the optional server is reachable — including preview/demo, so
+  // a prospect can actually save a code and restore it on another phone (fully working
+  // demo). Codes are anonymous (tied to the card, not a person).
+  async available() { return !!(await Counter._resolve()); },
   code() { return localStorage.getItem(this._codeKey) || null; },
   _setCode(c) { if (c) localStorage.setItem(this._codeKey, c); },
   // Upload current stamps. Reuses the stored code so re-saves update the same
   // backup. Returns the code on success, or null (never throws).
   async save(stamps) {
     const base = await Counter._resolve();
-    if (!base || isPreview) return null;
+    if (!base) return null;
     try {
       const existing = this.code();
       const q = `b=${encodeURIComponent(slug)}&stamps=${stamps}${existing ? `&code=${encodeURIComponent(existing)}` : ''}`;
@@ -270,6 +273,8 @@ const STR = {
     recCopy: 'Kopijuoti',
     recNote: '🔒 Saugokite kodą saugiai — kas jį turi, gali atkurti šią kortelę. Jokių asmens duomenų nesaugome.',
     recHaveCode: 'Turite kodą iš kito telefono? Atkurti →',
+    recToggle: 'atidaryti',
+    recToggleClose: 'uždaryti',
     recPlaceholder: 'pvz. BERN-7F3K-9QX2',
     recRestoreBtn: 'Atkurti kortelę',
     recRestoring: 'Atkuriama…',
@@ -418,6 +423,8 @@ const STR = {
     recCopy: 'Copy',
     recNote: '🔒 Keep the code safe — anyone who has it can restore this card. We store no personal data.',
     recHaveCode: 'Have a code from another phone? Restore →',
+    recToggle: 'open',
+    recToggleClose: 'close',
     recPlaceholder: 'e.g. BERN-7F3K-9QX2',
     recRestoreBtn: 'Restore card',
     recRestoring: 'Restoring…',
@@ -943,7 +950,7 @@ function render() {
     ${birthdayHtml()}
     ${isPreview ? staffFlowHtml() : ''}
     ${isPreview ? ctaHtml() : ''}
-    <section class="panel recovery hidden" id="recovery"></section>
+    <details class="panel recovery rec-collapse hidden" id="recovery"></details>
     <p class="privacy">${t('privacy')}</p>
     ${isDemo ? demoStaffHtml() : ''}
     ${isDemo ? `<p class="small-print">${t('demoFooter')}</p>` : ''}
@@ -976,21 +983,29 @@ async function wireRecovery() {
 
   const renderBox = () => {
     const code = Recovery.code();
-    box.innerHTML = code ? `
-      <h3>${t('recTitle')}</h3>
+    // Collapsible: a small summary header (closed by default) — most customers won't
+    // need recovery, so it stays out of the way until tapped.
+    const inner = code ? `
       <p class="panel-lead">${t('recSavedLead')}</p>
       <div class="rec-code"><code id="recCode">${code}</code><button class="rec-copy" id="recCopy">${t('recCopy')}</button></div>
       <p class="rec-note">${t('recNote')}</p>
       ${restoreUi}` : `
-      <h3>${t('recTitle')}</h3>
       <p class="panel-lead">${t('recNewLead')}</p>
       <button class="cta cta-demo" id="recSaveBtn">${t('recSaveBtn')}</button>
       ${restoreUi}`;
+    box.innerHTML = `
+      <summary class="rec-summary">💾 ${t('recTitle').replace(/^💾\s*/, '')} <span class="rec-toggle">${t('recToggle')} ▾</span></summary>
+      <div class="rec-body">${inner}</div>`;
     box.classList.remove('hidden');
     wireButtons();
   };
 
   const wireButtons = () => {
+    // collapsible label swap
+    box.ontoggle = () => {
+      const tog = box.querySelector('.rec-toggle');
+      if (tog) tog.textContent = `${box.open ? t('recToggleClose') : t('recToggle')} ${box.open ? '▴' : '▾'}`;
+    };
     const saveBtn = document.getElementById('recSaveBtn');
     if (saveBtn) saveBtn.onclick = async () => {
       saveBtn.disabled = true; saveBtn.textContent = t('recSaving');
