@@ -1,5 +1,5 @@
 {
-  "enabled": false,
-  "base": "",
-  "note": "Set enabled:true and base to your deployed Cloudflare Worker URL (e.g. https://lojalumas-counter.<subdomain>.workers.dev) after `npx wrangler deploy`. Until then the card no-ops the counter and works exactly as before."
+  "enabled": true,
+  "base": "https://lojalumas-counter.projektai777.workers.dev",
+  "note": "Live Cloudflare Worker (worker/). Provides the anonymous stamp counter, card recovery, and staff-device audit log. Set enabled:false to instantly fall back to the pure-static card (no server) without redeploying the worker."
 }
