@@ -163,7 +163,9 @@
     font-size: .56rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .au-seg.s .au-seg-v { color: var(--c-stamp); }
   .au-seg.r .au-seg-v { color: var(--c-redeem); }
-  .au-col-l { font-size: .62rem; color: #a8a29e; margin-top: 6px; font-weight: 600; white-space: nowrap; }
+  .au-col-l { font-size: .62rem; color: #a8a29e; margin-top: 6px; font-weight: 600; white-space: nowrap; text-align: center; line-height: 1.25; }
+  /* year shown on its own line below the date (weekly-trend labels) */
+  .au-col-l .au-yr { display: block; font-size: .56rem; font-weight: 600; color: #c4c0bc; }
   .au-empty { font-size: .76rem; color: #a8a29e; padding: 8px 2px; }
   /* "scroll to see older" hint pinned to the far-left (oldest) edge of the chart */
   .au-more { flex: 0 0 auto; align-self: center; font-size: .6rem; color: #c4c0bc;
@@ -283,8 +285,6 @@
         <div id="auTrend"></div>
       </div>
       </div><!-- /au-stats-body -->
-
-      <button class="lock au-reset hidden" id="auReset" data-i18n="clearSample">🗑️ Išvalyti pavyzdinę statistiką</button>
     </details>
 
     <button class="lock" id="lockBtn" data-i18n="lock">Užrakinti</button>
@@ -503,7 +503,6 @@ if (!tenant || !tenant.staff_secret) {
     $('devName').textContent = deviceLabel() || '—';
     const v = venue();
     $('geoState').textContent = v ? tr('venueSet') : tr('venueNone');
-    if (isPreview) $('auReset').classList.remove('hidden'); // preview: show clear-sample button
     await logLogin(base);
     // PREVIEW: if this tenant's log is empty, seed a few sample events so a prospect
     // sees a populated multi-branch dashboard (incl. a 🚩 off-site flag + a 2nd
@@ -589,7 +588,8 @@ if (!tenant || !tenant.staff_secret) {
     const offset = week === 0 ? 0 : daysToMon + (week - 1) * 7;
     const d = new Date(Date.UTC(year, 0, 1 + offset));
     const mon = (S[lang] || S.lt).months[d.getUTCMonth()];
-    return `${mon} ${d.getUTCDate()}`;
+    // Date on the first line, the YEAR on a second line below it.
+    return `${mon} ${d.getUTCDate()}<span class="au-yr">${d.getUTCFullYear()}</span>`;
   }
 
   // Grouped bar chart with LAZY horizontal rendering: each column = stamps (brand)
@@ -612,7 +612,9 @@ if (!tenant || !tenant.staff_secret) {
   function colHtml(d, max) {
     const sPct = Math.round((d.s / max) * 100);
     const rPct = Math.round((d.r / max) * 100);
-    const title = `${d.label} · ${d.s} ${tr('stamps')}${d.r ? ` · ${d.r} ${tr('prizes')}` : ''}`;
+    // label may carry a year <span> for display; strip tags for the plain-text tooltip
+    const labelText = String(d.label).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const title = `${labelText} · ${d.s} ${tr('stamps')}${d.r ? ` · ${d.r} ${tr('prizes')}` : ''}`;
     return `<div class="au-col" title="${title}">
       <div class="au-stack">
         <div class="au-seg s" data-h="${d.s ? Math.max(sPct, 4) : 0}"><span class="au-seg-v">${d.s}</span></div>
@@ -789,18 +791,6 @@ if (!tenant || !tenant.staff_secret) {
     if (!pos) { $('geoState').textContent = tr('venueFail'); return; }
     localStorage.setItem(geoKey, JSON.stringify({ ...pos, radius: 500 }));
     $('geoState').textContent = tr('venueSet');
-  };
-  // preview-only: clear the seeded sample stats + start over. This button is
-  // gated on isPreview and so VANISHES on go-live (preview:true removed) — the
-  // live staff page has no reset, exactly like the card's preview-only reset.
-  // &preview=1 tells the worker this is a sample reset (live clients send no such
-  // request because the button isn't there); the wipe is scoped to THIS slug only.
-  $('auReset').onclick = async () => {
-    const base = await resolveCounter(); if (!base) return;
-    $('auReset').disabled = true; $('auReset').textContent = tr('clearing');
-    try { await fetch(`${base}/audit/reset?b=${encodeURIComponent(slug)}&preview=1`, { method: 'POST' }); } catch {}
-    await renderAudit(base);
-    $('auReset').disabled = false; $('auReset').textContent = tr('clearSample');
   };
 
   async function tick() {
