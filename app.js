@@ -72,6 +72,45 @@ const Counter = {
   },
 };
 
+// =============================================================
+// Anonymous card recovery ("coat-check ticket"). Backs the card up under a random
+// CODE that identifies the CARD, not the person — no name/phone/email/device id,
+// so it stays GDPR-clean. Lose the phone -> enter the code on a new phone ->
+// stamps restored. Same optional server as Counter (counter-endpoint.json); if it
+// is disabled the whole feature hides and the card works exactly as before.
+// =============================================================
+const Recovery = {
+  _codeKey: `lojalumas_rcode_${slug}`,
+  async available() { return !isPreview && !!(await Counter._resolve()); }, // off in demo/preview
+  code() { return localStorage.getItem(this._codeKey) || null; },
+  _setCode(c) { if (c) localStorage.setItem(this._codeKey, c); },
+  // Upload current stamps. Reuses the stored code so re-saves update the same
+  // backup. Returns the code on success, or null (never throws).
+  async save(stamps) {
+    const base = await Counter._resolve();
+    if (!base || isPreview) return null;
+    try {
+      const existing = this.code();
+      const q = `b=${encodeURIComponent(slug)}&stamps=${stamps}${existing ? `&code=${encodeURIComponent(existing)}` : ''}`;
+      const r = await fetch(`${base}/recover/save?${q}`, { method: 'POST' });
+      const j = await r.json();
+      if (j && j.ok && j.code) { this._setCode(j.code); return j.code; }
+    } catch { /* offline — keep working, backup just isn't updated */ }
+    return null;
+  },
+  // Best-effort background save after a stamp changes (doesn't block UI).
+  autoSave(stamps) { if (this.code()) this.save(stamps); }, // only if a backup already exists
+  async load(code) {
+    const base = await Counter._resolve();
+    if (!base) return null;
+    try {
+      const r = await fetch(`${base}/recover/load?code=${encodeURIComponent(code)}`, { cache: 'no-store' });
+      const j = await r.json();
+      return j && j.ok ? j : null;
+    } catch { return null; }
+  },
+};
+
 // Personalized sales demos: /?b=demo&n=Kavinė+Aroma&c=%23064e3b&r=Prizas&s=8
 // lets an outreach email show the prospect THEIR OWN branded card with
 // zero per-prospect config. Only the demo tenant accepts overrides.
@@ -839,6 +878,7 @@ function render() {
     ${birthdayHtml()}
     ${isPreview ? staffFlowHtml() : ''}
     ${isPreview ? ctaHtml() : ''}
+    <section class="panel recovery hidden" id="recovery"></section>
     <p class="privacy">${t('privacy')}</p>
     ${isDemo ? demoStaffHtml() : ''}
     ${isDemo ? `<p class="small-print">${t('demoFooter')}</p>` : ''}
@@ -850,6 +890,76 @@ function render() {
   wireLangToggle();
   wireBirthday();
   wireReview();
+  wireRecovery();
+}
+
+// Card recovery UI — populated async because availability depends on a fetch
+// (the optional counter server). Two states: (a) no backup yet -> "save your
+// card" button + restore-from-code link; (b) backup exists -> show the code with
+// copy + a re-save button. Hidden entirely when the server is off (free static).
+async function wireRecovery() {
+  const box = document.getElementById('recovery');
+  if (!box) return;
+  if (!(await Recovery.available())) return; // server off / demo -> stays hidden
+  const render = () => {
+    const code = Recovery.code();
+    box.innerHTML = code ? `
+      <h3>${t('recTitle')}</h3>
+      <p class="panel-lead">${t('recSavedLead')}</p>
+      <div class="rec-code"><code id="recCode">${code}</code><button class="rec-copy" id="recCopy">${t('recCopy')}</button></div>
+      <p class="rec-note">${t('recNote')}</p>
+      <button class="rec-restore-link" id="recRestoreLink">${t('recHaveCode')}</button>
+      <div class="rec-restore hidden" id="recRestoreBox">
+        <input id="recInput" type="text" inputmode="text" autocapitalize="characters" placeholder="${t('recPlaceholder')}">
+        <button class="cta cta-demo" id="recLoadBtn">${t('recRestoreBtn')}</button>
+      </div>` : `
+      <h3>${t('recTitle')}</h3>
+      <p class="panel-lead">${t('recNewLead')}</p>
+      <button class="cta cta-demo" id="recSaveBtn">${t('recSaveBtn')}</button>
+      <button class="rec-restore-link" id="recRestoreLink">${t('recHaveCode')}</button>
+      <div class="rec-restore hidden" id="recRestoreBox">
+        <input id="recInput" type="text" inputmode="text" autocapitalize="characters" placeholder="${t('recPlaceholder')}">
+        <button class="cta cta-demo" id="recLoadBtn">${t('recRestoreBtn')}</button>
+      </div>`;
+    box.classList.remove('hidden');
+    wireButtons();
+  };
+  const wireButtons = () => {
+    const saveBtn = document.getElementById('recSaveBtn');
+    if (saveBtn) saveBtn.onclick = async () => {
+      saveBtn.disabled = true; saveBtn.textContent = t('recSaving');
+      const code = await Recovery.save(card.stamps);
+      if (code) { toast(t('recSavedToast')); render(); }
+      else { saveBtn.disabled = false; saveBtn.textContent = t('recSaveBtn'); toast(t('errNet'), true); }
+    };
+    const copyBtn = document.getElementById('recCopy');
+    if (copyBtn) copyBtn.onclick = () => {
+      const code = Recovery.code();
+      const done = () => toast(t('recCopiedToast'));
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(code).then(done).catch(() => fallbackCopy(code, done));
+      else fallbackCopy(code, done);
+    };
+    const reSave = document.getElementById('recCode');
+    const link = document.getElementById('recRestoreLink');
+    if (link) link.onclick = () => document.getElementById('recRestoreBox')?.classList.toggle('hidden');
+    const loadBtn = document.getElementById('recLoadBtn');
+    if (loadBtn) loadBtn.onclick = async () => {
+      const input = document.getElementById('recInput');
+      const codeIn = (input.value || '').trim().toUpperCase();
+      if (!codeIn) return;
+      loadBtn.disabled = true; loadBtn.textContent = t('recRestoring');
+      const data = await Recovery.load(codeIn);
+      loadBtn.disabled = false; loadBtn.textContent = t('recRestoreBtn');
+      if (!data) { toast(t('recBadCode'), true); return; }
+      // Restore stamps onto this device's card and adopt the code so future saves update it.
+      card.stamps = Math.min(data.stamps, tenant.stamps_needed);
+      if (backend._save) backend._save({ stamps: card.stamps, last: 0, fails: [], first: card.first, cycles: card.cycles });
+      Recovery._setCode(codeIn);
+      toast(t('recRestoredToast'));
+      render(); // re-render the card with restored stamps (and re-show the code state)
+    };
+  };
+  render();
 }
 
 // ---------- confetti (no library) ----------
@@ -1219,16 +1329,19 @@ async function runGrant(action, code) {
       if (action === 'redeem_reward') {
         Counter.hit('redeem'); // anonymous tally (server optional; no personal data)
         card.stamps = 0;
+        Recovery.autoSave(card.stamps); // keep an existing backup current
         showReview = !!tenant.google_review_url; // nudge a review right after the reward
         render();
         toast(t('toastRedeemed'));
       } else if (action === 'redeem_birthday') {
         if (typeof res.stamps === 'number') card.stamps = res.stamps; // one scan also stamped
+        Recovery.autoSave(card.stamps);
         render();                 // banner switches to "already claimed X ago"
         celebrate(birthdayReward());
       } else {
         Counter.hit('stamp'); // anonymous tally (server optional; no personal data)
         card.stamps = res.stamps;
+        Recovery.autoSave(card.stamps);
         render();
         if (res.full) celebrate(rewardText());
         else toast(t('toastStamp'));
