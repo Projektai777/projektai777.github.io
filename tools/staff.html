@@ -209,6 +209,12 @@ if (!tenant || !tenant.staff_secret) {
   const unlockKey = `lojalumas_staff_${slug}`;
 
   const isDemo = slug === 'demo';
+  // PREVIEW = demo slug OR a tenant flagged preview:true (e.g. a branded sales
+  // demo like berneliai). Preview tenants get SEEDED sample audit data + the
+  // clear-sample button, so a prospect sees a populated multi-branch dashboard
+  // instead of empty zeros. Real go-live clients (preview removed) NEVER seed and
+  // NEVER get a reset button — their audit log is real and append-only.
+  const isPreview = isDemo || (tenant.preview === true);
 
   function showCode() {
     $('login').classList.add('hidden');
@@ -303,20 +309,25 @@ if (!tenant || !tenant.staff_secret) {
     $('devName').textContent = deviceLabel() || 'nenustatyta';
     const v = venue();
     $('geoState').textContent = v ? '✅ Įstaigos vieta nustatyta' : 'Vieta nenustatyta (pasirinktinai)';
-    if (isDemo) $('auReset').classList.remove('hidden'); // demo: show clear button
+    if (isPreview) $('auReset').classList.remove('hidden'); // preview: show clear-sample button
     await logLogin(base);
-    // DEMO: if empty, seed a few sample events so a prospect sees a populated
-    // dashboard (incl. a 🚩 off-site flag + a 2nd branch). Real clients never seed.
-    if (isDemo) {
-      let cur; try { cur = await (await fetch(`${base}/audit?b=demo`, { cache: 'no-store' })).json(); } catch {}
-      if (cur && cur.ok && (cur.totals.stampsAll || 0) === 0) await seedDemo(base);
+    // PREVIEW: if this tenant's log is empty, seed a few sample events so a prospect
+    // sees a populated multi-branch dashboard (incl. a 🚩 off-site flag + a 2nd
+    // branch) instead of empty zeros. Seeds under THIS slug (not always demo), so a
+    // branded preview like berneliai shows its own populated stats. Real go-live
+    // clients (preview removed) never seed.
+    if (isPreview) {
+      let cur; try { cur = await (await fetch(`${base}/audit?b=${encodeURIComponent(slug)}`, { cache: 'no-store' })).json(); } catch {}
+      if (cur && cur.ok && (cur.totals.stampsAll || 0) === 0) await seedSample(base);
     }
     await renderAudit(base);
   }
 
-  async function seedDemo(base) {
+  // Seed sample audit events for the CURRENT preview tenant (two branches + one
+  // off-site anomaly), so the staff dashboard demos as a real multi-location view.
+  async function seedSample(base) {
     const ev = (device, action, geofar) =>
-      fetch(`${base}/log?b=demo&device=${encodeURIComponent(device)}&action=${action}${geofar ? '&geofar=1' : ''}`, { method: 'POST' }).catch(() => {});
+      fetch(`${base}/log?b=${encodeURIComponent(slug)}&device=${encodeURIComponent(device)}&action=${action}${geofar ? '&geofar=1' : ''}`, { method: 'POST' }).catch(() => {});
     const tasks = [];
     for (let i = 0; i < 9; i++) tasks.push(ev('Baras', 'stamp'));
     tasks.push(ev('Baras', 'redeem'));
