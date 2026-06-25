@@ -168,6 +168,7 @@ const STR = {
     errBadPin: 'Neteisingas arba pasenęs kodas',
     errRate: 'Per daug bandymų. Palaukite 10 min.',
     errDailyDone: 'Šiandien antspaudas jau gautas. Užsukite rytoj! 🙂',
+    errRedeemDone: 'Prizas šiandien jau atsiimtas. Užsukite rytoj! 🙂',
     errNotFull: 'Kortelė dar nepilna',
     errDemoOver: 'Demonstracija baigėsi. Dėl pilnos versijos susisiekite el. paštu.',
     errGeneric: 'Klaida. Bandykite dar kartą.',
@@ -318,6 +319,7 @@ const STR = {
     errBadPin: 'Wrong or expired code',
     errRate: 'Too many attempts. Wait 10 min.',
     errDailyDone: 'You already got a stamp today. Come back tomorrow! 🙂',
+    errRedeemDone: 'Reward already claimed today. Come back tomorrow! 🙂',
     errNotFull: 'The card isn’t full yet',
     errDemoOver: 'The demo has ended. Contact us by email for the full version.',
     errGeneric: 'Something went wrong. Please try again.',
@@ -591,7 +593,13 @@ const staticBackend = {
 
     if (fn === 'redeem_reward') {
       if (c.stamps < t.stamps_needed) return { ok: false, error: 'card_not_full' };
+      // One redemption per phone per LOCAL day (mirrors the stamp cooldown), so a
+      // present customer can't be re-scanned to farm the reward repeatedly. The
+      // per-stamp dates (below) let staff visually spot a card that isn't legit.
+      if (!isPreview && c.redeemDay === todayLocal()) return { ok: false, error: 'redeem_done' };
       c.stamps = 0;
+      c.dates = []; // new cycle starts empty
+      if (!isPreview) c.redeemDay = todayLocal();
       if (isDemo) c.cycles = (c.cycles || 0) + 1; // demo: one cycle per device
       this._save(c);
       return { ok: true };
@@ -606,7 +614,7 @@ const staticBackend = {
       if (!isPreview) markBirthdayClaimed(now); // demo/preview never pollutes the real cross-tenant flag
       // Also grant the day's stamp, unless one was already added today.
       if (isPreview || c.day !== todayLocal()) {
-        c.stamps = Math.min(c.stamps + 1, t.stamps_needed);
+        if (c.stamps < t.stamps_needed) { c.stamps += 1; stampDate(c); }
         c.last = now;
         c.day = todayLocal();
         this._save(c);
@@ -619,13 +627,20 @@ const staticBackend = {
     if (!isPreview && c.day === todayLocal()) {
       return { ok: false, error: 'daily_done' };
     }
-    c.stamps = Math.min(c.stamps + 1, t.stamps_needed);
+    if (c.stamps < t.stamps_needed) { c.stamps += 1; stampDate(c); } // record the visit date on this stamp
     c.last = now;
     c.day = todayLocal();
     this._save(c);
     return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed };
   },
 };
+
+// Record the local date (YYYY-MM-DD) of the stamp just added, so the card shows
+// when each stamp was earned and staff can eyeball a card's history at redemption.
+function stampDate(c) {
+  c.dates = (c.dates || []).slice(0, c.stamps - 1); // keep in sync with stamp count
+  c.dates[c.stamps - 1] = todayLocal();
+}
 
 const backend = isStatic ? staticBackend : supabaseBackend;
 
@@ -881,11 +896,15 @@ function render() {
   const installed = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
   const stampIcon = tenant.stamp_icon || '🍴'; // restaurant-flavored default; per-tenant override
+  const stampDates = card.dates || [];
   const grid = Array.from({ length: tenant.stamps_needed }, (_, i) => {
     const filled = i < card.stamps;
     const milestone = (tenant.milestones || []).some((m) => m.at === i + 1);
     const glyph = filled ? stampIcon : (milestone ? '🎁' : '');
-    return `<div class="stamp ${filled ? 'filled' : ''} ${milestone ? 'stamp-milestone' : ''}" style="animation-delay:${i * 40}ms">${glyph}</div>`;
+    // Date under each filled stamp (MM-DD): a visible visit history staff can
+    // glance at when giving the reward — a fake "all in one day" card stands out.
+    const d = filled && stampDates[i] ? `<span class="stamp-date">${stampDates[i].slice(5)}</span>` : '';
+    return `<div class="stamp-cell"><div class="stamp ${filled ? 'filled' : ''} ${milestone ? 'stamp-milestone' : ''}" style="animation-delay:${i * 40}ms">${glyph}</div>${d}</div>`;
   }).join('');
 
   const remaining = tenant.stamps_needed - card.stamps;
@@ -1415,6 +1434,7 @@ async function runGrant(action, code) {
         bad_pin: t('errBadPin'),
         rate_limited: t('errRate'),
         daily_done: t('errDailyDone'),
+        redeem_done: t('errRedeemDone'),
         card_not_full: t('errNotFull'),
         demo_over: t('errDemoOver'),
       }[res.error] || t('errGeneric');

@@ -95,7 +95,26 @@ h1 { font-size: 1.6rem; letter-spacing: -0.01em; }
   margin-bottom: 16px;
 }
 
+/* each cell stacks the stamp circle + its date label */
+.stamp-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+/* small visit date under a filled stamp (anti-fraud: a visible history) */
+.stamp-date {
+  font-size: .58rem;
+  font-weight: 600;
+  color: #a8a29e;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: .02em;
+}
+
 .stamp {
+  width: 100%;
   aspect-ratio: 1;
   border-radius: 50%;
   border: 2px dashed #d6d3d1;
