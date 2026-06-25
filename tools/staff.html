@@ -255,7 +255,7 @@
         </div>
       </div>
       <div class="au-sub">
-        <div class="au-sub-head" data-i18n="headAllTime">∑ Iš viso (per visą laiką)</div>
+        <div class="au-sub-head" data-i18n="headAllTime">📋 Iš viso (per visą laiką)</div>
         <div class="stats-nums stats-nums-3">
           <div class="stat stat-sm"><span class="stat-val" id="auRate">–</span><span class="stat-lbl" data-i18n="lblRate">Prizų %</span></div>
           <div class="stat stat-sm"><span class="stat-val" id="auLogins">–</span><span class="stat-lbl" data-i18n="lblLogins">Prisijungimai</span></div>
@@ -274,7 +274,7 @@
       </div>
 
       <div class="au-sub">
-        <div class="au-sub-head" data-i18n="headHours">🕐 Užimtumas pagal valandą</div>
+        <div class="au-sub-head" data-i18n="headHours">🕐 Užimtumas pagal valandą (visą laiką)</div>
         <div id="auHours"></div>
       </div>
 
@@ -316,8 +316,8 @@ const S = {
     thisBranch: 'Šis įrenginys / filialas:', change: 'keisti', setVenue: '📍 Nustatyti šią vietą kaip įstaigą',
     lblToday: 'Šiandien', lbl7d: '7 d.', lblAll: 'Iš viso', lblRate: 'Prizų %', lblLogins: 'Prisijungimai', lblOffsite: 'Ne vietoje 🚩',
     headFlags: '🚩 Naudojimas ne įstaigoje', headBranch: '🏆 Pagal įrenginį / filialą',
-    headHours: '🕐 Užimtumas pagal valandą', headTrend: '📈 Savaitės tendencija',
-    headStamps: '📊 Antspaudai', headAllTime: '∑ Iš viso (per visą laiką)',
+    headHours: '🕐 Užimtumas pagal valandą (visą laiką)', headTrend: '📈 Savaitės tendencija',
+    headStamps: '📊 Antspaudai', headAllTime: '📋 Iš viso (per visą laiką)',
     clearSample: '🗑️ Išvalyti pavyzdinę statistiką', clearing: 'Valoma…', lock: 'Užrakinti',
     legStamps: 'Antspaudai', legPrizes: 'Prizai', noData: 'Dar nėra duomenų.',
     stamps: 'antsp.', prizes: 'prizai', loadMore: '← slinkite, kad matytumėte senesnius',
@@ -341,8 +341,8 @@ const S = {
     thisBranch: 'This device / branch:', change: 'change', setVenue: '📍 Set this location as the venue',
     lblToday: 'Today', lbl7d: '7 d.', lblAll: 'Total', lblRate: 'Reward %', lblLogins: 'Logins', lblOffsite: 'Off-site 🚩',
     headFlags: '🚩 Off-site use', headBranch: '🏆 By device / branch',
-    headHours: '🕐 Busy hours', headTrend: '📈 Weekly trend',
-    headStamps: '📊 Stamps', headAllTime: '∑ All-time totals',
+    headHours: '🕐 Busy hours (all time)', headTrend: '📈 Weekly trend',
+    headStamps: '📊 Stamps', headAllTime: '📋 All-time totals',
     clearSample: '🗑️ Clear sample stats', clearing: 'Clearing…', lock: 'Lock',
     legStamps: 'Stamps', legPrizes: 'Rewards', noData: 'No data yet.',
     stamps: 'st.', prizes: 'rewards', loadMore: '← scroll to see older',
@@ -561,9 +561,9 @@ if (!tenant || !tenant.staff_secret) {
       for (let k = 0; k < Math.round(visitsB * 0.17); k++) add('Baras', 'redeem', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
       for (let k = 0; k < Math.round(visitsS * 0.16); k++) add('Senamiestis', 'redeem', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
     }
-    // A handful of rare off-site 🚩 anomalies across the year (odd late-night hours) to
-    // showcase the security flag — not a flood.
-    [3, 47, 122, 211, 298].forEach((d, i) => add('Baras', 'stamp', dateAt(d, i % 2 ? 1 : 23, 30 + i), 1));
+    // ONE rare off-site 🚩 anomaly (recent, odd late-night hour) to showcase the
+    // security flag — just a single example, not a flood.
+    add('Baras', 'stamp', dateAt(3, 23, 34), 1);
     // Bulk insert in one request; fall back to nothing on failure (dashboard just shows zeros).
     try {
       await fetch(`${base}/seed?b=${encodeURIComponent(slug)}&preview=1`, {
