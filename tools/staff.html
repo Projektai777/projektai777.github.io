@@ -161,6 +161,10 @@
   .au-seg.r .au-seg-v { color: var(--c-redeem); }
   .au-col-l { font-size: .62rem; color: #a8a29e; margin-top: 6px; font-weight: 600; white-space: nowrap; }
   .au-empty { font-size: .76rem; color: #a8a29e; padding: 8px 2px; }
+  /* "scroll to see older" hint pinned to the far-left (oldest) edge of the chart */
+  .au-more { flex: 0 0 auto; align-self: center; font-size: .6rem; color: #c4c0bc;
+    font-weight: 600; white-space: nowrap; padding: 0 6px; writing-mode: vertical-rl;
+    transform: rotate(180deg); opacity: .8; }
   /* ---------- branch filter ---------- */
   .branch-bar { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; margin: 14px 0 4px; }
   .branch-bar.hidden { display: none; }
@@ -209,8 +213,8 @@
     <div class="brand-band" id="brandBand">
       <img id="brandLogo" class="brand-logo hidden" alt="">
       <h1 id="bizName"></h1>
-      <p class="biz" data-i18n="showQr">Parodykite QR kodą svečiui — jis nuskaito jį savo telefono kamera</p>
     </div>
+    <p class="biz" data-i18n="showQr">Parodykite QR kodą svečiui — jis nuskaito jį savo telefono kamera</p>
     <div class="qr-box"><img id="qr" alt="QR"></div>
     <p class="qr-cap" data-i18n="qrCap">Svečias nuskaito → antspaudas pridedamas jo telefone automatiškai</p>
     <div class="timer"><span class="ring" id="ring"></span><span id="secs"></span></div>
@@ -238,15 +242,21 @@
       </div>
 
       <div class="au-stats-body" id="auStatsBody">
-      <div class="stats-nums stats-nums-3">
-        <div class="stat"><span class="stat-val" id="auToday">–</span><span class="stat-lbl" data-i18n="lblToday">Šiandien</span></div>
-        <div class="stat"><span class="stat-val" id="auWeek">–</span><span class="stat-lbl" data-i18n="lbl7d">7 d.</span></div>
-        <div class="stat"><span class="stat-val" id="auAll">–</span><span class="stat-lbl" data-i18n="lblAll">Iš viso</span></div>
+      <div class="au-sub">
+        <div class="au-sub-head" data-i18n="headStamps">📊 Antspaudai</div>
+        <div class="stats-nums stats-nums-3">
+          <div class="stat"><span class="stat-val" id="auToday">–</span><span class="stat-lbl" data-i18n="lblToday">Šiandien</span></div>
+          <div class="stat"><span class="stat-val" id="auWeek">–</span><span class="stat-lbl" data-i18n="lbl7d">7 d.</span></div>
+          <div class="stat"><span class="stat-val" id="auAll">–</span><span class="stat-lbl" data-i18n="lblAll">Iš viso</span></div>
+        </div>
       </div>
-      <div class="stats-nums stats-nums-3">
-        <div class="stat stat-sm"><span class="stat-val" id="auRate">–</span><span class="stat-lbl" data-i18n="lblRate">Prizų %</span></div>
-        <div class="stat stat-sm"><span class="stat-val" id="auLogins">–</span><span class="stat-lbl" data-i18n="lblLogins">Prisijungimai</span></div>
-        <div class="stat stat-sm"><span class="stat-val stat-warn" id="auOffsite">–</span><span class="stat-lbl" data-i18n="lblOffsite">Ne vietoje 🚩</span></div>
+      <div class="au-sub">
+        <div class="au-sub-head" data-i18n="headAllTime">∑ Iš viso (per visą laiką)</div>
+        <div class="stats-nums stats-nums-3">
+          <div class="stat stat-sm"><span class="stat-val" id="auRate">–</span><span class="stat-lbl" data-i18n="lblRate">Prizų %</span></div>
+          <div class="stat stat-sm"><span class="stat-val" id="auLogins">–</span><span class="stat-lbl" data-i18n="lblLogins">Prisijungimai</span></div>
+          <div class="stat stat-sm"><span class="stat-val stat-warn" id="auOffsite">–</span><span class="stat-lbl" data-i18n="lblOffsite">Ne vietoje 🚩</span></div>
+        </div>
       </div>
 
       <div class="au-sub" id="auFlagsWrap">
@@ -303,9 +313,11 @@ const S = {
     lblToday: 'Šiandien', lbl7d: '7 d.', lblAll: 'Iš viso', lblRate: 'Prizų %', lblLogins: 'Prisijungimai', lblOffsite: 'Ne vietoje 🚩',
     headFlags: '🚩 Naudojimas ne įstaigoje', headBranch: '🏆 Pagal įrenginį / filialą',
     headHours: '🕐 Užimtumas pagal valandą', headTrend: '📈 Savaitės tendencija',
+    headStamps: '📊 Antspaudai', headAllTime: '∑ Iš viso (per visą laiką)',
     clearSample: '🗑️ Išvalyti pavyzdinę statistiką', clearing: 'Valoma…', lock: 'Užrakinti',
     legStamps: 'Antspaudai', legPrizes: 'Prizai', noData: 'Dar nėra duomenų.',
-    stamps: 'antsp.', prizes: 'prizai',
+    stamps: 'antsp.', prizes: 'prizai', loadMore: '← slinkite, kad matytumėte senesnius',
+    months: ['Saus.','Vas.','Kov.','Bal.','Geg.','Birž.','Liep.','Rugp.','Rugs.','Spal.','Lapkr.','Gruod.'],
     branchAll: 'Visi filialai', viewBranch: 'Rodyti filialą:', setWorkBranch: 'Šis įrenginys yra:',
     promptBranch: 'Šio įrenginio / filialo pavadinimas (pvz. „Baras", „Senamiestis"):',
     promptRename: 'Įrenginio / filialo pavadinimas:',
@@ -326,9 +338,11 @@ const S = {
     lblToday: 'Today', lbl7d: '7 d.', lblAll: 'Total', lblRate: 'Reward %', lblLogins: 'Logins', lblOffsite: 'Off-site 🚩',
     headFlags: '🚩 Off-site use', headBranch: '🏆 By device / branch',
     headHours: '🕐 Busy hours', headTrend: '📈 Weekly trend',
+    headStamps: '📊 Stamps', headAllTime: '∑ All-time totals',
     clearSample: '🗑️ Clear sample stats', clearing: 'Clearing…', lock: 'Lock',
     legStamps: 'Stamps', legPrizes: 'Rewards', noData: 'No data yet.',
-    stamps: 'st.', prizes: 'rewards',
+    stamps: 'st.', prizes: 'rewards', loadMore: '← scroll to see older',
+    months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
     branchAll: 'All branches', viewBranch: 'Show branch:', setWorkBranch: 'This device is:',
     promptBranch: 'Name of this device / branch (e.g. “Bar”, “Old Town”):',
     promptRename: 'Device / branch name:',
@@ -393,6 +407,12 @@ if (!tenant || !tenant.staff_secret) {
     lg.classList.remove('hidden');
     // a wordmark logo already shows the name — hide the redundant heading
     if (tenant.logo_wide) $('bizName').classList.add('hidden');
+  }
+  // Soft blurred šaltibarščiai header behind the logo, same as the customer card.
+  if (tenant.hero_url) {
+    const band = $('brandBand');
+    band.style.setProperty('--hero', `url('../${tenant.hero_url}')`);
+    band.classList.add('has-hero');
   }
   const unlockKey = `lojalumas_staff_${slug}`;
 
@@ -534,43 +554,101 @@ if (!tenant || !tenant.staff_secret) {
     await Promise.all(tasks);
   }
 
-  // Grouped bar chart: each column = stamps (brand) and redemptions (amber) as two
-  // bars SIDE BY SIDE (not stacked). `items` rows have {stamps, redeems}; getLabel(it)
-  // is the x-axis label. Both bars are scaled to a common max so heights compare across
-  // columns. Returns a legend + the chart; bars animate up from 0 (height set after a
-  // frame). An empty series shows a friendly note instead of a broken empty box.
-  function barChart(items, getLabel) {
+  // Monday (week start) of an ISO-style "YYYY-WW" key (SQLite strftime('%Y-%W'),
+  // where %W weeks start on Monday and week 00 is the days before the first Monday).
+  // Returns a short localized "Geg. 26" / "May 26" label. No Date.now() needed —
+  // we build the date from the explicit year/week, so it's deterministic.
+  function weekStartLabel(wk) {
+    const [yStr, wStr] = String(wk).split('-');
+    const year = parseInt(yStr, 10), week = parseInt(wStr, 10);
+    if (!Number.isFinite(year) || !Number.isFinite(week)) return wk || '';
+    // Jan 1 of that year, then walk to the first Monday (start of %W week 1),
+    // then add (week-1) weeks. Week 0 starts on Jan 1 itself.
+    const jan1 = new Date(Date.UTC(year, 0, 1));
+    const dow = jan1.getUTCDay();                 // 0=Sun..6=Sat
+    const daysToMon = dow === 1 ? 0 : (8 - dow) % 7; // days from Jan1 to first Monday
+    const offset = week === 0 ? 0 : daysToMon + (week - 1) * 7;
+    const d = new Date(Date.UTC(year, 0, 1 + offset));
+    const mon = (S[lang] || S.lt).months[d.getUTCMonth()];
+    return `${mon} ${d.getUTCDate()}`;
+  }
+
+  // Grouped bar chart with LAZY horizontal rendering: each column = stamps (brand)
+  // + redemptions (amber) as two bars SIDE BY SIDE. `items` rows have {stamps,redeems};
+  // getLabel(it) is the x-axis label. Heights scale to a common max over the WHOLE
+  // dataset so bars stay comparable as more columns load. To keep the panel snappy
+  // with long history, only the most-recent WINDOW columns render up front; the chart
+  // opens scrolled to "now" (right edge) and PREPENDS older columns as the user scrolls
+  // left toward the start. Returns {html} for the placeholder; call mountChart() after
+  // it's in the DOM to wire scrolling + the grow-up animation.
+  const CHART_WINDOW = 14; // columns rendered initially / per lazy chunk
+  function buildChart(items, getLabel) {
     const data = (items || []).map((it) => ({
       label: getLabel(it),
       s: Number(it.stamps || 0),
       r: Number(it.redeems || 0),
     })).filter((d) => d.s + d.r > 0);
-    if (data.length === 0) return `<div class="au-empty">${tr('noData')}</div>`;
-    const max = Math.max(1, ...data.map((d) => Math.max(d.s, d.r)));  // tallest single bar
-    const cols = data.map((d) => {
-      const sPct = Math.round((d.s / max) * 100);              // stamp bar vs tallest bar
-      const rPct = Math.round((d.r / max) * 100);
-      const title = `${d.s} ${tr('stamps')}${d.r ? ` · ${d.r} ${tr('prizes')}` : ''}`;
-      // each bar carries its own count printed just above it (no "15+1" combined label)
-      return `<div class="au-col" title="${title}">
-        <div class="au-stack">
-          <div class="au-seg s" data-h="${d.s ? Math.max(sPct, 4) : 0}"><span class="au-seg-v">${d.s}</span></div>
-          ${d.r ? `<div class="au-seg r" data-h="${Math.max(rPct, 4)}"><span class="au-seg-v">${d.r}</span></div>` : ''}
-        </div>
-        <div class="au-col-l">${d.label}</div>
-      </div>`;
-    }).join('');
+    return { data };
+  }
+  function colHtml(d, max) {
+    const sPct = Math.round((d.s / max) * 100);
+    const rPct = Math.round((d.r / max) * 100);
+    const title = `${d.label} · ${d.s} ${tr('stamps')}${d.r ? ` · ${d.r} ${tr('prizes')}` : ''}`;
+    return `<div class="au-col" title="${title}">
+      <div class="au-stack">
+        <div class="au-seg s" data-h="${d.s ? Math.max(sPct, 4) : 0}"><span class="au-seg-v">${d.s}</span></div>
+        ${d.r ? `<div class="au-seg r" data-h="${Math.max(rPct, 4)}"><span class="au-seg-v">${d.r}</span></div>` : ''}
+      </div>
+      <div class="au-col-l">${d.label}</div>
+    </div>`;
+  }
+  // Render a chart into `host`, newest-first window + scroll-to-load-older.
+  function mountChart(host, items, getLabel) {
+    const { data } = buildChart(items, getLabel);
+    if (data.length === 0) { host.innerHTML = `<div class="au-empty">${tr('noData')}</div>`; return; }
+    const max = Math.max(1, ...data.map((d) => Math.max(d.s, d.r)));
     const legend = `<div class="au-legend">
       <span class="au-leg s">${tr('legStamps')}</span>
       <span class="au-leg r">${tr('legPrizes')}</span>
     </div>`;
-    return legend + `<div class="au-chart">${cols}</div>`;
+    // how many of the OLDEST columns are not yet rendered (lazy budget)
+    let unrendered = Math.max(0, data.length - CHART_WINDOW);
+    const startIdx = unrendered; // first index currently shown
+    const tail = data.slice(startIdx);
+    const more = unrendered > 0 ? `<span class="au-more" data-i18n="loadMore">${tr('loadMore')}</span>` : '';
+    host.innerHTML = legend + `<div class="au-chart">${more}${tail.map((d) => colHtml(d, max)).join('')}</div>`;
+    const chart = host.querySelector('.au-chart');
+    let firstShown = startIdx;
+    // Prepend an older chunk, preserving the scroll position so it doesn't jump.
+    const loadOlder = () => {
+      if (firstShown <= 0) return;
+      const from = Math.max(0, firstShown - CHART_WINDOW);
+      const chunk = data.slice(from, firstShown);
+      const beforeW = chart.scrollWidth;
+      const moreEl = chart.querySelector('.au-more');
+      const frag = chunk.map((d) => colHtml(d, max)).join('');
+      if (moreEl) moreEl.insertAdjacentHTML('afterend', frag);
+      else chart.insertAdjacentHTML('afterbegin', frag);
+      firstShown = from;
+      if (from === 0 && moreEl) moreEl.remove();
+      // keep the viewport anchored on the same bars after prepending width
+      chart.scrollLeft += chart.scrollWidth - beforeW;
+      animateNew(chart);
+    };
+    // Lazy trigger: when the user scrolls near the LEFT edge, load the next older chunk.
+    chart.addEventListener('scroll', () => {
+      if (chart.scrollLeft < 60) loadOlder();
+    }, { passive: true });
+    // Open scrolled to the newest data (right edge) once laid out, then animate.
+    requestAnimationFrame(() => { chart.scrollLeft = chart.scrollWidth; animateNew(chart); });
   }
-  // Trigger the grow-up animation: set each stack's real height after layout.
-  function animateBars(container) {
+  // Grow only the bars that haven't been animated yet (data-grown marks done).
+  function animateNew(chart) {
     requestAnimationFrame(() => {
-      container.querySelectorAll('.au-seg').forEach((el, i) => {
-        setTimeout(() => { el.style.height = el.dataset.h + '%'; }, 40 + i * 30);
+      const segs = [...chart.querySelectorAll('.au-seg:not([data-grown])')];
+      segs.forEach((el, i) => {
+        el.dataset.grown = '1';
+        setTimeout(() => { el.style.height = el.dataset.h + '%'; }, 30 + i * 24);
       });
     });
   }
@@ -619,9 +697,10 @@ if (!tenant || !tenant.staff_secret) {
     knownBranches = j.devices.map((d) => d.device);
     $('auDevices').innerHTML = j.devices.map((d) =>
       `<div class="au-dev ${d.device === branchFilter ? 'on' : ''}"><b>${d.device}</b><span>${d.stamps} ${tr('stamps')} · ${d.redeems} ${tr('prizes')}${d.city ? ' · ' + d.city : ''}${d.offsite ? ' · 🚩' + d.offsite : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
-    $('auHours').innerHTML = barChart(j.hours, (h) => `${h.hh}`);
-    $('auTrend').innerHTML = barChart(j.trend, (w) => `${w.wk.split('-')[1] || ''} sav.`);
-    animateBars($('auHours')); animateBars($('auTrend'));
+    // Busy hours: clear "14:00" labels (not bare "14"). Weekly trend: the week's
+    // start DATE ("Geg. 26") instead of a bare week number.
+    mountChart($('auHours'), j.hours, (h) => `${String(h.hh).padStart(2, '0')}:00`);
+    mountChart($('auTrend'), j.trend, (w) => weekStartLabel(w.wk));
     return j;
   }
 
