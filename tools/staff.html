@@ -168,7 +168,7 @@
       </div>
 
       <button class="dev-edit au-csv" id="auCsv">⬇️ Atsisiųsti visą istoriją (CSV)</button>
-      <button class="lock au-reset hidden" id="auReset">🗑️ Išvalyti demo statistiką</button>
+      <button class="lock au-reset hidden" id="auReset">🗑️ Išvalyti pavyzdinę statistiką</button>
       <p class="stats-note">🖥️ Stebimas tik įstaigos darbuotojo įrenginys (vieta, laikas) — saugumui. Klientų duomenų nerenkame.</p>
     </div>
 
@@ -393,13 +393,17 @@ if (!tenant || !tenant.staff_secret) {
     localStorage.setItem(geoKey, JSON.stringify({ ...pos, radius: 300 }));
     $('geoState').textContent = '✅ Įstaigos vieta nustatyta';
   };
-  // demo: clear stats + start over
+  // preview-only: clear the seeded sample stats + start over. This button is
+  // gated on isPreview and so VANISHES on go-live (preview:true removed) — the
+  // live staff page has no reset, exactly like the card's preview-only reset.
+  // &preview=1 tells the worker this is a sample reset (live clients send no such
+  // request because the button isn't there); the wipe is scoped to THIS slug only.
   $('auReset').onclick = async () => {
     const base = await resolveCounter(); if (!base) return;
     $('auReset').disabled = true; $('auReset').textContent = 'Valoma…';
-    try { await fetch(`${base}/audit/reset?b=demo`, { method: 'POST' }); } catch {}
+    try { await fetch(`${base}/audit/reset?b=${encodeURIComponent(slug)}&preview=1`, { method: 'POST' }); } catch {}
     await renderAudit(base);
-    $('auReset').disabled = false; $('auReset').textContent = '🗑️ Išvalyti demo statistiką';
+    $('auReset').disabled = false; $('auReset').textContent = '🗑️ Išvalyti pavyzdinę statistiką';
   };
 
   async function tick() {
