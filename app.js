@@ -653,7 +653,7 @@ function bdayAgo(ts) {
 // timestamp directly (NO QR scan, NO stamp). Once claimed, the banner shows "already
 // claimed X ago" (at every restaurant) until local midnight; we never store a birthday date.
 function claimBirthday() {
-  if (!isPreview) markBirthdayClaimed(Date.now()); // demo/preview never pollutes the real cross-tenant flag → replayable
+  markBirthdayClaimed(Date.now()); // record in demo too, so the demo behaves like live (banner → timer)
   render();                  // banner switches to "already claimed X ago"
   celebrate(birthdayReward());
 }
