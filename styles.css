@@ -529,6 +529,18 @@ dialog.celebrate strong { color: #1c1917; font-size: 1.1rem; }
    ==================================================================== */
 .recovery.hidden { display: none; }
 .recovery { text-align: center; }
+/* collapsible recovery panel — closed by default (most customers won't need it) */
+.rec-collapse { padding: 6px 18px; }
+.rec-collapse[open] { padding: 18px; }
+.rec-summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center;
+  justify-content: space-between; gap: 10px; font-size: 1rem; font-weight: 800;
+  color: var(--text); padding: 12px 0;
+}
+.rec-summary::-webkit-details-marker { display: none; }
+.rec-toggle { font-size: .78rem; font-weight: 600; color: var(--brand); white-space: nowrap; }
+.rec-collapse[open] .rec-summary { margin-bottom: 4px; }
+.rec-body { text-align: center; }
 .rec-code {
   display: flex; align-items: center; justify-content: center; gap: 10px;
   margin: 10px 0; flex-wrap: wrap;
