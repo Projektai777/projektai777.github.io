@@ -1290,6 +1290,10 @@ function releaseCamera() {
 function showScanFallback() {
   const frame = scanModal && scanModal.querySelector('.scan-frame');
   if (frame) frame.hidden = true; // hide the empty camera box
+  // The "point your camera" hint is moot with no in-page camera — hide it so only
+  // the fallback instruction shows (avoids two overlapping paragraphs).
+  const hint = scanModal && scanModal.querySelector('.scan-hint');
+  if (hint) hint.hidden = true;
   const fb = document.getElementById('scanFallback');
   if (fb) { fb.hidden = false; fb.textContent = t('scanFallback'); }
 }
