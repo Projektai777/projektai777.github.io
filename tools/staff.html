@@ -29,6 +29,27 @@
     font-size: .75rem; font-weight: 700; color: #a8a29e; cursor: pointer; transition: all .2s ease;
   }
   .lang-pill button.on { background: var(--brand); color: #fff; }
+  /* ---------- soft blurred šaltibarščiai header (same feel as the card app) ----------
+     Set --hero from the tenant's hero_url in JS; the band frames the logo + name. */
+  .brand-band {
+    position: relative; width: 100%; padding: 30px 22px 26px; border-radius: 28px;
+    overflow: hidden; text-align: center; box-shadow: 0 10px 26px rgb(0 0 0 / .08);
+    background: linear-gradient(180deg, #fffaf8, #f6e7e1);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .brand-band.has-hero::before {
+    content: ''; position: absolute; inset: -12px; z-index: 0;
+    background: var(--hero) center/cover no-repeat;
+    filter: blur(3px) brightness(1.12) saturate(1.1); opacity: .85;
+  }
+  .brand-band.has-hero::after {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    background: radial-gradient(115% 80% at 50% 46%,
+      rgb(255 250 247 / .82) 0%, rgb(255 250 247 / .42) 45%, rgb(255 250 247 / .12) 100%);
+  }
+  .brand-band > * { position: relative; z-index: 2; }
+  .brand-band.has-hero h1 { color: #3a1d1d; text-shadow: 0 1px 6px rgb(255 255 255 / .55); }
+  .brand-band.has-hero .biz { color: #7a4135; text-shadow: 0 1px 6px rgb(255 255 255 / .7); }
   /* brand header (logo + name) — same feel as the card app's header */
   .brand-logo {
     width: 84px; height: 84px; object-fit: contain; border-radius: 22px;
@@ -113,10 +134,8 @@
   .au-leg.r { --sw: var(--c-redeem); }
   .au-chart {
     position: relative; display: flex; align-items: flex-end; justify-content: flex-start;
-    gap: 9px; height: 120px; padding: 6px 2px 0; overflow-x: auto;
-    background:
-      linear-gradient(#f0efed 1px, transparent 1px) 0 0 / 100% 25% no-repeat,
-      linear-gradient(#f0efed 1px, transparent 1px) 0 50% / 100% 25% repeat-y;
+    gap: 9px; height: 120px; padding: 18px 2px 0; overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
     background-image:
       linear-gradient(to top, #f0efed 1px, transparent 1px),
       linear-gradient(to top, #f0efed 1px, transparent 1px),
@@ -124,7 +143,11 @@
     background-position: 0 0, 0 33.3%, 0 66.6%;
     background-size: 100% 1px; background-repeat: no-repeat;
   }
-  .au-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 0 0 34px; height: 100%; }
+  /* slim scrollbar hint so it's clearly swipeable sideways */
+  .au-chart::-webkit-scrollbar { height: 6px; }
+  .au-chart::-webkit-scrollbar-thumb { background: #e7e5e4; border-radius: 999px; }
+  .au-chart::-webkit-scrollbar-track { background: transparent; }
+  .au-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 0 0 auto; min-width: 38px; height: 100%; padding: 0 2px; }
   /* two bars side by side per column: stamps + redemptions */
   .au-stack { width: 100%; max-width: 34px; display: flex; flex-direction: row; align-items: flex-end;
     justify-content: center; gap: 3px; height: 100%; }
@@ -183,9 +206,11 @@
 
   <!-- CODE -->
   <div id="codeView" class="hidden">
-    <img id="brandLogo" class="brand-logo hidden" alt="">
-    <h1 id="bizName"></h1>
-    <p class="biz" data-i18n="showQr">Parodykite QR kodą svečiui — jis nuskaito jį savo telefono kamera</p>
+    <div class="brand-band" id="brandBand">
+      <img id="brandLogo" class="brand-logo hidden" alt="">
+      <h1 id="bizName"></h1>
+      <p class="biz" data-i18n="showQr">Parodykite QR kodą svečiui — jis nuskaito jį savo telefono kamera</p>
+    </div>
     <div class="qr-box"><img id="qr" alt="QR"></div>
     <p class="qr-cap" data-i18n="qrCap">Svečias nuskaito → antspaudas pridedamas jo telefone automatiškai</p>
     <div class="timer"><span class="ring" id="ring"></span><span id="secs"></span></div>
