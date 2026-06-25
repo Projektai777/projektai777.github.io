@@ -186,7 +186,7 @@ const STR = {
     reviewLater: 'Kitą kartą',
     // birthday
     bdayPromptTitle: '🎂 Gimtadienio dovana',
-    bdayShowId: (r) => `Gimtadienio proga Jūsų laukia <strong>${r}</strong>. Tą dieną parodykite asmens dokumentą darbuotojui ir paspauskite „Atsiimti dovaną" — jokių registracijų ar sąlygų. <strong>⚠️ Dovaną atsiimkite tik vietoje, restorane, darbuotojo akivaizdoje</strong> — atsiėmus iš anksto, tą dieną jos nebegalėsite panaudoti.`,
+    bdayShowId: (r) => `Gimtadienio proga Jūsų laukia <strong>${r}</strong>. Tą dieną parodykite asmens dokumentą darbuotojui ir paspauskite „Atsiimti dovaną" — jokių registracijų ar sąlygų.`,
     bdayClaimBtn: '🎁 Atsiimti dovaną',
     bdayConfirmQ: 'Dovaną galima atsiimti tik kartą per dieną ir tik vietoje, restorane, darbuotojo akivaizdoje. Atsiimti dabar?',
     bdayConfirmYes: '✓ Taip, atsiimti',
@@ -334,7 +334,7 @@ const STR = {
     reviewBtn: '⭐ Leave a review',
     reviewLater: 'Maybe later',
     bdayPromptTitle: '🎂 Birthday gift',
-    bdayShowId: (r) => `On your birthday you get <strong>${r}</strong>. On the day, just show your ID to a staff member and tap “Claim gift” — no sign-up, no conditions. <strong>⚠️ Claim the gift only at the restaurant, in front of staff</strong> — if you claim it early, you won’t be able to use it that day.`,
+    bdayShowId: (r) => `On your birthday you get <strong>${r}</strong>. On the day, just show your ID to a staff member and tap “Claim gift” — no sign-up, no conditions.`,
     bdayClaimBtn: '🎁 Claim gift',
     bdayConfirmQ: 'The gift can be claimed only once a day, and only at the restaurant in front of staff. Claim now?',
     bdayConfirmYes: '✓ Yes, claim',
