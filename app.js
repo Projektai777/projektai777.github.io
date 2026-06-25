@@ -1304,6 +1304,7 @@ async function openScanner(action) {
   const fb = document.getElementById('scanFallback');
   const video = document.getElementById('scanVideo');
   if (hint) {
+    hint.hidden = false; // reset after a previous fallback may have hidden it
     // Birthday gift: remind staff to check the customer's ID (the real anti-fraud
     // step) — same warning the old pad showed.
     hint.textContent = action === 'redeem_birthday' ? t('pinHintBday') : t('scanHint');
