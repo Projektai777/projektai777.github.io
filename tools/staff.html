@@ -60,11 +60,8 @@
     justify-content: space-between; gap: 10px; margin: 0; padding: 14px 0;
   }
   .audit-summary::-webkit-details-marker { display: none; }
-  .audit-toggle { font-size: .76rem; font-weight: 600; color: #78716c; white-space: nowrap; }
+  .audit-toggle { font-size: .76rem; font-weight: 600; color: var(--brand); white-space: nowrap; }
   .audit-panel[open] .audit-summary { margin-bottom: 6px; }
-  .audit-panel[open] .audit-toggle::after { content: ''; }
-  /* swap the label text on open via the toggle span */
-  .audit-panel:not([open]) .audit-toggle { color: var(--brand); }
   .stats-nums { display: flex; gap: 12px; }
   .stat { flex: 1; background: #faf9f8; border: 1px solid #f0efed; border-radius: 14px; padding: 14px 8px; }
   .stat-val { display: block; font-size: 2rem; font-weight: 800; color: var(--brand); line-height: 1.1; font-variant-numeric: tabular-nums; }
@@ -413,6 +410,13 @@ if (!tenant || !tenant.staff_secret) {
   }
 
   // device rename
+  // Collapsible audit panel: closed by default (cleaner for customers glancing at
+  // the screen); the staff tap the header to expand. Swap the toggle label.
+  $('audit').addEventListener('toggle', () => {
+    const tog = $('audit').querySelector('.audit-toggle');
+    if (tog) tog.textContent = $('audit').open ? 'slėpti ▴' : 'rodyti ▾';
+  });
+
   $('devEdit').onclick = () => {
     const name = (prompt('Įrenginio / filialo pavadinimas:', deviceLabel()) || '').trim();
     if (name) { localStorage.setItem(devKey, name.slice(0, 60)); $('devName').textContent = name; }
