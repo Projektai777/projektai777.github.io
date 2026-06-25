@@ -124,15 +124,13 @@
     background-position: 0 0, 0 33.3%, 0 66.6%;
     background-size: 100% 1px; background-repeat: no-repeat;
   }
-  .au-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 0 0 26px; height: 100%; }
-  .au-stack { width: 100%; max-width: 26px; display: flex; flex-direction: column; justify-content: flex-end;
-    height: 0; transition: height .7s cubic-bezier(.22,1,.36,1); } /* grows up on render */
-  .au-seg { width: 100%; }
-  .au-seg.s { background: var(--c-stamp); border-radius: 5px 5px 0 0; }
+  .au-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 0 0 34px; height: 100%; }
+  /* two bars side by side per column: stamps + redemptions */
+  .au-stack { width: 100%; max-width: 34px; display: flex; flex-direction: row; align-items: flex-end;
+    justify-content: center; gap: 3px; height: 100%; }
+  .au-seg { width: 13px; max-width: 13px; height: 0; transition: height .7s cubic-bezier(.22,1,.36,1); border-radius: 5px 5px 0 0; }
+  .au-seg.s { background: var(--c-stamp); }
   .au-seg.r { background: var(--c-redeem); }
-  /* if there are redeems on top, the stamp segment shouldn't round its top */
-  .au-stack.has-r .au-seg.s { border-radius: 0; }
-  .au-stack.has-r .au-seg.r { border-radius: 5px 5px 0 0; }
   .au-col-l { font-size: .62rem; color: #a8a29e; margin-top: 6px; font-weight: 600; white-space: nowrap; }
   .au-col-v { font-size: .58rem; color: #57534e; margin-top: 1px; font-variant-numeric: tabular-nums; font-weight: 700; }
   .au-empty { font-size: .76rem; color: #a8a29e; padding: 8px 2px; }
@@ -507,10 +505,11 @@ if (!tenant || !tenant.staff_secret) {
     await Promise.all(tasks);
   }
 
-  // Stacked bar chart: each column = stamps (brand) + redemptions (amber) on top.
-  // `items` rows have {stamps, redeems}; getLabel(it) is the x-axis label. Returns
-  // a legend + the chart; bars animate up from 0 (height set after a frame). An
-  // empty series shows a friendly note instead of a broken empty box.
+  // Grouped bar chart: each column = stamps (brand) and redemptions (amber) as two
+  // bars SIDE BY SIDE (not stacked). `items` rows have {stamps, redeems}; getLabel(it)
+  // is the x-axis label. Both bars are scaled to a common max so heights compare across
+  // columns. Returns a legend + the chart; bars animate up from 0 (height set after a
+  // frame). An empty series shows a friendly note instead of a broken empty box.
   function barChart(items, getLabel) {
     const data = (items || []).map((it) => ({
       label: getLabel(it),
@@ -518,18 +517,16 @@ if (!tenant || !tenant.staff_secret) {
       r: Number(it.redeems || 0),
     })).filter((d) => d.s + d.r > 0);
     if (data.length === 0) return `<div class="au-empty">${tr('noData')}</div>`;
-    const max = Math.max(1, ...data.map((d) => d.s + d.r));
+    const max = Math.max(1, ...data.map((d) => Math.max(d.s, d.r)));  // tallest single bar
     const cols = data.map((d) => {
-      const total = d.s + d.r;
-      const hPct = Math.round((total / max) * 100);            // stack height vs tallest
-      const sPct = total ? (d.s / total) * 100 : 0;            // stamp share of the stack
-      const rPct = total ? (d.r / total) * 100 : 0;
+      const sPct = Math.round((d.s / max) * 100);              // stamp bar vs tallest bar
+      const rPct = Math.round((d.r / max) * 100);
       const vlabel = d.r ? `${d.s}+${d.r}` : `${d.s}`;          // e.g. "11" or "9+1"
       const title = `${d.s} ${tr('stamps')}${d.r ? ` · ${d.r} ${tr('prizes')}` : ''}`;
       return `<div class="au-col" title="${title}">
-        <div class="au-stack ${d.r ? 'has-r' : ''}" data-h="${Math.max(hPct, 6)}">
-          ${d.r ? `<div class="au-seg r" style="height:${rPct}%"></div>` : ''}
-          <div class="au-seg s" style="height:${sPct}%"></div>
+        <div class="au-stack">
+          <div class="au-seg s" data-h="${d.s ? Math.max(sPct, 4) : 0}"></div>
+          ${d.r ? `<div class="au-seg r" data-h="${Math.max(rPct, 4)}"></div>` : ''}
         </div>
         <div class="au-col-v">${vlabel}</div>
         <div class="au-col-l">${d.label}</div>
@@ -544,8 +541,8 @@ if (!tenant || !tenant.staff_secret) {
   // Trigger the grow-up animation: set each stack's real height after layout.
   function animateBars(container) {
     requestAnimationFrame(() => {
-      container.querySelectorAll('.au-stack').forEach((el, i) => {
-        setTimeout(() => { el.style.height = el.dataset.h + '%'; }, 40 + i * 35);
+      container.querySelectorAll('.au-seg').forEach((el, i) => {
+        setTimeout(() => { el.style.height = el.dataset.h + '%'; }, 40 + i * 30);
       });
     });
   }
