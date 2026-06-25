@@ -49,6 +49,7 @@ export default {
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
     google_review_url: 'https://www.google.com/maps/search/?api=1&query=Berneli%C5%B3+u%C5%BEeiga',
     preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
+    staff_demo_pass: 'berneliai2026', // PREVIEW-ONLY: rodomas savininko puslapyje, kad prospektas galėtų pažiūrėti darbuotojo pusę; pašalinti įdiegus
     staff_secret: '3798bc6a93d45c798242d999ea43b6bf',     // rotating-code raktas
     staff_pass_hash: 'ae4964eeffe94ad8cbd2ec334814ec1b6b9b568d4729fadd74daf9caf7209ab1', // /tools/staff.html slaptažodis: berneliai2026
   },

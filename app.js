@@ -280,6 +280,11 @@ const STR = {
     demoStaffLead: 'Atidarykite darbuotojo kodų puslapį kitame įrenginyje ir suveskite slaptažodį, kad pamatytumėte besikeičiantį QR kodą:',
     demoStaffOpen: 'Atidaryti darbuotojo puslapį →',
     demoStaffPass: 'Slaptažodis',
+    // staff-page preview on the owner/sales page
+    ownerStaffTitle: '🔑 Pažiūrėkite darbuotojo pusę',
+    ownerStaffLead: 'Tai puslapis, kurį atidaro Jūsų personalas: jame keičiasi QR kodas (kas 30 s) ir matoma statistika. Apsaugotas slaptažodžiu — svečiai jo nemato. Atidarykite ir išbandykite:',
+    ownerStaffOpen: 'Atidaryti darbuotojo puslapį →',
+    ownerStaffPass: 'Slaptažodis',
   },
   en: {
     subtitle: 'Loyalty card',
@@ -422,6 +427,11 @@ const STR = {
     demoStaffLead: 'Open the staff code page on another device and enter the password to see the rotating QR code:',
     demoStaffOpen: 'Open the staff page →',
     demoStaffPass: 'Password',
+    // staff-page preview on the owner/sales page
+    ownerStaffTitle: '🔑 See the staff side',
+    ownerStaffLead: 'This is the page your staff opens: a QR code that rotates (every 30 s) plus live stats. Password-protected — guests never see it. Open it and try it out:',
+    ownerStaffOpen: 'Open the staff page →',
+    ownerStaffPass: 'Password',
   },
 };
 
