@@ -128,11 +128,15 @@
   /* two bars side by side per column: stamps + redemptions */
   .au-stack { width: 100%; max-width: 34px; display: flex; flex-direction: row; align-items: flex-end;
     justify-content: center; gap: 3px; height: 100%; }
-  .au-seg { width: 13px; max-width: 13px; height: 0; transition: height .7s cubic-bezier(.22,1,.36,1); border-radius: 5px 5px 0 0; }
+  .au-seg { position: relative; width: 13px; max-width: 13px; height: 0; transition: height .7s cubic-bezier(.22,1,.36,1); border-radius: 5px 5px 0 0; }
   .au-seg.s { background: var(--c-stamp); }
   .au-seg.r { background: var(--c-redeem); }
+  /* count printed just above each bar (so no "15+1" combined label is needed) */
+  .au-seg-v { position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    font-size: .56rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .au-seg.s .au-seg-v { color: var(--c-stamp); }
+  .au-seg.r .au-seg-v { color: var(--c-redeem); }
   .au-col-l { font-size: .62rem; color: #a8a29e; margin-top: 6px; font-weight: 600; white-space: nowrap; }
-  .au-col-v { font-size: .58rem; color: #57534e; margin-top: 1px; font-variant-numeric: tabular-nums; font-weight: 700; }
   .au-empty { font-size: .76rem; color: #a8a29e; padding: 8px 2px; }
   /* ---------- branch filter ---------- */
   .branch-bar { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; margin: 14px 0 4px; }
@@ -521,14 +525,13 @@ if (!tenant || !tenant.staff_secret) {
     const cols = data.map((d) => {
       const sPct = Math.round((d.s / max) * 100);              // stamp bar vs tallest bar
       const rPct = Math.round((d.r / max) * 100);
-      const vlabel = d.r ? `${d.s}+${d.r}` : `${d.s}`;          // e.g. "11" or "9+1"
       const title = `${d.s} ${tr('stamps')}${d.r ? ` · ${d.r} ${tr('prizes')}` : ''}`;
+      // each bar carries its own count printed just above it (no "15+1" combined label)
       return `<div class="au-col" title="${title}">
         <div class="au-stack">
-          <div class="au-seg s" data-h="${d.s ? Math.max(sPct, 4) : 0}"></div>
-          ${d.r ? `<div class="au-seg r" data-h="${Math.max(rPct, 4)}"></div>` : ''}
+          <div class="au-seg s" data-h="${d.s ? Math.max(sPct, 4) : 0}"><span class="au-seg-v">${d.s}</span></div>
+          ${d.r ? `<div class="au-seg r" data-h="${Math.max(rPct, 4)}"><span class="au-seg-v">${d.r}</span></div>` : ''}
         </div>
-        <div class="au-col-v">${vlabel}</div>
         <div class="au-col-l">${d.label}</div>
       </div>`;
     }).join('');
