@@ -148,62 +148,62 @@
   <div id="codeView" class="hidden">
     <img id="brandLogo" class="brand-logo hidden" alt="">
     <h1 id="bizName"></h1>
-    <p class="biz">Parodykite QR kodą svečiui — jis nuskaito jį savo telefono kamera</p>
+    <p class="biz" data-i18n="showQr">Parodykite QR kodą svečiui — jis nuskaito jį savo telefono kamera</p>
     <div class="qr-box"><img id="qr" alt="QR"></div>
-    <p class="qr-cap">Svečias nuskaito → antspaudas pridedamas jo telefone automatiškai</p>
+    <p class="qr-cap" data-i18n="qrCap">Svečias nuskaito → antspaudas pridedamas jo telefone automatiškai</p>
     <div class="timer"><span class="ring" id="ring"></span><span id="secs"></span></div>
-    <p class="hint">Kodas keičiasi kas 30 sekundžių. Vienas svečias gali gauti 1 antspaudą per dieną.</p>
+    <p class="hint" data-i18n="codeHint">Kodas keičiasi kas 30 sekundžių. Vienas svečias gali gauti 1 antspaudą per dieną.</p>
 
     <!-- AUDIT: this client's own staff terminal (NOT customers). Device/branch
          label + location + full history. Powered by the D1 audit log. -->
     <details id="audit" class="stats audit-panel hidden">
-      <summary class="stats-head audit-summary">🖥️ Įrenginio žurnalas ir statistika <span class="audit-toggle">rodyti ▾</span></summary>
+      <summary class="stats-head audit-summary"><span data-i18n="auTitle">🖥️ Įrenginio žurnalas ir statistika</span> <span class="audit-toggle" data-i18n="auShow">rodyti ▾</span></summary>
 
-      <p class="gdpr-warn">⚠️ Ši funkcija registruoja įrenginio vietą ir laiką (saugumui). Pagal GDPR <strong>privalote iš anksto informuoti darbuotojus</strong>, kad įrenginys yra stebimas. Klientų duomenų nerenkame.</p>
+      <p class="gdpr-warn" data-i18n="gdpr">⚠️ Ši funkcija registruoja įrenginio vietą ir laiką (saugumui). Pagal GDPR <strong>privalote iš anksto informuoti darbuotojus</strong>, kad įrenginys yra stebimas. Klientų duomenų nerenkame.</p>
 
       <div class="device-row">
-        <span class="dev-label">Šis įrenginys / filialas:</span>
+        <span class="dev-label" data-i18n="thisBranch">Šis įrenginys / filialas:</span>
         <span class="dev-name" id="devName">—</span>
-        <button class="dev-edit" id="devEdit">keisti</button>
+        <button class="dev-edit" id="devEdit" data-i18n="change">keisti</button>
       </div>
-      <button class="geo-btn" id="geoBtn">📍 Nustatyti šią vietą kaip įstaigą</button>
+      <button class="geo-btn" id="geoBtn" data-i18n="setVenue">📍 Nustatyti šią vietą kaip įstaigą</button>
       <p class="geo-state" id="geoState"></p>
 
       <div class="stats-nums stats-nums-3">
-        <div class="stat"><span class="stat-val" id="auToday">–</span><span class="stat-lbl">Šiandien</span></div>
-        <div class="stat"><span class="stat-val" id="auWeek">–</span><span class="stat-lbl">7 d.</span></div>
-        <div class="stat"><span class="stat-val" id="auAll">–</span><span class="stat-lbl">Iš viso</span></div>
+        <div class="stat"><span class="stat-val" id="auToday">–</span><span class="stat-lbl" data-i18n="lblToday">Šiandien</span></div>
+        <div class="stat"><span class="stat-val" id="auWeek">–</span><span class="stat-lbl" data-i18n="lbl7d">7 d.</span></div>
+        <div class="stat"><span class="stat-val" id="auAll">–</span><span class="stat-lbl" data-i18n="lblAll">Iš viso</span></div>
       </div>
       <div class="stats-nums stats-nums-3">
-        <div class="stat stat-sm"><span class="stat-val" id="auRate">–</span><span class="stat-lbl">Prizų %</span></div>
-        <div class="stat stat-sm"><span class="stat-val" id="auLogins">–</span><span class="stat-lbl">Prisijungimai</span></div>
-        <div class="stat stat-sm"><span class="stat-val stat-warn" id="auOffsite">–</span><span class="stat-lbl">Ne vietoje 🚩</span></div>
+        <div class="stat stat-sm"><span class="stat-val" id="auRate">–</span><span class="stat-lbl" data-i18n="lblRate">Prizų %</span></div>
+        <div class="stat stat-sm"><span class="stat-val" id="auLogins">–</span><span class="stat-lbl" data-i18n="lblLogins">Prisijungimai</span></div>
+        <div class="stat stat-sm"><span class="stat-val stat-warn" id="auOffsite">–</span><span class="stat-lbl" data-i18n="lblOffsite">Ne vietoje 🚩</span></div>
       </div>
 
       <div class="au-sub" id="auFlagsWrap">
-        <div class="au-sub-head">🚩 Naudojimas ne įstaigoje</div>
+        <div class="au-sub-head" data-i18n="headFlags">🚩 Naudojimas ne įstaigoje</div>
         <div id="auFlags" class="au-list"></div>
       </div>
 
       <div class="au-sub">
-        <div class="au-sub-head">🏆 Pagal įrenginį / filialą</div>
+        <div class="au-sub-head" data-i18n="headBranch">🏆 Pagal įrenginį / filialą</div>
         <div id="auDevices" class="au-list"></div>
       </div>
 
       <div class="au-sub">
-        <div class="au-sub-head">🕐 Užimtumas pagal valandą</div>
+        <div class="au-sub-head" data-i18n="headHours">🕐 Užimtumas pagal valandą</div>
         <div id="auHours"></div>
       </div>
 
       <div class="au-sub">
-        <div class="au-sub-head">📈 Savaitės tendencija</div>
+        <div class="au-sub-head" data-i18n="headTrend">📈 Savaitės tendencija</div>
         <div id="auTrend"></div>
       </div>
 
-      <button class="lock au-reset hidden" id="auReset">🗑️ Išvalyti pavyzdinę statistiką</button>
+      <button class="lock au-reset hidden" id="auReset" data-i18n="clearSample">🗑️ Išvalyti pavyzdinę statistiką</button>
     </details>
 
-    <button class="lock" id="lockBtn">Užrakinti</button>
+    <button class="lock" id="lockBtn" data-i18n="lock">Užrakinti</button>
   </div>
 
   <p id="fatal" class="biz hidden"></p>
@@ -218,6 +218,67 @@ const slug = (params.get('b') || '').toLowerCase();
 const tenant = TENANTS[slug];
 
 const $ = (id) => document.getElementById(id);
+
+// ---------- i18n (LT/EN) ----------
+const S = {
+  lt: {
+    loginTitle: '🔒 Darbuotojo prisijungimas', passLabel: 'Slaptažodis', unlock: 'Atrakinti',
+    badPass: 'Neteisingas slaptažodis.',
+    showQr: 'Parodykite QR kodą svečiui — jis nuskaito jį savo telefono kamera',
+    qrCap: 'Svečias nuskaito → antspaudas pridedamas jo telefone automatiškai',
+    codeHint: 'Kodas keičiasi kas 30 sekundžių. Vienas svečias gali gauti 1 antspaudą per dieną.',
+    auTitle: '🖥️ Įrenginio žurnalas ir statistika', auShow: 'rodyti ▾', auHide: 'slėpti ▴',
+    gdpr: '⚠️ Ši funkcija registruoja įrenginio vietą ir laiką (saugumui). Pagal GDPR <strong>privalote iš anksto informuoti darbuotojus</strong>, kad įrenginys yra stebimas. Klientų duomenų nerenkame.',
+    thisBranch: 'Šis įrenginys / filialas:', change: 'keisti', setVenue: '📍 Nustatyti šią vietą kaip įstaigą',
+    lblToday: 'Šiandien', lbl7d: '7 d.', lblAll: 'Iš viso', lblRate: 'Prizų %', lblLogins: 'Prisijungimai', lblOffsite: 'Ne vietoje 🚩',
+    headFlags: '🚩 Naudojimas ne įstaigoje', headBranch: '🏆 Pagal įrenginį / filialą',
+    headHours: '🕐 Užimtumas pagal valandą', headTrend: '📈 Savaitės tendencija',
+    clearSample: '🗑️ Išvalyti pavyzdinę statistiką', clearing: 'Valoma…', lock: 'Užrakinti',
+    legStamps: 'Antspaudai', legPrizes: 'Prizai', noData: 'Dar nėra duomenų.',
+    stamps: 'antsp.', prizes: 'prizai',
+    branchAll: 'Visi filialai', viewBranch: 'Rodyti filialą:', setWorkBranch: 'Šis įrenginys yra:',
+    promptBranch: 'Šio įrenginio / filialo pavadinimas (pvz. „Baras", „Senamiestis"):',
+    promptRename: 'Įrenginio / filialo pavadinimas:',
+    venueSetting: 'Nustatoma…', venueFail: '⚠️ Nepavyko gauti vietos (leiskite vietą naršyklėje).',
+    venueSet: '✅ Įstaigos vieta nustatyta', venueNone: 'Vieta nenustatyta (pasirinktinai)',
+    notFound: (s) => `Verslas „${s}" nerastas arba neturi darbuotojo kodo.`,
+    noSlug: 'Trūksta verslo nuorodos. Atidarykite: /tools/staff.html?b=slug',
+  },
+  en: {
+    loginTitle: '🔒 Staff login', passLabel: 'Password', unlock: 'Unlock',
+    badPass: 'Wrong password.',
+    showQr: 'Show the QR code to the guest — they scan it with their phone camera',
+    qrCap: 'Guest scans → a stamp is added on their phone automatically',
+    codeHint: 'The code changes every 30 seconds. One guest can get 1 stamp per day.',
+    auTitle: '🖥️ Device log & statistics', auShow: 'show ▾', auHide: 'hide ▴',
+    gdpr: '⚠️ This feature records the device’s location and time (for security). Under GDPR <strong>you must inform staff in advance</strong> that the device is monitored. We collect no customer data.',
+    thisBranch: 'This device / branch:', change: 'change', setVenue: '📍 Set this location as the venue',
+    lblToday: 'Today', lbl7d: '7 d.', lblAll: 'Total', lblRate: 'Reward %', lblLogins: 'Logins', lblOffsite: 'Off-site 🚩',
+    headFlags: '🚩 Off-site use', headBranch: '🏆 By device / branch',
+    headHours: '🕐 Busy hours', headTrend: '📈 Weekly trend',
+    clearSample: '🗑️ Clear sample stats', clearing: 'Clearing…', lock: 'Lock',
+    legStamps: 'Stamps', legPrizes: 'Rewards', noData: 'No data yet.',
+    stamps: 'st.', prizes: 'rewards',
+    branchAll: 'All branches', viewBranch: 'Show branch:', setWorkBranch: 'This device is:',
+    promptBranch: 'Name of this device / branch (e.g. “Bar”, “Old Town”):',
+    promptRename: 'Device / branch name:',
+    venueSetting: 'Setting…', venueFail: '⚠️ Couldn’t get location (allow location in the browser).',
+    venueSet: '✅ Venue location set', venueNone: 'Location not set (optional)',
+    notFound: (s) => `Business “${s}” not found or has no staff code.`,
+    noSlug: 'Missing business link. Open: /tools/staff.html?b=slug',
+  },
+};
+let lang = (() => {
+  const q = params.get('lang');
+  if (q === 'lt' || q === 'en') return q;
+  return localStorage.getItem('lojalumas_lang') === 'en' ? 'en' : 'lt';
+})();
+const tr = (k, ...a) => { const v = (S[lang] || S.lt)[k]; return typeof v === 'function' ? v(...a) : (v ?? k); };
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.innerHTML = tr(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('#langPill button').forEach((b) => b.classList.toggle('on', b.dataset.lang === lang));
+}
 
 async function sha256(text) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
