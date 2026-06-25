@@ -8,7 +8,7 @@
 <style>
   /* Staff page — matches the customer card app's look (light, warm, branded).
      --brand is set from the tenant's primary_color in JS, just like app.js. */
-  :root { --brand: #b91c1c; --bg: #f5f5f4; --text: #1c1917; }
+  :root { --brand: #b91c1c; --bg: #f5f5f4; --text: #1c1917; --c-stamp: var(--brand); --c-redeem: #f59e0b; }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   body {
     font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -93,16 +93,38 @@
   .au-flag { font-size: .74rem; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 6px 10px; }
   .au-dev { display: flex; justify-content: space-between; gap: 8px; font-size: .76rem; background: #faf9f8; border: 1px solid #f0efed; border-radius: 8px; padding: 7px 10px; }
   .au-dev span { color: #78716c; text-align: right; }
-  .au-hours { display: flex; align-items: flex-end; gap: 10px; min-height: 40px; padding: 4px 2px 0; overflow-x: auto; }
-  .au-hours:has(.au-bar-col) { height: 96px; } /* full height only when real bars exist */
-  .au-bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 0 0 30px; height: 100%; }
-  .au-bar { width: 100%; max-width: 28px; background: var(--brand); border-radius: 5px 5px 0 0; min-height: 4px; }
-  .au-bar-l { font-size: .62rem; color: #a8a29e; margin-top: 5px; font-weight: 600; }
-  .au-bar-v { font-size: .58rem; color: #78716c; margin-top: 1px; font-variant-numeric: tabular-nums; }
-  /* single-data-point summary (a 1-bar chart conveys nothing, so show a figure) */
-  .au-single { display: flex; align-items: baseline; gap: 7px; padding: 4px 2px 2px; }
-  .au-single-v { font-size: 1.15rem; font-weight: 800; color: var(--brand); font-variant-numeric: tabular-nums; }
-  .au-single-l { font-size: .76rem; color: #78716c; }
+  /* ---------- bar charts (stamps + redemptions, two stacked series) ----------
+     --c-stamp / --c-redeem are defined in :root above. amber = "reward redeemed". */
+  .au-legend { display: flex; gap: 16px; justify-content: flex-end; margin: -2px 0 8px; }
+  .au-leg { display: flex; align-items: center; gap: 6px; font-size: .68rem; color: #78716c; font-weight: 600; }
+  .au-leg::before { content: ''; width: 11px; height: 11px; border-radius: 3px; background: var(--sw); }
+  .au-leg.s { --sw: var(--c-stamp); }
+  .au-leg.r { --sw: var(--c-redeem); }
+  .au-chart {
+    position: relative; display: flex; align-items: flex-end; justify-content: flex-start;
+    gap: 9px; height: 120px; padding: 6px 2px 0; overflow-x: auto;
+    background:
+      linear-gradient(#f0efed 1px, transparent 1px) 0 0 / 100% 25% no-repeat,
+      linear-gradient(#f0efed 1px, transparent 1px) 0 50% / 100% 25% repeat-y;
+    background-image:
+      linear-gradient(to top, #f0efed 1px, transparent 1px),
+      linear-gradient(to top, #f0efed 1px, transparent 1px),
+      linear-gradient(to top, #f0efed 1px, transparent 1px);
+    background-position: 0 0, 0 33.3%, 0 66.6%;
+    background-size: 100% 1px; background-repeat: no-repeat;
+  }
+  .au-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 0 0 26px; height: 100%; }
+  .au-stack { width: 100%; max-width: 26px; display: flex; flex-direction: column; justify-content: flex-end;
+    height: 0; transition: height .7s cubic-bezier(.22,1,.36,1); } /* grows up on render */
+  .au-seg { width: 100%; }
+  .au-seg.s { background: var(--c-stamp); border-radius: 5px 5px 0 0; }
+  .au-seg.r { background: var(--c-redeem); }
+  /* if there are redeems on top, the stamp segment shouldn't round its top */
+  .au-stack.has-r .au-seg.s { border-radius: 0; }
+  .au-stack.has-r .au-seg.r { border-radius: 5px 5px 0 0; }
+  .au-col-l { font-size: .62rem; color: #a8a29e; margin-top: 6px; font-weight: 600; white-space: nowrap; }
+  .au-col-v { font-size: .58rem; color: #57534e; margin-top: 1px; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .au-empty { font-size: .76rem; color: #a8a29e; padding: 8px 2px; }
   .au-reset { margin-top: 14px; color: #b91c1c; border-color: #fecaca; }
   .hidden { display: none; }
 </style>
@@ -167,12 +189,12 @@
 
       <div class="au-sub">
         <div class="au-sub-head">🕐 Užimtumas pagal valandą</div>
-        <div id="auHours" class="au-hours"></div>
+        <div id="auHours"></div>
       </div>
 
       <div class="au-sub">
         <div class="au-sub-head">📈 Savaitės tendencija</div>
-        <div id="auTrend" class="au-hours"></div>
+        <div id="auTrend"></div>
       </div>
 
       <button class="lock au-reset hidden" id="auReset">🗑️ Išvalyti pavyzdinę statistiką</button>
@@ -363,22 +385,47 @@ if (!tenant || !tenant.staff_secret) {
     await Promise.all(tasks);
   }
 
-  // Render a small bar chart. getVal MUST return a number (drives bar height).
-  // With only one data point a bar chart conveys nothing (and a lone full-height
-  // block reads as broken) — so show a tidy single-figure summary instead until
-  // there are ≥2 bars. `unit` (e.g. 'antsp.') labels both the summary and bars.
-  function bars(items, getLabel, getVal, unit) {
-    if (!items || items.length === 0) return '';
-    const u = unit ? ' ' + unit : '';
-    if (items.length === 1) {
-      const it = items[0];
-      return `<div class="au-single"><span class="au-single-v">${getVal(it)}${u}</span><span class="au-single-l">· ${getLabel(it)}</span></div>`;
-    }
-    const max = Math.max(1, ...items.map(getVal));
-    return items.map((it) => {
-      const h = Math.round((getVal(it) / max) * 100);
-      return `<div class="au-bar-col"><div class="au-bar" style="height:${Math.max(h,6)}%"></div><div class="au-bar-l">${getLabel(it)}</div><div class="au-bar-v">${getVal(it)}</div></div>`;
+  // Stacked bar chart: each column = stamps (brand) + redemptions (amber) on top.
+  // `items` rows have {stamps, redeems}; getLabel(it) is the x-axis label. Returns
+  // a legend + the chart; bars animate up from 0 (height set after a frame). An
+  // empty series shows a friendly note instead of a broken empty box.
+  function barChart(items, getLabel) {
+    const data = (items || []).map((it) => ({
+      label: getLabel(it),
+      s: Number(it.stamps || 0),
+      r: Number(it.redeems || 0),
+    })).filter((d) => d.s + d.r > 0);
+    if (data.length === 0) return '<div class="au-empty">Dar nėra duomenų.</div>';
+    const max = Math.max(1, ...data.map((d) => d.s + d.r));
+    const cols = data.map((d) => {
+      const total = d.s + d.r;
+      const hPct = Math.round((total / max) * 100);            // stack height vs tallest
+      const sPct = total ? (d.s / total) * 100 : 0;            // stamp share of the stack
+      const rPct = total ? (d.r / total) * 100 : 0;
+      const vlabel = d.r ? `${d.s}+${d.r}` : `${d.s}`;          // e.g. "11" or "9+1"
+      const title = `${d.s} antsp.${d.r ? ` · ${d.r} prizai` : ''}`;
+      return `<div class="au-col" title="${title}">
+        <div class="au-stack ${d.r ? 'has-r' : ''}" data-h="${Math.max(hPct, 6)}">
+          ${d.r ? `<div class="au-seg r" style="height:${rPct}%"></div>` : ''}
+          <div class="au-seg s" style="height:${sPct}%"></div>
+        </div>
+        <div class="au-col-v">${vlabel}</div>
+        <div class="au-col-l">${d.label}</div>
+      </div>`;
     }).join('');
+    const legend = `<div class="au-legend">
+      <span class="au-leg s">Antspaudai</span>
+      <span class="au-leg r">Prizai</span>
+    </div>`;
+    return legend + `<div class="au-chart">${cols}</div>`;
+  }
+  // Trigger the grow-up animation: set each stack's real height after layout.
+  function animateBars(container) {
+    requestAnimationFrame(() => {
+      container.querySelectorAll('.au-stack').forEach((el, i) => {
+        setTimeout(() => { el.style.height = el.dataset.h + '%'; }, 40 + i * 35);
+      });
+    });
   }
 
   async function renderAudit(base) {
@@ -400,12 +447,11 @@ if (!tenant || !tenant.staff_secret) {
     // per device / branch
     $('auDevices').innerHTML = j.devices.map((d) =>
       `<div class="au-dev"><b>${d.device}</b><span>${d.stamps} antsp. · ${d.redeems} prizai${d.city ? ' · ' + d.city : ''}${d.offsite ? ' · 🚩' + d.offsite : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
-    // busy hours (single hour -> "17 antsp. · 17 val.")
-    $('auHours').innerHTML = bars(j.hours, (h) => `${h.hh} val.`, (h) => h.n, 'antsp.')
-      || '<span class="stats-note">Dar nėra duomenų.</span>';
-    // weekly trend (single week -> "17 antsp. · 25 sav.")
-    $('auTrend').innerHTML = bars(j.trend, (w) => `${w.wk.split('-')[1] || ''} sav.`, (w) => w.n, 'antsp.')
-      || '<span class="stats-note">Dar nėra duomenų.</span>';
+    // busy hours — stacked stamps + redemptions
+    $('auHours').innerHTML = barChart(j.hours, (h) => `${h.hh}`);
+    // weekly trend — stacked stamps + redemptions
+    $('auTrend').innerHTML = barChart(j.trend, (w) => `${w.wk.split('-')[1] || ''} sav.`);
+    animateBars($('auHours')); animateBars($('auTrend'));
     $('audit').classList.remove('hidden');
   }
 
