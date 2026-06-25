@@ -1012,7 +1012,8 @@ async function wireRecovery() {
       if (!data) { toast(t('recBadCode'), true); return; }
       // Restore stamps onto this device's card and adopt the code so future saves update it.
       card.stamps = Math.min(data.stamps, tenant.stamps_needed);
-      if (backend._save) backend._save({ stamps: card.stamps, last: 0, fails: [], first: card.first, cycles: card.cycles });
+      card.dates = (card.dates || []).slice(0, card.stamps); // keep dates consistent with restored count
+      if (backend._save) backend._save({ stamps: card.stamps, dates: card.dates, last: 0, fails: [], first: card.first, cycles: card.cycles });
       Recovery._setCode(codeIn);
       toast(t('recRestoredToast'));
       render(); // full card re-render: restored stamps + recovery box now shows the code
@@ -1059,7 +1060,11 @@ async function autoFill() {
   const target = next || tenant.stamps_needed;
   while (card.stamps < target) {
     card.stamps += 1;
-    if (backend._save) backend._save({ stamps: card.stamps, last: 0, fails: [], first: card.first, cycles: card.cycles });
+    // Demo: spread the auto-filled stamps across recent days so the per-stamp
+    // dates look like real visits (and showcase the anti-fraud history feature).
+    card.dates = card.dates || [];
+    card.dates[card.stamps - 1] = localDay(new Date(Date.now() - (target - card.stamps) * 86400000));
+    if (backend._save) backend._save({ stamps: card.stamps, dates: card.dates, last: 0, fails: [], first: card.first, cycles: card.cycles });
     render();
     await sleep(280);
   }
@@ -1073,9 +1078,10 @@ async function autoFill() {
 
 function resetCard() {
   card.stamps = 0;
+  card.dates = [];
   showReview = false;
   clearBirthdayClaim(); // replay the birthday flow too (reset only shows in preview)
-  if (backend._save) backend._save({ stamps: 0, last: 0, fails: [] });
+  if (backend._save) backend._save({ stamps: 0, dates: [], last: 0, fails: [] });
   render();
 }
 
