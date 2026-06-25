@@ -139,7 +139,7 @@
     position: relative; display: flex; align-items: flex-end; justify-content: flex-start;
     width: 100%; max-width: 100%;
     gap: 9px; height: 120px; padding: 18px 2px 0; overflow-x: auto; overflow-y: hidden;
-    -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
     background-image:
       linear-gradient(to top, #f0efed 1px, transparent 1px),
       linear-gradient(to top, #f0efed 1px, transparent 1px),
@@ -638,9 +638,12 @@ if (!tenant || !tenant.staff_secret) {
     host.innerHTML = legend + `<div class="au-chart">${more}${tail.map((d) => colHtml(d, max)).join('')}</div>`;
     const chart = host.querySelector('.au-chart');
     let firstShown = startIdx;
-    // Prepend an older chunk, preserving the scroll position so it doesn't jump.
+    let armed = false;   // ignore scroll events until the initial right-scroll has settled
+    let busy = false;    // re-entrancy guard: load at most one chunk per scroll burst
+    // Prepend an older chunk, preserving the scroll position so the viewport doesn't jump.
     const loadOlder = () => {
-      if (firstShown <= 0) return;
+      if (busy || firstShown <= 0) return;
+      busy = true;
       const from = Math.max(0, firstShown - CHART_WINDOW);
       const chunk = data.slice(from, firstShown);
       const beforeW = chart.scrollWidth;
@@ -650,16 +653,21 @@ if (!tenant || !tenant.staff_secret) {
       else chart.insertAdjacentHTML('afterbegin', frag);
       firstShown = from;
       if (from === 0 && moreEl) moreEl.remove();
-      // keep the viewport anchored on the same bars after prepending width
+      // keep the viewport anchored on the same bars after the prepend widened the content
       chart.scrollLeft += chart.scrollWidth - beforeW;
       animateNew(chart);
+      busy = false;
     };
-    // Lazy trigger: when the user scrolls near the LEFT edge, load the next older chunk.
-    chart.addEventListener('scroll', () => {
-      if (chart.scrollLeft < 60) loadOlder();
-    }, { passive: true });
-    // Open scrolled to the newest data (right edge) once laid out, then animate.
-    requestAnimationFrame(() => { chart.scrollLeft = chart.scrollWidth; animateNew(chart); });
+    // Lazy trigger: once armed, loading the next older chunk when the user scrolls near
+    // the LEFT (oldest) edge. Stays disarmed during the programmatic open-scroll so the
+    // chart doesn't auto-load the whole history at mount.
+    chart.addEventListener('scroll', () => { if (armed && chart.scrollLeft < 50) loadOlder(); }, { passive: true });
+    // Open scrolled to the newest data (right edge), THEN arm lazy-loading next frame.
+    requestAnimationFrame(() => {
+      chart.scrollLeft = chart.scrollWidth;
+      animateNew(chart);
+      requestAnimationFrame(() => { armed = true; });
+    });
   }
   // Grow only the bars that haven't been animated yet (data-grown marks done).
   function animateNew(chart) {
