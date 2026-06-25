@@ -78,8 +78,8 @@
     <div class="timer"><span class="ring" id="ring"></span><span id="secs"></span></div>
     <p class="hint">Kodas keičiasi kas 30 sekundžių. Vienas svečias gali gauti 1 antspaudą per dieną.</p>
 
-    <!-- REAL stats (only this password-protected page shows them; hidden if the
-         optional counter server isn't enabled/reachable). Anonymous counts only. -->
+    <!-- REAL stats (this password-protected page only; hidden if the optional
+         server isn't enabled/reachable). Customer counts = anonymous. -->
     <div id="stats" class="stats hidden">
       <div class="stats-head">📊 Šiandienos statistika</div>
       <div class="stats-nums">
@@ -87,7 +87,56 @@
         <div class="stat"><span class="stat-val" id="stRedeemed">–</span><span class="stat-lbl">Atsiimti prizai</span></div>
       </div>
       <div class="stats-recent" id="stRecent"></div>
-      <p class="stats-note">🔒 Tik antspaudų skaičius — jokių asmens duomenų. Atsistato vidurnaktį.</p>
+      <p class="stats-note">🔒 Klientų skaičiai anonimiški — jokių asmens duomenų.</p>
+    </div>
+
+    <!-- AUDIT: this client's own staff terminal (NOT customers). Device/branch
+         label + location + full history. Powered by the D1 audit log. -->
+    <div id="audit" class="stats hidden">
+      <div class="stats-head">🖥️ Įrenginio žurnalas ir statistika</div>
+
+      <div class="device-row">
+        <span class="dev-label">Šis įrenginys / filialas:</span>
+        <span class="dev-name" id="devName">—</span>
+        <button class="dev-edit" id="devEdit">keisti</button>
+      </div>
+      <button class="geo-btn" id="geoBtn">📍 Nustatyti šią vietą kaip įstaigą</button>
+      <p class="geo-state" id="geoState"></p>
+
+      <div class="stats-nums stats-nums-3">
+        <div class="stat"><span class="stat-val" id="auToday">–</span><span class="stat-lbl">Šiandien</span></div>
+        <div class="stat"><span class="stat-val" id="auWeek">–</span><span class="stat-lbl">7 d.</span></div>
+        <div class="stat"><span class="stat-val" id="auAll">–</span><span class="stat-lbl">Iš viso</span></div>
+      </div>
+      <div class="stats-nums stats-nums-3">
+        <div class="stat stat-sm"><span class="stat-val" id="auRate">–</span><span class="stat-lbl">Prizų %</span></div>
+        <div class="stat stat-sm"><span class="stat-val" id="auLogins">–</span><span class="stat-lbl">Prisijungimai</span></div>
+        <div class="stat stat-sm"><span class="stat-val stat-warn" id="auOffsite">–</span><span class="stat-lbl">Ne vietoje 🚩</span></div>
+      </div>
+
+      <div class="au-sub" id="auFlagsWrap">
+        <div class="au-sub-head">🚩 Naudojimas ne įstaigoje</div>
+        <div id="auFlags" class="au-list"></div>
+      </div>
+
+      <div class="au-sub">
+        <div class="au-sub-head">🏆 Pagal įrenginį / filialą</div>
+        <div id="auDevices" class="au-list"></div>
+      </div>
+
+      <div class="au-sub">
+        <div class="au-sub-head">🕐 Užimtumas pagal valandą</div>
+        <div id="auHours" class="au-hours"></div>
+      </div>
+
+      <div class="au-sub">
+        <div class="au-sub-head">📈 Savaitės tendencija</div>
+        <div id="auTrend" class="au-hours"></div>
+      </div>
+
+      <button class="dev-edit au-csv" id="auCsv">⬇️ Atsisiųsti visą istoriją (CSV)</button>
+      <button class="lock au-reset hidden" id="auReset">🗑️ Išvalyti demo statistiką</button>
+      <p class="stats-note">🖥️ Stebimas tik įstaigos darbuotojo įrenginys (vieta, laikas) — saugumui. Apie tai privalo žinoti darbuotojai. Klientų duomenų nerenkame.</p>
     </div>
 
     <button class="lock" id="lockBtn">Užrakinti</button>
