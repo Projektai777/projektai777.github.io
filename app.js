@@ -660,7 +660,6 @@ const backend = isStatic ? staticBackend : supabaseBackend;
 // ---------- state ----------
 let tenant = null;
 let card = null;
-let showReview = false; // set right after a reward is redeemed -> review nudge banner
 
 // ---------- rendering ----------
 function setTheme() {
@@ -871,22 +870,16 @@ function wireBirthday() {
   }
 }
 
-// ---------- review nudge (after redeeming a reward) ----------
+// ---------- review nudge (always shown when a review URL is configured) ----------
 function reviewBannerHtml() {
-  if (!showReview || !tenant.google_review_url) return '';
+  if (!tenant.google_review_url) return '';
   return `<div class="review-nudge" id="reviewNudge">
     <h3>${t('reviewTitle')}</h3>
     <p>${t('reviewLead')}</p>
     <a class="review-go" href="${tenant.google_review_url}" target="_blank" rel="noopener">${t('reviewBtn')}</a>
-    <button class="review-later" id="reviewLater">${t('reviewLater')}</button>
   </div>`;
 }
-function wireReview() {
-  const later = document.getElementById('reviewLater');
-  if (later) later.onclick = () => { showReview = false; render(); };
-  const go = document.querySelector('#reviewNudge .review-go');
-  if (go) go.addEventListener('click', () => { showReview = false; });
-}
+function wireReview() { /* always-on banner; nothing to wire (link opens directly) */ }
 
 // DEMO-ONLY helper: shows the password-gated staff page link + the demo password
 // so a prospect can open the staff QR on a second device and try the real flow.
@@ -947,10 +940,10 @@ function render() {
     ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
     ${isPreview ? `<button class="reset-link" id="resetBtn">${t('reset')}</button>` : ''}
     ${birthdayHtml()}
+    ${reviewBannerHtml()}
     ${isPreview ? staffFlowHtml() : ''}
     ${isPreview ? ctaHtml() : ''}
     <details class="panel recovery rec-collapse hidden" id="recovery"></details>
-    ${reviewBannerHtml()}
     <p class="privacy">${t('privacy')}</p>
     ${isDemo ? demoStaffHtml() : ''}
     ${isDemo ? `<p class="small-print">${t('demoFooter')}</p>` : ''}
@@ -1100,7 +1093,6 @@ async function autoFill() {
 function resetCard() {
   card.stamps = 0;
   card.dates = [];
-  showReview = false;
   clearBirthdayClaim(); // replay the birthday flow too (reset only shows in preview)
   // Wipe the whole stored card: dropping `day`/`redeemDay`/`cycles` clears the
   // daily stamp + reward cooldowns and the demo cycle-limit, so "Pradėti iš naujo"
@@ -1443,7 +1435,6 @@ async function runGrant(action, code) {
         Counter.hit('redeem'); // anonymous tally (server optional; no personal data)
         card.stamps = 0;
         Recovery.autoSave(card.stamps); // keep an existing backup current
-        showReview = !!tenant.google_review_url; // nudge a review right after the reward
         render();
         toast(t('toastRedeemed'));
       } else if (action === 'redeem_birthday') {
