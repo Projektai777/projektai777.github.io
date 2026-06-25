@@ -594,12 +594,13 @@ const staticBackend = {
     if (fn === 'redeem_reward') {
       if (c.stamps < t.stamps_needed) return { ok: false, error: 'card_not_full' };
       // One redemption per phone per LOCAL day (mirrors the stamp cooldown), so a
-      // present customer can't be re-scanned to farm the reward repeatedly. The
-      // per-stamp dates (below) let staff visually spot a card that isn't legit.
-      if (!isPreview && c.redeemDay === todayLocal()) return { ok: false, error: 'redeem_done' };
+      // present customer can't be re-scanned to farm the reward repeatedly. Enforced
+      // in preview too so the demo behaves like the real card; the preview-only reset
+      // clears it. The per-stamp dates let staff visually spot a card that isn't legit.
+      if (c.redeemDay === todayLocal()) return { ok: false, error: 'redeem_done' };
       c.stamps = 0;
       c.dates = []; // new cycle starts empty
-      if (!isPreview) c.redeemDay = todayLocal();
+      c.redeemDay = todayLocal();
       if (isDemo) c.cycles = (c.cycles || 0) + 1; // demo: one cycle per device
       this._save(c);
       return { ok: true };
@@ -612,8 +613,9 @@ const staticBackend = {
     // claimed X ago" until local midnight (can't farm the gift across restaurants).
     if (fn === 'redeem_birthday') {
       if (!isPreview) markBirthdayClaimed(now); // demo/preview never pollutes the real cross-tenant flag
-      // Also grant the day's stamp, unless one was already added today.
-      if (isPreview || c.day !== todayLocal()) {
+      // Also grant the day's stamp, unless one was already added today (real
+      // behaviour, in preview too).
+      if (c.day !== todayLocal()) {
         if (c.stamps < t.stamps_needed) { c.stamps += 1; stampDate(c); }
         c.last = now;
         c.day = todayLocal();
@@ -1085,6 +1087,9 @@ function resetCard() {
   card.dates = [];
   showReview = false;
   clearBirthdayClaim(); // replay the birthday flow too (reset only shows in preview)
+  // Wipe the whole stored card: dropping `day`/`redeemDay`/`cycles` clears the
+  // daily stamp + reward cooldowns and the demo cycle-limit, so "Pradėti iš naujo"
+  // fully replays the flow (you can stamp again immediately).
   if (backend._save) backend._save({ stamps: 0, dates: [], last: 0, fails: [] });
   render();
 }
