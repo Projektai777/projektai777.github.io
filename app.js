@@ -204,7 +204,7 @@ const STR = {
       ['Kuo skiriatės nuo kitų lojalumo programėlių?',
         '<strong>Jokių mėnesinių mokesčių.</strong> Dauguma lojalumo programėlių — prenumeratos (~25–80 €/mėn., ir taip be galo), įspraudžiančios Jus į griežtą šabloną su svetimu prekės ženklu. Pas mus sumokate <strong>vieną kartą</strong>, o programėlę <strong>pritaikome būtent Jūsų verslui</strong>: prizų pakopas, spalvas, kalbas (LT, EN ar bet kurią kitą), gimtadienio dovanas, net visiškai naujas funkcijas. Viskas su <strong>Jūsų prekės ženklu</strong> (ir, jei norite, Jūsų domenu) — produktą naudojate neterminuotai, be priklausomybės nuo svetimos platformos. Palaikymas greitas ir asmeniškas, o klientams nereikia jokios registracijos (privatumas). Finansiškai irgi laimite: lyginant su panašia prekės ženklo prenumerata (~60–80 €/mėn.), <strong>vienkartinis mokestis atsiperka maždaug per pirmus metus</strong>, o vėliau nemokate nieko.'],
       ['Ar tai saugu? Kaip su privatumu ir sukčiavimu?',
-        '<strong>Privatumas:</strong> nerenkame jokių asmens duomenų — kortelė saugoma tik svečio telefone, todėl nelieka ir GDPR (Bendrasis duomenų apsaugos reglamentas) rūpesčių dėl klientų sąrašų. <strong>Sukčiavimas:</strong> antspaudą galima pridėti tik nuskaičius darbuotojo QR kodą, kuris keičiasi kas 30 sekundžių, tad svečias negali prisidėti jo pats ir negali pakartotinai panaudoti pamatyto kodo; be to, vienam telefonui leidžiamas tik <strong>vienas antspaudas per dieną</strong> (atsistato vidurnaktį). Specialios dovanos (pvz. gimtadienio) atiduodamos tik darbuotojui patikrinus asmens dokumentą ir tik kartą per metus. <strong>Saugiausias prizo tipas — nuolaida</strong> (pvz. −20 % sąskaitai): net jei klientas rastų būdą apgauti sistemą, jis vis tiek turi išleisti pinigų, nes nuolaida taikoma tik apmokamam pirkiniui — skirtingai nei visiškai nemokamas prizas.'],
+        '<strong>Privatumas:</strong> nerenkame jokių asmens duomenų — kortelė saugoma tik svečio telefone, todėl nelieka ir GDPR (Bendrasis duomenų apsaugos reglamentas) rūpesčių dėl klientų sąrašų. <strong>Sukčiavimas:</strong> antspaudą galima pridėti tik nuskaičius darbuotojo QR kodą, kuris keičiasi kas 30 sekundžių, tad svečias negali prisidėti jo pats ir negali pakartotinai panaudoti pamatyto kodo; be to, vienam telefonui leidžiamas tik <strong>vienas antspaudas per dieną</strong> (atsistato vidurnaktį). <strong>Darbuotojų kontrolė:</strong> savininko apžvalgoje rodomas <strong>anoniminis dienos antspaudų skaitiklis</strong> — staiga šoktelėjęs skaičius iškart parodo neįprastą veiklą (pvz. jei darbuotojas dalintųsi QR kodu su pažįstamais). Skaičiuojami tik antspaudai — <strong>jokių asmens duomenų</strong>, todėl GDPR atžvilgiu lieka tokia pat švari kaip ir visa sistema. Specialios dovanos (pvz. gimtadienio) atiduodamos tik darbuotojui patikrinus asmens dokumentą ir tik kartą per metus. <strong>Saugiausias prizo tipas — nuolaida</strong> (pvz. −20 % sąskaitai): net jei klientas rastų būdą apgauti sistemą, jis vis tiek turi išleisti pinigų, nes nuolaida taikoma tik apmokamam pirkiniui — skirtingai nei visiškai nemokamas prizas.'],
       ['Kas gali atidaryti darbuotojų QR kodo puslapį?',
         'Tik Jūs (savininkas) ir Jūsų personalas. Darbuotojų kodo puslapis apsaugotas <strong>slaptažodžiu, kurį žinote tik Jūs</strong>, ir jį atidarote <strong>savo restorano planšetėse ar telefonuose</strong>, kuriais naudojasi personalas. Svečiai šio puslapio nemato ir prie jo neprieina — jie tik nuskaito ekrane rodomą QR kodą. Taip antspaudą gali pridėti tik darbuotojas.'],
       ['Ar galima naudoti su mano įmonės domenu ir svetaine?',
@@ -227,6 +227,10 @@ const STR = {
     liveStamps: 'Antspaudai šiandien',
     liveRedeemed: 'Atsiimti prizai',
     liveNote: '🔒 Skaičiuojami tik antspaudai — jokių asmens duomenų. Atsistato vidurnaktį.',
+    demoStaffTitle: '🔑 Darbuotojo puslapis (demonstracijai)',
+    demoStaffLead: 'Atidarykite darbuotojo kodų puslapį kitame įrenginyje ir suveskite slaptažodį, kad pamatytumėte besikeičiantį QR kodą:',
+    demoStaffOpen: 'Atidaryti darbuotojo puslapį →',
+    demoStaffPass: 'Slaptažodis',
   },
   en: {
     subtitle: 'Loyalty card',
@@ -332,7 +336,7 @@ const STR = {
       ['How are you different from other loyalty apps?',
         '<strong>No monthly fees.</strong> Most loyalty apps are subscriptions (~€25–80/month, forever) that squeeze you into a rigid template under someone else’s brand. With us you pay <strong>once</strong>, and we <strong>tailor the app to your business</strong>: reward tiers, colours, languages (LT, EN or any other), birthday gifts, even entirely new features. Everything under <strong>your brand</strong> (and your domain if you like) — you use the product indefinitely, with no dependence on someone else’s platform. Support is fast and personal, and customers need no sign-up (privacy). It wins financially too: against a comparable branded subscription (~€60–80/month), <strong>the one-time fee pays for itself in about the first year</strong>, and after that you pay nothing.'],
       ['Is it safe? What about privacy and cheating?',
-        '<strong>Privacy:</strong> we collect no personal data — the card lives only on the guest’s phone, so there are no GDPR (General Data Protection Regulation) headaches over customer lists. <strong>Cheating:</strong> a stamp can only be added by scanning the staff QR, which changes every 30 seconds, so guests can’t add their own and can’t reuse a code they once saw; on top of that each phone is limited to <strong>one stamp per day</strong> (resets at midnight). Special gifts (e.g. birthday) are released only after staff check an ID, and only once per year. <strong>The safest type of reward is a discount</strong> (e.g. −20% off the bill): even if a customer found a way to cheat, they still have to spend money, because the discount applies only to a paid purchase — unlike an entirely free reward.'],
+        '<strong>Privacy:</strong> we collect no personal data — the card lives only on the guest’s phone, so there are no GDPR (General Data Protection Regulation) headaches over customer lists. <strong>Cheating:</strong> a stamp can only be added by scanning the staff QR, which changes every 30 seconds, so guests can’t add their own and can’t reuse a code they once saw; on top of that each phone is limited to <strong>one stamp per day</strong> (resets at midnight). <strong>Staff oversight:</strong> the owner overview shows an <strong>anonymous daily stamp counter</strong> — a sudden spike instantly flags unusual activity (e.g. a staff member sharing the QR code with friends). Only stamps are counted — <strong>no personal data</strong> — so it stays as GDPR-clean as the rest of the system. Special gifts (e.g. birthday) are released only after staff check an ID, and only once per year. <strong>The safest type of reward is a discount</strong> (e.g. −20% off the bill): even if a customer found a way to cheat, they still have to spend money, because the discount applies only to a paid purchase — unlike an entirely free reward.'],
       ['Who can open the staff QR page?',
         'Only you (the owner) and your staff. The staff code page is protected by a <strong>password that only you know</strong>, and you open it on <strong>your restaurant’s own tablets or phones</strong> used by staff. Guests never see or reach this page — they only scan the QR shown on screen. That’s how only a staff member can add a stamp.'],
       ['Can it run on my own domain and website?',
@@ -355,6 +359,10 @@ const STR = {
     liveStamps: 'Stamps today',
     liveRedeemed: 'Rewards claimed',
     liveNote: '🔒 Only stamps are counted — no personal data. Resets at midnight.',
+    demoStaffTitle: '🔑 Staff page (for the demo)',
+    demoStaffLead: 'Open the staff code page on another device and enter the password to see the rotating QR code:',
+    demoStaffOpen: 'Open the staff page →',
+    demoStaffPass: 'Password',
   },
 };
 
@@ -783,6 +791,20 @@ function wireReview() {
   if (go) go.addEventListener('click', () => { showReview = false; });
 }
 
+// DEMO-ONLY helper: shows the password-gated staff page link + the demo password
+// so a prospect can open the staff QR on a second device and try the real flow.
+// Gated to slug 'demo' (see the isDemo check at the call site) — never shows for a
+// real client, whose staff password must stay private.
+function demoStaffHtml() {
+  const staffUrl = new URL('tools/staff.html', new URL('./', location.href)).href + '?b=demo';
+  return `<section class="panel demo-staff">
+    <h3>${t('demoStaffTitle')}</h3>
+    <p class="panel-lead">${t('demoStaffLead')}</p>
+    <a class="cta cta-demo" href="${staffUrl}" target="_blank" rel="noopener">${t('demoStaffOpen')}</a>
+    <p class="demo-pass">${t('demoStaffPass')}: <code>123456</code></p>
+  </section>`;
+}
+
 function render() {
   setTheme();
   const full = card.stamps >= tenant.stamps_needed;
@@ -828,6 +850,7 @@ function render() {
     ${isPreview ? staffFlowHtml() : ''}
     ${isPreview ? ctaHtml() : ''}
     <p class="privacy">${t('privacy')}</p>
+    ${isDemo ? demoStaffHtml() : ''}
     ${isDemo ? `<p class="small-print">${t('demoFooter')}</p>` : ''}
   `;
 

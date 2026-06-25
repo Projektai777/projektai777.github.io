@@ -22,7 +22,7 @@ export default {
     reward_text: 'Nemokamas didelis kapučinas',
     reward_text_en: 'Free large cappuccino', // EN variantas (rodomas kai įjungtas EN)
     staff_secret: '61d7201b3e2e02a883c9e4a42f527949',     // rotating-code raktas
-    staff_pass_hash: 'bac1bc821037abd4cf065a2e2b3f0c524e12c47ef4c8218c69fa9a71bcbe44ba', // /tools/staff.html slaptažodis: demo
+    staff_pass_hash: 'a1634fed17a756915fbda189de23ab9626c1badaf3785bbb790951f25b72ccea', // /tools/staff.html slaptažodis: 123456
   },
 
   berneliai: {
