@@ -50,6 +50,13 @@
   .stats-recent { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
   .stats-recent span { font-size: .72rem; color: #cbd5e1; background: #0f172a; border-radius: 8px; padding: 3px 8px; font-variant-numeric: tabular-nums; }
   .stats-note { font-size: .7rem; color: #64748b; margin-top: 12px; line-height: 1.4; }
+  /* GDPR / employer-duty warning near the audit feature */
+  .gdpr-warn {
+    font-size: .74rem; color: #fde68a; line-height: 1.45; text-align: left;
+    background: #2a2410; border: 1px solid #57430f; border-radius: 10px;
+    padding: 10px 12px; margin-bottom: 14px;
+  }
+  .gdpr-warn strong { color: #fef3c7; }
   /* audit panel */
   .stats-nums-3 .stat { padding: 12px 6px; }
   .stats-nums-3 { margin-top: 10px; }
@@ -119,6 +126,8 @@
     <div id="audit" class="stats hidden">
       <div class="stats-head">🖥️ Įrenginio žurnalas ir statistika</div>
 
+      <p class="gdpr-warn">⚠️ Ši funkcija registruoja darbuotojo įrenginio vietą ir laiką (saugumui). Tai darbuotojo asmens duomenys — pagal GDPR <strong>privalote iš anksto informuoti darbuotojus</strong>, kad įrenginys yra stebimas. Klientų duomenų nerenkame.</p>
+
       <div class="device-row">
         <span class="dev-label">Šis įrenginys / filialas:</span>
         <span class="dev-name" id="devName">—</span>
@@ -160,7 +169,7 @@
 
       <button class="dev-edit au-csv" id="auCsv">⬇️ Atsisiųsti visą istoriją (CSV)</button>
       <button class="lock au-reset hidden" id="auReset">🗑️ Išvalyti demo statistiką</button>
-      <p class="stats-note">🖥️ Stebimas tik įstaigos darbuotojo įrenginys (vieta, laikas) — saugumui. Apie tai privalo žinoti darbuotojai. Klientų duomenų nerenkame.</p>
+      <p class="stats-note">🖥️ Stebimas tik įstaigos darbuotojo įrenginys (vieta, laikas) — saugumui. Klientų duomenų nerenkame.</p>
     </div>
 
     <button class="lock" id="lockBtn">Užrakinti</button>
