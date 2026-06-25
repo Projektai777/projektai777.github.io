@@ -40,6 +40,16 @@
     background: conic-gradient(#22c55e calc(var(--p) * 1%), #334155 0); }
   .hint { font-size: .82rem; color: #94a3b8; line-height: 1.5; }
   .lock { font-size: .78rem; color: #64748b; background: none; border: 1px solid #334155; padding: 8px 14px; width: auto; margin: 6px auto 0; border-radius: 10px; }
+  /* real stats panel (this password page only) */
+  .stats { background: #1e293b; border-radius: 16px; padding: 18px 16px; width: 100%; margin-top: 4px; }
+  .stats-head { font-size: .9rem; font-weight: 700; color: #e2e8f0; margin-bottom: 12px; }
+  .stats-nums { display: flex; gap: 12px; }
+  .stat { flex: 1; background: #0f172a; border-radius: 12px; padding: 14px 8px; }
+  .stat-val { display: block; font-size: 2rem; font-weight: 800; color: #22c55e; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat-lbl { display: block; font-size: .72rem; color: #94a3b8; margin-top: 4px; }
+  .stats-recent { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .stats-recent span { font-size: .72rem; color: #cbd5e1; background: #0f172a; border-radius: 8px; padding: 3px 8px; font-variant-numeric: tabular-nums; }
+  .stats-note { font-size: .7rem; color: #64748b; margin-top: 12px; line-height: 1.4; }
   .hidden { display: none; }
 </style>
 </head>
@@ -67,6 +77,19 @@
     </div>
     <div class="timer"><span class="ring" id="ring"></span><span id="secs"></span></div>
     <p class="hint">Kodas keičiasi kas 30 sekundžių. Vienas svečias gali gauti 1 antspaudą per dieną.</p>
+
+    <!-- REAL stats (only this password-protected page shows them; hidden if the
+         optional counter server isn't enabled/reachable). Anonymous counts only. -->
+    <div id="stats" class="stats hidden">
+      <div class="stats-head">📊 Šiandienos statistika</div>
+      <div class="stats-nums">
+        <div class="stat"><span class="stat-val" id="stStamps">–</span><span class="stat-lbl">Antspaudai</span></div>
+        <div class="stat"><span class="stat-val" id="stRedeemed">–</span><span class="stat-lbl">Atsiimti prizai</span></div>
+      </div>
+      <div class="stats-recent" id="stRecent"></div>
+      <p class="stats-note">🔒 Tik antspaudų skaičius — jokių asmens duomenų. Atsistato vidurnaktį.</p>
+    </div>
+
     <button class="lock" id="lockBtn">Užrakinti</button>
   </div>
 
@@ -107,6 +130,42 @@ if (!tenant || !tenant.staff_secret) {
     $('login').classList.add('hidden');
     $('codeView').classList.remove('hidden');
     tick();
+    startStats();
+  }
+
+  // Real anonymous stats (this password-protected page only). Reads the optional
+  // counter endpoint; if the server is disabled or unreachable the panel stays
+  // hidden and the page works exactly as before. Counts only — no personal data.
+  let statsBase = undefined; // undefined = not resolved; null = disabled/unavailable
+  async function resolveCounter() {
+    if (statsBase !== undefined) return statsBase;
+    try {
+      const r = await fetch('../counter-endpoint.json', { cache: 'no-store' });
+      const j = await r.json();
+      statsBase = (j && j.enabled && j.base) ? j.base.replace(/\/$/, '') : null;
+    } catch { statsBase = null; }
+    return statsBase;
+  }
+  async function refreshStats() {
+    const base = await resolveCounter();
+    if (!base) return; // no server -> panel stays hidden
+    try {
+      const r = await fetch(`${base}/stats?b=${encodeURIComponent(slug)}`, { cache: 'no-store' });
+      const j = await r.json();
+      if (!j || !j.ok) return;
+      $('stStamps').textContent = j.total;
+      $('stRedeemed').textContent = j.redeemed;
+      const recent = (j.times || []).slice(-8).reverse();
+      $('stRecent').innerHTML = recent.map((tm) => `<span>${tm}</span>`).join('');
+      $('stats').classList.remove('hidden');
+    } catch { /* network blip — leave the last shown values */ }
+  }
+  let statsTimer = null;
+  function startStats() {
+    refreshStats();
+    if (!statsTimer) statsTimer = setInterval(() => {
+      if (!$('codeView').classList.contains('hidden')) refreshStats();
+    }, 20000); // every 20 s — counts move slowly; keep it light
   }
 
   async function tick() {
