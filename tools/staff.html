@@ -83,15 +83,16 @@
   .au-flag { font-size: .74rem; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 6px 10px; }
   .au-dev { display: flex; justify-content: space-between; gap: 8px; font-size: .76rem; background: #faf9f8; border: 1px solid #f0efed; border-radius: 8px; padding: 7px 10px; }
   .au-dev span { color: #78716c; text-align: right; }
-  .au-hours { display: flex; align-items: flex-end; gap: 10px; height: 96px; padding: 4px 2px 0; overflow-x: auto; }
+  .au-hours { display: flex; align-items: flex-end; gap: 10px; min-height: 40px; padding: 4px 2px 0; overflow-x: auto; }
+  .au-hours:has(.au-bar-col) { height: 96px; } /* full height only when real bars exist */
   .au-bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 0 0 30px; height: 100%; }
   .au-bar { width: 100%; max-width: 28px; background: var(--brand); border-radius: 5px 5px 0 0; min-height: 4px; }
   .au-bar-l { font-size: .62rem; color: #a8a29e; margin-top: 5px; font-weight: 600; }
   .au-bar-v { font-size: .58rem; color: #78716c; margin-top: 1px; font-variant-numeric: tabular-nums; }
   /* single-data-point summary (a 1-bar chart conveys nothing, so show a figure) */
-  .au-single { display: flex; align-items: baseline; gap: 8px; padding: 6px 2px; }
-  .au-single-v { font-size: 1.5rem; font-weight: 800; color: var(--brand); font-variant-numeric: tabular-nums; }
-  .au-single-l { font-size: .78rem; color: #78716c; }
+  .au-single { display: flex; align-items: baseline; gap: 7px; padding: 4px 2px 2px; }
+  .au-single-v { font-size: 1.15rem; font-weight: 800; color: var(--brand); font-variant-numeric: tabular-nums; }
+  .au-single-l { font-size: .76rem; color: #78716c; }
   .au-reset { margin-top: 14px; color: #b91c1c; border-color: #fecaca; }
   .hidden { display: none; }
 </style>
