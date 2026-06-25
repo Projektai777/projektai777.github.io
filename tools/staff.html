@@ -52,6 +52,19 @@
   /* stats panels */
   .stats { background: #fff; border-radius: 20px; padding: 20px 18px; width: 100%; box-shadow: 0 10px 30px rgb(0 0 0 / .08); }
   .stats-head { font-size: .95rem; font-weight: 800; color: var(--text); margin-bottom: 14px; }
+  /* collapsible audit panel — closed by default so customers don't see raw stats */
+  .audit-panel { padding: 4px 18px; } /* tighter when collapsed; summary adds its own space */
+  .audit-panel[open] { padding: 20px 18px; }
+  .audit-summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center;
+    justify-content: space-between; gap: 10px; margin: 0; padding: 14px 0;
+  }
+  .audit-summary::-webkit-details-marker { display: none; }
+  .audit-toggle { font-size: .76rem; font-weight: 600; color: #78716c; white-space: nowrap; }
+  .audit-panel[open] .audit-summary { margin-bottom: 6px; }
+  .audit-panel[open] .audit-toggle::after { content: ''; }
+  /* swap the label text on open via the toggle span */
+  .audit-panel:not([open]) .audit-toggle { color: var(--brand); }
   .stats-nums { display: flex; gap: 12px; }
   .stat { flex: 1; background: #faf9f8; border: 1px solid #f0efed; border-radius: 14px; padding: 14px 8px; }
   .stat-val { display: block; font-size: 2rem; font-weight: 800; color: var(--brand); line-height: 1.1; font-variant-numeric: tabular-nums; }
@@ -121,8 +134,8 @@
 
     <!-- AUDIT: this client's own staff terminal (NOT customers). Device/branch
          label + location + full history. Powered by the D1 audit log. -->
-    <div id="audit" class="stats hidden">
-      <div class="stats-head">🖥️ Įrenginio žurnalas ir statistika</div>
+    <details id="audit" class="stats audit-panel hidden">
+      <summary class="stats-head audit-summary">🖥️ Įrenginio žurnalas ir statistika <span class="audit-toggle">rodyti ▾</span></summary>
 
       <p class="gdpr-warn">⚠️ Ši funkcija registruoja įrenginio vietą ir laiką (saugumui). Pagal GDPR <strong>privalote iš anksto informuoti darbuotojus</strong>, kad įrenginys yra stebimas. Klientų duomenų nerenkame.</p>
 
@@ -166,7 +179,7 @@
       </div>
 
       <button class="lock au-reset hidden" id="auReset">🗑️ Išvalyti pavyzdinę statistiką</button>
-    </div>
+    </details>
 
     <button class="lock" id="lockBtn">Užrakinti</button>
   </div>
