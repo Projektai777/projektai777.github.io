@@ -524,8 +524,8 @@ if (!tenant || !tenant.staff_secret) {
   // no thousands of POSTs. Backdated timestamps are preview-only on the worker, so this
   // can never touch a real client's append-only log.
   // Shape: typical restaurant hours (lunch 11–15 + dinner 17–22 peaks), weekends busier
-  // than weekdays, two branches (Baras ~2× Senamiestis), a steady ~15–20% reward rate,
-  // and a few rare off-site 🚩 anomalies spread across the year.
+  // than weekdays, three Vilnius branches, a steady ~15–20% reward rate, a believable
+  // number of daily staff logins, and ONE rare off-site 🚩 anomaly across the year.
   async function seedSample(base) {
     // Deterministic pseudo-random so each demo looks identical (no Math.random).
     let s = 20260601; const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
@@ -544,25 +544,31 @@ if (!tenant || !tenant.staff_secret) {
     };
     const events = [];
     const add = (device, action, ts, geofar) => events.push({ device, action, ts, geofar });
-    // 365 days back -> today. Baras is the main room (~2× busier); Senamiestis is a 2nd
-    // branch. Weekend (Fri/Sat/Sun) gets a busier multiplier so the trend chart breathes.
+    // Three Vilnius branches. Senamiestis is the flagship (~2× busier); Akropolis and
+    // Ozas are mall locations. `w` is a per-branch volume weight.
+    const BRANCHES = [
+      { name: 'Senamiestis', w: 1.0 },
+      { name: 'Akropolis',   w: 0.6 },
+      { name: 'Ozas',        w: 0.45 },
+    ];
+    // 365 days back -> today. Weekend (Fri/Sat/Sun) gets a busier multiplier so the
+    // trend chart breathes. Each branch also logs a couple of staff logins per day.
     for (let day = 365; day >= 0; day--) {
       const dow = new Date(Date.now() - day * 86400000).getDay(); // 0=Sun..6=Sat
       const weekend = dow === 0 || dow === 5 || dow === 6;
       const wkMul = weekend ? 1.7 : 1;
-      const baseB = 4 + Math.floor(rnd() * 4);    // Baras 4–7 base
-      const baseS = 2 + Math.floor(rnd() * 3);    // Senamiestis 2–4 base
-      const visitsB = Math.round(baseB * wkMul);
-      const visitsS = Math.round(baseS * wkMul);
-      for (let k = 0; k < visitsB; k++) add('Baras', 'stamp', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
-      for (let k = 0; k < visitsS; k++) add('Senamiestis', 'stamp', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
-      // ~17% reward rate: redeem a share of each branch's stamps.
-      for (let k = 0; k < Math.round(visitsB * 0.17); k++) add('Baras', 'redeem', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
-      for (let k = 0; k < Math.round(visitsS * 0.16); k++) add('Senamiestis', 'redeem', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
+      for (const b of BRANCHES) {
+        const visits = Math.round((3 + Math.floor(rnd() * 4)) * b.w * wkMul); // ~base 3–6 × weight
+        for (let k = 0; k < visits; k++) add(b.name, 'stamp', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
+        for (let k = 0; k < Math.round(visits * 0.17); k++) add(b.name, 'redeem', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
+        // Staff logins: 1–2 per open branch per day (shift starts), at opening hours.
+        const logins = 1 + (rnd() < 0.6 ? 1 : 0);
+        for (let k = 0; k < logins; k++) add(b.name, 'login', dateAt(day, 10 + Math.floor(rnd() * 8), Math.floor(rnd() * 60)));
+      }
     }
     // ONE rare off-site 🚩 anomaly (recent, odd late-night hour) to showcase the
     // security flag — just a single example, not a flood.
-    add('Baras', 'stamp', dateAt(3, 23, 34), 1);
+    add('Senamiestis', 'stamp', dateAt(3, 23, 34), 1);
     // Bulk insert in one request; fall back to nothing on failure (dashboard just shows zeros).
     try {
       await fetch(`${base}/seed?b=${encodeURIComponent(slug)}&preview=1`, {
