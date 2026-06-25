@@ -126,6 +126,17 @@
   .geo-state { font-size: .72rem; color: #78716c; margin-top: 6px; min-height: 1em; }
   .au-sub { margin-top: 16px; text-align: left; }
   .au-sub-head { font-size: .78rem; font-weight: 700; color: #57534e; margin-bottom: 8px; }
+  /* collapsible sub-section (off-site flags): tap the header to expand the list */
+  .au-collapse > .au-collapse-sum {
+    list-style: none; cursor: pointer; display: flex; align-items: center;
+    justify-content: space-between; gap: 8px; margin-bottom: 0;
+  }
+  .au-collapse[open] > .au-collapse-sum { margin-bottom: 8px; }
+  .au-collapse-sum::-webkit-details-marker { display: none; }
+  .au-collapse-sum::after { content: '▾'; color: #a8a29e; font-size: .8rem; transition: transform .2s ease; }
+  .au-collapse[open] > .au-collapse-sum::after { transform: rotate(180deg); }
+  .au-collapse-count { margin-left: auto; font-size: .72rem; font-weight: 800; color: #b91c1c;
+    background: #fef2f2; border: 1px solid #fecaca; border-radius: 999px; padding: 1px 9px; }
   .au-list { display: flex; flex-direction: column; gap: 6px; }
   .au-flag { font-size: .74rem; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 6px 10px; }
   .au-dev { display: flex; justify-content: space-between; gap: 8px; font-size: .76rem; background: #faf9f8; border: 1px solid #f0efed; border-radius: 8px; padding: 7px 10px; }
@@ -267,10 +278,10 @@
         </div>
       </div>
 
-      <div class="au-sub" id="auFlagsWrap">
-        <div class="au-sub-head" data-i18n="headFlags">🚩 Naudojimas ne įstaigoje</div>
+      <details class="au-sub au-collapse" id="auFlagsWrap">
+        <summary class="au-sub-head au-collapse-sum"><span data-i18n="headFlags">🚩 Naudojimas ne įstaigoje</span><span class="au-collapse-count" id="auFlagsCount"></span></summary>
         <div id="auFlags" class="au-list"></div>
-      </div>
+      </details>
 
       <div class="au-sub">
         <div class="au-sub-head" data-i18n="headBranch">🏆 Pagal įrenginį / filialą</div>
@@ -729,6 +740,8 @@ if (!tenant || !tenant.staff_secret) {
     $('auOffsite').textContent = T.offsite;
     if (j.flags.length) {
       $('auFlagsWrap').classList.remove('hidden');
+      $('auFlagsWrap').open = false; // start collapsed; the count badge summarises it
+      $('auFlagsCount').textContent = j.flags.length;
       $('auFlags').innerHTML = j.flags.map((f) =>
         `<div class="au-flag">🚩 ${f.day} ${f.time} · ${f.device} · ${f.city || f.region || '?'}</div>`).join('');
     } else { $('auFlagsWrap').classList.add('hidden'); }
