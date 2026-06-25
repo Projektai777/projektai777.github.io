@@ -18,6 +18,17 @@
     padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
   }
   .wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 18px; align-items: center; text-align: center; }
+  /* LT/EN language pill (top-right) */
+  .lang-pill {
+    position: fixed; top: calc(12px + env(safe-area-inset-top)); right: 14px; z-index: 20;
+    display: flex; background: #fff; border: 1px solid #e7e5e4; border-radius: 999px;
+    overflow: hidden; box-shadow: 0 4px 14px rgb(0 0 0 / .08);
+  }
+  .lang-pill button {
+    margin: 0; width: auto; border: none; background: none; padding: 6px 12px;
+    font-size: .75rem; font-weight: 700; color: #a8a29e; cursor: pointer; transition: all .2s ease;
+  }
+  .lang-pill button.on { background: var(--brand); color: #fff; }
   /* brand header (logo + name) — same feel as the card app's header */
   .brand-logo {
     width: 84px; height: 84px; object-fit: contain; border-radius: 22px;
@@ -274,6 +285,7 @@ let lang = (() => {
   return localStorage.getItem('lojalumas_lang') === 'en' ? 'en' : 'lt';
 })();
 const tr = (k, ...a) => { const v = (S[lang] || S.lt)[k]; return typeof v === 'function' ? v(...a) : (v ?? k); };
+let onLangChange = null; // assigned once the audit UI is wired; re-renders dynamic bits
 function applyLang() {
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.innerHTML = tr(el.getAttribute('data-i18n')); });
@@ -405,9 +417,9 @@ if (!tenant || !tenant.staff_secret) {
       const name = (prompt('Šio įrenginio / filialo pavadinimas (pvz. „Baras", „Senamiestis"):', '') || '').trim();
       if (name) localStorage.setItem(devKey, name.slice(0, 60));
     }
-    $('devName').textContent = deviceLabel() || 'nenustatyta';
+    $('devName').textContent = deviceLabel() || '—';
     const v = venue();
-    $('geoState').textContent = v ? '✅ Įstaigos vieta nustatyta' : 'Vieta nenustatyta (pasirinktinai)';
+    $('geoState').textContent = v ? tr('venueSet') : tr('venueNone');
     if (isPreview) $('auReset').classList.remove('hidden'); // preview: show clear-sample button
     await logLogin(base);
     // PREVIEW: if this tenant's log is empty, seed a few sample events so a prospect
@@ -420,6 +432,8 @@ if (!tenant || !tenant.staff_secret) {
       if (cur && cur.ok && (cur.totals.stampsAll || 0) === 0) await seedSample(base);
     }
     await renderAudit(base);
+    // language switch -> re-render the dynamic audit content (charts, devices, labels)
+    onLangChange = () => { renderAudit(base); };
   }
 
   // Seed REALISTIC sample audit events for the CURRENT preview tenant, spread over
@@ -536,7 +550,7 @@ if (!tenant || !tenant.staff_secret) {
   // the screen); the staff tap the header to expand. Swap the toggle label.
   $('audit').addEventListener('toggle', () => {
     const tog = $('audit').querySelector('.audit-toggle');
-    if (tog) tog.textContent = $('audit').open ? 'slėpti ▴' : 'rodyti ▾';
+    if (tog) tog.textContent = $('audit').open ? tr('auHide') : tr('auShow');
   });
 
   $('devEdit').onclick = () => {
@@ -545,11 +559,11 @@ if (!tenant || !tenant.staff_secret) {
   };
   // set venue location (geofence anchor)
   $('geoBtn').onclick = async () => {
-    $('geoState').textContent = 'Nustatoma…';
+    $('geoState').textContent = tr('venueSetting');
     const pos = await getPos();
-    if (!pos) { $('geoState').textContent = '⚠️ Nepavyko gauti vietos (leiskite vietą naršyklėje).'; return; }
+    if (!pos) { $('geoState').textContent = tr('venueFail'); return; }
     localStorage.setItem(geoKey, JSON.stringify({ ...pos, radius: 500 }));
-    $('geoState').textContent = '✅ Įstaigos vieta nustatyta';
+    $('geoState').textContent = tr('venueSet');
   };
   // preview-only: clear the seeded sample stats + start over. This button is
   // gated on isPreview and so VANISHES on go-live (preview:true removed) — the
@@ -558,10 +572,10 @@ if (!tenant || !tenant.staff_secret) {
   // request because the button isn't there); the wipe is scoped to THIS slug only.
   $('auReset').onclick = async () => {
     const base = await resolveCounter(); if (!base) return;
-    $('auReset').disabled = true; $('auReset').textContent = 'Valoma…';
+    $('auReset').disabled = true; $('auReset').textContent = tr('clearing');
     try { await fetch(`${base}/audit/reset?b=${encodeURIComponent(slug)}&preview=1`, { method: 'POST' }); } catch {}
     await renderAudit(base);
-    $('auReset').disabled = false; $('auReset').textContent = '🗑️ Išvalyti pavyzdinę statistiką';
+    $('auReset').disabled = false; $('auReset').textContent = tr('clearSample');
   };
 
   async function tick() {
@@ -583,7 +597,7 @@ if (!tenant || !tenant.staff_secret) {
       sessionStorage.setItem(unlockKey, '1');
       showCode();
     } else {
-      $('loginErr').textContent = 'Neteisingas slaptažodis.';
+      $('loginErr').textContent = tr('badPass');
       $('pass').value = '';
     }
   }
