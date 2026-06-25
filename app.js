@@ -222,11 +222,6 @@ const STR = {
     ],
     loadingScan: 'Nuskenuokite parduotuvės QR kodą.',
     loadingNotFound: 'Kortelė nerasta. Patikrinkite QR kodą.',
-    liveTitle: 'Šiandienos antspaudai (tiesiogiai)',
-    liveLead: 'Anoniminis skaitiklis: matote, kiek antspaudų išduota šiandien. Neįprastas šuolis padeda pastebėti piktnaudžiavimą (pvz. jei darbuotojas dalintųsi QR kodu).',
-    liveStamps: 'Antspaudai šiandien',
-    liveRedeemed: 'Atsiimti prizai',
-    liveNote: '🔒 Skaičiuojami tik antspaudai — jokių asmens duomenų. Atsistato vidurnaktį.',
     demoStaffTitle: '🔑 Darbuotojo puslapis (demonstracijai)',
     demoStaffLead: 'Atidarykite darbuotojo kodų puslapį kitame įrenginyje ir suveskite slaptažodį, kad pamatytumėte besikeičiantį QR kodą:',
     demoStaffOpen: 'Atidaryti darbuotojo puslapį →',
@@ -354,11 +349,6 @@ const STR = {
     ],
     loadingScan: 'Scan the shop’s QR code.',
     loadingNotFound: 'Card not found. Check the QR code.',
-    liveTitle: 'Today’s stamps (live)',
-    liveLead: 'Anonymous counter: see how many stamps were given today. An unusual spike helps you spot abuse (e.g. a staff member sharing the QR code).',
-    liveStamps: 'Stamps today',
-    liveRedeemed: 'Rewards claimed',
-    liveNote: '🔒 Only stamps are counted — no personal data. Resets at midnight.',
     demoStaffTitle: '🔑 Staff page (for the demo)',
     demoStaffLead: 'Open the staff code page on another device and enter the password to see the rotating QR code:',
     demoStaffOpen: 'Open the staff page →',
@@ -1044,28 +1034,10 @@ function faqHtml() {
   </section>`;
 }
 
-// Live anonymous count panel (owner page). Hidden until wireLiveCount() confirms
-// a counter server is enabled AND returns today's tally — so it never shows a
-// dead/empty box when the free static mode has no server.
-function liveCountHtml() {
-  return `<section class="panel live-count hidden" id="liveCount">
-    <h3>${t('liveTitle')}</h3>
-    <p class="panel-lead">${t('liveLead')}</p>
-    <div class="live-nums">
-      <div class="live-num"><span class="live-val" id="liveStamps">–</span><span class="live-lbl">${t('liveStamps')}</span></div>
-      <div class="live-num"><span class="live-val" id="liveRedeemed">–</span><span class="live-lbl">${t('liveRedeemed')}</span></div>
-    </div>
-    <p class="chart-note">${t('liveNote')}</p>
-  </section>`;
-}
-async function wireLiveCount() {
-  const stats = await Counter.stats();
-  const box = document.getElementById('liveCount');
-  if (!box || !stats) return; // no server (free static mode) -> stays hidden
-  document.getElementById('liveStamps').textContent = stats.total;
-  document.getElementById('liveRedeemed').textContent = stats.redeemed;
-  box.classList.remove('hidden');
-}
+// NOTE: real anonymous stats are NOT shown on this PUBLIC owner/sales page (it
+// keeps the illustrative demo charts, since a prospect's real numbers would be
+// empty). Real per-tenant stats live ONLY on the password-protected staff page
+// (tools/staff.html), which reads the same Counter /stats endpoint.
 
 function renderOwner() {
   setTheme();
@@ -1075,8 +1047,6 @@ function renderOwner() {
     <a class="back-link" href="?b=${encodeURIComponent(slug)}">${t('back')}</a>
     ${headerHtml()}
     <div class="owner-tag">${t('ownerTag')}</div>
-
-    ${liveCountHtml()}
 
     <section class="panel">
       <h3>${t('whyTitle')}</h3>
@@ -1115,7 +1085,6 @@ function renderOwner() {
   wireOwnerQr(cardUrl);
   wireLangToggle();
   wireRoi();
-  wireLiveCount();
   const ce = document.getElementById('copyEmailBtn');
   if (ce) ce.onclick = copyEmail;
 }

@@ -503,20 +503,6 @@ dialog.celebrate strong { color: #1c1917; font-size: 1.1rem; }
 }
 .roi-month { display: block; font-size: .85rem; color: #78716c; margin-top: 4px; }
 
-/* ====================================================================
-   Live anonymous count panel (owner page) — only shown when a counter
-   server is enabled. Two big numbers: stamps today + rewards claimed.
-   ==================================================================== */
-.live-count.hidden { display: none; }
-.live-nums { display: flex; gap: 14px; justify-content: center; margin: 6px 0 4px; }
-.live-num {
-  flex: 1; max-width: 160px; text-align: center;
-  background: color-mix(in srgb, var(--brand) 8%, #fff);
-  border-radius: 14px; padding: 16px 10px;
-}
-.live-val { display: block; font-size: 2.1rem; font-weight: 800; color: var(--brand); line-height: 1.1; }
-.live-lbl { display: block; font-size: .78rem; color: #57534e; margin-top: 4px; }
-
 /* DEMO-only staff-page helper (card page) — never shown for real clients. */
 .demo-staff { text-align: center; }
 .demo-staff .cta-demo { display: inline-block; text-decoration: none; margin: 4px 0 10px; }
