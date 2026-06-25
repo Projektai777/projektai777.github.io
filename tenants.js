@@ -14,6 +14,16 @@
 
 export default {
 
+  recoverytest: {
+    business_name: 'Recovery Test',
+    logo_url: '',
+    primary_color: '#0ea5e9',
+    stamps_needed: 10,
+    reward_text: 'Test reward',
+    staff_secret: '61d7201b3e2e02a883c9e4a42f527949',
+    staff_pass_hash: 'a1634fed17a756915fbda189de23ab9626c1badaf3785bbb790951f25b72ccea',
+  },
+
   demo: {
     business_name: 'Coffee Box Kaunas',
     logo_url: '',                       // tuščia = rodoma pirma raidė

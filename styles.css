@@ -503,6 +503,38 @@ dialog.celebrate strong { color: #1c1917; font-size: 1.1rem; }
 }
 .roi-month { display: block; font-size: .85rem; color: #78716c; margin-top: 4px; }
 
+/* ====================================================================
+   Card recovery (card page) — anonymous "save your card" code. Only shown
+   when the optional counter server is enabled (wireRecovery reveals it).
+   ==================================================================== */
+.recovery.hidden { display: none; }
+.recovery { text-align: center; }
+.rec-code {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin: 10px 0; flex-wrap: wrap;
+}
+.rec-code code {
+  font-size: 1.15rem; font-weight: 800; letter-spacing: .08em;
+  background: color-mix(in srgb, var(--brand) 12%, #fff); color: var(--brand);
+  padding: 8px 14px; border-radius: 10px; font-variant-numeric: tabular-nums;
+}
+.rec-copy {
+  font-size: .8rem; font-weight: 700; color: var(--brand); background: none;
+  border: 1px solid color-mix(in srgb, var(--brand) 35%, #fff);
+  padding: 7px 12px; border-radius: 10px; cursor: pointer;
+}
+.rec-note { font-size: .72rem; color: #a8a29e; margin-top: 6px; line-height: 1.4; }
+.rec-restore-link {
+  display: inline-block; margin-top: 12px; font-size: .82rem; color: #78716c;
+  background: none; border: none; text-decoration: underline; cursor: pointer;
+}
+.rec-restore { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.rec-restore.hidden { display: none; }
+.rec-restore input {
+  width: 100%; padding: 12px; border: 1px solid #e7e5e4; border-radius: 10px;
+  font-size: 1rem; text-align: center; letter-spacing: .06em; text-transform: uppercase;
+}
+
 /* DEMO-only staff-page helper (card page) — never shown for real clients. */
 .demo-staff { text-align: center; }
 .demo-staff .cta-demo { display: inline-block; text-decoration: none; margin: 4px 0 10px; }

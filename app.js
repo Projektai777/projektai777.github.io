@@ -261,6 +261,21 @@ const STR = {
     ],
     loadingScan: 'Nuskenuokite parduotuvės QR kodą.',
     loadingNotFound: 'Kortelė nerasta. Patikrinkite QR kodą.',
+    recTitle: '💾 Išsaugokite kortelę',
+    recNewLead: 'Pakeitę ar pametę telefoną neprarasite antspaudų — išsaugokite atkūrimo kodą ir bet kada atkurkite kortelę kitame telefone. Jokių asmens duomenų: kodas susietas su kortele, ne su Jumis.',
+    recSaveBtn: '💾 Išsaugoti kortelę',
+    recSaving: 'Saugoma…',
+    recSavedLead: 'Jūsų atkūrimo kodas. Užsirašykite arba nufotografuokite — pametę telefoną įveskite jį naujame ir antspaudai grįš.',
+    recCopy: 'Kopijuoti',
+    recNote: '🔒 Saugokite kodą saugiai — kas jį turi, gali atkurti šią kortelę. Jokių asmens duomenų nesaugome.',
+    recHaveCode: 'Turite kodą iš kito telefono? Atkurti →',
+    recPlaceholder: 'pvz. BERN-7F3K-9QX2',
+    recRestoreBtn: 'Atkurti kortelę',
+    recRestoring: 'Atkuriama…',
+    recSavedToast: '💾 Kortelė išsaugota',
+    recCopiedToast: '📋 Kodas nukopijuotas',
+    recRestoredToast: '✅ Kortelė atkurta',
+    recBadCode: 'Kodas nerastas. Patikrinkite ir bandykite dar kartą.',
     demoStaffTitle: '🔑 Darbuotojo puslapis (demonstracijai)',
     demoStaffLead: 'Atidarykite darbuotojo kodų puslapį kitame įrenginyje ir suveskite slaptažodį, kad pamatytumėte besikeičiantį QR kodą:',
     demoStaffOpen: 'Atidaryti darbuotojo puslapį →',
@@ -388,6 +403,21 @@ const STR = {
     ],
     loadingScan: 'Scan the shop’s QR code.',
     loadingNotFound: 'Card not found. Check the QR code.',
+    recTitle: '💾 Save your card',
+    recNewLead: 'Change or lose your phone without losing your stamps — save a recovery code and restore your card on any phone, anytime. No personal data: the code is tied to the card, not to you.',
+    recSaveBtn: '💾 Save my card',
+    recSaving: 'Saving…',
+    recSavedLead: 'Your recovery code. Write it down or screenshot it — if you lose your phone, enter it on the new one and your stamps come back.',
+    recCopy: 'Copy',
+    recNote: '🔒 Keep the code safe — anyone who has it can restore this card. We store no personal data.',
+    recHaveCode: 'Have a code from another phone? Restore →',
+    recPlaceholder: 'e.g. BERN-7F3K-9QX2',
+    recRestoreBtn: 'Restore card',
+    recRestoring: 'Restoring…',
+    recSavedToast: '💾 Card saved',
+    recCopiedToast: '📋 Code copied',
+    recRestoredToast: '✅ Card restored',
+    recBadCode: 'Code not found. Check it and try again.',
     demoStaffTitle: '🔑 Staff page (for the demo)',
     demoStaffLead: 'Open the staff code page on another device and enter the password to see the rotating QR code:',
     demoStaffOpen: 'Open the staff page →',
@@ -901,35 +931,36 @@ async function wireRecovery() {
   const box = document.getElementById('recovery');
   if (!box) return;
   if (!(await Recovery.available())) return; // server off / demo -> stays hidden
-  const render = () => {
+
+  const restoreUi = `
+    <button class="rec-restore-link" id="recRestoreLink">${t('recHaveCode')}</button>
+    <div class="rec-restore hidden" id="recRestoreBox">
+      <input id="recInput" type="text" inputmode="text" autocapitalize="characters" placeholder="${t('recPlaceholder')}">
+      <button class="cta cta-demo" id="recLoadBtn">${t('recRestoreBtn')}</button>
+    </div>`;
+
+  const renderBox = () => {
     const code = Recovery.code();
     box.innerHTML = code ? `
       <h3>${t('recTitle')}</h3>
       <p class="panel-lead">${t('recSavedLead')}</p>
       <div class="rec-code"><code id="recCode">${code}</code><button class="rec-copy" id="recCopy">${t('recCopy')}</button></div>
       <p class="rec-note">${t('recNote')}</p>
-      <button class="rec-restore-link" id="recRestoreLink">${t('recHaveCode')}</button>
-      <div class="rec-restore hidden" id="recRestoreBox">
-        <input id="recInput" type="text" inputmode="text" autocapitalize="characters" placeholder="${t('recPlaceholder')}">
-        <button class="cta cta-demo" id="recLoadBtn">${t('recRestoreBtn')}</button>
-      </div>` : `
+      ${restoreUi}` : `
       <h3>${t('recTitle')}</h3>
       <p class="panel-lead">${t('recNewLead')}</p>
       <button class="cta cta-demo" id="recSaveBtn">${t('recSaveBtn')}</button>
-      <button class="rec-restore-link" id="recRestoreLink">${t('recHaveCode')}</button>
-      <div class="rec-restore hidden" id="recRestoreBox">
-        <input id="recInput" type="text" inputmode="text" autocapitalize="characters" placeholder="${t('recPlaceholder')}">
-        <button class="cta cta-demo" id="recLoadBtn">${t('recRestoreBtn')}</button>
-      </div>`;
+      ${restoreUi}`;
     box.classList.remove('hidden');
     wireButtons();
   };
+
   const wireButtons = () => {
     const saveBtn = document.getElementById('recSaveBtn');
     if (saveBtn) saveBtn.onclick = async () => {
       saveBtn.disabled = true; saveBtn.textContent = t('recSaving');
       const code = await Recovery.save(card.stamps);
-      if (code) { toast(t('recSavedToast')); render(); }
+      if (code) { toast(t('recSavedToast')); renderBox(); }
       else { saveBtn.disabled = false; saveBtn.textContent = t('recSaveBtn'); toast(t('errNet'), true); }
     };
     const copyBtn = document.getElementById('recCopy');
@@ -939,7 +970,6 @@ async function wireRecovery() {
       if (navigator.clipboard?.writeText) navigator.clipboard.writeText(code).then(done).catch(() => fallbackCopy(code, done));
       else fallbackCopy(code, done);
     };
-    const reSave = document.getElementById('recCode');
     const link = document.getElementById('recRestoreLink');
     if (link) link.onclick = () => document.getElementById('recRestoreBox')?.classList.toggle('hidden');
     const loadBtn = document.getElementById('recLoadBtn');
@@ -956,10 +986,11 @@ async function wireRecovery() {
       if (backend._save) backend._save({ stamps: card.stamps, last: 0, fails: [], first: card.first, cycles: card.cycles });
       Recovery._setCode(codeIn);
       toast(t('recRestoredToast'));
-      render(); // re-render the card with restored stamps (and re-show the code state)
+      render(); // full card re-render: restored stamps + recovery box now shows the code
     };
   };
-  render();
+
+  renderBox();
 }
 
 // ---------- confetti (no library) ----------
