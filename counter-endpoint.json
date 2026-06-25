@@ -1,0 +1,5 @@
+{
+  "enabled": false,
+  "base": "",
+  "note": "Set enabled:true and base to your deployed Cloudflare Worker URL (e.g. https://lojalumas-counter.<subdomain>.workers.dev) after `npx wrangler deploy`. Until then the card no-ops the counter and works exactly as before."
+}

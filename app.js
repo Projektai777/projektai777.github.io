@@ -31,6 +31,47 @@ const isDemo = slug === 'demo';
 const view = (params.get('view') || '').toLowerCase(); // ?view=owner -> savininko apžvalga (atskiras puslapis)
 let isPreview = false;       // set after tenant loads: demo OR tenant.preview (rodo pardavimų funkcijas)
 
+// =============================================================
+// Anonymous stamp counter (optional server). Lets the OWNER see how many
+// stamps were granted per day — a staff member quietly QR-sharing with friends
+// then shows up as an unusual burst. COUNT-ONLY: we send no device id, phone,
+// IP, or anything that links a scan to a person, so this stays GDPR-clean like
+// the rest of the product. The endpoint lives in counter-endpoint.json so the
+// backend (Cloudflare Worker today) is swappable without touching this file.
+// Best-effort: if the server is unreachable the card works exactly as before —
+// the stamp is still granted on the guest's phone; only the tally pauses.
+// =============================================================
+const Counter = {
+  _base: undefined, // undefined = not loaded; null = disabled/unavailable
+  async _resolve() {
+    if (this._base !== undefined) return this._base;
+    try {
+      const r = await fetch('counter-endpoint.json', { cache: 'no-store' });
+      const j = await r.json();
+      this._base = (j && j.enabled && j.base) ? j.base.replace(/\/$/, '') : null;
+    } catch { this._base = null; }
+    return this._base;
+  },
+  // Fire-and-forget; never throws, never blocks the stamp UX.
+  hit(kind /* 'stamp' | 'redeem' */) {
+    if (isPreview) return; // demo/preview aren't real stamps — don't pollute counts
+    this._resolve().then((base) => {
+      if (!base) return;
+      const q = `b=${encodeURIComponent(slug)}&kind=${kind === 'redeem' ? 'redeem' : 'stamp'}`;
+      fetch(`${base}/grant?${q}`, { method: 'POST', keepalive: true }).catch(() => {});
+    }).catch(() => {});
+  },
+  async stats() {
+    const base = await this._resolve();
+    if (!base) return null;
+    try {
+      const r = await fetch(`${base}/stats?b=${encodeURIComponent(slug)}`, { cache: 'no-store' });
+      const j = await r.json();
+      return j && j.ok ? j : null;
+    } catch { return null; }
+  },
+};
+
 // Personalized sales demos: /?b=demo&n=Kavinė+Aroma&c=%23064e3b&r=Prizas&s=8
 // lets an outreach email show the prospect THEIR OWN branded card with
 // zero per-prospect config. Only the demo tenant accepts overrides.
@@ -181,6 +222,11 @@ const STR = {
     ],
     loadingScan: 'Nuskenuokite parduotuvės QR kodą.',
     loadingNotFound: 'Kortelė nerasta. Patikrinkite QR kodą.',
+    liveTitle: 'Šiandienos antspaudai (tiesiogiai)',
+    liveLead: 'Anoniminis skaitiklis: matote, kiek antspaudų išduota šiandien. Neįprastas šuolis padeda pastebėti piktnaudžiavimą (pvz. jei darbuotojas dalintųsi QR kodu).',
+    liveStamps: 'Antspaudai šiandien',
+    liveRedeemed: 'Atsiimti prizai',
+    liveNote: '🔒 Skaičiuojami tik antspaudai — jokių asmens duomenų. Atsistato vidurnaktį.',
   },
   en: {
     subtitle: 'Loyalty card',
@@ -304,6 +350,11 @@ const STR = {
     ],
     loadingScan: 'Scan the shop’s QR code.',
     loadingNotFound: 'Card not found. Check the QR code.',
+    liveTitle: 'Today’s stamps (live)',
+    liveLead: 'Anonymous counter: see how many stamps were given today. An unusual spike helps you spot abuse (e.g. a staff member sharing the QR code).',
+    liveStamps: 'Stamps today',
+    liveRedeemed: 'Rewards claimed',
+    liveNote: '🔒 Only stamps are counted — no personal data. Resets at midnight.',
   },
 };
 
@@ -970,6 +1021,29 @@ function faqHtml() {
   </section>`;
 }
 
+// Live anonymous count panel (owner page). Hidden until wireLiveCount() confirms
+// a counter server is enabled AND returns today's tally — so it never shows a
+// dead/empty box when the free static mode has no server.
+function liveCountHtml() {
+  return `<section class="panel live-count hidden" id="liveCount">
+    <h3>${t('liveTitle')}</h3>
+    <p class="panel-lead">${t('liveLead')}</p>
+    <div class="live-nums">
+      <div class="live-num"><span class="live-val" id="liveStamps">–</span><span class="live-lbl">${t('liveStamps')}</span></div>
+      <div class="live-num"><span class="live-val" id="liveRedeemed">–</span><span class="live-lbl">${t('liveRedeemed')}</span></div>
+    </div>
+    <p class="chart-note">${t('liveNote')}</p>
+  </section>`;
+}
+async function wireLiveCount() {
+  const stats = await Counter.stats();
+  const box = document.getElementById('liveCount');
+  if (!box || !stats) return; // no server (free static mode) -> stays hidden
+  document.getElementById('liveStamps').textContent = stats.total;
+  document.getElementById('liveRedeemed').textContent = stats.redeemed;
+  box.classList.remove('hidden');
+}
+
 function renderOwner() {
   setTheme();
   const cardUrl = `${location.origin}${location.pathname}?b=${encodeURIComponent(slug)}`;
@@ -978,6 +1052,8 @@ function renderOwner() {
     <a class="back-link" href="?b=${encodeURIComponent(slug)}">${t('back')}</a>
     ${headerHtml()}
     <div class="owner-tag">${t('ownerTag')}</div>
+
+    ${liveCountHtml()}
 
     <section class="panel">
       <h3>${t('whyTitle')}</h3>
@@ -1016,6 +1092,7 @@ function renderOwner() {
   wireOwnerQr(cardUrl);
   wireLangToggle();
   wireRoi();
+  wireLiveCount();
   const ce = document.getElementById('copyEmailBtn');
   if (ce) ce.onclick = copyEmail;
 }
@@ -1148,6 +1225,7 @@ async function runGrant(action, code) {
     const res = await backend.rpc(action, { p_slug: slug, p_card: card.id, p_code: code });
     if (res.ok) {
       if (action === 'redeem_reward') {
+        Counter.hit('redeem'); // anonymous tally (server optional; no personal data)
         card.stamps = 0;
         showReview = !!tenant.google_review_url; // nudge a review right after the reward
         render();
@@ -1157,6 +1235,7 @@ async function runGrant(action, code) {
         render();                 // banner switches to "already claimed X ago"
         celebrate(birthdayReward());
       } else {
+        Counter.hit('stamp'); // anonymous tally (server optional; no personal data)
         card.stamps = res.stamps;
         render();
         if (res.full) celebrate(rewardText());
