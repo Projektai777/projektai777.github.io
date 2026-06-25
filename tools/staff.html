@@ -263,12 +263,16 @@ if (!tenant || !tenant.staff_secret) {
     return new Promise((res) => {
       if (!navigator.geolocation) return res(null);
       navigator.geolocation.getCurrentPosition(
-        (p) => res({ lat: p.coords.latitude, lon: p.coords.longitude }),
+        (p) => res({ lat: p.coords.latitude, lon: p.coords.longitude, acc: p.coords.accuracy }),
         () => res(null), { timeout: 6000, maximumAge: 60000 }
       );
     });
   }
   // Log this login: device label + (if GPS available) coords + off-venue flag.
+  // Geofence is deliberately FORGIVING — flag only when the device is CONFIDENTLY
+  // far from the venue: distance minus the reading's own GPS error must still exceed
+  // the radius (default 500 m, covers a big venue + parking + normal GPS drift). So a
+  // staffer on-site is never flagged; only genuinely off-site use (home, blocks away).
   async function logLogin(base) {
     const dev = deviceLabel() || 'unnamed';
     let lat, lon, geofar = 0;
@@ -276,7 +280,9 @@ if (!tenant || !tenant.staff_secret) {
     const pos = await getPos();
     if (pos) {
       lat = pos.lat; lon = pos.lon;
-      if (v && distM(v, pos) > (v.radius || 300)) geofar = 1; // >300 m from set venue
+      const radius = v && v.radius || 500;
+      const acc = Math.min(pos.acc || 0, 1000); // don't let a wild accuracy value swing it
+      if (v && (distM(v, pos) - acc) > radius) geofar = 1;
     }
     const q = `b=${encodeURIComponent(slug)}&device=${encodeURIComponent(dev)}&action=login`
       + (lat != null ? `&lat=${lat}&lon=${lon}` : '') + (geofar ? '&geofar=1' : '');
@@ -403,7 +409,7 @@ if (!tenant || !tenant.staff_secret) {
     $('geoState').textContent = 'Nustatoma…';
     const pos = await getPos();
     if (!pos) { $('geoState').textContent = '⚠️ Nepavyko gauti vietos (leiskite vietą naršyklėje).'; return; }
-    localStorage.setItem(geoKey, JSON.stringify({ ...pos, radius: 300 }));
+    localStorage.setItem(geoKey, JSON.stringify({ ...pos, radius: 500 }));
     $('geoState').textContent = '✅ Įstaigos vieta nustatyta';
   };
   // preview-only: clear the seeded sample stats + start over. This button is

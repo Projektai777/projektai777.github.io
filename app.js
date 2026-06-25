@@ -622,9 +622,13 @@ const staticBackend = {
       return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed };
     }
 
-    // Daily cooldown: one stamp per phone per LOCAL calendar day, resets at
-    // local midnight. demo/preview skip it so you can click through a full card.
-    if (!isPreview && c.day === todayLocal()) {
+    // Daily cooldown: one stamp per phone per LOCAL calendar day, resets at local
+    // midnight — ENFORCED in demo/preview too so the sales card behaves exactly like
+    // a real one (scan once today → next scan says "come back tomorrow"). To replay
+    // the flow in a demo, use the preview-only "Pradėti iš naujo" reset (clears the
+    // day). The "Užpildyti kortelę" auto-fill writes localStorage directly, so it
+    // still fills a card in one go for the pitch.
+    if (c.day === todayLocal()) {
       return { ok: false, error: 'daily_done' };
     }
     if (c.stamps < t.stamps_needed) { c.stamps += 1; stampDate(c); } // record the visit date on this stamp
