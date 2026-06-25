@@ -50,6 +50,30 @@
   .stats-recent { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
   .stats-recent span { font-size: .72rem; color: #cbd5e1; background: #0f172a; border-radius: 8px; padding: 3px 8px; font-variant-numeric: tabular-nums; }
   .stats-note { font-size: .7rem; color: #64748b; margin-top: 12px; line-height: 1.4; }
+  /* audit panel */
+  .stats-nums-3 .stat { padding: 12px 6px; }
+  .stats-nums-3 { margin-top: 10px; }
+  .stat-sm .stat-val { font-size: 1.4rem; }
+  .stat-warn { color: #f87171 !important; }
+  .device-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
+  .dev-label { font-size: .78rem; color: #94a3b8; }
+  .dev-name { font-size: .85rem; font-weight: 700; color: #e2e8f0; }
+  .dev-edit { font-size: .72rem; color: #38bdf8; background: none; border: 1px solid #334155; padding: 4px 10px; width: auto; margin: 0; border-radius: 8px; }
+  .geo-btn { font-size: .78rem; color: #cbd5e1; background: #0f172a; border: 1px solid #334155; padding: 9px 12px; border-radius: 10px; margin-top: 2px; }
+  .geo-state { font-size: .72rem; color: #94a3b8; margin-top: 6px; min-height: 1em; }
+  .au-sub { margin-top: 16px; text-align: left; }
+  .au-sub-head { font-size: .78rem; font-weight: 700; color: #cbd5e1; margin-bottom: 8px; }
+  .au-list { display: flex; flex-direction: column; gap: 6px; }
+  .au-flag { font-size: .74rem; color: #fca5a5; background: #2a1414; border-radius: 8px; padding: 6px 10px; }
+  .au-dev { display: flex; justify-content: space-between; gap: 8px; font-size: .76rem; background: #0f172a; border-radius: 8px; padding: 7px 10px; }
+  .au-dev span { color: #94a3b8; text-align: right; }
+  .au-hours { display: flex; align-items: flex-end; gap: 4px; height: 90px; padding-top: 4px; overflow-x: auto; }
+  .au-bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 1 0 18px; height: 100%; }
+  .au-bar { width: 70%; background: #22c55e; border-radius: 4px 4px 0 0; min-height: 3px; }
+  .au-bar-l { font-size: .6rem; color: #64748b; margin-top: 3px; }
+  .au-bar-v { font-size: .58rem; color: #94a3b8; }
+  .au-csv { margin-top: 14px; color: #38bdf8; border-color: #334155; }
+  .au-reset { margin-top: 8px; color: #fca5a5; border-color: #4c1d1d; }
   .hidden { display: none; }
 </style>
 </head>
@@ -175,16 +199,17 @@ if (!tenant || !tenant.staff_secret) {
   $('bizName').textContent = tenant.business_name;
   const unlockKey = `lojalumas_staff_${slug}`;
 
+  const isDemo = slug === 'demo';
+
   function showCode() {
     $('login').classList.add('hidden');
     $('codeView').classList.remove('hidden');
     tick();
     startStats();
+    initAudit(); // device label, geofence, log this login, render audit stats
   }
 
-  // Real anonymous stats (this password-protected page only). Reads the optional
-  // counter endpoint; if the server is disabled or unreachable the panel stays
-  // hidden and the page works exactly as before. Counts only — no personal data.
+  // Resolve the optional server (shared by the anonymous counter + the audit log).
   let statsBase = undefined; // undefined = not resolved; null = disabled/unavailable
   async function resolveCounter() {
     if (statsBase !== undefined) return statsBase;
@@ -195,9 +220,11 @@ if (!tenant || !tenant.staff_secret) {
     } catch { statsBase = null; }
     return statsBase;
   }
+
+  // ----- anonymous CUSTOMER counts (unchanged) -----
   async function refreshStats() {
     const base = await resolveCounter();
-    if (!base) return; // no server -> panel stays hidden
+    if (!base) return;
     try {
       const r = await fetch(`${base}/stats?b=${encodeURIComponent(slug)}`, { cache: 'no-store' });
       const j = await r.json();
@@ -207,15 +234,153 @@ if (!tenant || !tenant.staff_secret) {
       const recent = (j.times || []).slice(-8).reverse();
       $('stRecent').innerHTML = recent.map((tm) => `<span>${tm}</span>`).join('');
       $('stats').classList.remove('hidden');
-    } catch { /* network blip — leave the last shown values */ }
+    } catch { /* network blip */ }
   }
   let statsTimer = null;
   function startStats() {
     refreshStats();
     if (!statsTimer) statsTimer = setInterval(() => {
       if (!$('codeView').classList.contains('hidden')) refreshStats();
-    }, 20000); // every 20 s — counts move slowly; keep it light
+    }, 20000);
   }
+
+  // ===== STAFF-DEVICE AUDIT (this client's own terminal, NOT customers) =====
+  const devKey = `lojalumas_device_${slug}`;
+  const geoKey = `lojalumas_venue_${slug}`;
+  function deviceLabel() { return localStorage.getItem(devKey) || ''; }
+  function venue() { try { return JSON.parse(localStorage.getItem(geoKey) || 'null'); } catch { return null; } }
+  // Haversine distance in metres between two lat/lon points.
+  function distM(a, b) {
+    const R = 6371000, toR = (d) => d * Math.PI / 180;
+    const dLat = toR(b.lat - a.lat), dLon = toR(b.lon - a.lon);
+    const s = Math.sin(dLat / 2) ** 2 + Math.cos(toR(a.lat)) * Math.cos(toR(b.lat)) * Math.sin(dLon / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(s));
+  }
+  function getPos() {
+    return new Promise((res) => {
+      if (!navigator.geolocation) return res(null);
+      navigator.geolocation.getCurrentPosition(
+        (p) => res({ lat: p.coords.latitude, lon: p.coords.longitude }),
+        () => res(null), { timeout: 6000, maximumAge: 60000 }
+      );
+    });
+  }
+  // Log this login: device label + (if GPS available) coords + off-venue flag.
+  async function logLogin(base) {
+    const dev = deviceLabel() || 'unnamed';
+    let lat, lon, geofar = 0;
+    const v = venue();
+    const pos = await getPos();
+    if (pos) {
+      lat = pos.lat; lon = pos.lon;
+      if (v && distM(v, pos) > (v.radius || 300)) geofar = 1; // >300 m from set venue
+    }
+    const q = `b=${encodeURIComponent(slug)}&device=${encodeURIComponent(dev)}&action=login`
+      + (lat != null ? `&lat=${lat}&lon=${lon}` : '') + (geofar ? '&geofar=1' : '');
+    try { await fetch(`${base}/log?${q}`, { method: 'POST' }); } catch {}
+  }
+
+  async function initAudit() {
+    const base = await resolveCounter();
+    if (!base) return; // server off -> audit UI stays hidden
+    // probe: is the audit log available (D1 bound)?
+    let probe; try { probe = await (await fetch(`${base}/audit?b=${encodeURIComponent(slug)}`, { cache: 'no-store' })).json(); } catch { probe = null; }
+    if (!probe || probe.error === 'audit_off') return; // D1 not set up -> hide
+    // ensure a device label exists (prompt once)
+    if (!deviceLabel()) {
+      const name = (prompt('Šio įrenginio / filialo pavadinimas (pvz. „Baras", „Senamiestis"):', '') || '').trim();
+      if (name) localStorage.setItem(devKey, name.slice(0, 60));
+    }
+    $('devName').textContent = deviceLabel() || 'nenustatyta';
+    const v = venue();
+    $('geoState').textContent = v ? '✅ Įstaigos vieta nustatyta' : 'Vieta nenustatyta (pasirinktinai)';
+    if (isDemo) $('auReset').classList.remove('hidden'); // demo: show clear button
+    await logLogin(base);
+    // DEMO: if empty, seed a few sample events so a prospect sees a populated
+    // dashboard (incl. a 🚩 off-site flag + a 2nd branch). Real clients never seed.
+    if (isDemo) {
+      let cur; try { cur = await (await fetch(`${base}/audit?b=demo`, { cache: 'no-store' })).json(); } catch {}
+      if (cur && cur.ok && (cur.totals.stampsAll || 0) === 0) await seedDemo(base);
+    }
+    await renderAudit(base);
+  }
+
+  async function seedDemo(base) {
+    const ev = (device, action, geofar) =>
+      fetch(`${base}/log?b=demo&device=${encodeURIComponent(device)}&action=${action}${geofar ? '&geofar=1' : ''}`, { method: 'POST' }).catch(() => {});
+    const tasks = [];
+    for (let i = 0; i < 9; i++) tasks.push(ev('Baras', 'stamp'));
+    tasks.push(ev('Baras', 'redeem'));
+    for (let i = 0; i < 5; i++) tasks.push(ev('Senamiestis', 'stamp'));
+    tasks.push(ev('Senamiestis', 'redeem'));
+    tasks.push(ev('Baras', 'stamp', 1)); // one off-site anomaly to showcase the 🚩
+    await Promise.all(tasks);
+  }
+
+  function bars(items, getLabel, getVal) {
+    const max = Math.max(1, ...items.map(getVal));
+    return items.map((it) => {
+      const h = Math.round((getVal(it) / max) * 100);
+      return `<div class="au-bar-col"><div class="au-bar" style="height:${Math.max(h,4)}%"></div><div class="au-bar-l">${getLabel(it)}</div><div class="au-bar-v">${getVal(it)}</div></div>`;
+    }).join('');
+  }
+
+  async function renderAudit(base) {
+    let j; try { j = await (await fetch(`${base}/audit?b=${encodeURIComponent(slug)}`, { cache: 'no-store' })).json(); } catch { return; }
+    if (!j || !j.ok) return;
+    const T = j.totals;
+    $('auToday').textContent = T.stampsToday;
+    $('auWeek').textContent = T.stampsWeek;
+    $('auAll').textContent = T.stampsAll;
+    $('auRate').textContent = T.redemptionRate + '%';
+    $('auLogins').textContent = T.logins;
+    $('auOffsite').textContent = T.offsite;
+    // anomaly flags
+    if (j.flags.length) {
+      $('auFlagsWrap').classList.remove('hidden');
+      $('auFlags').innerHTML = j.flags.map((f) =>
+        `<div class="au-flag">🚩 ${f.day} ${f.time} · ${f.device} · ${f.city || f.region || '?'}</div>`).join('');
+    } else { $('auFlagsWrap').classList.add('hidden'); }
+    // per device / branch
+    $('auDevices').innerHTML = j.devices.map((d) =>
+      `<div class="au-dev"><b>${d.device}</b><span>${d.stamps} antsp. · ${d.redeems} prizai${d.city ? ' · ' + d.city : ''}${d.offsite ? ' · 🚩' + d.offsite : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
+    // busy hours
+    $('auHours').innerHTML = bars(j.hours, (h) => h.hh, (h) => h.n) || '<span class="stats-note">—</span>';
+    // weekly trend
+    $('auTrend').innerHTML = bars(j.trend, (w) => (w.wk.split('-')[1] || ''), (w) => w.n) || '<span class="stats-note">—</span>';
+    // CSV export of recent (full history would need pagination; recent is plenty for the demo/most owners)
+    $('auCsv').onclick = () => {
+      const rows = [['day','time','action','device','city','region','offsite'],
+        ...j.recent.map((r) => [r.day, r.time, r.action, r.device, r.city, r.region, r.geofar])];
+      const csv = rows.map((r) => r.map((c) => `"${String(c ?? '').replace(/"/g,'""')}"`).join(',')).join('\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+      a.download = `lojalumas-${slug}-istorija.csv`; a.click();
+    };
+    $('audit').classList.remove('hidden');
+  }
+
+  // device rename
+  $('devEdit').onclick = () => {
+    const name = (prompt('Įrenginio / filialo pavadinimas:', deviceLabel()) || '').trim();
+    if (name) { localStorage.setItem(devKey, name.slice(0, 60)); $('devName').textContent = name; }
+  };
+  // set venue location (geofence anchor)
+  $('geoBtn').onclick = async () => {
+    $('geoState').textContent = 'Nustatoma…';
+    const pos = await getPos();
+    if (!pos) { $('geoState').textContent = '⚠️ Nepavyko gauti vietos (leiskite vietą naršyklėje).'; return; }
+    localStorage.setItem(geoKey, JSON.stringify({ ...pos, radius: 300 }));
+    $('geoState').textContent = '✅ Įstaigos vieta nustatyta';
+  };
+  // demo: clear stats + start over
+  $('auReset').onclick = async () => {
+    const base = await resolveCounter(); if (!base) return;
+    $('auReset').disabled = true; $('auReset').textContent = 'Valoma…';
+    try { await fetch(`${base}/audit/reset?b=demo`, { method: 'POST' }); } catch {}
+    await renderAudit(base);
+    $('auReset').disabled = false; $('auReset').textContent = '🗑️ Išvalyti demo statistiką';
+  };
 
   async function tick() {
     const code = await currentCode(tenant.staff_secret);
