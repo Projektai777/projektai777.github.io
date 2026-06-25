@@ -17,7 +17,10 @@
     min-height: 100dvh; display: grid; place-items: start center;
     padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
   }
-  .wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 18px; align-items: center; text-align: center; }
+  .wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 18px; align-items: center; text-align: center; min-width: 0; }
+  /* every direct child stays within the wrap — a wide scrolling chart must NOT
+     stretch the column (otherwise the whole panel grows to the chart's content width) */
+  .wrap > * { max-width: 100%; min-width: 0; }
   /* LT/EN language pill (top-right) */
   .lang-pill {
     position: fixed; top: calc(12px + env(safe-area-inset-top)); right: 14px; z-index: 20;
@@ -134,6 +137,7 @@
   .au-leg.r { --sw: var(--c-redeem); }
   .au-chart {
     position: relative; display: flex; align-items: flex-end; justify-content: flex-start;
+    width: 100%; max-width: 100%;
     gap: 9px; height: 120px; padding: 18px 2px 0; overflow-x: auto; overflow-y: hidden;
     -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
     background-image:
