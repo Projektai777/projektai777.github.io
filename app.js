@@ -931,7 +931,6 @@ function render() {
     ${langToggleHtml()}
     ${isDemo ? `<div class="demo-badge">${t('demoBadge')}</div>` : ''}
     ${headerHtml()}
-    ${reviewBannerHtml()}
 
     <section class="card-box ${full ? 'card-full' : ''}">
       <div class="card-accent"></div>
@@ -951,6 +950,7 @@ function render() {
     ${isPreview ? staffFlowHtml() : ''}
     ${isPreview ? ctaHtml() : ''}
     <details class="panel recovery rec-collapse hidden" id="recovery"></details>
+    ${reviewBannerHtml()}
     <p class="privacy">${t('privacy')}</p>
     ${isDemo ? demoStaffHtml() : ''}
     ${isDemo ? `<p class="small-print">${t('demoFooter')}</p>` : ''}
