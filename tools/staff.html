@@ -290,10 +290,19 @@ function cardBase() {
   return new URL('../', location.href).href; // e.g. https://host/
 }
 
+// Language pill: switch LT/EN, persist, and re-render anything dynamic.
+applyLang();
+$('langPill').querySelectorAll('button').forEach((b) => {
+  b.onclick = () => {
+    lang = b.dataset.lang;
+    localStorage.setItem('lojalumas_lang', lang);
+    applyLang();
+    if (typeof onLangChange === 'function') onLangChange(); // re-render dynamic bits
+  };
+});
+
 if (!tenant || !tenant.staff_secret) {
-  $('fatal').textContent = slug
-    ? `Verslas „${slug}" nerastas arba neturi darbuotojo kodo.`
-    : 'Trūksta verslo nuorodos. Atidarykite: /tools/staff.html?b=slug';
+  $('fatal').textContent = slug ? tr('notFound', slug) : tr('noSlug');
   $('fatal').classList.remove('hidden');
 } else {
   $('bizLogin').textContent = tenant.business_name;
@@ -462,7 +471,7 @@ if (!tenant || !tenant.staff_secret) {
       s: Number(it.stamps || 0),
       r: Number(it.redeems || 0),
     })).filter((d) => d.s + d.r > 0);
-    if (data.length === 0) return '<div class="au-empty">Dar nėra duomenų.</div>';
+    if (data.length === 0) return `<div class="au-empty">${tr('noData')}</div>`;
     const max = Math.max(1, ...data.map((d) => d.s + d.r));
     const cols = data.map((d) => {
       const total = d.s + d.r;
@@ -470,7 +479,7 @@ if (!tenant || !tenant.staff_secret) {
       const sPct = total ? (d.s / total) * 100 : 0;            // stamp share of the stack
       const rPct = total ? (d.r / total) * 100 : 0;
       const vlabel = d.r ? `${d.s}+${d.r}` : `${d.s}`;          // e.g. "11" or "9+1"
-      const title = `${d.s} antsp.${d.r ? ` · ${d.r} prizai` : ''}`;
+      const title = `${d.s} ${tr('stamps')}${d.r ? ` · ${d.r} ${tr('prizes')}` : ''}`;
       return `<div class="au-col" title="${title}">
         <div class="au-stack ${d.r ? 'has-r' : ''}" data-h="${Math.max(hPct, 6)}">
           ${d.r ? `<div class="au-seg r" style="height:${rPct}%"></div>` : ''}
@@ -481,8 +490,8 @@ if (!tenant || !tenant.staff_secret) {
       </div>`;
     }).join('');
     const legend = `<div class="au-legend">
-      <span class="au-leg s">Antspaudai</span>
-      <span class="au-leg r">Prizai</span>
+      <span class="au-leg s">${tr('legStamps')}</span>
+      <span class="au-leg r">${tr('legPrizes')}</span>
     </div>`;
     return legend + `<div class="au-chart">${cols}</div>`;
   }
@@ -513,7 +522,7 @@ if (!tenant || !tenant.staff_secret) {
     } else { $('auFlagsWrap').classList.add('hidden'); }
     // per device / branch
     $('auDevices').innerHTML = j.devices.map((d) =>
-      `<div class="au-dev"><b>${d.device}</b><span>${d.stamps} antsp. · ${d.redeems} prizai${d.city ? ' · ' + d.city : ''}${d.offsite ? ' · 🚩' + d.offsite : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
+      `<div class="au-dev"><b>${d.device}</b><span>${d.stamps} ${tr('stamps')} · ${d.redeems} ${tr('prizes')}${d.city ? ' · ' + d.city : ''}${d.offsite ? ' · 🚩' + d.offsite : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
     // busy hours — stacked stamps + redemptions
     $('auHours').innerHTML = barChart(j.hours, (h) => `${h.hh}`);
     // weekly trend — stacked stamps + redemptions
