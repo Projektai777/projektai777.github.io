@@ -1,0 +1,14 @@
+{
+  "id": "../?b=kebabinn",
+  "name": "KEBAB inn",
+  "short_name": "KEBAB inn",
+  "start_url": "../?b=kebabinn",
+  "scope": "../",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ed2127",
+  "icons": [
+    { "src": "../logos/kebabinn-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "../logos/kebabinn-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
