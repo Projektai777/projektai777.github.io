@@ -97,6 +97,39 @@ export default {
     staff_pass_hash: '1cc34dd7af7a3501dd99af8d4d098d8e0ec83e7c1513d9343eb787cbda1bcfc5', // /tools/staff.html slaptažodis: kebabinn2026
   },
 
+  rugile: {
+    business_name: 'Rugilės blakstienos',
+    logo_url: 'logos/rugile.png',         // square brand mark (white eye + lashes on rose)
+    icon_url: 'logos/rugile.png',         // square brand image
+    app_icon: 'logos/rugile-icon-512.png',             // 512² home-screen icon (iOS + Android)
+    app_manifest: 'manifests/rugile.webmanifest',      // real manifest -> Android WebAPK install completes
+    hero_url: 'logos/rugile-hero.jpg',    // soft blush photo header behind the logo
+    primary_color: '#b23a6a',             // rose (lash-studio blush, deep enough for white button text)
+    stamps_needed: 10,
+    reward_text: '25% nuolaida procedūrai',
+    reward_text_en: '25% off your treatment', // EN variantas (rodomas kai įjungtas EN)
+    stamp_icon: '✨',                      // blakstienų/grožio antspaudas
+    // milestones = tarpiniai prizai (rodo, kad sistema lanksti); text_en = EN variantas
+    milestones: [
+      { at: 5, text: '10% nuolaida procedūrai', text_en: '10% off your treatment' },
+      { at: 10, text: '25% nuolaida procedūrai', text_en: '25% off your treatment' },
+    ],
+    birthday_reward: '−20% gimtadienio nuolaida', // gimtadienio dovana (rodo kortelėje)
+    birthday_reward_en: 'Birthday: 20% off',
+    // Viena studija Kaune — rodoma darbuotojo statistikoje (vieta, grafikai, anomalijų žymos).
+    // w = apkrovos svoris (solo meistrei laikomas saikingas).
+    demo_branches: [
+      { name: 'Kaunas', w: 0.8 },         // Rugilės blakstienų studija, Kaunas
+    ],
+    // Google atsiliepimo nuoroda — po prizo atsiėmimo svečiui pasiūloma palikti atsiliepimą.
+    // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
+    google_review_url: 'https://www.google.com/maps/search/?api=1&query=Rugil%C4%97s+blakstienos+Kaunas',
+    preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
+    staff_demo_pass: 'rugile2026', // PREVIEW-ONLY: rodomas savininko puslapyje, kad prospektas pamatytų darbuotojo pusę; pašalinti įdiegus
+    staff_secret: '3f5145aa6c20ee2f264990f9ab00d654',     // rotating-code raktas
+    staff_pass_hash: 'd7c89cdfdb36ffd19be0e9de7dd6376a4b2a738852b82dee9005d82f6c9524dc', // /tools/staff.html slaptažodis: rugile2026
+  },
+
   // kitasverslas: {
   //   business_name: 'Plovykla PRO',
   //   logo_url: '/logos/plovykla.png',
