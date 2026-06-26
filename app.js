@@ -609,10 +609,11 @@ const staticBackend = {
       if (c.redeemDay === todayLocal()) return { ok: false, error: 'redeem_done' };
       c.stamps = 0;
       c.dates = []; // new cycle starts empty
+      c.times = []; // …and its parallel per-stamp hours
       c.redeemDay = todayLocal();
       if (isDemo) c.cycles = (c.cycles || 0) + 1; // demo: one cycle per device
       this._save(c);
-      return { ok: true, dates: c.dates, day: c.day };
+      return { ok: true, dates: c.dates, times: c.times, day: c.day };
     }
 
     // Birthday gift: claimed by the SAME staff-QR scan that grants a stamp (tied to
@@ -630,7 +631,7 @@ const staticBackend = {
         c.day = todayLocal();
         this._save(c);
       }
-      return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed, dates: c.dates, day: c.day };
+      return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed, dates: c.dates, times: c.times, day: c.day };
     }
 
     // Daily cooldown: one stamp per phone per LOCAL calendar day, resets at local
@@ -646,15 +647,24 @@ const staticBackend = {
     c.last = now;
     c.day = todayLocal();
     this._save(c);
-    return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed, dates: c.dates, day: c.day };
+    return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed, dates: c.dates, times: c.times, day: c.day };
   },
 };
 
-// Record the local date (YYYY-MM-DD) of the stamp just added, so the card shows
-// when each stamp was earned and staff can eyeball a card's history at redemption.
+// Record the local date (YYYY-MM-DD) AND local hour (0-23) of the stamp just added,
+// so the card shows when each stamp was earned and staff can eyeball a card's history
+// at redemption. The hour is shown under the date ("14val" / "14pm").
 function stampDate(c) {
   c.dates = (c.dates || []).slice(0, c.stamps - 1); // keep in sync with stamp count
   c.dates[c.stamps - 1] = todayLocal();
+  c.times = (c.times || []).slice(0, c.stamps - 1); // parallel array, same length
+  c.times[c.stamps - 1] = new Date().getHours();
+}
+
+// Hour label shown under a stamp: 24-hour, no minutes. LT "14val", EN "14pm".
+function hourLabel(h) {
+  if (h === null || h === undefined || h === '' || isNaN(h)) return '';
+  return lang === 'en' ? `${h}pm` : `${h}val`;
 }
 
 const backend = isStatic ? staticBackend : supabaseBackend;
@@ -662,6 +672,9 @@ const backend = isStatic ? staticBackend : supabaseBackend;
 // ---------- state ----------
 let tenant = null;
 let card = null;
+// Index of the stamp just earned this scan (-1 = none). Set right before a render
+// so ONLY the new stamp plays the "ink press" animation; cleared after that paint.
+let justStamped = -1;
 
 // ---------- rendering ----------
 function setTheme() {
@@ -923,14 +936,23 @@ function render() {
 
   const stampIcon = tenant.stamp_icon || '🍴'; // restaurant-flavored default; per-tenant override
   const stampDates = card.dates || [];
+  const stampTimes = card.times || [];
   const grid = Array.from({ length: tenant.stamps_needed }, (_, i) => {
     const filled = i < card.stamps;
     const milestone = (tenant.milestones || []).some((m) => m.at === i + 1);
     const glyph = filled ? stampIcon : (milestone ? '🎁' : '');
-    // Date under each filled stamp (MM-DD): a visible visit history staff can
-    // glance at when giving the reward — a fake "all in one day" card stands out.
-    const d = filled && stampDates[i] ? `<span class="stamp-date">${stampDates[i].slice(5)}</span>` : '';
-    return `<div class="stamp-cell"><div class="stamp ${filled ? 'filled' : ''} ${milestone ? 'stamp-milestone' : ''}" style="animation-delay:${i * 40}ms">${glyph}</div>${d}</div>`;
+    // Date + hour under each filled stamp: a visible visit history staff can
+    // glance at when giving the reward — a fake "all in one day at one hour" card
+    // stands out. MM-DD on top, the hour ("14val"/"14pm") just below it.
+    const hr = filled ? hourLabel(stampTimes[i]) : '';
+    const d = filled && stampDates[i]
+      ? `<span class="stamp-when"><span class="stamp-date">${stampDates[i].slice(5)}</span>${hr ? `<span class="stamp-hour">${hr}</span>` : ''}</span>`
+      : '';
+    // The single freshly-earned stamp gets a richer "ink press" animation; the rest
+    // keep the subtle staggered pop. `justStamped` is set right before render() on a
+    // successful grant and cleared after one paint.
+    const fresh = filled && i === justStamped ? ' stamp-fresh' : '';
+    return `<div class="stamp-cell"><div class="stamp ${filled ? 'filled' : ''} ${milestone ? 'stamp-milestone' : ''}${fresh}" style="animation-delay:${i * 40}ms">${glyph}</div>${d}</div>`;
   }).join('');
 
   const remaining = tenant.stamps_needed - card.stamps;
