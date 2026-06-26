@@ -103,11 +103,32 @@ h1 { font-size: 1.6rem; letter-spacing: -0.01em; }
   gap: 3px;
 }
 
+/* date (top) + hour (below) stacked under a filled stamp */
+.stamp-when {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  line-height: 1;
+}
+
 /* small visit date under a filled stamp (anti-fraud: a visible history) */
 .stamp-date {
   font-size: .58rem;
   font-weight: 600;
   color: #a8a29e;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: .02em;
+}
+
+/* the hour ("14val" / "14pm") just under the date — brand-tinted so the two read
+   as a pair without competing with the date */
+.stamp-hour {
+  font-size: .54rem;
+  font-weight: 700;
+  color: var(--brand);
+  opacity: .85;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   letter-spacing: .02em;
@@ -138,6 +159,43 @@ h1 { font-size: 1.6rem; letter-spacing: -0.01em; }
   0% { transform: scale(.5); }
   70% { transform: scale(1.15); }
   100% { transform: scale(1); }
+}
+
+/* ---- "ink press": only the stamp earned on THIS scan plays it ---- */
+/* A rubber stamp slamming down: drops in big + tilted + blurred, overshoots
+   small with a tiny wobble, then settles — while an ink halo spreads out from
+   under it. Reads like a physical stamp, not a generic fade-in. */
+.stamp.filled.stamp-fresh {
+  position: relative;
+  animation: ink-press .55s cubic-bezier(.2, 1.35, .35, 1) both;
+}
+@keyframes ink-press {
+  0%   { transform: scale(1.7) rotate(-14deg); filter: blur(1.4px); opacity: .15; }
+  42%  { transform: scale(.84) rotate(5deg);   filter: blur(0);     opacity: 1; }
+  66%  { transform: scale(1.09) rotate(-3deg); }
+  84%  { transform: scale(.97) rotate(1deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+/* ink halo ring spreading out as the stamp lands */
+.stamp.filled.stamp-fresh::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid var(--brand);
+  pointer-events: none;
+  animation: ink-halo .6s ease-out .08s both;
+}
+@keyframes ink-halo {
+  0%   { transform: scale(.55); opacity: .5; }
+  100% { transform: scale(2);   opacity: 0; }
+}
+
+/* Accessibility: users who ask for less motion get the plain fill, no theatrics. */
+@media (prefers-reduced-motion: reduce) {
+  .stamp.filled,
+  .stamp.filled.stamp-fresh { animation: none; }
+  .stamp.filled.stamp-fresh::after { display: none; }
 }
 
 .progress { font-weight: 700; font-size: 1.1rem; margin-bottom: 6px; }

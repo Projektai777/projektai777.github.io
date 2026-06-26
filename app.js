@@ -1072,7 +1072,8 @@ async function wireRecovery() {
       // Restore stamps onto this device's card and adopt the code so future saves update it.
       card.stamps = Math.min(data.stamps, tenant.stamps_needed);
       card.dates = (card.dates || []).slice(0, card.stamps); // keep dates consistent with restored count
-      if (backend._save) backend._save({ stamps: card.stamps, dates: card.dates, last: 0, fails: [], first: card.first, cycles: card.cycles });
+      card.times = (card.times || []).slice(0, card.stamps); // …and the parallel hours
+      if (backend._save) backend._save({ stamps: card.stamps, dates: card.dates, times: card.times, last: 0, fails: [], first: card.first, cycles: card.cycles });
       Recovery._setCode(codeIn);
       toast(t('recRestoredToast'));
       render(); // full card re-render: restored stamps + recovery box now shows the code
@@ -1117,14 +1118,21 @@ async function autoFill() {
   const next = (tenant.milestones || [])
     .map((m) => m.at).filter((a) => a > card.stamps).sort((a, b) => a - b)[0];
   const target = next || tenant.stamps_needed;
+  // Plausible lunch/dinner-ish hours so the demo's per-stamp times don't all read
+  // the same (showcases the "different hours = real visits" history at a glance).
+  const demoHours = [12, 13, 18, 19, 13, 20, 12, 19, 14, 18, 13, 20];
   while (card.stamps < target) {
     card.stamps += 1;
     // Demo: spread the auto-filled stamps across recent days so the per-stamp
     // dates look like real visits (and showcase the anti-fraud history feature).
     card.dates = card.dates || [];
+    card.times = card.times || [];
     card.dates[card.stamps - 1] = localDay(new Date(Date.now() - (target - card.stamps) * 86400000));
-    if (backend._save) backend._save({ stamps: card.stamps, dates: card.dates, last: 0, fails: [], first: card.first, cycles: card.cycles });
+    card.times[card.stamps - 1] = demoHours[(card.stamps - 1) % demoHours.length];
+    if (backend._save) backend._save({ stamps: card.stamps, dates: card.dates, times: card.times, last: 0, fails: [], first: card.first, cycles: card.cycles });
+    justStamped = card.stamps - 1; // each auto-filled stamp presses in
     render();
+    justStamped = -1;
     await sleep(280);
   }
   if (card.stamps >= tenant.stamps_needed) {
@@ -1138,11 +1146,12 @@ async function autoFill() {
 function resetCard() {
   card.stamps = 0;
   card.dates = [];
+  card.times = [];
   clearBirthdayClaim(); // replay the birthday flow too (reset only shows in preview)
   // Wipe the whole stored card: dropping `day`/`redeemDay`/`cycles` clears the
   // daily stamp + reward cooldowns and the demo cycle-limit, so "Pradėti iš naujo"
   // fully replays the flow (you can stamp again immediately).
-  if (backend._save) backend._save({ stamps: 0, dates: [], last: 0, fails: [] });
+  if (backend._save) backend._save({ stamps: 0, dates: [], times: [], last: 0, fails: [] });
   render();
 }
 
@@ -1480,6 +1489,7 @@ async function runGrant(action, code) {
       // fields back onto the in-memory card so render() shows the new stamp's date
       // and the day-cooldown (hides the camera button) without needing a reload.
       if (res.dates !== undefined) card.dates = res.dates;
+      if (res.times !== undefined) card.times = res.times;
       if (res.day !== undefined) card.day = res.day;
       if (action === 'redeem_reward') {
         Counter.hit('redeem'); // anonymous tally (server optional; no personal data)
@@ -1490,13 +1500,17 @@ async function runGrant(action, code) {
       } else if (action === 'redeem_birthday') {
         if (typeof res.stamps === 'number') card.stamps = res.stamps; // one scan also stamped
         Recovery.autoSave(card.stamps);
+        justStamped = card.stamps - 1; // animate the stamp this scan also granted
         render();                 // banner switches to "already claimed X ago"
+        justStamped = -1;
         celebrate(birthdayReward());
       } else {
         Counter.hit('stamp'); // anonymous tally (server optional; no personal data)
         card.stamps = res.stamps;
         Recovery.autoSave(card.stamps);
+        justStamped = card.stamps - 1; // only the freshly-earned stamp plays "ink press"
         render();
+        justStamped = -1;
         if (res.full) celebrate(rewardText());
         else toast(t('toastStamp'));
       }
