@@ -153,6 +153,7 @@ const STR = {
     staffPress: 'Darbuotojas parodys QR kodą — nuskaitykite jį telefonu, kad gautumėte antspaudą.',
     staffPressDemo: 'Demonstracija: palieskite, kad pamatytumėte, kaip svečias nuskaito darbuotojo QR ir gauna antspaudą.',
     savedHint: 'Jūsų antspaudai išsaugomi telefone — diegti nieko nereikia.',
+    stampOnce: '⭐ Antspauduoti vieną kartą (demonstracija)',
     autoFill: '✨ Užpildyti kortelę (demonstracija)',
     reset: '↺ Pradėti iš naujo',
     ownerLink: '📊 Kuo tai naudinga verslui? →',
@@ -307,6 +308,7 @@ const STR = {
     staffPress: 'Staff will show a QR code — scan it with your phone to get a stamp.',
     staffPressDemo: 'Demo: tap to see how a guest scans the staff QR and gets a stamp.',
     savedHint: 'Your stamps are saved on your phone — no install needed.',
+    stampOnce: '⭐ Stamp once (demo)',
     autoFill: '✨ Fill the card (demo)',
     reset: '↺ Start over',
     ownerLink: '📊 How does this help the business? →',
@@ -981,6 +983,7 @@ function render() {
       : `<button class="cta" id="actionBtn">${full ? t('redeem') : t('getStamp')}</button>
     <p class="small-print">${isDemo ? t('staffPressDemo') : t('staffPress')}</p>`}
     ${installed ? '' : `<p class="small-print">${t('savedHint')}</p>`}
+    ${isPreview && !full ? `<button class="cta cta-demo" id="stampOnceBtn">${t('stampOnce')}</button>` : ''}
     ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
     ${isPreview ? `<button class="reset-link" id="resetBtn">${t('reset')}</button>` : ''}
     ${birthdayHtml()}
@@ -995,6 +998,7 @@ function render() {
 
   const actionBtn = document.getElementById('actionBtn'); // absent while the daily stamp cooldown hides it
   if (actionBtn) actionBtn.onclick = () => stampAction(full ? 'redeem_reward' : 'add_stamp');
+  const so = document.getElementById('stampOnceBtn'); if (so) so.onclick = stampOnce;
   const af = document.getElementById('autoFillBtn'); if (af) af.onclick = autoFill;
   const rs = document.getElementById('resetBtn'); if (rs) rs.onclick = resetCard;
   wireLangToggle();
@@ -1110,6 +1114,31 @@ function celebrate(rewardText) {
 
 // ---------- demo helpers (preview only) ----------
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Preview-only: add exactly ONE stamp with the full 3s "ink press" animation, so a
+// prospect (or we) can watch a single stamp land on demand. Records today's real
+// date + hour and bypasses the daily cooldown so it stays repeatable in a demo
+// (unlike the camera button, which hides itself after the day's stamp). Mirrors the
+// add_stamp persistence so a closed app still keeps the stamp.
+function stampOnce() {
+  if (card.stamps >= tenant.stamps_needed) return; // button is hidden when full anyway
+  card.stamps += 1;
+  card.dates = card.dates || [];
+  card.times = card.times || [];
+  card.dates[card.stamps - 1] = todayLocal();
+  card.times[card.stamps - 1] = new Date().getHours();
+  if (backend._save) backend._save({ stamps: card.stamps, dates: card.dates, times: card.times, last: 0, fails: [], first: card.first, cycles: card.cycles });
+  justStamped = card.stamps - 1; // only this fresh stamp plays the press animation
+  render();
+  justStamped = -1;
+  if (card.stamps >= tenant.stamps_needed) {
+    celebrate(rewardText());
+  } else {
+    const m = (tenant.milestones || []).find((x) => x.at === card.stamps);
+    if (m) toast(t('reached', milestoneText(m)));
+    else toast(t('toastStamp'));
+  }
+}
 
 async function autoFill() {
   const btn = document.getElementById('autoFillBtn');
