@@ -149,6 +149,7 @@ const STR = {
     prizeIs: (r) => `Prizas: ${r}`,
     redeem: '🎁 Atsiimti prizą',
     getStamp: '📷 Atidaryti kamerą',
+    stampedToday: '✅ Šiandienos antspaudas jau gautas. Užsukite rytoj!',
     staffPress: 'Darbuotojas parodys QR kodą — nuskaitykite jį telefonu, kad gautumėte antspaudą.',
     staffPressDemo: 'Demonstracija: palieskite, kad pamatytumėte, kaip svečias nuskaito darbuotojo QR ir gauna antspaudą.',
     savedHint: 'Jūsų antspaudai išsaugomi telefone — diegti nieko nereikia.',
@@ -302,6 +303,7 @@ const STR = {
     prizeIs: (r) => `Reward: ${r}`,
     redeem: '🎁 Claim reward',
     getStamp: '📷 Open camera',
+    stampedToday: "✅ Today's stamp is already collected. Come back tomorrow!",
     staffPress: 'Staff will show a QR code — scan it with your phone to get a stamp.',
     staffPressDemo: 'Demo: tap to see how a guest scans the staff QR and gets a stamp.',
     savedHint: 'Your stamps are saved on your phone — no install needed.',
@@ -610,7 +612,7 @@ const staticBackend = {
       c.redeemDay = todayLocal();
       if (isDemo) c.cycles = (c.cycles || 0) + 1; // demo: one cycle per device
       this._save(c);
-      return { ok: true };
+      return { ok: true, dates: c.dates, day: c.day };
     }
 
     // Birthday gift: claimed by the SAME staff-QR scan that grants a stamp (tied to
@@ -628,7 +630,7 @@ const staticBackend = {
         c.day = todayLocal();
         this._save(c);
       }
-      return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed };
+      return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed, dates: c.dates, day: c.day };
     }
 
     // Daily cooldown: one stamp per phone per LOCAL calendar day, resets at local
@@ -644,7 +646,7 @@ const staticBackend = {
     c.last = now;
     c.day = todayLocal();
     this._save(c);
-    return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed };
+    return { ok: true, stamps: c.stamps, full: c.stamps >= t.stamps_needed, dates: c.dates, day: c.day };
   },
 };
 
@@ -898,6 +900,10 @@ function demoStaffHtml() {
 function render() {
   setTheme();
   const full = card.stamps >= tenant.stamps_needed;
+  // Daily cooldown is active once today's stamp is in — hide the camera button so
+  // the customer isn't invited to scan again until local midnight (the scan would
+  // just be rejected with "come back tomorrow"). Redeeming a full card is exempt.
+  const stampedToday = !full && card.day === todayLocal();
   // Running as an installed PWA? Then "no install needed" is moot — skip that hint.
   const installed = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
@@ -934,8 +940,10 @@ function render() {
     </section>
     ${tiersHtml()}
 
-    <button class="cta" id="actionBtn">${full ? t('redeem') : t('getStamp')}</button>
-    <p class="small-print">${isDemo ? t('staffPressDemo') : t('staffPress')}</p>
+    ${stampedToday
+      ? `<p class="small-print stamped-today">${t('stampedToday')}</p>`
+      : `<button class="cta" id="actionBtn">${full ? t('redeem') : t('getStamp')}</button>
+    <p class="small-print">${isDemo ? t('staffPressDemo') : t('staffPress')}</p>`}
     ${installed ? '' : `<p class="small-print">${t('savedHint')}</p>`}
     ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
     ${isPreview ? `<button class="reset-link" id="resetBtn">${t('reset')}</button>` : ''}
@@ -949,7 +957,8 @@ function render() {
     ${isDemo ? `<p class="small-print">${t('demoFooter')}</p>` : ''}
   `;
 
-  document.getElementById('actionBtn').onclick = () => stampAction(full ? 'redeem_reward' : 'add_stamp');
+  const actionBtn = document.getElementById('actionBtn'); // absent while the daily stamp cooldown hides it
+  if (actionBtn) actionBtn.onclick = () => stampAction(full ? 'redeem_reward' : 'add_stamp');
   const af = document.getElementById('autoFillBtn'); if (af) af.onclick = autoFill;
   const rs = document.getElementById('resetBtn'); if (rs) rs.onclick = resetCard;
   wireLangToggle();
@@ -1431,6 +1440,11 @@ async function runGrant(action, code) {
   try {
     const res = await backend.rpc(action, { p_slug: slug, p_card: card.id, p_code: code });
     if (res.ok) {
+      // rpc operates on its own copy loaded from storage; copy the authoritative
+      // fields back onto the in-memory card so render() shows the new stamp's date
+      // and the day-cooldown (hides the camera button) without needing a reload.
+      if (res.dates !== undefined) card.dates = res.dates;
+      if (res.day !== undefined) card.day = res.day;
       if (action === 'redeem_reward') {
         Counter.hit('redeem'); // anonymous tally (server optional; no personal data)
         card.stamps = 0;
