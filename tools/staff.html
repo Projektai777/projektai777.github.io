@@ -589,7 +589,7 @@ if (!tenant || !tenant.staff_secret) {
       return d.toISOString();
     };
     const events = [];
-    const add = (device, action, ts, geofar) => events.push({ device, action, ts, geofar });
+    const add = (device, action, ts, geofar, city) => events.push({ device, action, ts, geofar, city });
     // Branch list comes from the tenant (`demo_branches`) so every chain shows its OWN
     // real locations; falls back to three generic Vilnius branches. `w` = volume weight
     // (first entry is treated as the flagship). Keeps demos separate per tenant.
@@ -611,19 +611,19 @@ if (!tenant || !tenant.staff_secret) {
       for (const b of BRANCHES) {
         const visits = Math.round((3 + Math.floor(rnd() * 4)) * b.w * wkMul * vol); // base 3–6 × weight × scale
         for (let k = 0; k < visits; k++) {
-          add(b.name, 'stamp', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
+          add(b.name, 'stamp', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)), 0, b.city);
           // ~17% of stamped visits also redeem a reward — rolled PER visit so the rate stays
           // realistic even when per-day visit counts are small after volume scaling.
-          if (rnd() < 0.17) add(b.name, 'redeem', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
+          if (rnd() < 0.17) add(b.name, 'redeem', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)), 0, b.city);
         }
         // Staff logins: ~1–2 per open branch per day (shift starts), scaled by `vol`.
         const logins = (rnd() < vol) ? (1 + (rnd() < 0.6 ? 1 : 0)) : 0;
-        for (let k = 0; k < logins; k++) add(b.name, 'login', dateAt(day, 10 + Math.floor(rnd() * 8), Math.floor(rnd() * 60)));
+        for (let k = 0; k < logins; k++) add(b.name, 'login', dateAt(day, 10 + Math.floor(rnd() * 8), Math.floor(rnd() * 60)), 0, b.city);
       }
     }
     // ONE rare off-site 🚩 anomaly (recent, odd late-night hour) on the flagship branch
     // to showcase the security flag — just a single example, not a flood.
-    add(BRANCHES[0].name, 'stamp', dateAt(3, 23, 34), 1);
+    add(BRANCHES[0].name, 'stamp', dateAt(3, 23, 34), 1, BRANCHES[0].city);
     // Bulk insert in one request; fall back to nothing on failure (dashboard just shows zeros).
     try {
       await fetch(`${base}/seed?b=${encodeURIComponent(slug)}&preview=1`, {

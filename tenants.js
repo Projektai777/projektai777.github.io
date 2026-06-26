@@ -67,7 +67,7 @@ export default {
     stamps_needed: 10,
     reward_text: '25% nuolaida sąskaitai',
     reward_text_en: '25% off your bill',  // EN variantas (rodomas kai įjungtas EN)
-    stamp_icon: '🥙',                     // kebabo antspaudas
+    stamp_icon: '🍴',                     // toks pat antspaudas kaip Bernelių (vienodas stilius)
     // milestones = tarpiniai prizai (rodo, kad sistema lanksti); text_en = EN variantas
     milestones: [
       { at: 5, text: '10% nuolaida sąskaitai', text_en: '10% off your bill' },
@@ -78,15 +78,15 @@ export default {
     // Tikri KEBAB inn padaliniai — rodomi darbuotojo statistikoje (filialų sąrašas, grafikai,
     // anomalijų žymos). Pavadinimai pagal jų pačių „KEBAB inn @ ..." vietas. w = apkrovos svoris.
     demo_branches: [
-      { name: 'Gariūnai', w: 0.6 },            // Vilnius (Gariūnų g. 55)
-      { name: 'Lazdynai', w: 0.45 },           // Vilnius (Architektų g. 130)
-      { name: 'Naujamiestis', w: 0.4 },        // Vilnius (Savanorių pr. 15A)
-      { name: 'Šiaurės Miestelis', w: 0.35 },  // Vilnius (P. Lukšio g. 22)
-      { name: 'Eišiškės', w: 0.3 },            // Vilnius (Eišiškių pl. 82)
-      { name: 'Naujininkai', w: 0.3 },         // Vilnius (Dariaus ir Girėno g. 17)
-      { name: 'Greitkelis', w: 0.45 },         // Kaunas (Ateities pl. 50B)
-      { name: 'Aleksotas', w: 0.35 },          // Kaunas (Europos pr. 43)
-      { name: 'Kėdainiai', w: 0.25 },          // Kėdainiai (J. Basanavičiaus g. 51)
+      { name: 'Gariūnai', w: 0.6, city: 'Vilnius' },            // Gariūnų g. 55
+      { name: 'Lazdynai', w: 0.45, city: 'Vilnius' },           // Architektų g. 130
+      { name: 'Naujamiestis', w: 0.4, city: 'Vilnius' },        // Savanorių pr. 15A
+      { name: 'Šiaurės Miestelis', w: 0.35, city: 'Vilnius' },  // P. Lukšio g. 22
+      { name: 'Eišiškės', w: 0.3, city: 'Vilnius' },            // Eišiškių pl. 82
+      { name: 'Naujininkai', w: 0.3, city: 'Vilnius' },         // Dariaus ir Girėno g. 17
+      { name: 'Greitkelis', w: 0.45, city: 'Kaunas' },          // Ateities pl. 50B
+      { name: 'Aleksotas', w: 0.35, city: 'Kaunas' },           // Europos pr. 43
+      { name: 'Kėdainiai', w: 0.25, city: 'Kėdainiai' },        // J. Basanavičiaus g. 51
     ],
     // Google atsiliepimo nuoroda — po prizo atsiėmimo svečiui pasiūloma palikti atsiliepimą.
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
