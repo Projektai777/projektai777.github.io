@@ -75,6 +75,19 @@ export default {
     ],
     birthday_reward: 'Nemokamas firminis kebabas', // gimtadienio dovana (rodo kortelėje)
     birthday_reward_en: 'Free signature kebab',
+    // Tikri KEBAB inn padaliniai — rodomi darbuotojo statistikoje (filialų sąrašas, grafikai,
+    // anomalijų žymos). Pavadinimai pagal jų pačių „KEBAB inn @ ..." vietas. w = apkrovos svoris.
+    demo_branches: [
+      { name: 'Gariūnai', w: 0.6 },            // Vilnius (Gariūnų g. 55)
+      { name: 'Lazdynai', w: 0.45 },           // Vilnius (Architektų g. 130)
+      { name: 'Naujamiestis', w: 0.4 },        // Vilnius (Savanorių pr. 15A)
+      { name: 'Šiaurės Miestelis', w: 0.35 },  // Vilnius (P. Lukšio g. 22)
+      { name: 'Eišiškės', w: 0.3 },            // Vilnius (Eišiškių pl. 82)
+      { name: 'Naujininkai', w: 0.3 },         // Vilnius (Dariaus ir Girėno g. 17)
+      { name: 'Greitkelis', w: 0.45 },         // Kaunas (Ateities pl. 50B)
+      { name: 'Aleksotas', w: 0.35 },          // Kaunas (Europos pr. 43)
+      { name: 'Kėdainiai', w: 0.25 },          // Kėdainiai (J. Basanavičiaus g. 51)
+    ],
     // Google atsiliepimo nuoroda — po prizo atsiėmimo svečiui pasiūloma palikti atsiliepimą.
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
     google_review_url: 'https://www.google.com/maps/search/?api=1&query=KEBAB+inn',

@@ -610,8 +610,12 @@ if (!tenant || !tenant.staff_secret) {
       const wkMul = weekend ? 1.7 : 1;
       for (const b of BRANCHES) {
         const visits = Math.round((3 + Math.floor(rnd() * 4)) * b.w * wkMul * vol); // base 3–6 × weight × scale
-        for (let k = 0; k < visits; k++) add(b.name, 'stamp', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
-        for (let k = 0; k < Math.round(visits * 0.17); k++) add(b.name, 'redeem', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
+        for (let k = 0; k < visits; k++) {
+          add(b.name, 'stamp', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
+          // ~17% of stamped visits also redeem a reward — rolled PER visit so the rate stays
+          // realistic even when per-day visit counts are small after volume scaling.
+          if (rnd() < 0.17) add(b.name, 'redeem', dateAt(day, pick(hourPool), Math.floor(rnd() * 60)));
+        }
         // Staff logins: ~1–2 per open branch per day (shift starts), scaled by `vol`.
         const logins = (rnd() < vol) ? (1 + (rnd() < 0.6 ? 1 : 0)) : 0;
         for (let k = 0; k < logins; k++) add(b.name, 'login', dateAt(day, 10 + Math.floor(rnd() * 8), Math.floor(rnd() * 60)));
