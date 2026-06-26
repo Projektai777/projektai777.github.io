@@ -65,15 +65,13 @@ export default {
     hero_url: 'logos/kebabinn-hero.jpg',  // firminis kebabas ant kreminio fono
     primary_color: '#ed2127',             // brand red (iš kebabinn.lt --brand-red)
     stamps_needed: 10,
-    reward_text: 'Nemokamas kebabas',
-    reward_text_en: 'Free kebab',         // EN variantas (rodomas kai įjungtas EN)
+    reward_text: '25% nuolaida sąskaitai',
+    reward_text_en: '25% off your bill',  // EN variantas (rodomas kai įjungtas EN)
     stamp_icon: '🥙',                     // kebabo antspaudas
     // milestones = tarpiniai prizai (rodo, kad sistema lanksti); text_en = EN variantas
     milestones: [
-      { at: 3, text: 'Nemokamas gaivusis gėrimas', text_en: 'Free soft drink' },
       { at: 5, text: '10% nuolaida sąskaitai', text_en: '10% off your bill' },
-      { at: 8, text: '25% nuolaida sąskaitai', text_en: '25% off your bill' },
-      { at: 10, text: 'Nemokamas kebabas', text_en: 'Free kebab' },
+      { at: 10, text: '25% nuolaida sąskaitai', text_en: '25% off your bill' },
     ],
     birthday_reward: 'Nemokamas firminis kebabas', // gimtadienio dovana (rodo kortelėje)
     birthday_reward_en: 'Free signature kebab',

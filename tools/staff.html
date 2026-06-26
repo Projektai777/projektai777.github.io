@@ -106,6 +106,23 @@
   .stats-recent { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
   .stats-recent span { font-size: .72rem; color: #57534e; background: #f5f5f4; border-radius: 8px; padding: 3px 8px; font-variant-numeric: tabular-nums; }
   .stats-note { font-size: .72rem; color: #a8a29e; margin-top: 12px; line-height: 1.4; }
+  /* stats loading placeholder — shown while the audit dashboard fetches/seeds (can take
+     several seconds) so staff get an indeterminate progress bar instead of a blank wait */
+  .stats-loading {
+    background: #fff; border-radius: 20px; padding: 22px 18px; width: 100%;
+    box-shadow: 0 10px 30px rgb(0 0 0 / .08);
+    display: flex; flex-direction: column; align-items: center; gap: 13px;
+  }
+  .stats-loading-text { font-size: .9rem; font-weight: 700; color: #57534e; line-height: 1.4; }
+  .stats-loading-bar {
+    width: 100%; height: 8px; border-radius: 999px; background: #f0efed;
+    position: relative; overflow: hidden;
+  }
+  .stats-loading-bar > span {
+    position: absolute; top: 0; height: 100%; width: 40%; border-radius: 999px;
+    background: var(--brand); animation: stats-load 1.15s ease-in-out infinite;
+  }
+  @keyframes stats-load { 0% { left: -42%; } 100% { left: 100%; } }
   /* GDPR / employer-duty warning near the audit feature */
   .gdpr-warn {
     font-size: .74rem; color: #92400e; line-height: 1.45; text-align: left;
@@ -239,6 +256,12 @@
     <div class="timer"><span class="ring" id="ring"></span><span id="secs"></span></div>
     <p class="hint" data-i18n="codeHint">Kodas keičiasi kas 30 sekundžių. Vienas svečias gali gauti 1 antspaudą per dieną.</p>
 
+    <!-- shown while the audit stats load (seeding + geolocation can take ~10s) -->
+    <div id="statsLoading" class="stats-loading hidden">
+      <span class="stats-loading-text" data-i18n="statsLoading">Netrukus galėsite peržiūrėti statistiką</span>
+      <div class="stats-loading-bar"><span></span></div>
+    </div>
+
     <!-- AUDIT: this client's own staff terminal (NOT customers). Device/branch
          label + location + full history. Powered by the D1 audit log. -->
     <details id="audit" class="stats audit-panel hidden">
@@ -333,6 +356,7 @@ const S = {
     headHours: '🕐 Užimtumas pagal valandą (visą laiką)', headTrend: '📈 Savaitės tendencija',
     headStamps: '📊 Antspaudai', headAllTime: '📋 Iš viso (per visą laiką)',
     clearSample: '🗑️ Išvalyti pavyzdinę statistiką', clearing: 'Valoma…', lock: 'Užrakinti',
+    statsLoading: 'Netrukus galėsite peržiūrėti statistiką',
     legStamps: 'Antspaudai', legPrizes: 'Prizai', noData: 'Dar nėra duomenų.',
     stamps: 'antsp.', prizes: 'prizai', loadMore: '← slinkite, kad matytumėte senesnius',
     months: ['Saus.','Vas.','Kov.','Bal.','Geg.','Birž.','Liep.','Rugp.','Rugs.','Spal.','Lapkr.','Gruod.'],
@@ -504,12 +528,18 @@ if (!tenant || !tenant.staff_secret) {
     try { await fetch(`${base}/log?${q}`, { method: 'POST' }); } catch {}
   }
 
+  function showStatsLoading() { const el = $('statsLoading'); if (el) el.classList.remove('hidden'); }
+  function hideStatsLoading() { const el = $('statsLoading'); if (el) el.classList.add('hidden'); }
+
   async function initAudit() {
     const base = await resolveCounter();
     if (!base) return; // server off -> audit UI stays hidden
     // probe: is the audit log available (D1 bound)?
     let probe; try { probe = await (await fetch(`${base}/audit?b=${encodeURIComponent(slug)}`, { cache: 'no-store' })).json(); } catch { probe = null; }
     if (!probe || probe.error === 'audit_off') return; // D1 not set up -> hide
+    // stats ARE coming (server on + audit available), but seeding + geolocation can take
+    // several seconds — show an indeterminate loading bar so staff aren't left waiting blank.
+    showStatsLoading();
     // ensure a device label exists (prompt once)
     if (!deviceLabel()) {
       const name = (prompt(tr('promptBranch'), '') || '').trim();
@@ -529,6 +559,7 @@ if (!tenant || !tenant.staff_secret) {
       if (cur && cur.ok && (cur.totals.stampsAll || 0) === 0) await seedSample(base);
     }
     await renderAudit(base);
+    hideStatsLoading();
     // language switch -> re-render the dynamic audit content (charts, devices, labels)
     onLangChange = () => { renderAudit(base); };
   }
