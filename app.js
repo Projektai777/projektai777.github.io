@@ -711,6 +711,20 @@ function makeSquareIcon(src) {
 // The apple-touch-icon (iOS) is set client-side and can be a data: URL safely —
 // iOS "Add to Home Screen" has no server-side minting step.
 async function setAppIcon() {
+  // CROSS-TENANT INSTALL ISOLATION (2026-06-26): the shared demo/sales host
+  // (projektai777.github.io) serves EVERY client's card from ONE origin, and a PWA
+  // install is scoped per-ORIGIN. If we branded the install per tenant here, whichever
+  // demo the user installed would brand the home-screen icon + OS splash for the WHOLE
+  // origin — so opening another demo (or the staff page) shows the FIRST business's
+  // logo, and the installed app hijacks the in-scope staff page. To stop that leak we
+  // keep the install NEUTRAL ("Lojalumo kortelė" + generic icon) on any *.github.io
+  // host: the default manifest.webmanifest + ./icon-192.png stay in place, the app is
+  // still installable, and an installed launch (no ?b=) restores the last card via
+  // `lojalumas_last`. A real client's BRANDED install happens on THEIR OWN domain at
+  // go-live (a separate origin -> isolation is automatic -> safe), where app_manifest/
+  // app_icon below DO apply.
+  if (location.hostname.endsWith('github.io')) return;
+
   // iOS icon: prefer a ready-made square icon file (app_icon); else square-pad the
   // logo on the fly (data URL is fine on iOS — no server minting). Else fall back.
   let appleIconUrl;
