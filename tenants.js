@@ -55,6 +55,35 @@ export default {
     staff_pass_hash: 'ae4964eeffe94ad8cbd2ec334814ec1b6b9b568d4729fadd74daf9caf7209ab1', // /tools/staff.html slaptažodis: berneliai2026
   },
 
+  kebabinn: {
+    business_name: 'KEBAB inn',
+    logo_url: 'logos/kebabinn-logo.png',  // official horizontal wordmark
+    logo_wide: true,                      // wordmark -> wide plate, hides redundant name heading
+    icon_url: 'logos/kebabinn.png',       // square brand image (flame + ūsai)
+    app_icon: 'logos/kebabinn-icon-512.png',           // 512² home-screen icon (iOS + Android)
+    app_manifest: 'manifests/kebabinn.webmanifest',    // real manifest -> Android WebAPK install completes
+    hero_url: 'logos/kebabinn-hero.jpg',  // firminis kebabas ant kreminio fono
+    primary_color: '#ed2127',             // brand red (iš kebabinn.lt --brand-red)
+    stamps_needed: 10,
+    reward_text: 'Nemokamas kebabas',
+    reward_text_en: 'Free kebab',         // EN variantas (rodomas kai įjungtas EN)
+    stamp_icon: '🥙',                     // kebabo antspaudas
+    // milestones = tarpiniai prizai (rodo, kad sistema lanksti); text_en = EN variantas
+    milestones: [
+      { at: 5, text: 'Nemokamas gaivusis gėrimas', text_en: 'Free soft drink' },
+      { at: 10, text: 'Nemokamas kebabas', text_en: 'Free kebab' },
+    ],
+    birthday_reward: 'Nemokamas firminis kebabas', // gimtadienio dovana (rodo kortelėje)
+    birthday_reward_en: 'Free signature kebab',
+    // Google atsiliepimo nuoroda — po prizo atsiėmimo svečiui pasiūloma palikti atsiliepimą.
+    // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
+    google_review_url: 'https://www.google.com/maps/search/?api=1&query=KEBAB+inn',
+    preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
+    staff_demo_pass: 'kebabinn2026', // PREVIEW-ONLY: rodomas savininko puslapyje, kad prospektas pamatytų darbuotojo pusę; pašalinti įdiegus
+    staff_secret: '82817f34fc753ec35f83a8d796a689c7',     // rotating-code raktas
+    staff_pass_hash: '1cc34dd7af7a3501dd99af8d4d098d8e0ec83e7c1513d9343eb787cbda1bcfc5', // /tools/staff.html slaptažodis: kebabinn2026
+  },
+
   // kitasverslas: {
   //   business_name: 'Plovykla PRO',
   //   logo_url: '/logos/plovykla.png',
