@@ -1505,6 +1505,10 @@ async function runGrant(action, code) {
         justStamped = -1;
         celebrate(birthdayReward());
       } else {
+        // The stamp is ALREADY durably saved at this point: backend.rpc() did a
+        // synchronous localStorage write (_save) before returning, BEFORE we render
+        // the 3s animation. So if the customer closes the app mid-animation the stamp
+        // still counts. Keep this order — never move persistence after the animation.
         Counter.hit('stamp'); // anonymous tally (server optional; no personal data)
         card.stamps = res.stamps;
         Recovery.autoSave(card.stamps);

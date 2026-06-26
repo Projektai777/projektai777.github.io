@@ -122,13 +122,12 @@ h1 { font-size: 1.6rem; letter-spacing: -0.01em; }
   letter-spacing: .02em;
 }
 
-/* the hour ("14val" / "14pm") just under the date — brand-tinted so the two read
-   as a pair without competing with the date */
+/* the hour ("14val" / "14pm") just under the date — SAME muted color as the date
+   so the two read as one quiet timestamp pair */
 .stamp-hour {
   font-size: .54rem;
-  font-weight: 700;
-  color: var(--brand);
-  opacity: .85;
+  font-weight: 600;
+  color: #a8a29e;
   font-variant-numeric: tabular-nums;
   line-height: 1;
   letter-spacing: .02em;
@@ -162,40 +161,54 @@ h1 { font-size: 1.6rem; letter-spacing: -0.01em; }
 }
 
 /* ---- "ink press": only the stamp earned on THIS scan plays it ---- */
-/* A rubber stamp slamming down: drops in big + tilted + blurred, overshoots
-   small with a tiny wobble, then settles — while an ink halo spreads out from
-   under it. Reads like a physical stamp, not a generic fade-in. */
+/* A 3-second moment so the customer actually notices and enjoys it: a rubber stamp
+   slams down (big + tilted + blurred), overshoots small with a wobble and settles
+   in the first ~1s, then a warm brand-colored glow swells and fades over the
+   remaining 2s. Two ink-halo rings ripple outward in sequence. Reads like a
+   physical stamp landing, not a generic fade-in. */
 .stamp.filled.stamp-fresh {
   position: relative;
-  animation: ink-press .55s cubic-bezier(.2, 1.35, .35, 1) both;
+  z-index: 1; /* glow + halo sit above neighbouring stamps */
+  animation: ink-press 3s cubic-bezier(.2, 1, .3, 1) both;
 }
 @keyframes ink-press {
-  0%   { transform: scale(1.7) rotate(-14deg); filter: blur(1.4px); opacity: .15; }
-  42%  { transform: scale(.84) rotate(5deg);   filter: blur(0);     opacity: 1; }
-  66%  { transform: scale(1.09) rotate(-3deg); }
-  84%  { transform: scale(.97) rotate(1deg); }
-  100% { transform: scale(1) rotate(0); }
+  0%   { transform: scale(1.7) rotate(-14deg); filter: blur(1.4px); opacity: .15;
+         box-shadow: 0 0 0 0 transparent; }
+  13%  { transform: scale(.84) rotate(5deg);   filter: blur(0);     opacity: 1; }
+  19%  { transform: scale(1.09) rotate(-3deg); }
+  25%  { transform: scale(.97) rotate(1deg); }
+  31%  { transform: scale(1) rotate(0);
+         box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand) 55%, transparent); }
+  55%  { transform: scale(1.06) rotate(0);
+         box-shadow: 0 0 18px 5px color-mix(in srgb, var(--brand) 45%, transparent); }
+  80%  { transform: scale(1) rotate(0);
+         box-shadow: 0 0 0 0 transparent; }
+  100% { transform: scale(1) rotate(0); box-shadow: 0 0 0 0 transparent; }
 }
-/* ink halo ring spreading out as the stamp lands */
-.stamp.filled.stamp-fresh::after {
+/* two ink-halo rings, staggered, so the ripple keeps living through the 3s */
+.stamp.filled.stamp-fresh::after,
+.stamp.filled.stamp-fresh::before {
   content: '';
   position: absolute;
   inset: -2px;
   border-radius: 50%;
   border: 2px solid var(--brand);
   pointer-events: none;
-  animation: ink-halo .6s ease-out .08s both;
+  animation: ink-halo 1.5s ease-out both;
 }
+.stamp.filled.stamp-fresh::after  { animation-delay: .1s; }
+.stamp.filled.stamp-fresh::before { animation-delay: 1.2s; }
 @keyframes ink-halo {
   0%   { transform: scale(.55); opacity: .5; }
-  100% { transform: scale(2);   opacity: 0; }
+  100% { transform: scale(2.1); opacity: 0; }
 }
 
 /* Accessibility: users who ask for less motion get the plain fill, no theatrics. */
 @media (prefers-reduced-motion: reduce) {
   .stamp.filled,
   .stamp.filled.stamp-fresh { animation: none; }
-  .stamp.filled.stamp-fresh::after { display: none; }
+  .stamp.filled.stamp-fresh::after,
+  .stamp.filled.stamp-fresh::before { display: none; }
 }
 
 .progress { font-weight: 700; font-size: 1.1rem; margin-bottom: 6px; }
