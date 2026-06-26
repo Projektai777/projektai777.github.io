@@ -70,7 +70,9 @@ export default {
     stamp_icon: '🥙',                     // kebabo antspaudas
     // milestones = tarpiniai prizai (rodo, kad sistema lanksti); text_en = EN variantas
     milestones: [
-      { at: 5, text: 'Nemokamas gaivusis gėrimas', text_en: 'Free soft drink' },
+      { at: 3, text: 'Nemokamas gaivusis gėrimas', text_en: 'Free soft drink' },
+      { at: 5, text: '10% nuolaida sąskaitai', text_en: '10% off your bill' },
+      { at: 8, text: '25% nuolaida sąskaitai', text_en: '25% off your bill' },
       { at: 10, text: 'Nemokamas kebabas', text_en: 'Free kebab' },
     ],
     birthday_reward: 'Nemokamas firminis kebabas', // gimtadienio dovana (rodo kortelėje)
