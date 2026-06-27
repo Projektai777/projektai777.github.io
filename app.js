@@ -1135,9 +1135,10 @@ function stampOnce() {
   if (card.stamps >= tenant.stamps_needed) {
     celebrate(rewardText());
   } else {
+    // No "stamp added" toast — the animation is the confirmation. Still announce a
+    // milestone reach (a bigger moment) when one is hit.
     const m = (tenant.milestones || []).find((x) => x.at === card.stamps);
     if (m) toast(t('reached', milestoneText(m)));
-    else toast(t('toastStamp'));
   }
 }
 
@@ -1542,7 +1543,7 @@ async function runGrant(action, code) {
         render();
         justStamped = -1;
         if (res.full) celebrate(rewardText());
-        else toast(t('toastStamp'));
+        // No "stamp added" toast — the stamp animation is the confirmation.
       }
     } else {
       const msg = {
