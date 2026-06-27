@@ -1620,6 +1620,9 @@ function whenPagePainted(maxWait = 1800) {
       if (grant) {
         const full = card.stamps >= tenant.stamps_needed;
         history.replaceState({}, '', `?b=${encodeURIComponent(slug)}${lang === 'en' ? '&lang=en' : ''}`);
+        // Hold the stamp until the card is fully loaded + painted, so the customer
+        // actually watches the animation instead of it firing mid-load off-screen.
+        await whenPagePainted();
         await runGrant(full ? 'redeem_reward' : 'add_stamp', grant);
       }
     }
