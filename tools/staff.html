@@ -254,6 +254,7 @@
     <div class="qr-box"><img id="qr" alt="QR"></div>
     <p class="qr-cap" data-i18n="qrCap">Svečias nuskaito → antspaudas pridedamas jo telefone automatiškai</p>
     <div class="timer"><span class="ring" id="ring"></span><span id="secs"></span></div>
+    <p class="err" id="codeErr"></p>
     <p class="hint" data-i18n="codeHint">Kodas keičiasi kas 30 sekundžių. Vienas svečias gali gauti 1 antspaudą per dieną.</p>
 
     <!-- shown while the audit stats load (seeding + geolocation can take ~10s) -->
@@ -267,15 +268,13 @@
     <details id="audit" class="stats audit-panel hidden">
       <summary class="stats-head audit-summary"><span data-i18n="auTitle">🖥️ Įrenginio žurnalas ir statistika</span> <span class="audit-toggle" data-i18n="auShow">rodyti ▾</span></summary>
 
-      <p class="gdpr-warn" data-i18n="gdpr">⚠️ Ši funkcija registruoja įrenginio vietą ir laiką (saugumui). Pagal GDPR <strong>privalote iš anksto informuoti darbuotojus</strong>, kad įrenginys yra stebimas. Klientų duomenų nerenkame.</p>
+      <p class="gdpr-warn" data-i18n="gdpr">ℹ️ Šis žurnalas registruoja tik darbuotojo įrenginio pavadinimą ir veiksmų laiką (statistikai). GPS vieta nesaugoma. Klientų asmens duomenų nerenkame.</p>
 
       <div class="device-row">
         <span class="dev-label" data-i18n="thisBranch">Šis įrenginys / filialas:</span>
         <span class="dev-name" id="devName">—</span>
         <button class="dev-edit" id="devEdit" data-i18n="change">keisti</button>
       </div>
-      <button class="geo-btn" id="geoBtn" data-i18n="setVenue">📍 Nustatyti šią vietą kaip įstaigą</button>
-      <p class="geo-state" id="geoState"></p>
 
       <!-- branch filter: pick a filialas to scope ALL stats below to it -->
       <div class="branch-bar" id="branchBar">
@@ -297,14 +296,8 @@
         <div class="stats-nums stats-nums-3">
           <div class="stat stat-sm"><span class="stat-val" id="auRate">–</span><span class="stat-lbl" data-i18n="lblRate">Prizų %</span><span class="stat-hint" data-i18n="hintRate">Kiek surinktų antspaudų virto prizais</span></div>
           <div class="stat stat-sm"><span class="stat-val" id="auLogins">–</span><span class="stat-lbl" data-i18n="lblLogins">Prisijungimai</span><span class="stat-hint" data-i18n="hintLogins">Kiek kartų darbuotojas atrakino šį puslapį</span></div>
-          <div class="stat stat-sm"><span class="stat-val stat-warn" id="auOffsite">–</span><span class="stat-lbl" data-i18n="lblOffsite">Ne vietoje 🚩</span><span class="stat-hint" data-i18n="hintOffsite">Prisijungimai ne iš įstaigos vietos</span></div>
         </div>
       </div>
-
-      <details class="au-sub au-collapse" id="auFlagsWrap">
-        <summary class="au-sub-head au-collapse-sum"><span data-i18n="headFlags">🚩 Naudojimas ne įstaigoje</span><span class="au-collapse-count" id="auFlagsCount"></span></summary>
-        <div id="auFlags" class="au-list"></div>
-      </details>
 
       <div class="au-sub">
         <div class="au-sub-head" data-i18n="headBranch">🏆 Pagal įrenginį / filialą</div>
@@ -348,14 +341,16 @@ const S = {
     qrCap: 'Svečias nuskaito → antspaudas pridedamas jo telefone automatiškai',
     codeHint: 'Kodas keičiasi kas 30 sekundžių. Vienas svečias gali gauti 1 antspaudą per dieną.',
     auTitle: '🖥️ Įrenginio žurnalas ir statistika', auShow: 'rodyti ▾', auHide: 'slėpti ▴',
-    gdpr: '⚠️ Ši funkcija registruoja įrenginio vietą ir laiką (saugumui). Pagal GDPR <strong>privalote iš anksto informuoti darbuotojus</strong>, kad įrenginys yra stebimas. Klientų duomenų nerenkame.',
-    thisBranch: 'Šis įrenginys / filialas:', change: 'keisti', setVenue: '📍 Nustatyti šią vietą kaip įstaigą',
-    lblToday: 'Šiandien', lbl7d: '7 d.', lblAll: 'Iš viso', lblRate: 'Prizų %', lblLogins: 'Prisijungimai', lblOffsite: 'Ne vietoje 🚩',
-    hintRate: 'Kiek surinktų antspaudų virto prizais', hintLogins: 'Kiek kartų darbuotojas atrakino šį puslapį', hintOffsite: 'Prisijungimai ne iš įstaigos vietos',
-    headFlags: '🚩 Naudojimas ne įstaigoje', headBranch: '🏆 Pagal įrenginį / filialą',
+    gdpr: 'ℹ️ Šis žurnalas registruoja tik darbuotojo įrenginio pavadinimą ir veiksmų laiką (statistikai). GPS vieta nesaugoma. Klientų asmens duomenų nerenkame.',
+    thisBranch: 'Šis įrenginys / filialas:', change: 'keisti',
+    lblToday: 'Šiandien', lbl7d: '7 d.', lblAll: 'Iš viso', lblRate: 'Prizų %', lblLogins: 'Prisijungimai',
+    hintRate: 'Kiek surinktų antspaudų virto prizais', hintLogins: 'Kiek kartų darbuotojas atrakino šį puslapį',
+    headBranch: '🏆 Pagal įrenginį / filialą',
     headHours: '🕐 Užimtumas pagal valandą (visą laiką)', headTrend: '📈 Savaitės tendencija',
     headStamps: '📊 Antspaudai', headAllTime: '📋 Iš viso (per visą laiką)',
     clearSample: '🗑️ Išvalyti pavyzdinę statistiką', clearing: 'Valoma…', lock: 'Užrakinti',
+    errOffsite: '📍 Šį kodą galima rodyti tik įstaigoje.', errNeedLoc: '📍 Įjunkite vietos nustatymą, kad matytumėte kodą.',
+    errRevoked: '🚫 Šis įrenginys užblokuotas. Kreipkitės į vadovą.', errNet: '⚠️ Nėra ryšio. Bandykite dar kartą.',
     statsLoading: 'Netrukus galėsite peržiūrėti statistiką',
     legStamps: 'Antspaudai', legPrizes: 'Prizai', noData: 'Dar nėra duomenų.',
     stamps: 'antsp.', prizes: 'prizai', loadMore: '← slinkite, kad matytumėte senesnius',
@@ -363,8 +358,6 @@ const S = {
     branchAll: 'Visi filialai', viewBranch: 'Rodyti filialą:', setWorkBranch: 'Šis įrenginys yra:',
     promptBranch: 'Šio įrenginio / filialo pavadinimas (pvz. „Baras", „Senamiestis"):',
     promptRename: 'Įrenginio / filialo pavadinimas:',
-    venueSetting: 'Nustatoma…', venueFail: '⚠️ Nepavyko gauti vietos (leiskite vietą naršyklėje).',
-    venueSet: '✅ Įstaigos vieta nustatyta', venueNone: 'Vieta nenustatyta (pasirinktinai)',
     notFound: (s) => `Verslas „${s}" nerastas arba neturi darbuotojo kodo.`,
     noSlug: 'Trūksta verslo nuorodos. Atidarykite: /tools/staff.html?b=slug',
   },
@@ -375,22 +368,22 @@ const S = {
     qrCap: 'Guest scans → a stamp is added on their phone automatically',
     codeHint: 'The code changes every 30 seconds. One guest can get 1 stamp per day.',
     auTitle: '🖥️ Device log & statistics', auShow: 'show ▾', auHide: 'hide ▴',
-    gdpr: '⚠️ This feature records the device’s location and time (for security). Under GDPR <strong>you must inform staff in advance</strong> that the device is monitored. We collect no customer data.',
-    thisBranch: 'This device / branch:', change: 'change', setVenue: '📍 Set this location as the venue',
-    lblToday: 'Today', lbl7d: '7 d.', lblAll: 'Total', lblRate: 'Reward %', lblLogins: 'Logins', lblOffsite: 'Off-site 🚩',
-    hintRate: 'Share of stamps that became rewards', hintLogins: 'Times staff unlocked this page', hintOffsite: 'Logins from outside the venue',
-    headFlags: '🚩 Off-site use', headBranch: '🏆 By device / branch',
+    gdpr: 'ℹ️ This log records only the staff device’s label and the time of actions (for statistics). GPS location is not stored. We collect no customer personal data.',
+    thisBranch: 'This device / branch:', change: 'change',
+    lblToday: 'Today', lbl7d: '7 d.', lblAll: 'Total', lblRate: 'Reward %', lblLogins: 'Logins',
+    hintRate: 'Share of stamps that became rewards', hintLogins: 'Times staff unlocked this page',
+    headBranch: '🏆 By device / branch',
     headHours: '🕐 Busy hours (all time)', headTrend: '📈 Weekly trend',
     headStamps: '📊 Stamps', headAllTime: '📋 All-time totals',
     clearSample: '🗑️ Clear sample stats', clearing: 'Clearing…', lock: 'Lock',
+    errOffsite: '📍 This code can only be shown at the venue.', errNeedLoc: '📍 Enable location to show the code.',
+    errRevoked: '🚫 This device is blocked. Contact your manager.', errNet: '⚠️ No connection. Please try again.',
     legStamps: 'Stamps', legPrizes: 'Rewards', noData: 'No data yet.',
     stamps: 'st.', prizes: 'rewards', loadMore: '← scroll to see older',
     months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
     branchAll: 'All branches', viewBranch: 'Show branch:', setWorkBranch: 'This device is:',
     promptBranch: 'Name of this device / branch (e.g. “Bar”, “Old Town”):',
     promptRename: 'Device / branch name:',
-    venueSetting: 'Setting…', venueFail: '⚠️ Couldn’t get location (allow location in the browser).',
-    venueSet: '✅ Venue location set', venueNone: 'Location not set (optional)',
     notFound: (s) => `Business “${s}” not found or has no staff code.`,
     noSlug: 'Missing business link. Open: /tools/staff.html?b=slug',
   },
@@ -429,7 +422,12 @@ $('langPill').querySelectorAll('button').forEach((b) => {
   };
 });
 
-if (!tenant || !tenant.staff_secret) {
+// A server-authoritative tenant has NO staff_secret in this file — its secret + password
+// live in the Worker, and the rotating code is fetched from /staffcode (after the Worker
+// checks the password, the device registry, and the geofence). A static/demo tenant keeps
+// the local TOTP (secret in tenants.js). Either is a valid, openable staff page.
+const isServerTenant = !!(tenant && tenant.server);
+if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   $('fatal').textContent = slug ? tr('notFound', slug) : tr('noSlug');
   $('fatal').classList.remove('hidden');
 } else {
@@ -486,18 +484,11 @@ if (!tenant || !tenant.staff_secret) {
     return statsBase;
   }
 
-  // ===== STAFF-DEVICE AUDIT (this client's own terminal, NOT customers) =====
+  // ===== STAFF-DEVICE LOG (this client's own terminal, NOT customers) =====
   const devKey = `lojalumas_device_${slug}`;
-  const geoKey = `lojalumas_venue_${slug}`;
   function deviceLabel() { return localStorage.getItem(devKey) || ''; }
-  function venue() { try { return JSON.parse(localStorage.getItem(geoKey) || 'null'); } catch { return null; } }
-  // Haversine distance in metres between two lat/lon points.
-  function distM(a, b) {
-    const R = 6371000, toR = (d) => d * Math.PI / 180;
-    const dLat = toR(b.lat - a.lat), dLon = toR(b.lon - a.lon);
-    const s = Math.sin(dLat / 2) ** 2 + Math.cos(toR(a.lat)) * Math.cos(toR(b.lat)) * Math.sin(dLon / 2) ** 2;
-    return 2 * R * Math.asin(Math.sqrt(s));
-  }
+  // Current GPS reading (used ONLY transiently to pass to the Worker's geofence check
+  // for a server tenant — "check, don't store": coords are never saved anywhere).
   function getPos() {
     return new Promise((res) => {
       if (!navigator.geolocation) return res(null);
@@ -507,24 +498,11 @@ if (!tenant || !tenant.staff_secret) {
       );
     });
   }
-  // Log this login: device label + (if GPS available) coords + off-venue flag.
-  // Geofence is deliberately FORGIVING — flag only when the device is CONFIDENTLY
-  // far from the venue: distance minus the reading's own GPS error must still exceed
-  // the radius (default 500 m, covers a big venue + parking + normal GPS drift). So a
-  // staffer on-site is never flagged; only genuinely off-site use (home, blocks away).
+  // Log this login (device label + time only — no location is stored). Drives the
+  // logins stat and ensures the branch appears in the per-branch list.
   async function logLogin(base) {
     const dev = deviceLabel() || 'unnamed';
-    let lat, lon, geofar = 0;
-    const v = venue();
-    const pos = await getPos();
-    if (pos) {
-      lat = pos.lat; lon = pos.lon;
-      const radius = v && v.radius || 500;
-      const acc = Math.min(pos.acc || 0, 1000); // don't let a wild accuracy value swing it
-      if (v && (distM(v, pos) - acc) > radius) geofar = 1;
-    }
-    const q = `b=${encodeURIComponent(slug)}&device=${encodeURIComponent(dev)}&action=login`
-      + (lat != null ? `&lat=${lat}&lon=${lon}` : '') + (geofar ? '&geofar=1' : '');
+    const q = `b=${encodeURIComponent(slug)}&device=${encodeURIComponent(dev)}&action=login`;
     try { await fetch(`${base}/log?${q}`, { method: 'POST' }); } catch {}
   }
 
@@ -546,8 +524,6 @@ if (!tenant || !tenant.staff_secret) {
       if (name) localStorage.setItem(devKey, name.slice(0, 60));
     }
     $('devName').textContent = deviceLabel() || '—';
-    const v = venue();
-    $('geoState').textContent = v ? tr('venueSet') : tr('venueNone');
     await logLogin(base);
     // PREVIEW: if this tenant's log is empty, seed a few sample events so a prospect
     // sees a populated multi-branch dashboard (incl. a 🚩 off-site flag + a 2nd
@@ -621,9 +597,6 @@ if (!tenant || !tenant.staff_secret) {
         for (let k = 0; k < logins; k++) add(b.name, 'login', dateAt(day, 10 + Math.floor(rnd() * 8), Math.floor(rnd() * 60)), 0, b.city);
       }
     }
-    // ONE rare off-site 🚩 anomaly (recent, odd late-night hour) on the flagship branch
-    // to showcase the security flag — just a single example, not a flood.
-    add(BRANCHES[0].name, 'stamp', dateAt(3, 23, 34), 1, BRANCHES[0].city);
     // Bulk insert in one request; fall back to nothing on failure (dashboard just shows zeros).
     try {
       await fetch(`${base}/seed?b=${encodeURIComponent(slug)}&preview=1`, {
@@ -777,18 +750,10 @@ if (!tenant || !tenant.staff_secret) {
     $('auAll').textContent = T.stampsAll;
     $('auRate').textContent = T.redemptionRate + '%';
     $('auLogins').textContent = T.logins;
-    $('auOffsite').textContent = T.offsite;
-    if (j.flags.length) {
-      $('auFlagsWrap').classList.remove('hidden');
-      $('auFlagsWrap').open = false; // start collapsed; the count badge summarises it
-      $('auFlagsCount').textContent = j.flags.length;
-      $('auFlags').innerHTML = j.flags.map((f) =>
-        `<div class="au-flag">🚩 ${f.day} ${f.time} · ${f.device} · ${f.city || f.region || '?'}</div>`).join('');
-    } else { $('auFlagsWrap').classList.add('hidden'); }
     // branch list is ALWAYS the full set (j.devices isn't filtered server-side)
     knownBranches = j.devices.map((d) => d.device);
     $('auDevices').innerHTML = j.devices.map((d) =>
-      `<div class="au-dev ${d.device === branchFilter ? 'on' : ''}"><b>${d.device}</b><span>${d.stamps} ${tr('stamps')} · ${d.redeems} ${tr('prizes')}${d.city ? ' · ' + d.city : ''}${d.offsite ? ' · 🚩' + d.offsite : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
+      `<div class="au-dev ${d.device === branchFilter ? 'on' : ''}"><b>${d.device}</b><span>${d.stamps} ${tr('stamps')} · ${d.redeems} ${tr('prizes')}${d.city ? ' · ' + d.city : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
     // Busy hours: clear "14:00" labels (not bare "14"). Weekly trend: the week's
     // start DATE ("Geg. 26") instead of a bare week number.
     mountChart($('auHours'), j.hours, (h) => `${String(h.hh).padStart(2, '0')}:00`);
@@ -847,17 +812,38 @@ if (!tenant || !tenant.staff_secret) {
     $('branchNewSave').onclick = () => setBranch($('branchNewInput').value);
     $('branchNewInput').onkeydown = (e) => { if (e.key === 'Enter') setBranch($('branchNewInput').value); };
   };
-  // set venue location (geofence anchor)
-  $('geoBtn').onclick = async () => {
-    $('geoState').textContent = tr('venueSetting');
-    const pos = await getPos();
-    if (!pos) { $('geoState').textContent = tr('venueFail'); return; }
-    localStorage.setItem(geoKey, JSON.stringify({ ...pos, radius: 500 }));
-    $('geoState').textContent = tr('venueSet');
-  };
+  // ----- rotating code -----
+  // Static/demo tenant: the secret is local, compute the code in-browser (unchanged).
+  // Server tenant: the secret lives in the Worker; fetch the code from /staffcode, which
+  // first checks the password (held in memory only), the device registry, and the
+  // geofence. A blocked device / off-venue / no-location request returns no code.
+  let staffPass = '';                          // server tenant: kept in memory only, never stored
+  let serverCode = { code: '', period: -1 };    // cache the current period's code
+  const periodNow = () => Math.floor(Date.now() / 1000 / TOTP_PERIOD);
 
-  async function tick() {
-    const code = await currentCode(tenant.staff_secret);
+  function setCodeError(error) {
+    const map = { offsite: 'errOffsite', need_location: 'errNeedLoc', device_revoked: 'errRevoked', net: 'errNet' };
+    $('codeErr').textContent = tr(map[error] || 'errNet');
+    $('qr').removeAttribute('src'); $('qr').dataset.code = '';
+    $('secs').textContent = '';
+  }
+  function clearCodeError() { $('codeErr').textContent = ''; }
+
+  // Ask the Worker for the current code. Returns the JSON ({ok,code,...} or {ok:false,error}).
+  async function fetchServerCode() {
+    const base = await resolveCounter();
+    if (!base) return { ok: false, error: 'net' };
+    const pos = await getPos();                 // transient; only sent for the geofence check
+    const dev = deviceLabel() || 'terminal';
+    let url = `${base}/staffcode?b=${encodeURIComponent(slug)}&device=${encodeURIComponent(dev)}`;
+    if (pos) url += `&lat=${pos.lat}&lon=${pos.lon}`;
+    try {
+      const r = await fetch(url, { method: 'POST', headers: { 'x-staff-pass': staffPass } });
+      return await r.json();
+    } catch { return { ok: false, error: 'net' }; }
+  }
+
+  function paintCode(code) {
     const url = `${cardBase()}?b=${encodeURIComponent(slug)}&grant=${code}`;
     const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=10&data=${encodeURIComponent(url)}`;
     if ($('qr').dataset.code !== code) { $('qr').src = qrSrc; $('qr').dataset.code = code; }
@@ -865,11 +851,38 @@ if (!tenant || !tenant.staff_secret) {
     $('secs').textContent = `${left} s`;
     $('ring').style.setProperty('--p', String((left / TOTP_PERIOD) * 100));
   }
+
+  async function tick() {
+    if (isServerTenant) {
+      const p = periodNow();
+      if (serverCode.period !== p) {            // only hit the Worker once per 30 s period
+        const j = await fetchServerCode();
+        if (!j.ok) { setCodeError(j.error); return; }
+        serverCode = { code: j.code, period: p };
+        clearCodeError();
+      }
+      paintCode(serverCode.code);
+      return;
+    }
+    paintCode(await currentCode(tenant.staff_secret));
+  }
   setInterval(() => { if (!$('codeView').classList.contains('hidden')) tick(); }, 1000);
 
   async function tryUnlock() {
     const pass = $('pass').value.trim();
     if (!pass) return;
+    if (isServerTenant) {
+      // No local hash to check — the Worker verifies the password on the first /staffcode.
+      staffPass = pass;
+      const j = await fetchServerCode();
+      if (j.ok) { serverCode = { code: j.code, period: periodNow() }; showCode(); return; }
+      staffPass = '';
+      $('loginErr').textContent = tr(
+        { bad_pass: 'badPass', offsite: 'errOffsite', need_location: 'errNeedLoc', device_revoked: 'errRevoked' }[j.error] || 'errNet'
+      );
+      $('pass').value = '';
+      return;
+    }
     const ok = (await sha256(`${slug}:${pass}`)) === tenant.staff_pass_hash;
     if (ok) {
       sessionStorage.setItem(unlockKey, '1');
@@ -884,7 +897,9 @@ if (!tenant || !tenant.staff_secret) {
   $('pass').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
   $('lockBtn').onclick = () => { sessionStorage.removeItem(unlockKey); location.reload(); };
 
-  if (sessionStorage.getItem(unlockKey) === '1') showCode();
+  // Auto-resume only for static tenants. A server tenant holds the password in memory
+  // only (never persisted), so it re-asks for it each new page session — by design.
+  if (!isServerTenant && sessionStorage.getItem(unlockKey) === '1') showCode();
   else { $('login').classList.remove('hidden'); $('pass').focus(); }
 }
 </script>
