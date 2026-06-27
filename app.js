@@ -602,22 +602,6 @@ const staticBackend = {
       return { ok: false, error: 'bad_pin' };
     }
 
-    if (fn === 'redeem_reward') {
-      if (c.stamps < t.stamps_needed) return { ok: false, error: 'card_not_full' };
-      // One redemption per phone per LOCAL day (mirrors the stamp cooldown), so a
-      // present customer can't be re-scanned to farm the reward repeatedly. Enforced
-      // in preview too so the demo behaves like the real card; the preview-only reset
-      // clears it. The per-stamp dates let staff visually spot a card that isn't legit.
-      if (c.redeemDay === todayLocal()) return { ok: false, error: 'redeem_done' };
-      c.stamps = 0;
-      c.dates = []; // new cycle starts empty
-      c.times = []; // …and its parallel per-stamp hours
-      c.redeemDay = todayLocal();
-      if (isDemo) c.cycles = (c.cycles || 0) + 1; // demo: one cycle per device
-      this._save(c);
-      return { ok: true, dates: c.dates, times: c.times, day: c.day };
-    }
-
     // Birthday gift: claimed by the SAME staff-QR scan that grants a stamp (tied to
     // a real, rotating-code-verified visit). The staff ID check (see pinHintBday) is
     // the only anti-fraud gate — we never store/check the birthday date. We record a
@@ -644,6 +628,15 @@ const staticBackend = {
     // still fills a card in one go for the pitch.
     if (c.day === todayLocal()) {
       return { ok: false, error: 'daily_done' };
+    }
+    // Loop: a full card starts over on the next stamp — this stamp becomes the first
+    // of a fresh card. No separate "redeem" step; once full, the customer claims the
+    // reward in person and the card simply begins again.
+    if (c.stamps >= t.stamps_needed) {
+      c.stamps = 0;
+      c.dates = [];
+      c.times = [];
+      if (isDemo) c.cycles = (c.cycles || 0) + 1; // demo abuse guard: count the completed card
     }
     if (c.stamps < t.stamps_needed) { c.stamps += 1; stampDate(c); } // record the visit date on this stamp
     c.last = now;
@@ -931,8 +924,10 @@ function render() {
   const full = card.stamps >= tenant.stamps_needed;
   // Daily cooldown is active once today's stamp is in — hide the camera button so
   // the customer isn't invited to scan again until local midnight (the scan would
-  // just be rejected with "come back tomorrow"). Redeeming a full card is exempt.
-  const stampedToday = !full && card.day === todayLocal();
+  // just be rejected with "come back tomorrow"). Applies to a full card too: once
+  // completed, the customer claims the reward in person and the NEXT day's scan
+  // simply starts a fresh card (loop) — there is no separate redeem step.
+  const stampedToday = card.day === todayLocal();
   // Running as an installed PWA? Then "no install needed" is moot — skip that hint.
   const installed = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
@@ -985,11 +980,11 @@ function render() {
 
     ${stampedToday
       ? `<p class="small-print stamped-today">${t('stampedToday')}</p>`
-      : `<button class="cta" id="actionBtn">${full ? t('redeem') : t('getStamp')}</button>
+      : `<button class="cta" id="actionBtn">${t('getStamp')}</button>
     <p class="small-print">${isDemo ? t('staffPressDemo') : t('staffPress')}</p>`}
     ${installed ? '' : `<p class="small-print">${t('savedHint')}</p>`}
-    ${isPreview && !full ? `<button class="cta cta-demo" id="stampOnceBtn">${t('stampOnce')}</button>` : ''}
-    ${isPreview && !full ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
+    ${isPreview ? `<button class="cta cta-demo" id="stampOnceBtn">${t('stampOnce')}</button>` : ''}
+    ${isPreview ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
     ${isPreview ? `<button class="reset-link" id="resetBtn">${t('reset')}</button>` : ''}
     ${birthdayHtml()}
     ${reviewBannerHtml()}
@@ -1002,7 +997,7 @@ function render() {
   `;
 
   const actionBtn = document.getElementById('actionBtn'); // absent while the daily stamp cooldown hides it
-  if (actionBtn) actionBtn.onclick = () => stampAction(full ? 'redeem_reward' : 'add_stamp');
+  if (actionBtn) actionBtn.onclick = () => stampAction('add_stamp'); // final stamp is just a stamp; a full card loops on the next one
   const so = document.getElementById('stampOnceBtn'); if (so) so.onclick = stampOnce;
   const af = document.getElementById('autoFillBtn'); if (af) af.onclick = autoFill;
   const rs = document.getElementById('resetBtn'); if (rs) rs.onclick = resetCard;
@@ -1525,13 +1520,7 @@ async function runGrant(action, code) {
       if (res.dates !== undefined) card.dates = res.dates;
       if (res.times !== undefined) card.times = res.times;
       if (res.day !== undefined) card.day = res.day;
-      if (action === 'redeem_reward') {
-        Counter.hit('redeem'); // anonymous tally (server optional; no personal data)
-        card.stamps = 0;
-        Recovery.autoSave(card.stamps); // keep an existing backup current
-        render();
-        toast(t('toastRedeemed'));
-      } else if (action === 'redeem_birthday') {
+      if (action === 'redeem_birthday') {
         if (typeof res.stamps === 'number') card.stamps = res.stamps; // one scan also stamped
         Recovery.autoSave(card.stamps);
         justStamped = card.stamps - 1; // animate the stamp this scan also granted
@@ -1618,12 +1607,13 @@ function whenPagePainted(maxWait = 1800) {
       // from the URL so a refresh/bookmark can't replay it.
       const grant = params.get('grant');
       if (grant) {
-        const full = card.stamps >= tenant.stamps_needed;
         history.replaceState({}, '', `?b=${encodeURIComponent(slug)}${lang === 'en' ? '&lang=en' : ''}`);
         // Hold the stamp until the card is fully loaded + painted, so the customer
         // actually watches the animation instead of it firing mid-load off-screen.
         await whenPagePainted();
-        await runGrant(full ? 'redeem_reward' : 'add_stamp', grant);
+        // Always add a stamp — a full card loops (resets to the first stamp); there
+        // is no separate redeem action.
+        await runGrant('add_stamp', grant);
       }
     }
   } catch (e) {
