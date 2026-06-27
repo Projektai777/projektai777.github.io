@@ -143,19 +143,7 @@
   .geo-state { font-size: .72rem; color: #78716c; margin-top: 6px; min-height: 1em; }
   .au-sub { margin-top: 16px; text-align: left; }
   .au-sub-head { font-size: .78rem; font-weight: 700; color: #57534e; margin-bottom: 8px; }
-  /* collapsible sub-section (off-site flags): tap the header to expand the list */
-  .au-collapse > .au-collapse-sum {
-    list-style: none; cursor: pointer; display: flex; align-items: center;
-    justify-content: space-between; gap: 8px; margin-bottom: 0;
-  }
-  .au-collapse[open] > .au-collapse-sum { margin-bottom: 8px; }
-  .au-collapse-sum::-webkit-details-marker { display: none; }
-  .au-collapse-sum::after { content: '▾'; color: #a8a29e; font-size: .8rem; transition: transform .2s ease; }
-  .au-collapse[open] > .au-collapse-sum::after { transform: rotate(180deg); }
-  .au-collapse-count { margin-left: auto; font-size: .72rem; font-weight: 800; color: #b91c1c;
-    background: #fef2f2; border: 1px solid #fecaca; border-radius: 999px; padding: 1px 9px; }
   .au-list { display: flex; flex-direction: column; gap: 6px; }
-  .au-flag { font-size: .74rem; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 6px 10px; }
   .au-dev { display: flex; justify-content: space-between; gap: 8px; font-size: .76rem; background: #faf9f8; border: 1px solid #f0efed; border-radius: 8px; padding: 7px 10px; }
   .au-dev span { color: #78716c; text-align: right; }
   /* ---------- bar charts (stamps + redemptions, two stacked series) ----------
