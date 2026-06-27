@@ -851,9 +851,19 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   let staffPass = '';                          // server tenant: kept in memory only, never stored
   let serverCode = { code: '', period: -1 };    // cache the current period's code
   const periodNow = () => Math.floor(Date.now() / 1000 / TOTP_PERIOD);
+  // This device's random identity token (NOT the label) + its short public id, persisted
+  // so blocking it on the server actually sticks (re-typing a label can't bypass it).
+  const devTokenKey = `lojalumas_devtoken_${slug}`;
+  const devIdKey = `lojalumas_devid_${slug}`;
+  function devToken() { return localStorage.getItem(devTokenKey) || ''; }
+  function thisDevId() { return localStorage.getItem(devIdKey) || ''; }
+  function storeDevIdentity(j) {
+    if (j && j.token) localStorage.setItem(devTokenKey, j.token);
+    if (j && j.id) localStorage.setItem(devIdKey, j.id);
+  }
 
   function setCodeError(error) {
-    const map = { offsite: 'errOffsite', need_location: 'errNeedLoc', device_revoked: 'errRevoked', net: 'errNet' };
+    const map = { offsite: 'errOffsite', need_location: 'errNeedLoc', device_revoked: 'errRevoked', device_pending: 'errPending', net: 'errNet' };
     $('codeErr').textContent = tr(map[error] || 'errNet');
     $('qr').removeAttribute('src'); $('qr').dataset.code = '';
     $('secs').textContent = '';
@@ -867,10 +877,14 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     const pos = await getPos();                 // transient; only sent for the geofence check
     const dev = deviceLabel() || 'terminal';
     let url = `${base}/staffcode?b=${encodeURIComponent(slug)}&device=${encodeURIComponent(dev)}`;
+    const tok = devToken();
+    if (tok) url += `&token=${encodeURIComponent(tok)}`;
     if (pos) url += `&lat=${pos.lat}&lon=${pos.lon}`;
     try {
       const r = await fetch(url, { method: 'POST', headers: { 'x-staff-pass': staffPass } });
-      return await r.json();
+      const j = await r.json();
+      storeDevIdentity(j); // the server returns this device's token/id even on geofence/pending errors
+      return j;
     } catch { return { ok: false, error: 'net' }; }
   }
 
