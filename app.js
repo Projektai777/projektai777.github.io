@@ -1121,7 +1121,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // (unlike the camera button, which hides itself after the day's stamp). Mirrors the
 // add_stamp persistence so a closed app still keeps the stamp.
 function stampOnce() {
-  if (card.stamps >= tenant.stamps_needed) return; // button is hidden when full anyway
+  // Loop exactly like the live card: a full card starts over on the next stamp.
+  if (card.stamps >= tenant.stamps_needed) { card.stamps = 0; card.dates = []; card.times = []; }
   card.stamps += 1;
   card.dates = card.dates || [];
   card.times = card.times || [];
@@ -1143,6 +1144,8 @@ function stampOnce() {
 async function autoFill() {
   const btn = document.getElementById('autoFillBtn');
   if (btn) btn.disabled = true;
+  // Loop like the live card: if it's already full, start a fresh card first.
+  if (card.stamps >= tenant.stamps_needed) { card.stamps = 0; card.dates = []; card.times = []; }
   // Fill only up to the NEXT milestone; the user clicks again to continue to full.
   const next = (tenant.milestones || [])
     .map((m) => m.at).filter((a) => a > card.stamps).sort((a, b) => a - b)[0];
