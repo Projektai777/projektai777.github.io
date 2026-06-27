@@ -28,6 +28,9 @@ const slug = (params.get('b') || location.pathname.split('/').filter(Boolean).po
 const app = document.getElementById('app');
 const isStatic = !!TENANTS[slug] || SUPABASE_URL.includes('YOUR-PROJECT');
 const isDemo = slug === 'demo';
+// Server-authoritative tenant (secure tier): secret + stamp count live in the Worker,
+// not the phone. Set `server: true` on the tenant at go-live (and drop its staff_secret).
+const isServer = !!(TENANTS[slug] && TENANTS[slug].server);
 const view = (params.get('view') || '').toLowerCase(); // ?view=owner -> savininko apžvalga (atskiras puslapis)
 let isPreview = false;       // set after tenant loads: demo OR tenant.preview (rodo pardavimų funkcijas)
 
@@ -662,7 +665,79 @@ function hourLabel(h) {
   return lang === 'en' ? `${h}pm` : `${h}val`;
 }
 
-const backend = isStatic ? staticBackend : supabaseBackend;
+// Server-authoritative mode (the secure tier, 2026-06-27). A go-live tenant marked
+// `server: true` in tenants.js has NO staff_secret in the shipped JS — the secret
+// lives only in the Worker, and the STAMP COUNT is the Worker's truth. The phone's
+// localStorage is just a display cache: editing it changes nothing, because every
+// load reconciles from /card and every stamp is granted by /stamp (which validates
+// the rotating code, enforces the daily cooldown, and increments server-side). Demos
+// and any tenant without the flag keep the pure-static path above (secret in tenants.js
+// is harmless for a demo). Online is required to EARN a stamp (the card still displays
+// offline); a network blip surfaces a clean "try again" instead of a forgeable stamp.
+const serverBackend = {
+  _key: `lojalumas_card_${slug}`,
+  _idKey: `lojalumas_cardid_${slug}`,
+  _load() { return JSON.parse(localStorage.getItem(this._key) || '{"stamps":0,"day":"","dates":[],"times":[]}'); },
+  _save(c) { localStorage.setItem(this._key, JSON.stringify(c)); },
+  // Anonymous, random per-device card id — identifies the CARD, not the person. It is
+  // the server-side cooldown key; lose it (cleared storage) and a recovery code restores it.
+  cardId() {
+    let id = localStorage.getItem(this._idKey);
+    if (!id || !/^[a-z0-9]{8,48}$/.test(id)) {
+      id = [...crypto.getRandomValues(new Uint8Array(12))].map((b) => b.toString(16).padStart(2, '0')).join('');
+      localStorage.setItem(this._idKey, id);
+    }
+    return id;
+  },
+  async loadTenant() { const t = TENANTS[slug]; if (!t) throw new Error('tenant_not_found'); return t; },
+  // Pull the server count onto a (possibly stale/forged) local cache.
+  _reconcile(c, stamps, day) {
+    c.stamps = Math.max(0, stamps | 0);
+    if (day) c.day = day;
+    c.dates = (c.dates || []).slice(0, c.stamps);
+    c.times = (c.times || []).slice(0, c.stamps);
+    while (c.dates.length < c.stamps) c.dates.push(''); // unknown past dates render blank
+    while (c.times.length < c.stamps) c.times.push('');
+  },
+  async loadOrCreateCard() {
+    const c = this._load();
+    try {
+      const base = await Counter._resolve();
+      if (base) {
+        const r = await fetch(`${base}/card?b=${encodeURIComponent(slug)}&card=${this.cardId()}`, { cache: 'no-store' });
+        const j = await r.json();
+        if (j && j.ok) { this._reconcile(c, j.stamps, j.day); this._save(c); }
+      }
+    } catch { /* offline: fall back to the local cache, display still works */ }
+    return { id: slug, ...c };
+  },
+  // The authoritative grant. fn is 'add_stamp' (or 'redeem'); p_code is the scanned
+  // rotating code. The Worker is the sole authority on whether it counts.
+  async rpc(fn, { p_code }) {
+    const base = await Counter._resolve();
+    if (!base) return { ok: false, error: 'net' };
+    const action = fn === 'redeem' ? 'redeem' : 'stamp';
+    let j;
+    try {
+      const r = await fetch(
+        `${base}/stamp?b=${encodeURIComponent(slug)}&card=${this.cardId()}&code=${encodeURIComponent(p_code)}&action=${action}`,
+        { method: 'POST', keepalive: true }
+      );
+      j = await r.json();
+    } catch { return { ok: false, error: 'net' }; }
+    const c = this._load();
+    if (!j.ok) {
+      if (j.error === 'daily_done' && typeof j.stamps === 'number') { this._reconcile(c, j.stamps, j.day); this._save(c); }
+      return { ok: false, error: j.error === 'bad_code' ? 'bad_pin' : j.error };
+    }
+    this._reconcile(c, j.stamps, j.day);             // server count wins
+    if (j.stamps >= 1) { c.dates[j.stamps - 1] = todayLocal(); c.times[j.stamps - 1] = new Date().getHours(); }
+    this._save(c);
+    return { ok: true, stamps: j.stamps, full: j.full, dates: c.dates, times: c.times, day: j.day };
+  },
+};
+
+const backend = isServer ? serverBackend : (isStatic ? staticBackend : supabaseBackend);
 
 // ---------- state ----------
 let tenant = null;
@@ -1536,7 +1611,7 @@ async function runGrant(action, code) {
         // synchronous localStorage write (_save) before returning, BEFORE we render
         // the 3s animation. So if the customer closes the app mid-animation the stamp
         // still counts. Keep this order — never move persistence after the animation.
-        Counter.hit('stamp'); // anonymous tally (server optional; no personal data)
+        if (!isServer) Counter.hit('stamp'); // anonymous tally (authoritative /stamp already counts server-side)
         card.stamps = res.stamps;
         Recovery.autoSave(card.stamps);
         justStamped = card.stamps - 1; // only the freshly-earned stamp plays "ink press"
@@ -1553,6 +1628,9 @@ async function runGrant(action, code) {
         redeem_done: t('errRedeemDone'),
         card_not_full: t('errNotFull'),
         demo_over: t('errDemoOver'),
+        net: t('errNet'),                 // Worker unreachable — earning a stamp needs a connection
+        not_provisioned: t('errGeneric'), // server tenant not set up yet (shouldn't reach a live customer)
+        offsite: t('errGeneric'),         // staff geofence (never reached on the customer path)
       }[res.error] || t('errGeneric');
       toast(msg, true);
     }
