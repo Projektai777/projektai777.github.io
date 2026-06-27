@@ -942,7 +942,12 @@ function render() {
   const grid = Array.from({ length: tenant.stamps_needed }, (_, i) => {
     const filled = i < card.stamps;
     const milestone = (tenant.milestones || []).some((m) => m.at === i + 1);
-    const glyph = filled ? stampIcon : (milestone ? '🎁' : '');
+    // A "reward" cell = a milestone OR the final prize cell (the full card). These
+    // ALWAYS show the 🎁 gift box — even once filled — so a customer instantly sees
+    // WHERE they won something (a filled gift = "I got the prize here"), instead of
+    // the reward turning into just another food stamp.
+    const isReward = milestone || (i + 1 === tenant.stamps_needed);
+    const glyph = isReward ? '🎁' : (filled ? stampIcon : '');
     // Date + hour under each filled stamp: a visible visit history staff can
     // glance at when giving the reward — a fake "all in one day at one hour" card
     // stands out. MM-DD on top, the hour ("14val"/"14pm") just below it.
@@ -950,11 +955,11 @@ function render() {
     const d = filled && stampDates[i]
       ? `<span class="stamp-when"><span class="stamp-date">${stampDates[i].slice(5)}</span>${hr ? `<span class="stamp-hour">${hr}</span>` : ''}</span>`
       : '';
-    // The single freshly-earned stamp gets a richer "ink press" animation; the rest
-    // keep the subtle staggered pop. `justStamped` is set right before render() on a
-    // successful grant and cleared after one paint.
+    // The single freshly-earned stamp gets a richer "coin flip + shine" animation;
+    // the rest keep the subtle staggered pop. `justStamped` is set right before
+    // render() on a successful grant and cleared after one paint.
     const fresh = filled && i === justStamped ? ' stamp-fresh' : '';
-    return `<div class="stamp-cell"><div class="stamp ${filled ? 'filled' : ''} ${milestone ? 'stamp-milestone' : ''}${fresh}" style="animation-delay:${i * 40}ms">${glyph}</div>${d}</div>`;
+    return `<div class="stamp-cell"><div class="stamp ${filled ? 'filled' : ''} ${isReward ? 'stamp-milestone' : ''}${fresh}" style="animation-delay:${i * 40}ms">${glyph}</div>${d}</div>`;
   }).join('');
 
   const remaining = tenant.stamps_needed - card.stamps;
