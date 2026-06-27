@@ -89,9 +89,36 @@
       font-weight:700; opacity:0; transition:.22s; pointer-events:none
     }
     .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+    .gate{position:fixed; inset:0; z-index:50; display:grid; place-items:center; padding:24px;
+      background:radial-gradient(1200px 600px at 50% -200px,#1a2340,var(--bg))}
+    .gate.hide{display:none}
+    .gate-box{width:min(380px,92vw); background:linear-gradient(180deg,var(--panel2),var(--panel));
+      border:1px solid var(--line); border-radius:18px; padding:30px 26px; text-align:center}
+    .gate-emoji{font-size:34px}
+    .gate-box h2{margin:6px 0 4px; font-size:21px}
+    .gate-box p{margin:0; color:var(--muted); font-size:13px}
+    .gate-box input{width:100%; padding:12px 14px; margin-top:16px; border-radius:11px;
+      border:1px solid var(--line); background:var(--bg); color:var(--txt); font-size:16px}
+    .gate-box input:focus{outline:none; border-color:var(--accent)}
+    .gate-box button{width:100%; margin-top:12px; padding:12px; border-radius:11px; border:0;
+      background:var(--accent); color:#fff; font-weight:700; font-size:15px; cursor:pointer}
+    .gate-box button:disabled{opacity:.6; cursor:default}
+    .gate-err{color:#ff9090; font-size:13px; min-height:18px; margin-top:10px}
   </style>
 </head>
 <body>
+  <!-- Slaptažodžio vartai: turinys NEatvaizduojamas, kol Worker nepatvirtina slaptažodžio. -->
+  <div class="gate" id="gate">
+    <div class="gate-box">
+      <div class="gate-emoji">🔒</div>
+      <h2>Projektų sąrašas</h2>
+      <p>Įveskite slaptažodį, kad pamatytumėte demonstracijas ir klientus.</p>
+      <input id="gatePass" type="password" autocomplete="current-password" placeholder="Slaptažodis" autofocus>
+      <button id="gateBtn">Atrakinti</button>
+      <div class="gate-err" id="gateErr"></div>
+    </div>
+  </div>
+
   <div class="wrap">
     <header>
       <h1>🗂️ Lojalumas — projektai</h1>
@@ -198,40 +225,85 @@
       </div>`;
     }
 
-    // ── Render ─────────────────────────────────────────────────────
-    const demoEl = document.getElementById('demos');
-    const liveEl = document.getElementById('live');
-    const demos = [], live = [];
+    // ── Render (paleidžiama TIK atrakinus) ─────────────────────────
+    function renderAll(){
+      const demoEl = document.getElementById('demos');
+      const liveEl = document.getElementById('live');
+      const demos = [], live = [];
 
-    for (const [slug, t] of Object.entries(TENANTS)){
-      (isDemo(slug, t) ? demos : live).push([slug, t]);
+      for (const [slug, t] of Object.entries(TENANTS)){
+        (isDemo(slug, t) ? demos : live).push([slug, t]);
+      }
+      for (const p of EXTRA_PROJECTS){ (p.live ? live : demos).push(['extra', p]); }
+
+      demoEl.innerHTML = demos.map(([s, t]) =>
+        s === 'extra' ? extraCard(t) : tenantCard(s, t)).join('');
+
+      if (live.length){
+        liveEl.innerHTML = live.map(([s, t]) => s === 'extra' ? extraCard(t) : tenantCard(s, t)).join('');
+      } else {
+        liveEl.outerHTML = `<div class="empty" id="live">
+          Kol kas nėra įdiegtų tikrų klientų.<br>
+          Įdiegus klientą (<code>server: true</code> arba pašalinus <code>preview</code>) jis čia atsiras automatiškai.
+        </div>`;
+      }
+
+      document.getElementById('demoCount').textContent = demos.length;
+      document.getElementById('liveCount').textContent = live.length;
+      document.getElementById('stat').innerHTML =
+        `<span class="pill"><b>${demos.length + live.length}</b> projektai iš viso</span>
+         <span class="pill">🎬 <b>${demos.length}</b> demo</span>
+         <span class="pill">🚀 <b>${live.length}</b> gyvi</span>`;
     }
-    for (const p of EXTRA_PROJECTS){ (p.live ? live : demos).push(['extra', p]); }
-
-    demoEl.innerHTML = demos.map(([s, t]) =>
-      s === 'extra' ? extraCard(t) : tenantCard(s, t)).join('');
-
-    liveEl.innerHTML = live.length
-      ? live.map(([s, t]) => s === 'extra' ? extraCard(t) : tenantCard(s, t)).join('')
-      : '';
-    if (!live.length){
-      liveEl.outerHTML = `<div class="empty" id="live">
-        Kol kas nėra įdiegtų tikrų klientų.<br>
-        Įdiegus klientą (<code>server: true</code> arba pašalinus <code>preview</code>) jis čia atsiras automatiškai.
-      </div>`;
-    }
-
-    document.getElementById('demoCount').textContent = demos.length;
-    document.getElementById('liveCount').textContent = live.length;
-    document.getElementById('stat').innerHTML =
-      `<span class="pill"><b>${demos.length + live.length}</b> projektai iš viso</span>
-       <span class="pill">🎬 <b>${demos.length}</b> demo</span>
-       <span class="pill">🚀 <b>${live.length}</b> gyvi</span>`;
 
     // click-to-copy passwords -> toast
     document.addEventListener('click', e => {
       const c = e.target.closest('.pass code'); if (c) copy(c.textContent.trim());
     });
+
+    // ── Slaptažodžio vartai (serveris patikrina per Worker /projects-auth) ──
+    // Sąrašas nerenderinamas, kol Worker negrąžina {ok:true}. Atrakinus, sesijai
+    // įsimenama (sessionStorage), kad nereiktų vesti kaskart. PASTABA: tenants.js yra
+    // viešas statinis failas — šie vartai saugo PATOGŲ suvestinį puslapį, ne pačius failus.
+    async function workerBase(){
+      try { const r = await fetch('./counter-endpoint.json'); const j = await r.json();
+            return (j && j.enabled && j.base) ? String(j.base).replace(/\/+$/,'') : ''; }
+      catch { return ''; }
+    }
+    async function tryUnlock(pass){
+      const base = await workerBase();
+      if (!base) return { ok:false, msg:'Serveris nepasiekiamas.' };
+      try {
+        const r = await fetch(base + '/projects-auth', {
+          method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ pass })
+        });
+        if (r.ok) return { ok:true };
+        if (r.status === 429) return { ok:false, msg:'Per daug bandymų. Palaukite ~10 min.' };
+        if (r.status === 503) return { ok:false, msg:'Slaptažodis serveryje nesukonfigūruotas.' };
+        return { ok:false, msg:'Neteisingas slaptažodis.' };
+      } catch { return { ok:false, msg:'Tinklo klaida. Bandykite dar kartą.' }; }
+    }
+
+    const gate = document.getElementById('gate');
+    function openDash(){ gate.classList.add('hide'); renderAll(); }
+
+    if (sessionStorage.getItem('projects_ok') === '1'){
+      openDash();
+    } else {
+      const inp = document.getElementById('gatePass');
+      const btn = document.getElementById('gateBtn');
+      const err = document.getElementById('gateErr');
+      const submit = async () => {
+        err.textContent = ''; btn.disabled = true; btn.textContent = 'Tikrinama…';
+        const res = await tryUnlock(inp.value);
+        btn.disabled = false; btn.textContent = 'Atrakinti';
+        if (res.ok){ sessionStorage.setItem('projects_ok','1'); openDash(); }
+        else { err.textContent = res.msg; inp.select(); }
+      };
+      btn.addEventListener('click', submit);
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+      inp.focus();
+    }
   </script>
 </body>
 </html>
