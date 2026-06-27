@@ -296,11 +296,6 @@
       </div>
 
       <div class="au-sub">
-        <div class="au-sub-head" data-i18n="headBranch">🏆 Pagal įrenginį / filialą</div>
-        <div id="auDevices" class="au-list"></div>
-      </div>
-
-      <div class="au-sub">
         <div class="au-sub-head" data-i18n="headHours">🕐 Užimtumas pagal valandą (visą laiką)</div>
         <div id="auHours"></div>
       </div>
@@ -363,7 +358,6 @@ const S = {
     stamps: 'antsp.', prizes: 'prizai', loadMore: '← slinkite, kad matytumėte senesnius',
     months: ['Saus.','Vas.','Kov.','Bal.','Geg.','Birž.','Liep.','Rugp.','Rugs.','Spal.','Lapkr.','Gruod.'],
     branchAll: 'Visi filialai', viewBranch: 'Rodyti filialą:', setWorkBranch: 'Šis įrenginys yra:',
-    promptBranch: 'Šio įrenginio / filialo pavadinimas (pvz. „Baras", „Senamiestis"):',
     promptRename: 'Įrenginio / filialo pavadinimas:',
     notFound: (s) => `Verslas „${s}" nerastas arba neturi darbuotojo kodo.`,
     noSlug: 'Trūksta verslo nuorodos. Atidarykite: /tools/staff.html?b=slug',
@@ -392,7 +386,6 @@ const S = {
     stamps: 'st.', prizes: 'rewards', loadMore: '← scroll to see older',
     months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
     branchAll: 'All branches', viewBranch: 'Show branch:', setWorkBranch: 'This device is:',
-    promptBranch: 'Name of this device / branch (e.g. “Bar”, “Old Town”):',
     promptRename: 'Device / branch name:',
     notFound: (s) => `Business “${s}” not found or has no staff code.`,
     noSlug: 'Missing business link. Open: /tools/staff.html?b=slug',
@@ -479,8 +472,7 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     $('login').classList.add('hidden');
     $('codeView').classList.remove('hidden');
     tick();
-    initAudit();   // device label, log this login, render audit stats
-    initDevices(); // device-management panel (block lost/unknown, lock to approved)
+    initAudit();   // device label, log this login, render audit + per-device stats
   }
 
   // Resolve the optional server (shared by the anonymous counter + the audit log).
@@ -498,6 +490,22 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   // ===== STAFF-DEVICE LOG (this client's own terminal, NOT customers) =====
   const devKey = `lojalumas_device_${slug}`;
   function deviceLabel() { return localStorage.getItem(devKey) || ''; }
+  // A friendly default name auto-detected from the device, so staff don't have to type
+  // anything (they can still rename it to a branch via "keisti/change"). UA model strings
+  // are coarse — iOS only ever says iPhone/iPad — but good enough as a starting label.
+  function detectModel() {
+    const ua = navigator.userAgent || '';
+    if (/iPad/.test(ua)) return 'iPad';
+    if (/iPhone/.test(ua)) return 'iPhone';
+    if (/Android/.test(ua)) {
+      const m = ua.match(/Android[^;]*;\s?([^;)]+?)\s*(?:build|\))/i);
+      const name = (m && m[1] || '').trim();
+      return (name && !/^wv$/i.test(name)) ? name.slice(0, 40) : 'Android';
+    }
+    if (/Macintosh/.test(ua)) return 'Mac';
+    if (/Windows/.test(ua)) return 'Windows';
+    return lang === 'en' ? 'Terminal' : 'Terminalas';
+  }
   // Current GPS reading (used ONLY transiently to pass to the Worker's geofence check
   // for a server tenant — "check, don't store": coords are never saved anywhere).
   function getPos() {
@@ -529,11 +537,9 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     // stats ARE coming (server on + audit available), but seeding + geolocation can take
     // several seconds — show an indeterminate loading bar so staff aren't left waiting blank.
     showStatsLoading();
-    // ensure a device label exists (prompt once)
-    if (!deviceLabel()) {
-      const name = (prompt(tr('promptBranch'), '') || '').trim();
-      if (name) localStorage.setItem(devKey, name.slice(0, 60));
-    }
+    // Default this device's label to its auto-detected model (no prompt); staff can rename
+    // it to a branch with "keisti/change".
+    if (!deviceLabel()) localStorage.setItem(devKey, detectModel().slice(0, 60));
     $('devName').textContent = deviceLabel() || '—';
     await logLogin(base);
     // PREVIEW: if this tenant's log is empty, seed sample events so a prospect sees a
@@ -762,10 +768,9 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     $('auAll').textContent = T.stampsAll;
     $('auRate').textContent = T.redemptionRate + '%';
     $('auLogins').textContent = T.logins;
-    // branch list is ALWAYS the full set (j.devices isn't filtered server-side)
+    // branch list is ALWAYS the full set (j.devices isn't filtered server-side) — used by
+    // the branch-rename picker and the standalone per-device stats panel.
     knownBranches = j.devices.map((d) => d.device);
-    $('auDevices').innerHTML = j.devices.map((d) =>
-      `<div class="au-dev ${d.device === branchFilter ? 'on' : ''}"><b>${d.device}</b><span>${d.stamps} ${tr('stamps')} · ${d.redeems} ${tr('prizes')}${d.city ? ' · ' + d.city : ''}</span></div>`).join('') || '<div class="au-dev">—</div>';
     // Busy hours: clear "14:00" labels (not bare "14"). Weekly trend: the week's
     // start DATE ("Geg. 26") instead of a bare week number.
     mountChart($('auHours'), j.hours, (h) => `${String(h.hh).padStart(2, '0')}:00`);
@@ -785,7 +790,7 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   async function renderAudit(base) {
     auditBase = base;
     const j = await paintStats(base);
-    if (j) renderBranchChips(j.devices);
+    if (j) { renderBranchChips(j.devices); renderDeviceStats(j.devices); }
     $('audit').classList.remove('hidden');
   }
 
@@ -797,92 +802,33 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     if (tog) tog.textContent = $('audit').open ? tr('auHide') : tr('auShow');
   });
 
-  // ===== DEVICE MANAGEMENT (block a lost/unknown device; lock to approved only) =====
-  // Real for a server tenant (Worker-backed, token identity); SIMULATED for a preview/demo
-  // tenant (localStorage) so a prospect can see + try the feature without a backend.
+  // ===== DEVICE STATS (per-device / per-branch stamp counts) =====
+  // A simple, encouraging breakdown — today / 7 d / 30 d / total stamps per terminal.
+  // Same data as the audit panel's device list (one /audit fetch), shown as its own
+  // collapsible list. The CURRENT device is tagged so staff know which row is theirs.
   const escD = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   $('devices').addEventListener('toggle', () => {
     const tog = $('devices').querySelector('.audit-toggle');
     if (tog) tog.textContent = $('devices').open ? tr('auHide') : tr('auShow');
   });
-
-  async function devApi(path, opts = {}) {
-    const base = await resolveCounter();
-    if (!base) return null;
-    try {
-      const r = await fetch(`${base}${path}`, { ...opts, headers: { 'x-staff-pass': staffPass, ...(opts.headers || {}) } });
-      return await r.json();
-    } catch { return null; }
-  }
-  // Preview/demo: a localStorage-backed fake device list so the panel is fully interactive.
-  const simKey = `lojalumas_simdev_${slug}`;
-  function simState() {
-    let s = null; try { s = JSON.parse(localStorage.getItem(simKey) || 'null'); } catch {}
-    if (!s) {
-      const names = (tenant.demo_branches && tenant.demo_branches.length)
-        ? tenant.demo_branches.map((b) => b.name) : ['Baras', 'Salė'];
-      s = { lock: false, devices: names.slice(0, 2).map((n, i) => ({ id: 'sim' + i, label: n, status: 'approved', last: '2026-06-27' })) };
-      s.devices.push({ id: 'simx', label: lang === 'en' ? 'Unknown device' : 'Nežinomas įrenginys', status: 'approved', last: '2026-06-25' });
-      localStorage.setItem(simKey, JSON.stringify(s));
-    }
-    return s;
-  }
-  function simSave(s) { localStorage.setItem(simKey, JSON.stringify(s)); }
-
-  async function loadDevices() {
-    if (isServerTenant) {
-      const j = await devApi(`/staffdevices?b=${encodeURIComponent(slug)}`);
-      return j && j.ok ? { devices: j.devices, lock: j.lock } : null;
-    }
-    return simState();
-  }
-  function renderDevices(state) {
-    $('lockToggle').checked = !!state.lock;
-    const myId = isServerTenant ? thisDevId() : 'sim0';
+  // Render the device list from the audit endpoint's `devices` array (always the full,
+  // unfiltered set). Called by renderAudit so it stays in sync with one fetch.
+  function renderDeviceStats(devices) {
+    const me = deviceLabel();
     const list = $('devList');
-    if (!state.devices || !state.devices.length) {
+    if (!devices || !devices.length) {
       list.innerHTML = `<div class="dev-item"><span class="dev-meta">${tr('devNone')}</span></div>`;
       return;
     }
-    list.innerHTML = state.devices.map((d) => {
-      const isThis = d.id === myId;
-      const badge = d.status === 'blocked' ? 'blocked' : (d.status === 'pending' ? 'pending' : 'approved');
-      const badgeTxt = d.status === 'blocked' ? tr('stBlocked') : (d.status === 'pending' ? tr('stPending') : tr('stApproved'));
-      let action = '';
-      if (isThis) action = `<span class="dev-this">${tr('thisDevice')}</span>`;
-      else if (d.status === 'blocked') action = `<button class="dev-act" data-id="${d.id}" data-act="approve">${tr('btnUnblock')}</button>`;
-      else if (d.status === 'pending') action = `<button class="dev-act" data-id="${d.id}" data-act="approve">${tr('btnApprove')}</button>`;
-      else action = `<button class="dev-act danger" data-id="${d.id}" data-act="block">${tr('btnBlock')}</button>`;
-      return `<div class="dev-item ${d.status === 'blocked' ? 'blocked' : ''}">
-        <div class="dev-info"><div class="dev-name">${escD(d.label)}</div><div class="dev-meta">${tr('devSeen')} ${escD(d.last || '—')}</div></div>
-        <span class="dev-badge ${badge}">${badgeTxt}</span>${action}</div>`;
-    }).join('');
-    list.querySelectorAll('.dev-act').forEach((b) => { b.onclick = () => onDevAction(b.dataset.id, b.dataset.act); });
-  }
-  async function onDevAction(id, act) {
-    if (act === 'block' && !confirm(tr('devConfirmBlock'))) return;
-    if (isServerTenant) {
-      await devApi(`/staffdevice?b=${encodeURIComponent(slug)}&id=${encodeURIComponent(id)}&action=${act}`, { method: 'POST' });
-      const s = await loadDevices(); if (s) renderDevices(s);
-    } else {
-      const s = simState(); const d = s.devices.find((x) => x.id === id);
-      if (d) d.status = act === 'block' ? 'blocked' : 'approved';
-      simSave(s); renderDevices(s);
-    }
-  }
-  $('lockToggle').onchange = async () => {
-    const on = $('lockToggle').checked;
-    if (isServerTenant) await devApi(`/stafflock?b=${encodeURIComponent(slug)}&on=${on ? 1 : 0}`, { method: 'POST' });
-    else { const s = simState(); s.lock = on; simSave(s); }
-  };
-  async function initDevices() {
-    if (!isServerTenant && !isPreview) return; // static non-preview: no panel
-    const state = await loadDevices();
-    if (!state) return;                        // server off / not provisioned -> hide
-    renderDevices(state);
+    const cell = (v, l) => `<div class="dev-stat"><b>${v || 0}</b><span>${l}</span></div>`;
+    list.innerHTML = devices.map((d) => `
+      <div class="dev-item">
+        <div class="dev-name">${escD(d.device)}${d.device === me ? `<span class="dev-this">${tr('thisDevice')}</span>` : ''}</div>
+        <div class="dev-stats">
+          ${cell(d.today, tr('lblToday'))}${cell(d.d7, tr('lbl7d'))}${cell(d.d30, tr('lbl30d'))}${cell(d.stamps, tr('lblAll'))}
+        </div>
+      </div>`).join('');
     $('devices').classList.remove('hidden');
-    const prev = onLangChange;                 // re-render on LT/EN switch too
-    onLangChange = async () => { if (prev) await prev(); const s = await loadDevices(); if (s) renderDevices(s); };
   }
 
   // Pick which filialas THIS device is — choose an existing branch or type a new one.
@@ -920,19 +866,9 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   let staffPass = '';                          // server tenant: kept in memory only, never stored
   let serverCode = { code: '', period: -1 };    // cache the current period's code
   const periodNow = () => Math.floor(Date.now() / 1000 / TOTP_PERIOD);
-  // This device's random identity token (NOT the label) + its short public id, persisted
-  // so blocking it on the server actually sticks (re-typing a label can't bypass it).
-  const devTokenKey = `lojalumas_devtoken_${slug}`;
-  const devIdKey = `lojalumas_devid_${slug}`;
-  function devToken() { return localStorage.getItem(devTokenKey) || ''; }
-  function thisDevId() { return localStorage.getItem(devIdKey) || ''; }
-  function storeDevIdentity(j) {
-    if (j && j.token) localStorage.setItem(devTokenKey, j.token);
-    if (j && j.id) localStorage.setItem(devIdKey, j.id);
-  }
 
   function setCodeError(error) {
-    const map = { offsite: 'errOffsite', need_location: 'errNeedLoc', device_revoked: 'errRevoked', device_pending: 'errPending', net: 'errNet' };
+    const map = { offsite: 'errOffsite', need_location: 'errNeedLoc', net: 'errNet' };
     $('codeErr').textContent = tr(map[error] || 'errNet');
     $('qr').removeAttribute('src'); $('qr').dataset.code = '';
     $('secs').textContent = '';
@@ -940,20 +876,17 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   function clearCodeError() { $('codeErr').textContent = ''; }
 
   // Ask the Worker for the current code. Returns the JSON ({ok,code,...} or {ok:false,error}).
+  // `device` is just a label for the per-device stats; geofence is the only staff gate.
   async function fetchServerCode() {
     const base = await resolveCounter();
     if (!base) return { ok: false, error: 'net' };
     const pos = await getPos();                 // transient; only sent for the geofence check
     const dev = deviceLabel() || 'terminal';
     let url = `${base}/staffcode?b=${encodeURIComponent(slug)}&device=${encodeURIComponent(dev)}`;
-    const tok = devToken();
-    if (tok) url += `&token=${encodeURIComponent(tok)}`;
     if (pos) url += `&lat=${pos.lat}&lon=${pos.lon}`;
     try {
       const r = await fetch(url, { method: 'POST', headers: { 'x-staff-pass': staffPass } });
-      const j = await r.json();
-      storeDevIdentity(j); // the server returns this device's token/id even on geofence/pending errors
-      return j;
+      return await r.json();
     } catch { return { ok: false, error: 'net' }; }
   }
 
@@ -992,7 +925,7 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
       if (j.ok) { serverCode = { code: j.code, period: periodNow() }; showCode(); return; }
       staffPass = '';
       $('loginErr').textContent = tr(
-        { bad_pass: 'badPass', offsite: 'errOffsite', need_location: 'errNeedLoc', device_revoked: 'errRevoked', device_pending: 'errPending' }[j.error] || 'errNet'
+        { bad_pass: 'badPass', offsite: 'errOffsite', need_location: 'errNeedLoc' }[j.error] || 'errNet'
       );
       $('pass').value = '';
       return;

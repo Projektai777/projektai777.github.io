@@ -18,7 +18,7 @@
 //    PAŠALINKITE `staff_secret` + `staff_pass_hash` iš šio failo. Paslaptis ir
 //    antspaudų skaičius lieka TIK Worker'yje (žr. worker/README.md → /admin/tenant),
 //    todėl klientas negali jų perskaityti ar suklastoti. Antspaudui pridėti reikia
-//    interneto (kortelė rodoma ir be jo). Geofence + įrenginių sąrašas — Worker'yje.
+//    interneto (kortelė rodoma ir be jo). Geofence + antspaudų statistika pagal įrenginį — Worker'yje.
 //    Įdiegimo žingsniai: worker/README.md „Going live (secure tier)".
 // =============================================================
 
@@ -159,7 +159,7 @@ export default {
   //   primary_color: '#0ea5e9',
   //   stamps_needed: 5,
   //   reward_text: 'Nemokamas plovimas',
-  //   server: true, // paslaptis + antspaudų skaičius Worker'yje; geofence/įrenginiai ten pat
+  //   server: true, // paslaptis + antspaudų skaičius Worker'yje; geofence + statistika pagal įrenginį ten pat
   // },
 
 };
