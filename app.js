@@ -1,6 +1,6 @@
 // =============================================================
 // Lojalumas — multi-tenant PWA stamp card
-// Tenant is resolved from the URL path:  kortele.lt/coffeebox
+// Tenant is resolved from the URL path:  kortele.lt/kavine
 // All branding/config comes from the tenant_public view.
 //
 // Stamps are authorised with a ROTATING staff code (TOTP, see totp.js):
