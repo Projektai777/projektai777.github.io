@@ -134,13 +134,10 @@
   .stats-nums-3 .stat { padding: 12px 6px; }
   .stats-nums-3 { margin-top: 10px; }
   .stat-sm .stat-val { font-size: 1.4rem; }
-  .stat-warn { color: #dc2626 !important; }
   .device-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px; }
   .dev-label { font-size: .78rem; color: #78716c; }
   .dev-name { font-size: .85rem; font-weight: 700; color: var(--text); }
   .dev-edit { font-size: .72rem; color: var(--brand); background: none; border: 1px solid #e7e5e4; padding: 5px 11px; width: auto; margin: 0; border-radius: 9px; font-weight: 600; }
-  .geo-btn { font-size: .78rem; color: #57534e; background: #faf9f8; border: 1px solid #e7e5e4; padding: 9px 12px; border-radius: 12px; margin-top: 2px; width: auto; }
-  .geo-state { font-size: .72rem; color: #78716c; margin-top: 6px; min-height: 1em; }
   .au-sub { margin-top: 16px; text-align: left; }
   .au-sub-head { font-size: .78rem; font-weight: 700; color: #57534e; margin-bottom: 8px; }
   .au-list { display: flex; flex-direction: column; gap: 6px; }
@@ -513,11 +510,12 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     }
     $('devName').textContent = deviceLabel() || '—';
     await logLogin(base);
-    // PREVIEW: if this tenant's log is empty, seed a few sample events so a prospect
-    // sees a populated multi-branch dashboard (incl. a 🚩 off-site flag + a 2nd
-    // branch) instead of empty zeros. Seeds under THIS slug (not always demo), so a
-    // branded preview like berneliai shows its own populated stats. Real go-live
-    // clients (preview removed) never seed.
+    // PREVIEW: if this tenant's log is empty, seed sample events so a prospect sees a
+    // populated multi-branch dashboard (busy hours, per-branch totals, weekly trend)
+    // instead of empty zeros. Seeds under THIS slug (not always demo), so a branded
+    // preview like berneliai shows its own populated stats. Real go-live clients
+    // (preview removed) never seed — their per-branch stats fill in automatically as
+    // customers scan (the Worker attributes each stamp to the staff device's code).
     if (isPreview) {
       let cur; try { cur = await (await fetch(`${base}/audit?b=${encodeURIComponent(slug)}`, { cache: 'no-store' })).json(); } catch {}
       if (cur && cur.ok && (cur.totals.stampsAll || 0) === 0) await seedSample(base);
@@ -534,8 +532,8 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   // no thousands of POSTs. Backdated timestamps are preview-only on the worker, so this
   // can never touch a real client's append-only log.
   // Shape: typical restaurant hours (lunch 11–15 + dinner 17–22 peaks), weekends busier
-  // than weekdays, three Vilnius branches, a steady ~15–20% reward rate, a believable
-  // number of daily staff logins, and ONE rare off-site 🚩 anomaly across the year.
+  // than weekdays, three Vilnius branches, a steady ~15–20% reward rate, and a believable
+  // number of daily staff logins.
   async function seedSample(base) {
     // Deterministic pseudo-random so each demo looks identical (no Math.random).
     let s = 20260601; const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
@@ -553,7 +551,7 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
       return d.toISOString();
     };
     const events = [];
-    const add = (device, action, ts, geofar, city) => events.push({ device, action, ts, geofar, city });
+    const add = (device, action, ts, _unused, city) => events.push({ device, action, ts, city });
     // Branch list comes from the tenant (`demo_branches`) so every chain shows its OWN
     // real locations; falls back to three generic Vilnius branches. `w` = volume weight
     // (first entry is treated as the flagship). Keeps demos separate per tenant.
