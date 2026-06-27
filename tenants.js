@@ -10,6 +10,16 @@
 // staff_pass_hash = SHA-256("slug:slaptažodis") — darbuotojo puslapio
 //                   slaptažodis (atrakina /tools/staff.html). Pats
 //                   slaptažodis niekur nesaugomas.
+//
+// DU REŽIMAI:
+//  • STATINIS (demo / pardavimų peržiūra) — `staff_secret` ČIA, kortelė veikia be
+//    serverio. Tinka demonstracijoms; antspaudų skaičius saugomas telefone.
+//  • SERVERINIS / SAUGUS (tikram klientui, įdiegus) — pridėkite `server: true` IR
+//    PAŠALINKITE `staff_secret` + `staff_pass_hash` iš šio failo. Paslaptis ir
+//    antspaudų skaičius lieka TIK Worker'yje (žr. worker/README.md → /admin/tenant),
+//    todėl klientas negali jų perskaityti ar suklastoti. Antspaudui pridėti reikia
+//    interneto (kortelė rodoma ir be jo). Geofence + įrenginių sąrašas — Worker'yje.
+//    Įdiegimo žingsniai: worker/README.md „Going live (secure tier)".
 // =============================================================
 
 export default {
@@ -130,6 +140,7 @@ export default {
     staff_pass_hash: 'd7c89cdfdb36ffd19be0e9de7dd6376a4b2a738852b82dee9005d82f6c9524dc', // /tools/staff.html slaptažodis: rugile2026
   },
 
+  // STATINIS pavyzdys (demo / peržiūra) — paslaptis čia:
   // kitasverslas: {
   //   business_name: 'Plovykla PRO',
   //   logo_url: '/logos/plovykla.png',
@@ -138,6 +149,17 @@ export default {
   //   reward_text: 'Nemokamas plovimas',
   //   staff_secret: '...',
   //   staff_pass_hash: '...',
+  // },
+
+  // SERVERINIS / SAUGUS pavyzdys (tikram klientui) — JOKIO staff_secret/staff_pass_hash
+  // čia; jie gyvena tik Worker'yje (provisioned per /admin/tenant). Pridėkite `server: true`:
+  // realusklientas: {
+  //   business_name: 'Plovykla PRO',
+  //   logo_url: '/logos/plovykla.png',
+  //   primary_color: '#0ea5e9',
+  //   stamps_needed: 5,
+  //   reward_text: 'Nemokamas plovimas',
+  //   server: true, // paslaptis + antspaudų skaičius Worker'yje; geofence/įrenginiai ten pat
   // },
 
 };
