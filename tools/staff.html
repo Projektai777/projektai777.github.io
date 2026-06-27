@@ -143,26 +143,17 @@
   .au-list { display: flex; flex-direction: column; gap: 6px; }
   .au-dev { display: flex; justify-content: space-between; gap: 8px; font-size: .76rem; background: #faf9f8; border: 1px solid #f0efed; border-radius: 8px; padding: 7px 10px; }
   .au-dev span { color: #78716c; text-align: right; }
-  /* ---------- devices panel ---------- */
+  /* ---------- devices panel (per-device stamp stats) ---------- */
   .dev-lead { font-size: .78rem; color: #78716c; text-align: left; line-height: 1.45; margin-bottom: 12px; }
-  .lock-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #faf9f8; border: 1px solid #f0efed; border-radius: 14px; padding: 12px 14px; cursor: pointer; }
-  .lock-row > span:first-child { display: flex; flex-direction: column; gap: 2px; text-align: left; }
-  .lock-title { font-size: .82rem; font-weight: 700; color: var(--text); }
-  .lock-hint { font-size: .68rem; color: #a8a29e; line-height: 1.35; }
-  .lock-row input { width: auto; margin: 0; transform: scale(1.3); accent-color: var(--brand); }
-  .dev-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
-  .dev-item { display: flex; align-items: center; gap: 10px; background: #faf9f8; border: 1px solid #f0efed; border-radius: 12px; padding: 10px 12px; }
-  .dev-item.blocked { opacity: .7; }
-  .dev-info { flex: 1; text-align: left; min-width: 0; }
-  .dev-item .dev-name { font-size: .85rem; font-weight: 700; color: var(--text); }
+  .dev-list { display: flex; flex-direction: column; gap: 8px; }
+  .dev-item { background: #faf9f8; border: 1px solid #f0efed; border-radius: 12px; padding: 10px 12px; text-align: left; }
+  .dev-item .dev-name { font-size: .85rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .dev-this { font-size: .6rem; color: #78716c; font-weight: 700; background: #fff; border: 1px solid #e7e5e4; border-radius: 999px; padding: 1px 7px; }
+  .dev-stats { display: flex; gap: 6px; margin-top: 8px; }
+  .dev-stat { flex: 1; background: #fff; border: 1px solid #f0efed; border-radius: 9px; padding: 6px 4px; text-align: center; }
+  .dev-stat b { display: block; font-size: 1rem; font-weight: 800; color: var(--brand); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .dev-stat span { display: block; font-size: .58rem; color: #a8a29e; margin-top: 2px; }
   .dev-meta { font-size: .68rem; color: #a8a29e; margin-top: 2px; }
-  .dev-badge { font-size: .62rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
-  .dev-badge.approved { color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; }
-  .dev-badge.blocked { color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; }
-  .dev-badge.pending { color: #b45309; background: #fffbeb; border: 1px solid #fde68a; }
-  .dev-act { font-size: .72rem; font-weight: 700; width: auto; margin: 0; padding: 7px 12px; border-radius: 10px; border: 1px solid #e7e5e4; background: #fff; color: var(--brand); }
-  .dev-act.danger { color: #b91c1c; border-color: #fecaca; }
-  .dev-this { font-size: .62rem; color: #78716c; font-weight: 700; white-space: nowrap; }
   /* ---------- bar charts (stamps + redemptions, two stacked series) ----------
      --c-stamp / --c-redeem are defined in :root above. amber = "reward redeemed". */
   .au-legend { display: flex; gap: 16px; justify-content: flex-end; margin: -2px 0 8px; }
@@ -321,15 +312,11 @@
       </div><!-- /au-stats-body -->
     </details>
 
-    <!-- DEVICES: the staff devices that can show the code. Owner can block a lost/unknown
-         one and lock the card to approved devices only. Hidden unless available. -->
+    <!-- DEVICES: per-device (terminal/branch) stamp counts. A simple, encouraging
+         breakdown — today / 7 d / 30 d / total. Hidden unless stats are available. -->
     <details id="devices" class="stats audit-panel hidden">
       <summary class="stats-head audit-summary"><span data-i18n="devTitle">🖥️ Įrenginiai</span> <span class="audit-toggle" data-i18n="auShow">rodyti ▾</span></summary>
-      <p class="dev-lead" data-i18n="devLead">Įrenginiai, kuriais darbuotojai rodo kodą. Pamestą ar svetimą galite užblokuoti.</p>
-      <label class="lock-row">
-        <span><span class="lock-title" data-i18n="lockLabel">Tik patvirtinti įrenginiai</span><span class="lock-hint" data-i18n="lockHint">Įjungus, naujas nepažįstamas įrenginys negaus kodo, kol jo nepatvirtinsite.</span></span>
-        <input type="checkbox" id="lockToggle">
-      </label>
+      <p class="dev-lead" data-i18n="devLead">Antspaudai pagal įrenginį / filialą. Pavadinimą galite pakeisti į filialą.</p>
       <div id="devList" class="dev-list"></div>
     </details>
 
@@ -367,13 +354,10 @@ const S = {
     headStamps: '📊 Antspaudai', headAllTime: '📋 Iš viso (per visą laiką)',
     clearSample: '🗑️ Išvalyti pavyzdinę statistiką', clearing: 'Valoma…', lock: 'Užrakinti',
     errOffsite: '📍 Šį kodą galima rodyti tik įstaigoje.', errNeedLoc: '📍 Įjunkite vietos nustatymą, kad matytumėte kodą.',
-    errRevoked: '🚫 Šis įrenginys užblokuotas. Kreipkitės į vadovą.', errNet: '⚠️ Nėra ryšio. Bandykite dar kartą.',
-    errPending: '⏳ Šis įrenginys laukia patvirtinimo. Patvirtinkite jį iš kito (jau patvirtinto) įrenginio „Įrenginiai" sąraše.',
-    devTitle: '🖥️ Įrenginiai', devLead: 'Įrenginiai, kuriais darbuotojai rodo kodą. Pamestą ar svetimą galite užblokuoti.',
-    lockLabel: 'Tik patvirtinti įrenginiai', lockHint: 'Įjungus, naujas nepažįstamas įrenginys negaus kodo, kol jo nepatvirtinsite.',
-    thisDevice: '(šis įrenginys)', btnBlock: 'Blokuoti', btnUnblock: 'Atblokuoti', btnApprove: 'Patvirtinti',
-    stApproved: 'patvirtintas', stBlocked: 'užblokuotas', stPending: 'laukia patvirtinimo',
-    devNone: 'Kol kas nėra įrenginių.', devSeen: 'matytas', devConfirmBlock: 'Užblokuoti šį įrenginį? Jis nebegalės rodyti kodo.',
+    errNet: '⚠️ Nėra ryšio. Bandykite dar kartą.',
+    devTitle: '🖥️ Įrenginiai', devLead: 'Antspaudai pagal įrenginį / filialą. Pavadinimą galite pakeisti į filialą.',
+    thisDevice: 'šis', devNone: 'Kol kas nėra įrenginių.', devSeen: 'matytas',
+    lbl30d: '30 d.',
     statsLoading: 'Netrukus galėsite peržiūrėti statistiką',
     legStamps: 'Antspaudai', legPrizes: 'Prizai', noData: 'Dar nėra duomenų.',
     stamps: 'antsp.', prizes: 'prizai', loadMore: '← slinkite, kad matytumėte senesnius',
@@ -400,13 +384,10 @@ const S = {
     headStamps: '📊 Stamps', headAllTime: '📋 All-time totals',
     clearSample: '🗑️ Clear sample stats', clearing: 'Clearing…', lock: 'Lock',
     errOffsite: '📍 This code can only be shown at the venue.', errNeedLoc: '📍 Enable location to show the code.',
-    errRevoked: '🚫 This device is blocked. Contact your manager.', errNet: '⚠️ No connection. Please try again.',
-    errPending: '⏳ This device is awaiting approval. Approve it from another (already approved) device in the “Devices” list.',
-    devTitle: '🖥️ Devices', devLead: 'Devices your staff use to show the code. Block a lost or unknown one.',
-    lockLabel: 'Only approved devices', lockHint: 'When on, a new unknown device gets no code until you approve it.',
-    thisDevice: '(this device)', btnBlock: 'Block', btnUnblock: 'Unblock', btnApprove: 'Approve',
-    stApproved: 'approved', stBlocked: 'blocked', stPending: 'awaiting approval',
-    devNone: 'No devices yet.', devSeen: 'seen', devConfirmBlock: 'Block this device? It will no longer be able to show the code.',
+    errNet: '⚠️ No connection. Please try again.',
+    devTitle: '🖥️ Devices', devLead: 'Stamps by device / branch. You can rename a device to a branch.',
+    thisDevice: 'this', devNone: 'No devices yet.', devSeen: 'seen',
+    lbl30d: '30 d.',
     legStamps: 'Stamps', legPrizes: 'Rewards', noData: 'No data yet.',
     stamps: 'st.', prizes: 'rewards', loadMore: '← scroll to see older',
     months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
