@@ -1576,6 +1576,20 @@ function toast(text, isError = false) {
   setTimeout(() => el.remove(), 2500);
 }
 
+// Resolve once the page is fully loaded AND has had a couple of paint frames, so a
+// stamp granted straight off a scan (?grant=CODE) doesn't animate before the
+// customer can see the card. Capped so a slow hero image never blocks the stamp.
+function whenPagePainted(maxWait = 1800) {
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = () => { if (!done) { done = true; resolve(); } };
+    const afterPaint = () => requestAnimationFrame(() => requestAnimationFrame(finish));
+    if (document.readyState === 'complete') afterPaint();
+    else window.addEventListener('load', afterPaint, { once: true });
+    setTimeout(finish, maxWait); // safety cap: never wait forever on a heavy image
+  });
+}
+
 // ---------- boot ----------
 (async () => {
   document.documentElement.lang = lang;
