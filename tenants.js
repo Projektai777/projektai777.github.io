@@ -25,7 +25,7 @@
 export default {
 
   demo: {
-    business_name: 'Coffee Box Kaunas',
+    business_name: 'Demonstracinė kavinė',
     logo_url: '',                       // tuščia = rodoma pirma raidė
     primary_color: '#FF5733',
     stamps_needed: 10,
