@@ -1,0 +1,273 @@
+<!doctype html>
+<!-- © 2026 Lojalumas. All rights reserved. Proprietary — see LICENSE.
+     INTERNAL INDEX of every demo + live project in the workspace.
+     AUTO-GENERATED from public/tenants.js — a new tenant there shows up here
+     automatically (demos = preview:true or slug 'demo'; live = everything else).
+     For a project that is NOT a tenants.js entry, add it to EXTRA_PROJECTS below. -->
+<html lang="lt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#1f2937">
+  <title>Lojalumas — projektai</title>
+  <style>
+    :root{
+      --bg:#0f1525; --panel:#161d31; --panel2:#1c2540; --line:#28304b;
+      --txt:#eef2ff; --muted:#9aa6c8; --accent:#5b8cff; --good:#34d399;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background:radial-gradient(1200px 600px at 50% -200px,#1a2340,var(--bg)) fixed;
+      color:var(--txt); -webkit-font-smoothing:antialiased; padding:0 16px 64px;
+    }
+    .wrap{max-width:1000px; margin:0 auto}
+    header{padding:40px 4px 12px; text-align:center}
+    header h1{margin:0 0 6px; font-size:30px; letter-spacing:-.02em}
+    header p{margin:0; color:var(--muted)}
+    .stat{display:inline-flex; gap:14px; margin-top:14px; flex-wrap:wrap; justify-content:center}
+    .stat b{color:var(--txt)}
+    .pill{
+      background:var(--panel); border:1px solid var(--line); border-radius:999px;
+      padding:6px 14px; font-size:13px; color:var(--muted)
+    }
+    section{margin-top:34px}
+    .sec-head{display:flex; align-items:center; gap:10px; margin:0 4px 14px}
+    .sec-head h2{margin:0; font-size:19px}
+    .sec-head .count{
+      font-size:13px; color:var(--muted); background:var(--panel);
+      border:1px solid var(--line); border-radius:999px; padding:2px 10px
+    }
+    .sec-head .bar{flex:1; height:1px; background:var(--line)}
+    .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:14px}
+    .card{
+      background:linear-gradient(180deg,var(--panel2),var(--panel));
+      border:1px solid var(--line); border-radius:16px; padding:16px;
+      display:flex; flex-direction:column; gap:12px; min-width:0;
+    }
+    .card-top{display:flex; align-items:center; gap:12px; min-width:0}
+    .logo{
+      width:48px; height:48px; border-radius:12px; flex:0 0 48px; object-fit:cover;
+      display:grid; place-items:center; font-weight:800; font-size:20px; color:#fff;
+      border:1px solid rgba(255,255,255,.12); overflow:hidden; background:#333;
+    }
+    .meta{min-width:0}
+    .meta .name{font-weight:700; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .meta .slug{font-size:12px; color:var(--muted); font-family:ui-monospace,Menlo,Consolas,monospace}
+    .reward{font-size:13px; color:var(--muted); margin:-2px 0 0}
+    .reward .tag{
+      display:inline-block; background:rgba(91,140,255,.12); border:1px solid rgba(91,140,255,.3);
+      color:#bcd0ff; border-radius:7px; padding:1px 7px; font-size:11px; margin-right:6px
+    }
+    .links{display:flex; flex-wrap:wrap; gap:7px; margin-top:auto}
+    .links a{
+      flex:1 1 auto; text-align:center; text-decoration:none; font-size:13px; font-weight:600;
+      padding:9px 10px; border-radius:10px; background:var(--bg); color:var(--txt);
+      border:1px solid var(--line); transition:.12s;
+    }
+    .links a:hover{border-color:var(--accent); background:#10182b}
+    .links a.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+    .links a.primary:hover{filter:brightness(1.08)}
+    .pass{
+      font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px; flex-wrap:wrap
+    }
+    .pass code{
+      background:var(--bg); border:1px solid var(--line); border-radius:6px;
+      padding:2px 7px; color:#ffd; font-family:ui-monospace,Menlo,Consolas,monospace; cursor:pointer
+    }
+    .empty{
+      border:1px dashed var(--line); border-radius:16px; padding:26px; text-align:center;
+      color:var(--muted); background:rgba(255,255,255,.015)
+    }
+    .extra .links a{flex-basis:100%}
+    footer{margin-top:48px; text-align:center; color:var(--muted); font-size:12px}
+    a.ext{color:var(--accent)}
+    .toast{
+      position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(20px);
+      background:var(--good); color:#04210f; padding:10px 18px; border-radius:10px;
+      font-weight:700; opacity:0; transition:.22s; pointer-events:none
+    }
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>🗂️ Lojalumas — projektai</h1>
+      <p>Visos demonstracijos ir tikri klientai vienoje vietoje.</p>
+      <div class="stat" id="stat"></div>
+    </header>
+
+    <section id="demosSec">
+      <div class="sec-head">
+        <h2>🎬 Demonstracijos</h2>
+        <span class="count" id="demoCount">0</span>
+        <span class="bar"></span>
+      </div>
+      <div class="grid" id="demos"></div>
+    </section>
+
+    <section id="liveSec">
+      <div class="sec-head">
+        <h2>🚀 Tikri klientai (gyvi)</h2>
+        <span class="count" id="liveCount">0</span>
+        <span class="bar"></span>
+      </div>
+      <div class="grid" id="live"></div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <h2>🛠️ Įrankiai</h2>
+        <span class="bar"></span>
+      </div>
+      <div class="grid">
+        <div class="card extra">
+          <div class="card-top">
+            <div class="logo" style="background:#2d3a5e">⚙️</div>
+            <div class="meta"><div class="name">Naujo verslo paruošimas</div>
+              <div class="slug">tools/setup.html</div></div>
+          </div>
+          <p class="reward">Sugeneruoja staff_secret + slaptažodžio hash naujam klientui.</p>
+          <div class="links"><a href="./tools/setup.html">Atidaryti →</a></div>
+        </div>
+        <div class="card extra">
+          <div class="card-top">
+            <div class="logo" style="background:#2d3a5e">🔑</div>
+            <div class="meta"><div class="name">Darbuotojo QR puslapis</div>
+              <div class="slug">tools/staff.html</div></div>
+          </div>
+          <p class="reward">Kas 30 s besikeičiantis kodas/QR. Pridėkite <code style="font-size:11px">?b=slug</code>.</p>
+          <div class="links"><a href="./tools/staff.html">Atidaryti →</a></div>
+        </div>
+        <div class="card extra">
+          <div class="card-top">
+            <div class="logo" style="background:#2d3a5e">✉️</div>
+            <div class="meta"><div class="name">Outreach laiškai</div>
+              <div class="slug">tools/outreach.html</div></div>
+          </div>
+          <p class="reward">Mail-merge su atskirais įžanginiais pagal kategoriją.</p>
+          <div class="links"><a href="./tools/outreach.html">Atidaryti →</a></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Gyvas adresas: <a class="ext" href="https://projektai777.github.io/projects.html">projektai777.github.io/projects.html</a><br>
+      Sąrašas atsinaujina automatiškai iš <code>public/tenants.js</code>.
+    </footer>
+  </div>
+
+  <div class="toast" id="toast">Nukopijuota ✓</div>
+
+  <script type="module">
+    import TENANTS from './tenants.js';
+
+    // ── Klasifikacija ──────────────────────────────────────────────
+    // DEMO = preview:true ARBA slug 'demo'.  GYVAS = visa kita (pvz. server:true klientas).
+    const isDemo = (slug, t) => slug === 'demo' || t.preview === true;
+
+    // Ne-tenant projektai (atskiros svetainės/aplikacijos, kurios NĖRA tenants.js įrašai).
+    // Pridėkite čia ranka. live:true -> rodoma „Tikri klientai" skiltyje.
+    const EXTRA_PROJECTS = [
+      // { name:'Pavyzdys', slug:'—', live:true, url:'https://...', reward:'Aprašymas' },
+    ];
+
+    const toast = (msg) => {
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 1300);
+    };
+    const copy = (txt) => navigator.clipboard?.writeText(txt).then(() => toast('Nukopijuota ✓')).catch(()=>{});
+
+    const esc = (s='') => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+    function logoHtml(slug, t){
+      const src = t.logo_url || t.icon_url || '';
+      const color = t.primary_color || '#5b8cff';
+      if (src){
+        // tenants.js logo keliai yra reliatyvūs public/ šakniai — toks pat kaip čia.
+        return `<img class="logo" src="${esc(src)}" alt="" loading="lazy"
+                 onerror="this.outerHTML='<div class=&quot;logo&quot; style=&quot;background:${color}&quot;>${esc((t.business_name||slug)[0]||'?').toUpperCase()}</div>'">`;
+      }
+      const letter = esc((t.business_name || slug)[0] || '?').toUpperCase();
+      return `<div class="logo" style="background:${color}">${letter}</div>`;
+    }
+
+    function tenantCard(slug, t){
+      const reward = t.reward_text ? `<span class="tag">🎁</span>${esc(t.reward_text)}` : '';
+      const stamps = t.stamps_needed ? ` · ${t.stamps_needed} antsp.` : '';
+      const pass = (slug === 'demo' || t.preview) && t.staff_demo_pass
+        ? `<div class="pass">🔑 darbuotojo slaptažodis:
+             <code onclick="navigator.clipboard?.writeText('${esc(t.staff_demo_pass)}')">${esc(t.staff_demo_pass)}</code></div>`
+        : '';
+      return `<div class="card">
+        <div class="card-top">
+          ${logoHtml(slug, t)}
+          <div class="meta">
+            <div class="name">${esc(t.business_name || slug)}</div>
+            <div class="slug">?b=${esc(slug)}${stamps}</div>
+          </div>
+        </div>
+        <p class="reward">${reward}</p>
+        <div class="links">
+          <a class="primary" href="./?b=${encodeURIComponent(slug)}">🎴 Kortelė</a>
+          <a href="./?b=${encodeURIComponent(slug)}&view=owner">📊 Savininkui</a>
+          <a href="./tools/staff.html?b=${encodeURIComponent(slug)}">🔑 Darbuotojui</a>
+        </div>
+        ${pass}
+      </div>`;
+    }
+
+    function extraCard(p){
+      return `<div class="card">
+        <div class="card-top">
+          <div class="logo" style="background:#2d3a5e">🌐</div>
+          <div class="meta">
+            <div class="name">${esc(p.name)}</div>
+            <div class="slug">${esc(p.slug || '')}</div>
+          </div>
+        </div>
+        <p class="reward">${esc(p.reward || '')}</p>
+        <div class="links"><a class="primary" href="${esc(p.url)}" target="_blank" rel="noopener">Atidaryti →</a></div>
+      </div>`;
+    }
+
+    // ── Render ─────────────────────────────────────────────────────
+    const demoEl = document.getElementById('demos');
+    const liveEl = document.getElementById('live');
+    const demos = [], live = [];
+
+    for (const [slug, t] of Object.entries(TENANTS)){
+      (isDemo(slug, t) ? demos : live).push([slug, t]);
+    }
+    for (const p of EXTRA_PROJECTS){ (p.live ? live : demos).push(['extra', p]); }
+
+    demoEl.innerHTML = demos.map(([s, t]) =>
+      s === 'extra' ? extraCard(t) : tenantCard(s, t)).join('');
+
+    liveEl.innerHTML = live.length
+      ? live.map(([s, t]) => s === 'extra' ? extraCard(t) : tenantCard(s, t)).join('')
+      : '';
+    if (!live.length){
+      liveEl.outerHTML = `<div class="empty" id="live">
+        Kol kas nėra įdiegtų tikrų klientų.<br>
+        Įdiegus klientą (<code>server: true</code> arba pašalinus <code>preview</code>) jis čia atsiras automatiškai.
+      </div>`;
+    }
+
+    document.getElementById('demoCount').textContent = demos.length;
+    document.getElementById('liveCount').textContent = live.length;
+    document.getElementById('stat').innerHTML =
+      `<span class="pill"><b>${demos.length + live.length}</b> projektai iš viso</span>
+       <span class="pill">🎬 <b>${demos.length}</b> demo</span>
+       <span class="pill">🚀 <b>${live.length}</b> gyvi</span>`;
+
+    // click-to-copy passwords -> toast
+    document.addEventListener('click', e => {
+      const c = e.target.closest('.pass code'); if (c) copy(c.textContent.trim());
+    });
+  </script>
+</body>
+</html>
