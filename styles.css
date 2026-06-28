@@ -203,12 +203,9 @@ h1 { font-size: 1.6rem; letter-spacing: -0.01em; }
   34%     { background-position: 100% 0; } /* swept off the right */
   100%    { background-position: 100% 0; }
 }
-/* Accessibility: users who ask for less motion get the plain fill, no theatrics. */
-@media (prefers-reduced-motion: reduce) {
-  .stamp.filled,
-  .stamp.filled.stamp-fresh { animation: none; }
-  .stamp.filled.stamp-fresh::before { display: none; }
-}
+/* The stamp animation is the core "you earned a stamp" confirmation, so it plays
+   on every device — including PCs with Windows "Show animations" off (which maps to
+   prefers-reduced-motion: reduce). This keeps the card identical on phone and PC. */
 
 .progress { font-weight: 700; font-size: 1.1rem; margin-bottom: 6px; }
 .reward { color: #78716c; font-size: .95rem; }

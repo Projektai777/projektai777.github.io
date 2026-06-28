@@ -203,9 +203,9 @@
         </div>
         <p class="reward">${reward}</p>
         <div class="links">
-          <a class="primary" href="./?b=${encodeURIComponent(slug)}">🎴 Kortelė</a>
-          <a href="./?b=${encodeURIComponent(slug)}&view=owner">📊 Savininkui</a>
-          <a href="./tools/staff.html?b=${encodeURIComponent(slug)}">🔑 Darbuotojui</a>
+          <a class="primary" href="./?b=${encodeURIComponent(slug)}" target="_blank" rel="noopener">🎴 Kortelė</a>
+          <a href="./?b=${encodeURIComponent(slug)}&view=owner" target="_blank" rel="noopener">📊 Savininkui</a>
+          <a href="./tools/staff.html?b=${encodeURIComponent(slug)}" target="_blank" rel="noopener">🔑 Darbuotojui</a>
         </div>
         ${pass}
       </div>`;
@@ -232,6 +232,9 @@
       const demos = [], live = [];
 
       for (const [slug, t] of Object.entries(TENANTS)){
+        // The bare 'demo' slug is just the template for parameterized sales demos
+        // (/?b=demo&n=Name&c=...&r=...), not a real project — don't list its placeholder card.
+        if (slug === 'demo') continue;
         (isDemo(slug, t) ? demos : live).push([slug, t]);
       }
       for (const p of EXTRA_PROJECTS){ (p.live ? live : demos).push(['extra', p]); }
