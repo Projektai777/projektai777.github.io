@@ -189,6 +189,7 @@
     function tenantCard(slug, t){
       const reward = t.reward_text ? `<span class="tag">🎁</span>${esc(t.reward_text)}` : '';
       const stamps = t.stamps_needed ? ` · ${t.stamps_needed} antsp.` : '';
+      const mode = t.poster ? ' · 🪧 statinis QR' : ''; // skiria „ant stalo" versiją nuo darbuotojo-QR
       const pass = (slug === 'demo' || t.preview) && t.staff_demo_pass
         ? `<div class="pass">🔑 darbuotojo slaptažodis:
              <code onclick="navigator.clipboard?.writeText('${esc(t.staff_demo_pass)}')">${esc(t.staff_demo_pass)}</code></div>`
@@ -198,14 +199,16 @@
           ${logoHtml(slug, t)}
           <div class="meta">
             <div class="name">${esc(t.business_name || slug)}</div>
-            <div class="slug">?b=${esc(slug)}${stamps}</div>
+            <div class="slug">?b=${esc(slug)}${stamps}${mode}</div>
           </div>
         </div>
         <p class="reward">${reward}</p>
         <div class="links">
           <a class="primary" href="./?b=${encodeURIComponent(slug)}" target="_blank" rel="noopener">🎴 Kortelė</a>
           <a href="./?b=${encodeURIComponent(slug)}&view=owner" target="_blank" rel="noopener">📊 Savininkui</a>
-          <a href="./tools/staff.html?b=${encodeURIComponent(slug)}" target="_blank" rel="noopener">🔑 Darbuotojui</a>
+          ${t.poster
+            ? `<a href="./?b=${encodeURIComponent(slug)}&q=1" target="_blank" rel="noopener">🪧 QR plakatas</a>`
+            : `<a href="./tools/staff.html?b=${encodeURIComponent(slug)}" target="_blank" rel="noopener">🔑 Darbuotojui</a>`}
         </div>
         ${pass}
       </div>`;
