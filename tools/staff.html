@@ -307,14 +307,6 @@
       </div><!-- /au-stats-body -->
     </details>
 
-    <!-- DEVICES: per-device (terminal/branch) stamp counts. A simple, encouraging
-         breakdown — today / 7 d / 30 d / total. Hidden unless stats are available. -->
-    <details id="devices" class="stats audit-panel hidden">
-      <summary class="stats-head audit-summary"><span data-i18n="devTitle">🖥️ Įrenginiai</span> <span class="audit-toggle" data-i18n="auShow">rodyti ▾</span></summary>
-      <p class="dev-lead" data-i18n="devLead">Antspaudai pagal įrenginį / filialą. Pavadinimą galite pakeisti į filialą.</p>
-      <div id="devList" class="dev-list"></div>
-    </details>
-
     <button class="lock" id="lockBtn" data-i18n="lock">Užrakinti</button>
   </div>
 
@@ -784,46 +776,16 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   async function renderAudit(base) {
     auditBase = base;
     const j = await paintStats(base);
-    if (j) { renderBranchChips(j.devices); renderDeviceStats(j.devices); }
+    if (j) renderBranchChips(j.devices);
     $('audit').classList.remove('hidden');
   }
 
-  // device rename
   // Collapsible audit panel: closed by default (cleaner for customers glancing at
   // the screen); the staff tap the header to expand. Swap the toggle label.
   $('audit').addEventListener('toggle', () => {
     const tog = $('audit').querySelector('.audit-toggle');
     if (tog) tog.textContent = $('audit').open ? tr('auHide') : tr('auShow');
   });
-
-  // ===== DEVICE STATS (per-device / per-branch stamp counts) =====
-  // A simple, encouraging breakdown — today / 7 d / 30 d / total stamps per terminal.
-  // Same data as the audit panel's device list (one /audit fetch), shown as its own
-  // collapsible list. The CURRENT device is tagged so staff know which row is theirs.
-  const escD = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  $('devices').addEventListener('toggle', () => {
-    const tog = $('devices').querySelector('.audit-toggle');
-    if (tog) tog.textContent = $('devices').open ? tr('auHide') : tr('auShow');
-  });
-  // Render the device list from the audit endpoint's `devices` array (always the full,
-  // unfiltered set). Called by renderAudit so it stays in sync with one fetch.
-  function renderDeviceStats(devices) {
-    const me = deviceLabel();
-    const list = $('devList');
-    if (!devices || !devices.length) {
-      list.innerHTML = `<div class="dev-item"><span class="dev-meta">${tr('devNone')}</span></div>`;
-      return;
-    }
-    const cell = (v, l) => `<div class="dev-stat"><b>${v || 0}</b><span>${l}</span></div>`;
-    list.innerHTML = devices.map((d) => `
-      <div class="dev-item">
-        <div class="dev-name">${escD(d.device)}${d.device === me ? `<span class="dev-this">${tr('thisDevice')}</span>` : ''}</div>
-        <div class="dev-stats">
-          ${cell(d.today, tr('lblToday'))}${cell(d.d7, tr('lbl7d'))}${cell(d.d30, tr('lbl30d'))}${cell(d.stamps, tr('lblAll'))}
-        </div>
-      </div>`).join('');
-    $('devices').classList.remove('hidden');
-  }
 
   // Pick which filialas THIS device is — choose an existing branch or type a new one.
   function setBranch(name) {
