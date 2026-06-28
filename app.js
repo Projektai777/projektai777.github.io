@@ -39,6 +39,10 @@ const isServer = !!(TENANTS[slug] && TENANTS[slug].server);
 //     staticBackend (cooldown/geofence-exempt), simulated like any other preview demo.
 //   • LIVE poster tenant  = poster:true + server:true -> posterBackend talks to /pscan.
 const isPoster = !!(TENANTS[slug] && TENANTS[slug].poster);
+// Poster version for the kill-switch: prefer the value printed on the scanned poster
+// (?v=N — captured here before boot strips it from the URL), else the tenant default.
+// Bumping cfg.qr_version in the Worker + reprinting with a higher v voids old posters.
+const posterVersion = parseInt(params.get('v'), 10) || (TENANTS[slug] && TENANTS[slug].qr_version) || 1;
 const view = (params.get('view') || '').toLowerCase(); // ?view=owner -> savininko apžvalga (atskiras puslapis)
 let isPreview = false;       // set after tenant loads: demo OR tenant.preview (rodo pardavimų funkcijas)
 
@@ -821,7 +825,7 @@ const posterBackend = {
   async rpc(fn, args) {
     const base = await Counter._resolve();
     if (!base) return { ok: false, error: 'net' };
-    const v = (TENANTS[slug] && TENANTS[slug].qr_version) || 1;
+    const v = posterVersion; // from the scanned poster URL (?v=N), else the tenant default
     const pid = localStorage.getItem(this._pidKey) || '';
     const body = { lat: args?.lat, lon: args?.lon, accuracy: args?.accuracy, pid };
     let j;
