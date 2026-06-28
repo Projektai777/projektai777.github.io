@@ -31,6 +31,14 @@ const isDemo = slug === 'demo';
 // Server-authoritative tenant (secure tier): secret + stamp count live in the Worker,
 // not the phone. Set `server: true` on the tenant at go-live (and drop its staff_secret).
 const isServer = !!(TENANTS[slug] && TENANTS[slug].server);
+// STATIC-POSTER tier ("QR ant stalo", 2026-06-29): the customer scans ONE fixed poster QR
+// posted in the venue (no rotating staff code, no handover). Presence/anti-farming is a
+// SOFT server-side stack at /pscan (geofence nudge + open-hours + per-human cooldown). The
+// name is DISTINCT from isStatic/staticBackend (existing concepts above) on purpose.
+//   • DEMO poster tenant  = poster:true + preview:true, NO server -> runs client-side via
+//     staticBackend (cooldown/geofence-exempt), simulated like any other preview demo.
+//   • LIVE poster tenant  = poster:true + server:true -> posterBackend talks to /pscan.
+const isPoster = !!(TENANTS[slug] && TENANTS[slug].poster);
 const view = (params.get('view') || '').toLowerCase(); // ?view=owner -> savininko apžvalga (atskiras puslapis)
 let isPreview = false;       // set after tenant loads: demo OR tenant.preview (rodo pardavimų funkcijas)
 
@@ -737,7 +745,63 @@ const serverBackend = {
   },
 };
 
-const backend = isServer ? serverBackend : (isStatic ? staticBackend : supabaseBackend);
+// Static-poster backend (LIVE poster tenant: poster:true + server:true). The customer
+// scans a fixed poster QR — there is no rotating code — so rpc() ignores p_code and POSTs
+// the (optional) location to /pscan, the sole authority. Reuses serverBackend's storage +
+// reconcile + cardId verbatim; adds the per-human pid cache and a code-less grant. Demos
+// (poster:true WITHOUT server) never reach this — they run on staticBackend like any preview.
+const posterBackend = {
+  ...serverBackend,
+  _pidKey: `lojalumas_pid_${slug}`,
+  // No /card preload: the poster count is keyed server-side by the signed pid (unknown
+  // until the first /pscan), so on load we just show the local display cache; each /pscan
+  // reconciles the authoritative count. A device move is covered by the recovery code.
+  async loadOrCreateCard() { return { id: slug, ...this._load() }; },
+  async rpc(fn, args) {
+    const base = await Counter._resolve();
+    if (!base) return { ok: false, error: 'net' };
+    const v = (TENANTS[slug] && TENANTS[slug].qr_version) || 1;
+    const pid = localStorage.getItem(this._pidKey) || '';
+    const body = { lat: args?.lat, lon: args?.lon, accuracy: args?.accuracy, pid };
+    let j;
+    try {
+      const r = await fetch(`${base}/pscan?b=${encodeURIComponent(slug)}&card=${this.cardId()}&v=${v}`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      j = await r.json();
+    } catch { return { ok: false, error: 'net' }; }
+    if (j && j.pid) localStorage.setItem(this._pidKey, j.pid); // cache the signed identity (cross-site cookie fallback)
+    const c = this._load();
+    if (!j || !j.ok) {
+      if (j && j.error === 'daily_done' && typeof j.stamps === 'number') { this._reconcile(c, j.stamps, j.day); this._save(c); }
+      return { ok: false, error: (j && j.error) || 'net' };
+    }
+    this._reconcile(c, j.stamps, j.day);
+    if (j.stamps >= 1) { c.dates[j.stamps - 1] = todayLocal(); c.times[j.stamps - 1] = new Date().getHours(); }
+    this._save(c);
+    return { ok: true, stamps: j.stamps, full: j.full, dates: c.dates, times: c.times, day: j.day };
+  },
+};
+
+// Ask for a one-shot location fix. SOFT by design: resolves {} on deny/timeout/no-API
+// (it NEVER rejects), so a refusal just falls through to the server's soft path — an
+// honest customer is never blocked, and nothing is stored on the device.
+function getPosition() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) { resolve({}); return; }
+    navigator.geolocation.getCurrentPosition(
+      (p) => resolve({ lat: p.coords.latitude, lon: p.coords.longitude, accuracy: p.coords.accuracy }),
+      () => resolve({}),
+      { enableHighAccuracy: true, timeout: 9000, maximumAge: 60000 }
+    );
+  });
+}
+
+const backend = (isPoster && isServer) ? posterBackend
+  : isServer ? serverBackend
+    : (isStatic ? staticBackend : supabaseBackend);
 
 // ---------- state ----------
 let tenant = null;
@@ -1588,10 +1652,11 @@ function wireScanner() {
   scanModal.addEventListener('close', releaseCamera);
 }
 
-// Shared by the in-page scanner and the scanned-QR boot path (?grant=CODE).
-async function runGrant(action, code) {
+// Shared by the in-page scanner, the scanned-QR boot path (?grant=CODE) and the static
+// poster flow. `extra` (optional) carries poster location {lat,lon,accuracy} to backend.rpc.
+async function runGrant(action, code, extra) {
   try {
-    const res = await backend.rpc(action, { p_slug: slug, p_card: card.id, p_code: code });
+    const res = await backend.rpc(action, { p_slug: slug, p_card: card.id, p_code: code, ...(extra || {}) });
     if (res.ok) {
       // rpc operates on its own copy loaded from storage; copy the authoritative
       // fields back onto the in-memory card so render() shows the new stamp's date
