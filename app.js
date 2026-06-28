@@ -276,6 +276,30 @@ const STR = {
       ['Kaip veikia 1 metų palaikymas?',
         'Pirmus <strong>12 mėn. palaikymas — nemokamas</strong>. Tereikia parašyti, ir smulkius pakeitimus (tekstai, spalvos, prizai) dažniausiai įgyvendiname <strong>per kelias valandas</strong>. Didelės naujos funkcijos, nauji puslapiai ar atskiri projektai — pagal atskirą sutartį ir įkainį (kad būtų sąžininga abiem pusėms). Po metų produktas toliau veikia be jokių privalomų mokesčių; pakeitimai — pagal poreikį už fiksuotą kainą, jokių prenumeratų.'],
     ],
+    // ---- STATIC-POSTER tier ("QR ant stalo", 2026-06-29) ----
+    getStampHere: '📍 Gauti antspaudą',
+    posterHint: 'Nuskaitykite ant stalo esantį QR kodą, tada palieskite — antspaudas užsiskaitys. Vieta tik patikrinama (kad būtumėte vietoje), niekur nesaugoma.',
+    posterHintDemo: 'Demonstracija: palieskite, kad pamatytumėte, kaip svečias gauna antspaudą nuskaitęs ant stalo esantį QR kodą.',
+    errOffsite: 'Atrodo, kad esate ne vietoje. Antspaudą galima gauti tik užsukus į restoraną.',
+    errClosed: 'Šiuo metu uždaryta. Antspaudą gausite užsukę darbo valandomis.',
+    errExpiredPoster: 'Šis QR kodas nebegalioja. Nuskaitykite naują kodą, esantį ant stalo.',
+    errNeedLoc: 'Norėdami gauti antspaudą, leiskite nustatyti vietą — taip patvirtinate, kad esate restorane.',
+    flowTitlePoster: 'Kaip tai veikia svečiui?',
+    flowPoster: [
+      ['Nuskaito QR ant stalo', 'Sava telefono kamera — kortelė atsidaro iškart, nieko diegti nereikia'],
+      ['Patvirtina, kad yra vietoje', 'Vienu palietimu — vieta tik patikrinama, nesaugoma'],
+      ['Antspaudas pridėtas', 'Po vieną su kiekvienu apsilankymu (1 per dieną)'],
+      ['Surinko — gauna prizą', 'Personalas pritaiko nuolaidą, kortelė pradedama iš naujo'],
+    ],
+    qrLeadPoster: 'Tai Jūsų „ant stalo" QR plakatas: atspausdinkite jį vieną kartą ir pritvirtinkite ant stalų, prie kasos ar ant sienos (QR nekinta). Nuskaitykite jį kitu telefonu — kortelė atsidarys ir antspaudas užsiskaitys, lygiai kaip tikram svečiui.',
+    faqPHow: ['Kaip veikia lojalumo kortelė?',
+      'Ant stalo, prie kasos ar ant sienos pritvirtinamas vienas QR kodas. Svečias nuskaito jį savo telefono kamera — iškart atsidaro Jūsų prekės ženklo kortelė ir, vienu palietimu patvirtinus, kad yra vietoje, pridedamas antspaudas. Jokios programėlės, jokio darbuotojo įsikišimo, telefono atiduoti nereikia. Kitą kartą svečias vėl nuskaito tą patį kodą (vienas antspaudas per dieną). Surinkęs reikiamą skaičių, atsiima prizą ir kortelė pradedama iš naujo.'],
+    faqPSafe: ['Ar tai saugu? Kaip su privatumu ir sukčiavimu?',
+      '<strong>Privatumas:</strong> nerenkame jokių asmens duomenų — nereikia nei vardo, nei el. pašto, nei registracijos, todėl nelieka GDPR rūpesčių. Vietą tik <strong>patikriname</strong> antspaudo metu (kad svečias būtų restorane) ir niekur jos nesaugome. <strong>Apsauga nuo sukčiavimo (kelių lygių):</strong> antspaudų skaičius saugomas <strong>mūsų serveryje</strong>, ne telefone (redaguoti telefoną beprasmiška); <strong>vieta patikrinama</strong>, kad svečias būtų vietoje; leidžiamas tik <strong>vienas antspaudas vienam žmogui per dieną</strong> (riba susieta su serverio pasirašytu anoniminiu raktu, todėl neapeinama išvalius programą); antspaudai pridedami tik <strong>darbo valandomis</strong>; o jei kodo nuotrauka kur nors paplistų, vienu mygtuko paspaudimu išleidžiame naują kodą ir seni plakatai nustoja veikti. Svarbiausia — <strong>nuolaidą pritaiko personalas prie kasos</strong>, tad net teoriškai „prifarminta" kortelė be Jūsų darbuotojo nieko neduoda. <strong>Saugiausias prizo tipas — nuolaida</strong> (pvz. −25 %): net bandant apgauti, vis tiek reikia išleisti pinigų. Norintiems dar griežčiau, vietos patvirtinimą galima padaryti <strong>privalomą</strong>.'],
+    faqPShare: ['O jei kas nors nuskaitytų kodą iš namų ar pasidalintų jo nuotrauka?',
+      'Tam yra kelios kliūtys. Pirma, antspaudo metu <strong>patikrinama vieta</strong> — esantiems toli antspaudas neužskaitomas. Antra, vienas žmogus gali gauti tik <strong>vieną antspaudą per dieną</strong>, ir ši riba susieta su serverio raktu, todėl jos neapeisi išvalęs naršyklę. Trečia, kodas veikia tik <strong>darbo valandomis</strong>. Ir svarbiausia — pati <strong>nuolaida pritaikoma tik personalui prie kasos</strong> perkant, tad surinkti antspaudai be apsilankymo realiai nieko verti. Tai kortelė nedidelės vertės nuolaidai, kur patogumas svarbiau už absoliučią apsaugą; brangesniems prizams siūlome darbuotojo nuskaitomą (besikeičiantį) QR variantą.'],
+    faqPStart: ['Kaip greitai galima pradėti? Ko reikia iš manęs?',
+      'Paprastai per kelias dienas. Iš Jūsų reikia: logotipo, spalvų ir prizo sąlygų (pvz. „−25 % sąskaitai"). Mes viską sukonfigūruojame, atsiunčiame kortelės nuorodą ir <strong>paruoštą QR plakatą</strong>, kurį tiesiog atsispausdinate ir pritvirtinate ant stalų ar prie kasos. Jokios įrangos ar darbuotojų mokymų nereikia.'],
     loadingScan: 'Nuskenuokite parduotuvės QR kodą.',
     loadingNotFound: 'Kortelė nerasta. Patikrinkite QR kodą.',
     recTitle: '💾 Išsaugokite kortelę',
@@ -428,6 +452,30 @@ const STR = {
       ['How does the 1-year support work?',
         'For the first <strong>12 months support is free</strong>. Just say the word and small changes (texts, colours, rewards) are usually done <strong>within hours</strong>. Large new features, extra pages or separate projects go under a separate contract and fee (fair to both sides). After the year the product keeps working with no mandatory fees; changes are done as needed for a fixed price — no subscriptions.'],
     ],
+    // ---- STATIC-POSTER tier ("QR ant stalo", 2026-06-29) ----
+    getStampHere: '📍 Get my stamp',
+    posterHint: 'Scan the QR on your table, then tap — your stamp is added. Your location is only checked (to confirm you’re here), never stored.',
+    posterHintDemo: 'Demo: tap to see how a guest gets a stamp after scanning the table QR.',
+    errOffsite: 'You don’t seem to be at the venue. Stamps can only be earned at the restaurant.',
+    errClosed: 'We’re closed right now. Pop in during opening hours to get your stamp.',
+    errExpiredPoster: 'This QR code is no longer valid. Scan the new code on your table.',
+    errNeedLoc: 'Allow location to get your stamp — it confirms you’re at the restaurant.',
+    flowTitlePoster: 'How does it work for guests?',
+    flowPoster: [
+      ['Scan the table QR', 'With their phone camera — the card opens instantly, nothing to install'],
+      ['Confirm they’re here', 'One tap — location is only checked, never stored'],
+      ['Stamp added', 'One per visit (1 per day)'],
+      ['Card full — reward earned', 'Staff apply the discount and the card starts over'],
+    ],
+    qrLeadPoster: 'This is your “on the table” QR poster: print it once and stick it on tables, the counter or a wall (the QR never changes). Scan it with another phone — the card opens and a stamp is added, exactly like a real guest.',
+    faqPHow: ['How does the loyalty card work?',
+      'One QR code is posted on the table, at the counter or on a wall. The guest scans it with their phone camera — your branded card opens instantly and, with a single tap to confirm they’re here, a stamp is added. No app, no staff involvement, the phone never changes hands. Next time the guest scans the same code again (one stamp per day). Once full, they claim the reward and the card starts over.'],
+    faqPSafe: ['Is it safe? What about privacy and cheating?',
+      '<strong>Privacy:</strong> we collect no personal data — no name, email or sign-up, so no GDPR headaches. We only <strong>check</strong> location at the moment of a stamp (to confirm the guest is at the restaurant) and never store it. <strong>Anti-cheating (layered):</strong> the stamp count lives on <strong>our server</strong>, not the phone (editing the phone does nothing); <strong>location is checked</strong> so the guest is on site; only <strong>one stamp per person per day</strong> is allowed (the limit is tied to a server-signed anonymous key, so clearing the app can’t reset it); stamps are only added <strong>during opening hours</strong>; and if a photo of the code ever spreads, one click issues a new code and old posters stop working. Above all — <strong>your staff apply the discount at the till</strong>, so even a theoretically “farmed” card is worthless without your team. <strong>The safest reward is a discount</strong> (e.g. −25%): even a cheat still has to spend money. If you want it stricter, location confirmation can be made <strong>mandatory</strong>.'],
+    faqPShare: ['What if someone scans the code from home or shares a photo of it?',
+      'Several hurdles stop that. First, location is <strong>checked</strong> at stamp time — someone far away isn’t credited. Second, one person can only get <strong>one stamp per day</strong>, and that limit is tied to a server key, so clearing the browser won’t reset it. Third, the code only works <strong>during opening hours</strong>. And most importantly, the <strong>discount is only applied by staff at the till</strong> on a real purchase, so stamps collected without visiting are effectively worthless. This is a card for a modest discount where convenience matters more than absolute security; for higher-value rewards we offer the staff-scanned (rotating) QR instead.'],
+    faqPStart: ['How fast can we start? What do you need from me?',
+      'Usually within a few days. From you we need your logo, colours and the reward terms (e.g. “−25% off the bill”). We configure everything and send you the card link plus a <strong>ready-made QR poster</strong> you simply print and stick on tables or at the counter. No hardware and no staff training needed.'],
     loadingScan: 'Scan the shop’s QR code.',
     loadingNotFound: 'Card not found. Check the QR code.',
     recTitle: '💾 Save your card',
@@ -458,6 +506,19 @@ const STR = {
     ownerStaffPass: 'Password',
   },
 };
+
+// Poster-tier FAQ = the shared FAQ with only the how-it-works (0), safety (4), staff-page
+// (5 → "scan from home?") and getting-started (8) answers swapped for poster-specific ones.
+// Everything else (price, contract, domain, support…) is REUSED, so it stays consistent
+// with the main FAQ automatically (no second copy to keep in sync).
+for (const L of ['lt', 'en']) {
+  const f = STR[L].faq.slice();
+  f[0] = STR[L].faqPHow;
+  f[4] = STR[L].faqPSafe;
+  f[5] = STR[L].faqPShare;
+  f[8] = STR[L].faqPStart;
+  STR[L].faqPoster = f;
+}
 
 function t(key, ...args) {
   const v = (STR[lang] && STR[lang][key] !== undefined) ? STR[lang][key] : STR.lt[key];
@@ -1503,7 +1564,7 @@ function renderOwner() {
 
     <section class="panel qr-test">
       <h3>${t('qrTitle')}</h3>
-      <p class="panel-lead">${t(isPreview ? 'qrLeadDemo' : 'qrLead')}</p>
+      <p class="panel-lead">${t(isPoster ? 'qrLeadPoster' : (isPreview ? 'qrLeadDemo' : 'qrLead'))}</p>
       <div class="standee-mock">
         <div class="standee-top"></div>
         <p class="sm-name">${tenant.business_name}</p>

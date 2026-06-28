@@ -65,6 +65,44 @@ export default {
     staff_pass_hash: 'ae4964eeffe94ad8cbd2ec334814ec1b6b9b568d4729fadd74daf9caf7209ab1', // /tools/staff.html slaptažodis: berneliai2026
   },
 
+  // STATINIO QR ("ant stalo") demo — ATSKIRA, nepriklausoma berneliai versija.
+  // Skirtumas nuo `berneliai`: NĖRA besikeičiančio darbuotojo QR ir telefono atidavimo.
+  // Svečias nuskaito VIENĄ nekintantį QR plakatą, pritvirtintą ant stalo/sienos/prie kasos
+  // (URL: …/?b=berneliai_qr&q=1). `poster: true` įjungia šį režimą (žr. isPoster app.js).
+  // Apsauga (tikram klientui, server:true): /pscan Worker'yje — ŠVELNUS geofence (vieta tik
+  // patikrinama, nesaugoma) + darbo valandos + vienas antspaudas vienam ŽMOGUI per dieną
+  // (serverio pasirašytas pid) + plakato „kill-switch". Nuolaidą galutinai pritaiko personalas
+  // prie kasos. Demo (preview, BE server) veikia kliento pusėje ir atleista — testuojama iš bet kur.
+  // Atskiras slug => atskira localStorage erdvė => JOKIO konflikto su `berneliai`.
+  berneliai_qr: {
+    business_name: 'Bernelių užeiga',
+    logo_url: 'logos/berneliai-logo.png',
+    logo_wide: true,
+    icon_url: 'logos/berneliai.png',
+    app_icon: 'logos/berneliai-icon-512.png',
+    app_manifest: 'manifests/berneliai_qr.webmanifest',
+    hero_url: 'logos/berneliai-hero.jpg',
+    primary_color: '#b91c1c',
+    stamps_needed: 10,
+    reward_text: '25% nuolaida sąskaitai',
+    reward_text_en: '25% off your bill',
+    stamp_icon: '🍴',
+    milestones: [
+      { at: 5, text: '10% nuolaida sąskaitai', text_en: '10% off your bill' },
+      { at: 10, text: '25% nuolaida sąskaitai', text_en: '25% off your bill' },
+    ],
+    birthday_reward: 'Nemokamas desertas',
+    birthday_reward_en: 'Free birthday dessert',
+    google_review_url: 'https://www.google.com/maps/search/?api=1&query=Berneli%C5%B3+u%C5%BEeiga',
+    poster: true,  // NAUJA: statinio QR ("ant stalo") režimas
+    preview: true, // demo: kliento pusėje, atleista nuo cooldown/geofence — galima kartoti laisvai
+    // staff_secret + staff_pass_hash privalomi (check-tenants.js) IR naudojami demo simuliacijai
+    // (currentCode -> staticBackend.verifyCode); tikram klientui šie laukai keliauja į Worker'į.
+    // staff_demo_pass NEnurodytas tyčia — statinio QR režime NĖRA darbuotojo puslapio.
+    staff_secret: 'c07a962faa7211225b8cc2ac3eae5fc5',
+    staff_pass_hash: 'c805bb919d215fdc15f106a46ca138c43fe958640becff5516ce0ba2c10b0183', // demo slaptažodis: berneliaiqr2026
+  },
+
   kebabinn: {
     business_name: 'KEBAB inn',
     logo_url: 'logos/kebabinn-logo.png',  // official horizontal wordmark
