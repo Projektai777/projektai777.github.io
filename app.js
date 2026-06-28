@@ -923,13 +923,14 @@ function tiersHtml() {
 // one-tap re-scanning install it themselves — the camera button is the hook.
 
 function staffFlowHtml() {
-  const icons = ['📱', '📷', '⭐', '🎁'];
-  const cells = t('flow').map(([title, sub], i) => `
+  // Poster tier is customer-driven (scan the table QR), so it gets its own steps/icons.
+  const icons = isPoster ? ['📷', '📍', '⭐', '🎁'] : ['📱', '📷', '⭐', '🎁'];
+  const cells = t(isPoster ? 'flowPoster' : 'flow').map(([title, sub], i) => `
     <div class="flow-step">
       <div class="flow-num">${i + 1}</div>
       <div class="flow-body"><span class="flow-icon">${icons[i]}</span><b>${title}</b><p>${sub}</p></div>
     </div>${i < 3 ? '<div class="flow-arrow">▼</div>' : ''}`).join('');
-  return `<section class="flow-wrap"><h3 class="flow-title">${t('flowTitle')}</h3><div class="flow">${cells}</div></section>`;
+  return `<section class="flow-wrap"><h3 class="flow-title">${t(isPoster ? 'flowTitlePoster' : 'flowTitle')}</h3><div class="flow">${cells}</div></section>`;
 }
 
 function ctaHtml() {
@@ -1119,8 +1120,8 @@ function render() {
 
     ${stampedToday
       ? `<p class="small-print stamped-today">${t('stampedToday')}</p>`
-      : `<button class="cta" id="actionBtn">${t('getStamp')}</button>
-    <p class="small-print">${isDemo ? t('staffPressDemo') : t('staffPress')}</p>`}
+      : `<button class="cta" id="actionBtn">${t(isPoster ? 'getStampHere' : 'getStamp')}</button>
+    <p class="small-print">${isPoster ? (isPreview ? t('posterHintDemo') : t('posterHint')) : (isDemo ? t('staffPressDemo') : t('staffPress'))}</p>`}
     ${installed ? '' : `<p class="small-print">${t('savedHint')}</p>`}
     ${isPreview ? `<button class="cta cta-demo" id="stampOnceBtn">${t('stampOnce')}</button>` : ''}
     ${isPreview ? `<button class="cta cta-demo" id="autoFillBtn">${t('autoFill')}</button>` : ''}
@@ -1370,6 +1371,10 @@ function drawQr(targetUrl) {
 let ownerQrTimer = null;
 function wireOwnerQr(cardUrl) {
   clearInterval(ownerQrTimer); ownerQrTimer = null; // re-render (e.g. lang toggle) -> reset
+  // Static-poster tenant: the QR is FIXED (?q=1) — exactly the poster you'd print and
+  // stick on the table. No rotation. Scanning it on another phone opens the card and (in
+  // the demo) auto-adds a stamp, just like a real guest scanning the wall.
+  if (isPoster) { drawQr(`${cardUrl}&q=1`); return; }
   if (!isPreview || !tenant.staff_secret) { drawQr(cardUrl); return; }
   let lastCode = null;
   const paint = async () => {
@@ -1441,7 +1446,8 @@ function startHtml() {
 
 // FAQ accordion for the owner/sales page (native <details>, no JS needed).
 function faqHtml() {
-  const items = t('faq').map(([q, a]) => `
+  // Poster tier swaps the how-it-works + safety answers for poster-specific ones.
+  const items = t(isPoster ? 'faqPoster' : 'faq').map(([q, a]) => `
     <details class="faq-item">
       <summary>${q}</summary>
       <div class="faq-a">${a}</div>
@@ -1635,10 +1641,22 @@ async function openScanner(action) {
   requestAnimationFrame(tick);
 }
 
+// Static-poster stamp ("QR ant stalo"). DEMO/preview: no real venue or server, so
+// simulate exactly like the existing demo (currentCode makes staticBackend's verifyCode
+// pass) — a prospect anywhere sees the full flow with ZERO location prompt. LIVE poster
+// tenant: take a one-shot SOFT location fix (optional — deny is fine) and post it to
+// /pscan, which decides. Either way the success path is the shared runGrant animation.
+async function posterStampFlow(action) {
+  if (isPreview || !isServer) return runGrant(action, await currentCode(tenant.staff_secret));
+  const pos = await getPosition();
+  return runGrant(action, null, pos);
+}
+
 // In a real shop the customer scans the staff QR; in the DEMO there is no staff
 // QR to point at, so simulate a successful scan with the live code — a solo
 // prospect still sees the stamp / celebration.
 async function stampAction(action) {
+  if (isPoster) return posterStampFlow(action); // static-poster tier: no camera scan, presence is server-side
   if (isDemo) return runGrant(action, await currentCode(tenant.staff_secret));
   return openScanner(action);
 }
@@ -1695,7 +1713,10 @@ async function runGrant(action, code, extra) {
         demo_over: t('errDemoOver'),
         net: t('errNet'),                 // Worker unreachable — earning a stamp needs a connection
         not_provisioned: t('errGeneric'), // server tenant not set up yet (shouldn't reach a live customer)
-        offsite: t('errGeneric'),         // staff geofence (never reached on the customer path)
+        offsite: t('errOffsite'),         // poster geofence: conclusive off-site fix
+        closed: t('errClosed'),           // poster open-hours window
+        expired_poster: t('errExpiredPoster'), // poster kill-switch (old printed QR)
+        need_location: t('errNeedLoc'),   // poster_strict tenant + no location
       }[res.error] || t('errGeneric');
       toast(msg, true);
     }
@@ -1761,6 +1782,15 @@ function whenPagePainted(maxWait = 1800) {
         // Always add a stamp — a full card loops (resets to the first stamp); there
         // is no separate redeem action.
         await runGrant('add_stamp', grant);
+      }
+      // STATIC-POSTER scan (?q=1 from the wall/table QR). Strip the marker so a refresh /
+      // bookmark can't silently replay. In DEMO/preview, auto-grant for the one-scan "wow"
+      // (no location needed). On a LIVE poster tenant, do NOT auto-grant — render already
+      // shows the "📍 Gauti antspaudą" button, and the tap supplies the gesture that
+      // geolocation requires.
+      if (params.get('q') === '1') {
+        history.replaceState({}, '', `?b=${encodeURIComponent(slug)}${lang === 'en' ? '&lang=en' : ''}`);
+        if (isPoster && isPreview) { await whenPagePainted(); await posterStampFlow('add_stamp'); }
       }
     }
   } catch (e) {
