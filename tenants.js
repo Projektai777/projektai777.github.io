@@ -178,6 +178,39 @@ export default {
     staff_pass_hash: 'd7c89cdfdb36ffd19be0e9de7dd6376a4b2a738852b82dee9005d82f6c9524dc', // /tools/staff.html slaptažodis: rugile2026
   },
 
+  // Automobilių plovykla Telšiuose (Dainius, autobondas.lt) — susidomėjęs klientas
+  // (lojalumo kortelė su nemokamu plovimu). Logotipas ir „vandens lašų" fonas — jų pačių.
+  autobondas: {
+    business_name: 'Auto Bondas',
+    logo_url: 'logos/autobondas-logo.png', // oficialus ovalus logotipas (wordmark)
+    logo_wide: true,                       // wordmark -> platus skydelis, paslepia perteklinį pavadinimą
+    icon_url: 'logos/autobondas.png',      // kvadratinis firminis ženklas
+    hero_url: 'logos/autobondas-hero.jpg', // švarūs vandens lašai ant stiklo (plovyklos motyvas)
+    primary_color: '#095498',              // logotipo mėlyna
+    stamps_needed: 8,
+    reward_text: 'Nemokamas plovimas',
+    reward_text_en: 'Free car wash',       // EN variantas (rodomas kai įjungtas EN)
+    stamp_icon: '🚗',                      // automobilio antspaudas (kiekvienas plovimas = vienas antspaudas)
+    // milestones = tarpiniai prizai (rodo, kad sistema lanksti); text_en = EN variantas
+    milestones: [
+      { at: 4, text: '−50% plovimui', text_en: '50% off a wash' },
+      { at: 8, text: 'Nemokamas plovimas', text_en: 'Free car wash' },
+    ],
+    birthday_reward: '−50% plovimui gimtadienio proga', // gimtadienio dovana (rodo kortelėje)
+    birthday_reward_en: 'Birthday: 50% off a wash',
+    // Viena vieta Telšiuose — rodoma darbuotojo statistikoje (vieta, grafikai).
+    demo_branches: [
+      { name: 'Telšiai', w: 0.8 },         // Kęstučio g. 20c, Telšiai
+    ],
+    // Google atsiliepimo nuoroda — po prizo atsiėmimo klientui pasiūloma palikti atsiliepimą.
+    // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
+    google_review_url: 'https://www.google.com/maps/search/?api=1&query=Auto+Bondas+Tel%C5%A1iai',
+    preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
+    staff_demo_pass: 'autobondas2026', // PREVIEW-ONLY: rodomas savininko puslapyje; pašalinti įdiegus
+    staff_secret: 'a2f1e0b143941c2127a6fa7aa6b9687e',     // rotating-code raktas
+    staff_pass_hash: 'ded97b32282d7f7d1e8c4431f6950468e22c000142a847e2ab038e7bcbfae2cb', // /tools/staff.html slaptažodis: autobondas2026
+  },
+
   // STATINIS pavyzdys (demo / peržiūra) — paslaptis čia:
   // kitasverslas: {
   //   business_name: 'Plovykla PRO',
