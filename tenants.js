@@ -191,13 +191,10 @@ export default {
     reward_text: 'Nemokamas plovimas',
     reward_text_en: 'Free car wash',       // EN variantas (rodomas kai įjungtas EN)
     stamp_icon: '🚗',                      // automobilio antspaudas (kiekvienas plovimas = vienas antspaudas)
-    // milestones = tarpiniai prizai (rodo, kad sistema lanksti); text_en = EN variantas
-    milestones: [
-      { at: 4, text: '−50% plovimui', text_en: '50% off a wash' },
-      { at: 8, text: 'Nemokamas plovimas', text_en: 'Free car wash' },
-    ],
-    birthday_reward: '−50% plovimui gimtadienio proga', // gimtadienio dovana (rodo kortelėje)
-    birthday_reward_en: 'Birthday: 50% off a wash',
+    // VIENAS prizas (savininko pageidavimas 2026-07-14): jokių tarpinių milestone —
+    // tik nemokamas plovimas užpildžius kortelę; gimtadienio dovana — taip pat nemokamas plovimas.
+    birthday_reward: 'Nemokamas plovimas', // gimtadienio dovana (rodo kortelėje)
+    birthday_reward_en: 'Free birthday car wash',
     // Viena vieta Telšiuose — rodoma darbuotojo statistikoje (vieta, grafikai).
     demo_branches: [
       { name: 'Telšiai', w: 0.8 },         // Kęstučio g. 20c, Telšiai
