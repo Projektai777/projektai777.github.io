@@ -1137,6 +1137,10 @@ function render() {
   const installed = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
   const stampIcon = tenant.stamp_icon || '🍴'; // restaurant-flavored default; per-tenant override
+  // Optional IMAGE stamp (tenant.stamp_icon_url) — a branded picture fills the whole
+  // circle instead of an emoji. Reward/milestone cells still show 🎁 so the prize
+  // spots stay instantly recognizable; no field -> emoji stamps as before.
+  const stampImg = tenant.stamp_icon_url ? `<img class="stamp-img" src="${tenant.stamp_icon_url}" alt="">` : '';
   const stampDates = card.dates || [];
   const stampTimes = card.times || [];
   const grid = Array.from({ length: tenant.stamps_needed }, (_, i) => {
@@ -1147,7 +1151,7 @@ function render() {
     // WHERE they won something (a filled gift = "I got the prize here"), instead of
     // the reward turning into just another food stamp.
     const isReward = milestone || (i + 1 === tenant.stamps_needed);
-    const glyph = isReward ? '🎁' : (filled ? stampIcon : '');
+    const glyph = isReward ? '🎁' : (filled ? (stampImg || stampIcon) : '');
     // Date + hour under each filled stamp: a visible visit history staff can
     // glance at when giving the reward — a fake "all in one day at one hour" card
     // stands out. MM-DD on top, the hour ("14val"/"14pm") just below it.

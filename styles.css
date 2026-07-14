@@ -143,6 +143,17 @@ h1 { font-size: 1.6rem; letter-spacing: -0.01em; }
   font-size: 1.3rem;
   color: #fff;
   transition: all .25s ease;
+  overflow: hidden; /* clips an image stamp (.stamp-img) to the circle */
+}
+
+/* per-tenant IMAGE stamp (tenant.stamp_icon_url) — fills the circle like a printed coin;
+   reward cells keep the 🎁 emoji, and tenants without the field keep emoji stamps */
+.stamp-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 
 .stamp.filled {
