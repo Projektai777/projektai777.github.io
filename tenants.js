@@ -191,9 +191,10 @@ export default {
     reward_text: 'Nemokamas plovimas',
     reward_text_en: 'Free car wash',       // EN variantas (rodomas kai įjungtas EN)
     stamp_icon: '🚗',                      // atsarginis emoji (rodomas, jei paveikslėlio nėra)
-    // FIRMINIS paveikslėlio antspaudas (2026-07-14): švarus automobilis muilo burbule,
-    // sugeneruotas pagal firminę mėlyną. Kiti 4 variantai — design/stamp-icons/ (pasikeisti:
-    // perkopijuoti kitą į public/logos/autobondas-stamp.png). Prizo langeliai lieka 🎁.
+    // FIRMINIS paveikslėlio antspaudas (savininko pasirinkimas 2026-07-14): švarus automobilis
+    // su žvaigždutėmis (design/stamp-icons/stamp-1.png), sugeneruotas pagal firminę mėlyną.
+    // Kiti 4 variantai — design/stamp-icons/ (pasikeisti: perkopijuoti kitą į
+    // public/logos/autobondas-stamp.png). Prizo langeliai lieka 🎁.
     stamp_icon_url: 'logos/autobondas-stamp.png',
     // VIENAS prizas (savininko pageidavimas 2026-07-14): jokių tarpinių milestone —
     // tik nemokamas plovimas užpildžius kortelę; gimtadienio dovana — taip pat nemokamas plovimas.
