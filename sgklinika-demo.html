@@ -1,0 +1,410 @@
+<!doctype html>
+<!-- © 2026. DEMO for SG Klinika (sgklinika.lt) — clinic digital module.
+     Self-contained, all patient data invented, state in localStorage (sgklinika_demo).
+     Covers: online registration (4 branches), reception view, automatic visit +
+     recall reminders, procedure-course loyalty card, gift-voucher check, reviews. -->
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#9e2b33">
+<title>SG Klinika — skaitmeninis modulis (DEMO)</title>
+<style>
+  :root{
+    --wine:#9e2b33; --wine2:#7c2026; --rose:#c4515b; --gold:#b98a2f;
+    --bg:#f7f4f3; --card:#ffffff; --line:#e7dcdc; --txt:#2a2224; --muted:#7d6c6f;
+    --good:#0e9f6e; --radius:14px;
+  }
+  *{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+  body{margin:0;font:15px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--txt)}
+  .top{background:linear-gradient(135deg,var(--wine2),var(--wine));color:#fff;padding:18px 16px 14px}
+  .top .inner{max-width:1060px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .brand .logo{width:46px;height:46px;border-radius:12px;background:#fff;color:var(--wine);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;letter-spacing:-1px}
+  .brand h1{margin:0;font-size:20px;letter-spacing:.3px}
+  .brand .sub{font-size:12.5px;opacity:.8}
+  .demo-badge{margin-left:auto;background:#ffb020;color:#3a2a00;font-weight:700;font-size:12px;padding:4px 10px;border-radius:99px}
+  .tabs{max-width:1060px;margin:12px auto 0;display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+  .tab{flex:0 0 auto;border:0;background:rgba(255,255,255,.14);color:#fff;padding:9px 14px;border-radius:10px 10px 0 0;font-size:13.5px;cursor:pointer;white-space:nowrap}
+  .tab.on{background:var(--bg);color:var(--wine2);font-weight:700}
+  .wrap{max-width:1060px;margin:0 auto;padding:18px 14px 60px}
+  .view{display:none}.view.on{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+  h2{margin:0 0 4px;font-size:18px} h3{margin:0 0 10px;font-size:15.5px}
+  .hint{color:var(--muted);font-size:13px;margin:0 0 14px}
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+  input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--txt)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  @media(max-width:640px){.row{grid-template-columns:1fr}}
+  .btn{display:inline-block;border:0;background:var(--wine);color:#fff;font-weight:700;font-size:14.5px;padding:11px 18px;border-radius:10px;cursor:pointer;margin-top:14px}
+  .btn:hover{background:var(--wine2)} .btn.sm{padding:7px 12px;font-size:13px;margin-top:0}
+  .btn.ghost{background:#f6ebec;color:var(--wine2)} .btn.green{background:var(--good)}
+  .slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .slot{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font-size:13.5px;cursor:pointer}
+  .slot.on{border-color:var(--wine);background:#fbeeef;color:var(--wine2);font-weight:700}
+  .ok-box{background:#e6f7f0;border:1px solid #b5e6d3;border-radius:12px;padding:16px;margin-top:14px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;text-align:left;padding:8px 8px;border-bottom:2px solid var(--line)}
+  td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .tbl-wrap{overflow-x:auto}
+  .pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+  .p-new{background:#fdf2d0;color:#8a6a00}.p-ok{background:#def7ec;color:#0a7a54}.p-used{background:#eee;color:#777}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center}
+  .stat b{display:block;font-size:22px;color:var(--wine2)} .stat span{font-size:12px;color:var(--muted)}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--wine2);color:#fff;padding:11px 18px;border-radius:12px;font-size:13.5px;opacity:0;transition:.25s;z-index:50;max-width:92vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+  .muted-s{font-size:12px;color:var(--muted)}
+  .sms{background:#f1f6f1;border:1px solid #cfe3cf;border-radius:14px 14px 14px 4px;padding:12px 14px;font-size:13.5px;max-width:440px;margin-top:10px}
+  .sms b{display:block;font-size:11px;color:#5c7a5c;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .gdpr{background:#f3f0fa;border:1px solid #ddd3f0;border-radius:10px;padding:10px 13px;font-size:12.5px;color:#4d3f6e;margin-top:12px}
+  .stamps{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+  .stamp{width:52px;height:52px;border-radius:50%;border:2.5px dashed #d9c4c6;display:flex;align-items:center;justify-content:center;font-size:22px;background:#fdfafa}
+  .stamp.got{border:2.5px solid var(--wine);background:#fbeeef}
+  .reward-box{background:linear-gradient(135deg,#7c2026,#9e2b33);color:#fff;border-radius:12px;padding:16px;margin-top:14px}
+  .reward-box a,.reward-box .btn{background:#fff;color:var(--wine2)}
+  .stb{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer}
+  .vou{border-radius:12px;padding:16px;margin-top:14px;display:none}
+  .vou.ok{display:block;background:#e6f7f0;border:1px solid #b5e6d3}
+  .vou.bad{display:block;background:#fde8e8;border:1px solid #f5c2c2}
+  .branch-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:6px}
+  .bp{border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;cursor:pointer;background:#fff}
+  .bp.on{border-color:var(--wine);background:#fbeeef}
+  .bp b{display:block;font-size:14.5px} .bp span{font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="inner">
+    <div class="brand">
+      <div class="logo">SG</div>
+      <div>
+        <h1>SG KLINIKA — skaitmeninis modulis</h1>
+        <div class="sub">medicina · estetika — Klaipėda, Mažeikiai, Plungė, Palanga · demonstracinė versija</div>
+      </div>
+      <div class="demo-badge">DEMO — pacientų duomenys išgalvoti</div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-v="reg">📝 Registracija internetu</button>
+      <button class="tab" data-v="adm">🖥️ Registratūra</button>
+      <button class="tab" data-v="rem">⏰ Priminimai</button>
+      <button class="tab" data-v="card">💎 Procedūrų kursas</button>
+      <button class="tab" data-v="vou">🎁 Dovanų kuponai</button>
+      <button class="tab" data-v="rev">⭐ Atsiliepimai</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ══════════ 1. REGISTRACIJA (paciento pusė) ══════════ -->
+  <div class="view on" id="v-reg">
+    <div class="card">
+      <h2>Registracija vizitui internetu</h2>
+      <p class="hint">Taip registraciją matytų pacientas svetainėje sgklinika.lt — pasirenka kliniką, paslaugą ir laisvą laiką bet kuriuo paros metu, be skambučio. Užklausa iškart atsiranda registratūros sąraše (skiltis „Registratūra“).</p>
+      <div id="reg-form">
+        <label>Klinika</label>
+        <div class="branch-pick" id="r-branch"></div>
+        <div class="row">
+          <div><label>Paslaugų sritis</label><select id="r-area"></select></div>
+          <div><label>Paslauga</label><select id="r-service"></select></div>
+        </div>
+        <label>Specialistas</label>
+        <select id="r-spec"></select>
+        <label>Data</label><input type="date" id="r-date">
+        <label>Laisvas laikas <span class="muted-s">(užimti laikai nerodomi)</span></label>
+        <div class="slots" id="r-slots"></div>
+        <div class="row">
+          <div><label>Vardas</label><input id="r-name" placeholder="Vardas"></div>
+          <div><label>Telefonas</label><input id="r-phone" placeholder="+370 6xx xxxxx"></div>
+        </div>
+        <button class="btn" id="r-submit">Registruotis vizitui</button>
+        <div class="gdpr">🔒 <b>Duomenų apsauga:</b> formoje prašoma tik vardo ir telefono — jokių sveikatos duomenų. Duomenys saugomi ES, naudojami tik vizito priminimui ir ištrinami pagal kliniką atitinkančią BDAR tvarką.</div>
+      </div>
+      <div id="reg-ok" style="display:none" class="ok-box">
+        <b>✅ Registracija priimta!</b>
+        <p style="margin:8px 0 0">Patvirtinimą išsiuntėme SMS žinute. Likus parai iki vizito gausite priminimą.<br>
+        <span class="muted-s" id="reg-ok-info"></span></p>
+        <div class="sms"><b>SMS pavyzdys</b><span id="reg-ok-sms"></span></div>
+        <button class="btn ghost sm" style="margin-top:12px" onclick="location.reload()">Nauja registracija</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 2. REGISTRATŪRA ══════════ -->
+  <div class="view" id="v-adm">
+    <div class="stats" id="adm-stats"></div>
+    <div class="card">
+      <h2>Naujos registracijos internetu</h2>
+      <p class="hint">Registratūra mato visas internetu atėjusias užklausas pagal kliniką. Vienas paspaudimas — vizitas patvirtintas, pacientui automatiškai išsiunčiamas patvirtinimo SMS. Nieko nereikia perskambinti.</p>
+      <div class="tbl-wrap"><table><thead><tr><th>Klinika</th><th>Pacientas</th><th>Paslauga</th><th>Laikas</th><th>Būsena</th><th></th></tr></thead>
+      <tbody id="adm-rows"></tbody></table></div>
+    </div>
+    <div class="card">
+      <h3>Kodėl tai apsimoka</h3>
+      <p class="hint" style="margin:0">☎️ Kiekviena internetinė registracija — vienu skambučiu mažiau registratūrai. 🕐 Pacientai registruojasi ir vakare po darbo — kada klinikos telefonas jau neatsiliepia. 📉 Automatinis priminimas prieš parą sumažina neatvykimų skaičių — tuščias vizito laikas kainuoja brangiausiai.</p>
+    </div>
+  </div>
+
+  <!-- ══════════ 3. PRIMINIMAI ══════════ -->
+  <div class="view" id="v-rem">
+    <div class="card">
+      <h2>Automatiniai priminimai</h2>
+      <p class="hint">Du tipai: <b>vizito priminimas</b> (išsiunčiamas savaime likus parai — sukuriamas automatiškai su kiekviena registracija) ir <b>pakartotinio apsilankymo priminimas</b> — profilaktinis patikrinimas po metų, kita kurso procedūra po kelių savaičių, injekcijų atnaujinimas. Registratūra suplanuoja vienu paspaudimu — sistema išsiunčia pati.</p>
+      <div class="row">
+        <div><label>Pacientas</label><input id="m-name" placeholder="Vardas"></div>
+        <div><label>Telefonas</label><input id="m-phone" placeholder="+370 6xx xxxxx"></div>
+      </div>
+      <label>Priminimo tipas — arba spauskite greitą mygtuką</label>
+      <div class="slots">
+        <div class="slot" onclick="quickRem('Profilaktinis sveikatos patikrinimas',12)">Profilaktika: +12 mėn.</div>
+        <div class="slot" onclick="quickRem('Kita kurso procedūra',1)">Kurso procedūra: +4 sav.</div>
+        <div class="slot" onclick="quickRem('Injekcinės procedūros atnaujinimas',6)">Injekcijos: +6 mėn.</div>
+      </div>
+      <div class="row">
+        <div><label>Tipas</label><input id="m-type" placeholder="pvz. Profilaktinis patikrinimas"></div>
+        <div><label>Data</label><input type="date" id="m-date"></div>
+      </div>
+      <button class="btn" onclick="addReminder()">Suplanuoti priminimą</button>
+      <div class="sms"><b>SMS pavyzdys</b>Sveiki! Primename: rytoj 14:00 Jūsų laukia SG klinika Klaipėdoje (S. Daukanto g. 22). Negalėsite atvykti? Atšaukite: sgklinika.lt/v/8241</div>
+    </div>
+    <div class="card">
+      <h3>Suplanuoti priminimai</h3>
+      <div class="tbl-wrap"><table><thead><tr><th>Pacientas</th><th>Tipas</th><th>Terminas</th><th>SMS išsiųs</th><th></th></tr></thead>
+      <tbody id="rem-rows"></tbody></table></div>
+      <p class="muted-s" id="rem-cost"></p>
+    </div>
+  </div>
+
+  <!-- ══════════ 4. PROCEDŪRŲ KURSAS ══════════ -->
+  <div class="view" id="v-card">
+    <div class="card">
+      <h2>Skaitmeninė procedūrų kurso kortelė</h2>
+      <p class="hint">Estetinės procedūros perkamos kursais — ši kortelė gyvena paciento telefone (jokios programėlės diegti nereikia, atsidaro kaip nuoroda). Pacientas visada mato, kiek procedūrų atlikta, kada kita, ir kokia nuolaida laukia kurso pabaigoje. Registratūra pažymi vizitą vienu paspaudimu.</p>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="font-size:30px">💎</div>
+        <div><b style="font-size:17px">Lazerinė epiliacija — 6 procedūrų kursas</b><br><span class="muted-s">Pacientė: Greta · SG estetikos centras, Klaipėda</span></div>
+      </div>
+      <div class="stamps" id="stamps"></div>
+      <div id="card-status"></div>
+      <button class="btn ghost sm" onclick="addStamp()">➕ Simuliuoti vizitą (registratūra pažymėtų atvykus)</button>
+      <button class="btn ghost sm" onclick="resetCard()" style="margin-left:6px">Iš naujo</button>
+      <p class="muted-s" style="margin-top:12px">Veikia bet kokiam kursui ar lojalumo taisyklei: 6-oji procedūra –50 %, kas 5-as veido valymas –30 %, gimtadienio dovana nuolatiniams pacientams — taisykles nustato klinika.</p>
+    </div>
+  </div>
+
+  <!-- ══════════ 5. DOVANŲ KUPONAI ══════════ -->
+  <div class="view" id="v-vou">
+    <div class="card">
+      <h2>Dovanų kuponų patikra</h2>
+      <p class="hint">Kuponai jau parduodami sgklinika.lt — šis modulis leidžia bet kurios klinikos registratūrai akimirksniu patikrinti kupono galiojimą ir pažymėti panaudojimą. Nebelieka skambučių tarp filialų ir popierinių žurnalų; kuponas nepanaudojamas du kartus.</p>
+      <label>Kupono kodas</label>
+      <div style="display:flex;gap:8px">
+        <input id="vo-code" placeholder="SG-2026-XXXX" style="flex:1">
+        <button class="btn sm" style="margin-top:0" onclick="checkVoucher()">Tikrinti</button>
+      </div>
+      <div class="slots" style="margin-top:10px">
+        <div class="slot" onclick="fillCode('SG-2026-0117')">Pavyzdys: galiojantis</div>
+        <div class="slot" onclick="fillCode('SG-2026-0093')">Pavyzdys: jau panaudotas</div>
+      </div>
+      <div class="vou" id="vo-box"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ 6. ATSILIEPIMAI ══════════ -->
+  <div class="view" id="v-rev">
+    <div class="card">
+      <h2>Atsiliepimų rinkimas po vizito</h2>
+      <p class="hint">Praėjus porai valandų po vizito pacientas automatiškai gauna trumpą žinutę su tiesiogine nuoroda palikti Google atsiliepimą — kiekviena klinika renka atsiliepimus į savo profilį. Daugiau ir šviežesnių atsiliepimų = aukštesnė vieta Google žemėlapyje, kai žmogus ieško „klinika Klaipėda“.</p>
+      <label>Klinika</label>
+      <select id="rv-branch"></select>
+      <div class="sms"><b>SMS pavyzdys</b><span id="rv-sms"></span></div>
+      <div class="reward-box">
+        <b>Kodėl verta:</b><br>
+        <span style="font-size:13.5px;opacity:.9">Žinutę gauna tik realiai apsilankę pacientai, todėl atsiliepimai — tikri. Nepatenkintas pacientas dažniau paskambins, o patenkintas — paliks žvaigždutes, kurios dirba jums kasdien.</span>
+      </div>
+    </div>
+  </div>
+
+  <footer style="text-align:center;color:var(--muted);font-size:12px;padding:10px">
+    DEMO · visi pacientų duomenys išgalvoti · siūlo <b>Ignas</b> · projektai777.koduojam@gmail.com
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+const LS = 'sgklinika_demo';
+const BRANCHES = [
+  {n:'Klaipėda', a:'S. Daukanto g. 22', h:'I–V 8–19, VI 9–15'},
+  {n:'Mažeikiai', a:'Naftininkų g. 9', h:'I–V 8–18'},
+  {n:'Plungė', a:'Telšių g. 13', h:'I–V 8–20, VI 8–16'},
+  {n:'Palanga', a:'Vytauto g. 27', h:'I–V 8–18'},
+];
+const AREAS = {
+  'Gydytojų konsultacijos': ['Šeimos gydytojo konsultacija','Dermatovenerologo konsultacija','Vaikų ligų gydytojo konsultacija','Neurologo konsultacija'],
+  'Tyrimai ir diagnostika': ['Echoskopija','Kraujo tyrimai','Rentgenas','Mamografija'],
+  'Estetinė medicina': ['Injekcinių procedūrų konsultacija','Lazerinė epiliacija','Gilus veido valymas','Plaukų slinkimo gydymas','Lazerinis odos atjauninimas'],
+  'Profilaktika ir pažymos': ['Profilaktinis sveikatos patikrinimas','Vairuotojų sveikatos pažyma','Jūrininkų sveikatos patikrinimas'],
+};
+const SPECS = {
+  'Gydytojų konsultacijos': ['Nesvarbu — artimiausias laikas','gyd. R. Kazlauskienė','gyd. M. Petraitis'],
+  'Tyrimai ir diagnostika': ['Nesvarbu — artimiausias laikas','gyd. V. Jonaitienė'],
+  'Estetinė medicina': ['Nesvarbu — artimiausias laikas','kosmetologė E. Jankauskaitė','gyd. dermatologė A. Vaitkienė'],
+  'Profilaktika ir pažymos': ['Nesvarbu — artimiausias laikas','gyd. M. Petraitis'],
+};
+const seed = () => ({
+  bookings: [
+    {br:'Klaipėda', name:'Rūta', phone:'+370 6xx 11111', svc:'Lazerinė epiliacija', date:tomorrow(), time:'10:30', st:'ok'},
+    {br:'Plungė', name:'Jonas', phone:'+370 6xx 22222', svc:'Šeimos gydytojo konsultacija', date:tomorrow(), time:'9:00', st:'new'},
+    {br:'Palanga', name:'Milda', phone:'+370 6xx 33333', svc:'Profilaktinis sveikatos patikrinimas', date:tomorrow(2), time:'14:00', st:'new'},
+  ],
+  reminders: [
+    {name:'Greta', phone:'+370 6xx 44444', type:'Kita kurso procedūra (lazerinė epiliacija)', date:plusDays(28)},
+    {name:'Jonas', phone:'+370 6xx 22222', type:'Profilaktinis sveikatos patikrinimas', date:plusMonths(12)},
+  ],
+  stamps: 2,
+  vouchers: {'SG-2026-0117':{v:'100 €', for:'Estetinės medicinos procedūroms', used:false}, 'SG-2026-0093':{v:'50 €', for:'Bet kuriai paslaugai', used:true}},
+});
+function tomorrow(d=1){ return plusDays(d); }
+function plusDays(d){ const t=new Date(Date.now()+d*864e5); return t.toISOString().slice(0,10); }
+function plusMonths(m){ const t=new Date(); t.setMonth(t.getMonth()+m); return t.toISOString().slice(0,10); }
+let DB;
+try { DB = JSON.parse(localStorage.getItem(LS)) || seed(); } catch(e){ DB = seed(); }
+const save = () => localStorage.setItem(LS, JSON.stringify(DB));
+const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const toast = m => { const t = document.getElementById('toast'); t.innerHTML = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 3400); };
+
+// ── Tabs ──
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if(!b) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t===b));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on', v.id==='v-'+b.dataset.v));
+  render();
+});
+
+// ── 1. Registracija ──
+const brEl = document.getElementById('r-branch');
+BRANCHES.forEach((b,i)=>{
+  const d = document.createElement('div'); d.className = 'bp'+(i===0?' on':'');
+  d.innerHTML = `<b>${esc(b.n)}</b><span>${esc(b.a)} · ${esc(b.h)}</span>`;
+  d.onclick = () => { brEl.querySelectorAll('.bp').forEach(x=>x.classList.remove('on')); d.classList.add('on'); };
+  brEl.appendChild(d);
+});
+const areaEl = document.getElementById('r-area'), svcEl = document.getElementById('r-service'), specEl = document.getElementById('r-spec');
+areaEl.innerHTML = Object.keys(AREAS).map(a=>`<option>${esc(a)}</option>`).join('');
+function fillSvc(){
+  svcEl.innerHTML = AREAS[areaEl.value].map(s=>`<option>${esc(s)}</option>`).join('');
+  specEl.innerHTML = SPECS[areaEl.value].map(s=>`<option>${esc(s)}</option>`).join('');
+}
+areaEl.onchange = fillSvc; fillSvc();
+document.getElementById('r-date').valueAsDate = new Date(Date.now() + 2*864e5);
+const slotsEl = document.getElementById('r-slots');
+['8:30','9:00','10:30','11:00','13:30','14:00','15:30','17:00'].forEach((s,i)=>{
+  if (i===1 || i===4) return; // „užimti" laikai — demo efektas
+  const d = document.createElement('div'); d.className='slot'; d.textContent=s;
+  d.onclick = () => { slotsEl.querySelectorAll('.slot').forEach(x=>x.classList.remove('on')); d.classList.add('on'); };
+  slotsEl.appendChild(d);
+});
+document.getElementById('r-submit').onclick = () => {
+  const g = id => document.getElementById(id).value.trim();
+  const slot = slotsEl.querySelector('.slot.on');
+  const br = brEl.querySelector('.bp.on b').textContent;
+  if (!g('r-name') || !g('r-phone') || !slot) { toast('Užpildykite vardą, telefoną ir pasirinkite laiką'); return; }
+  DB.bookings.unshift({br, name:g('r-name'), phone:g('r-phone'), svc:g('r-service'), date:g('r-date'), time:slot.textContent, st:'new'});
+  DB.reminders.push({name:g('r-name'), phone:g('r-phone'), type:'Vizito priminimas (automatinis)', date:g('r-date')});
+  save();
+  const b = BRANCHES.find(x=>x.n===br);
+  document.getElementById('reg-form').style.display='none';
+  document.getElementById('reg-ok').style.display='block';
+  document.getElementById('reg-ok-info').textContent = `${g('r-service')} · ${br} · ${g('r-date')} ${slot.textContent}`;
+  document.getElementById('reg-ok-sms').textContent = `SG klinika: Jūsų vizitas patvirtintas — ${g('r-date')} ${slot.textContent}, ${br}, ${b.a}. Iki pasimatymo!`;
+  toast('📨 Pacientui išsiųstas patvirtinimas SMS (demo) — registracija matoma skiltyje „Registratūra“');
+};
+
+// ── 2. Registratūra ──
+function renderAdm(){
+  const nw = DB.bookings.filter(b=>b.st==='new').length;
+  document.getElementById('adm-stats').innerHTML = `
+    <div class="stat"><b>${DB.bookings.length}</b><span>artimiausi vizitai</span></div>
+    <div class="stat"><b>${nw}</b><span>naujos internetu</span></div>
+    <div class="stat"><b>${DB.reminders.length}</b><span>suplanuoti priminimai</span></div>
+    <div class="stat"><b>${DB.bookings.length + DB.reminders.length}</b><span>skambučių sutaupyta</span></div>`;
+  document.getElementById('adm-rows').innerHTML = DB.bookings.map((b,i)=>`
+    <tr><td><b>${esc(b.br)}</b></td><td>${esc(b.name)}<br><span class="muted-s">${esc(b.phone)}</span></td>
+    <td>${esc(b.svc)}</td><td>${esc(b.date)}<br>${esc(b.time)}</td>
+    <td><span class="pill ${b.st==='new'?'p-new':'p-ok'}">${b.st==='new'?'Nauja':'Patvirtinta'}</span></td>
+    <td>${b.st==='new'?`<button class="btn sm green" onclick="confirmB(${i})">Patvirtinti</button>`:''}</td></tr>`).join('')
+    || '<tr><td colspan="6" class="muted-s">Registracijų nėra</td></tr>';
+}
+window.confirmB = i => { DB.bookings[i].st='ok'; save(); renderAdm(); toast('📨 Pacientui automatiškai išsiųstas patvirtinimo SMS'); };
+
+// ── 3. Priminimai ──
+window.quickRem = (type, months) => {
+  document.getElementById('m-type').value = type;
+  const d = new Date(); months===1 ? d.setDate(d.getDate()+28) : d.setMonth(d.getMonth()+months);
+  document.getElementById('m-date').valueAsDate = d;
+};
+window.addReminder = () => {
+  const g = id => document.getElementById(id).value.trim();
+  if (!g('m-name') || !g('m-date')) { toast('Įveskite pacientą ir datą'); return; }
+  DB.reminders.push({name:g('m-name'), phone:g('m-phone')||'—', type:g('m-type')||'Priminimas', date:g('m-date')});
+  DB.reminders.sort((a,b)=>a.date<b.date?-1:1);
+  save(); renderRem(); toast('⏰ Priminimas suplanuotas — SMS išsiųs automatiškai');
+};
+window.delReminder = i => { DB.reminders.splice(i,1); save(); renderRem(); };
+function renderRem(){
+  document.getElementById('rem-rows').innerHTML = DB.reminders.map((r,i)=>{
+    const send = new Date(new Date(r.date) - 864e5).toISOString().slice(0,10);
+    return `<tr><td><b>${esc(r.name)}</b><br><span class="muted-s">${esc(r.phone)}</span></td><td>${esc(r.type)}</td><td>${esc(r.date)}</td><td>${send} <span class="muted-s">(prieš parą)</span></td>
+    <td><button class="stb" onclick="delReminder(${i})">✕</button></td></tr>`;
+  }).join('') || '<tr><td colspan="5" class="muted-s">Priminimų nėra</td></tr>';
+  document.getElementById('rem-cost').textContent = `Numatoma kaina: ${DB.reminders.length} SMS × ~0,03 € = ~${(DB.reminders.length*0.03).toFixed(2)} € (mokama tik už išsiųstas žinutes, jokio mėnesinio mokesčio)`;
+}
+
+// ── 4. Kurso kortelė ──
+function renderCard(){
+  const total = 6, got = DB.stamps;
+  document.getElementById('stamps').innerHTML = Array.from({length:total},(_,i)=>
+    `<div class="stamp ${i<got?'got':''}">${i<got?'💎':i+1}</div>`).join('');
+  const st = document.getElementById('card-status');
+  if (got >= total){
+    st.innerHTML = `<div class="reward-box"><b>🎉 Kursas baigtas — paskutinei procedūrai pritaikyta –50 % nuolaida!</b><br>
+    <span style="font-size:13.5px;opacity:.9">Po 4 savaičių pacientė automatiškai gaus priminimą apie palaikomąją procedūrą.</span></div>`;
+  } else {
+    st.innerHTML = `<p style="margin:6px 0 0"><b>${got} / ${total}</b> procedūrų atlikta · kita rekomenduojama po 4 sav. · <span style="color:var(--wine2);font-weight:700">6-oji procedūra –50 %</span></p>`;
+  }
+}
+window.addStamp = () => { if (DB.stamps<6){ DB.stamps++; save(); renderCard(); toast(DB.stamps===6?'🎉 Kursas baigtas!':'💎 Vizitas pažymėtas — pacientė mato progresą savo telefone'); } };
+window.resetCard = () => { DB.stamps=2; save(); renderCard(); };
+
+// ── 5. Kuponai ──
+window.fillCode = c => { document.getElementById('vo-code').value = c; checkVoucher(); };
+window.checkVoucher = () => {
+  const c = document.getElementById('vo-code').value.trim().toUpperCase();
+  const box = document.getElementById('vo-box');
+  const v = DB.vouchers[c];
+  if (!v){ box.className='vou bad'; box.innerHTML = '<b>❌ Kuponas nerastas</b><br><span class="muted-s">Patikrinkite kodą arba paspauskite pavyzdį aukščiau.</span>'; return; }
+  if (v.used){ box.className='vou bad'; box.innerHTML = `<b>⛔ Kuponas jau panaudotas</b><br><span class="muted-s">${esc(c)} · ${esc(v.v)} · ${esc(v.for)}</span>`; return; }
+  box.className='vou ok';
+  box.innerHTML = `<b>✅ Galiojantis kuponas — ${esc(v.v)}</b><br><span class="muted-s">${esc(c)} · ${esc(v.for)}</span><br>
+  <button class="btn sm green" style="margin-top:10px" onclick="useVoucher('${esc(c)}')">Pažymėti panaudotą</button>`;
+};
+window.useVoucher = c => { DB.vouchers[c].used = true; save(); checkVoucher(); toast('✅ Pažymėta — kuponas nebegalios kitoje klinikoje'); };
+
+// ── 6. Atsiliepimai ──
+const rvB = document.getElementById('rv-branch');
+rvB.innerHTML = BRANCHES.map(b=>`<option>${esc(b.n)}</option>`).join('');
+function renderRev(){
+  document.getElementById('rv-sms').textContent =
+    `Ačiū, kad lankėtės SG klinikoje (${rvB.value})! Jei liko gera nuomonė, būsime dėkingi už atsiliepimą — tai užtrunka minutę: g.page/sg-${rvB.value.toLowerCase().slice(0,4)}/review`;
+}
+rvB.onchange = renderRev;
+
+// ── Render all ──
+function render(){ renderAdm(); renderRem(); renderCard(); renderRev(); }
+render();
+</script>
+</body>
+</html>
