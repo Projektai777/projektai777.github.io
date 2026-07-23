@@ -1,0 +1,485 @@
+<!doctype html>
+<!-- © 2026. DEMO for UAB Autoaivas (aivas.lt) — auto-service digital module.
+     Self-contained, all data invented, state in localStorage (autoaivas_demo).
+     Covers: registration, repair status + QR client link + notifications,
+     SMS reminders, review requests, estimates, parts goods-in parsing. -->
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0d2340">
+<title>Autoaivas — serviso modulis (DEMO)</title>
+<style>
+  :root{
+    --navy:#0d2340; --navy2:#123056; --blue:#1464d8; --blue2:#0f52b0;
+    --red:#d92b2b; --bg:#f2f5fa; --card:#ffffff; --line:#dde5f0;
+    --txt:#16233a; --muted:#5b6b85; --good:#0e9f6e; --warn:#c27803; --radius:14px;
+  }
+  *{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+  body{margin:0;font:15px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--txt)}
+  .top{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:18px 16px 14px}
+  .top .inner{max-width:1060px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .brand .logo{width:46px;height:46px;border-radius:12px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff}
+  .brand h1{margin:0;font-size:20px;letter-spacing:.3px}
+  .brand .sub{font-size:12.5px;opacity:.75}
+  .demo-badge{margin-left:auto;background:#ffb020;color:#3a2a00;font-weight:700;font-size:12px;padding:4px 10px;border-radius:99px}
+  .tabs{max-width:1060px;margin:12px auto 0;display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+  .tab{flex:0 0 auto;border:0;background:rgba(255,255,255,.12);color:#fff;padding:9px 14px;border-radius:10px 10px 0 0;font-size:13.5px;cursor:pointer;white-space:nowrap}
+  .tab.on{background:var(--bg);color:var(--navy);font-weight:700}
+  .wrap{max-width:1060px;margin:0 auto;padding:18px 14px 60px}
+  .view{display:none}.view.on{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+  h2{margin:0 0 4px;font-size:18px} h3{margin:0 0 10px;font-size:15.5px}
+  .hint{color:var(--muted);font-size:13px;margin:0 0 14px}
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+  input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--txt)}
+  textarea{min-height:110px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  @media(max-width:640px){.row{grid-template-columns:1fr}}
+  .btn{display:inline-block;border:0;background:var(--blue);color:#fff;font-weight:700;font-size:14.5px;padding:11px 18px;border-radius:10px;cursor:pointer;margin-top:14px}
+  .btn:hover{background:var(--blue2)} .btn.sm{padding:7px 12px;font-size:13px;margin-top:0}
+  .btn.ghost{background:#eef3fb;color:var(--blue2)} .btn.green{background:var(--good)} .btn.red{background:var(--red)}
+  .slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .slot{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font-size:13.5px;cursor:pointer}
+  .slot.on{border-color:var(--blue);background:#e8f0fe;color:var(--blue2);font-weight:700}
+  .ok-box{background:#e6f7f0;border:1px solid #b5e6d3;border-radius:12px;padding:16px;margin-top:14px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;text-align:left;padding:8px 8px;border-bottom:2px solid var(--line)}
+  td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .tbl-wrap{overflow-x:auto}
+  .pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap}
+  .st0{background:#e8f0fe;color:#1a56b0}.st1{background:#fdf2d0;color:#8a6a00}.st2{background:#fde8e8;color:#b02525}
+  .st3{background:#e5e0fb;color:#5b3fd0}.st4{background:#ffe8d8;color:#b05a10}.st5{background:#def7ec;color:#0a7a54}
+  .steps{list-style:none;margin:14px 0 0;padding:0}
+  .steps li{position:relative;padding:0 0 22px 34px}
+  .steps li::before{content:'';position:absolute;left:10px;top:22px;bottom:0;width:2px;background:var(--line)}
+  .steps li:last-child::before{display:none}
+  .dot{position:absolute;left:0;top:1px;width:22px;height:22px;border-radius:50%;background:#e6ebf4;border:2px solid #c8d3e4;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff}
+  .steps li.done .dot{background:var(--good);border-color:var(--good)}
+  .steps li.now .dot{background:var(--blue);border-color:var(--blue);box-shadow:0 0 0 4px #1464d833}
+  .steps li.now .st-name{font-weight:800;color:var(--blue2)}
+  .st-name{font-size:14.5px}.st-time{font-size:12px;color:var(--muted)}
+  .comment{background:#fff8e6;border:1px solid #f0dfae;border-radius:10px;padding:12px;margin-top:12px;font-size:14px}
+  .notif{font-size:12.5px;color:var(--muted);border-left:3px solid var(--line);padding:2px 0 2px 10px;margin:6px 0}
+  .review-box{background:linear-gradient(135deg,#103a6e,#0d2340);color:#fff;border-radius:12px;padding:16px;margin-top:14px}
+  .review-box a{display:inline-block;background:#fff;color:#123;font-weight:700;text-decoration:none;border-radius:9px;padding:9px 14px;margin:10px 8px 0 0;font-size:13.5px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr}}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center}
+  .stat b{display:block;font-size:22px;color:var(--navy)} .stat span{font-size:12px;color:var(--muted)}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;padding:11px 18px;border-radius:12px;font-size:13.5px;opacity:0;transition:.25s;z-index:50;max-width:92vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+  .flag{font-size:11.5px;color:var(--muted)}
+  .total-line{display:flex;justify-content:space-between;padding:6px 4px;font-size:14.5px}
+  .total-line.grand{font-size:18px;font-weight:800;border-top:2px solid var(--line);margin-top:6px;padding-top:10px}
+  .qr-wrap{text-align:center;padding:10px}
+  .qr-wrap img{border:1px solid var(--line);border-radius:10px;padding:6px;background:#fff}
+  .muted-s{font-size:12px;color:var(--muted)}
+  .status-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .stb{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer}
+  .stb.cur{border-color:var(--blue);background:#e8f0fe;font-weight:700}
+  @media print{.top,.tabs,.no-print{display:none!important}.card{border:0}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="inner">
+    <div class="brand">
+      <div class="logo">A</div>
+      <div>
+        <h1>AUTOAIVAS — serviso modulis</h1>
+        <div class="sub">Bosch Car Service · Dembava · demonstracinė versija</div>
+      </div>
+      <div class="demo-badge">DEMO — duomenys išgalvoti</div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-v="reg">📝 Registracija</button>
+      <button class="tab" data-v="client">📱 Kliento nuoroda</button>
+      <button class="tab" data-v="staff">🛠️ Vadybininkas</button>
+      <button class="tab" data-v="rem">⏰ Priminimai</button>
+      <button class="tab" data-v="est">📄 Sąmata</button>
+      <button class="tab" data-v="parts">📦 Pajamavimas</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ══════════ 1. REGISTRACIJA (kliento pusė) ══════════ -->
+  <div class="view on" id="v-reg">
+    <div class="card">
+      <h2>Registracija į servisą</h2>
+      <p class="hint">Taip registraciją matytų klientas svetainėje aivas.lt — pasirenka paslaugą ir laisvą laiką, iškart gauna patvirtinimą. Užklausa automatiškai atsiranda vadybininko sąraše (skiltis „Vadybininkas“).</p>
+      <div id="reg-form">
+        <label>Paslauga</label>
+        <select id="r-service">
+          <option>Kompiuterinė diagnostika</option><option>Važiuoklės remontas / 3D geometrija</option>
+          <option>Stabdžių sistemos remontas</option><option>Variklio remontas</option>
+          <option>Kondicionieriaus pildymas / remontas</option><option>Padangų keitimas</option>
+          <option>Paruošimas techninei apžiūrai</option><option>Kita (aprašykite)</option>
+        </select>
+        <div class="row">
+          <div><label>Valst. numeris</label><input id="r-plate" placeholder="ABC 123" maxlength="8"></div>
+          <div><label>Automobilis</label><input id="r-car" placeholder="pvz. VW Passat, 2018"></div>
+        </div>
+        <div class="row">
+          <div><label>Vardas</label><input id="r-name" placeholder="Vardas"></div>
+          <div><label>Telefonas</label><input id="r-phone" placeholder="+370 6xx xxxxx"></div>
+        </div>
+        <label>Data</label><input type="date" id="r-date">
+        <label>Laisvas laikas <span class="flag">(užimti laikai nerodomi)</span></label>
+        <div class="slots" id="r-slots"></div>
+        <label>Gedimo aprašymas (nebūtina)</label>
+        <textarea id="r-desc" placeholder="Trumpai aprašykite problemą…" style="min-height:70px"></textarea>
+        <button class="btn" id="r-submit">Registruotis</button>
+      </div>
+      <div id="reg-ok" style="display:none" class="ok-box">
+        <b>✅ Registracija priimta!</b>
+        <p style="margin:8px 0 0">Patvirtinimą išsiuntėme SMS žinute ir el. paštu. Dieną prieš vizitą gausite priminimą.<br>
+        <span class="muted-s" id="reg-ok-info"></span></p>
+        <button class="btn ghost sm no-print" style="margin-top:12px" onclick="location.reload()">Nauja registracija</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 2. KLIENTO NUORODA (būsenos puslapis) ══════════ -->
+  <div class="view" id="v-client">
+    <div class="card">
+      <h2>Jūsų automobilio remonto eiga</h2>
+      <p class="hint">Tai mato klientas, atidaręs savo unikalią nuorodą ar nuskenavęs QR kodą (gautą registracijos SMS žinutėje arba priimant automobilį). Matomas tik JO automobilis — jokių prisijungimų nereikia.</p>
+      <div id="client-body"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ 3. VADYBININKAS ══════════ -->
+  <div class="view" id="v-staff">
+    <div class="stats" id="staff-stats"></div>
+    <div class="card">
+      <h2>Užsakymai</h2>
+      <p class="hint">Vienas paspaudimas = nauja būsena. Sistema pati išsiunčia el. laišką (visada) ir SMS (tik svarbioms būsenoms: „laukiama sprendimo“ ir „paruoštas atsiimti“). Nieko nereikia perrašinėti antrą kartą.</p>
+      <div id="staff-orders"></div>
+    </div>
+    <div class="card">
+      <h3>🆕 Naujos registracijos iš svetainės</h3>
+      <div id="staff-new"><p class="muted-s">Kol kas nėra — užpildykite formą skiltyje „Registracija“.</p></div>
+    </div>
+  </div>
+
+  <!-- ══════════ 4. PRIMINIMAI ══════════ -->
+  <div class="view" id="v-rem">
+    <div class="card">
+      <h2>Automatiniai SMS priminimai</h2>
+      <p class="hint">Atiduodant automobilį vadybininkas vienu paspaudimu suplanuoja kitą priminimą — sistema pati išsiųs SMS likus 7 d. iki termino. Kaina ~0,03 € / SMS, jokio mėnesinio mokesčio.</p>
+      <div class="row">
+        <div><label>Automobilis (valst. nr.)</label><input id="m-plate" placeholder="ABC 123"></div>
+        <div><label>Telefonas</label><input id="m-phone" placeholder="+370 6xx xxxxx"></div>
+      </div>
+      <label>Priminimo tipas</label>
+      <select id="m-type">
+        <option>Techninė apžiūra (TA)</option><option>Planinis aptarnavimas</option>
+        <option>Alyvos keitimas</option><option>Sezoninis padangų keitimas</option><option>Kita</option>
+      </select>
+      <label>Terminas — arba spauskite greitą mygtuką</label>
+      <div class="slots">
+        <div class="slot" onclick="quickDate(12)">TA: +12 mėn.</div>
+        <div class="slot" onclick="quickDate(6)">Alyva: +6 mėn.</div>
+        <div class="slot" onclick="quickDate(4)">Padangos: +4 mėn.</div>
+      </div>
+      <input type="date" id="m-date" style="margin-top:8px">
+      <button class="btn" onclick="addReminder()">Suplanuoti priminimą</button>
+    </div>
+    <div class="card">
+      <h3>Suplanuoti priminimai</h3>
+      <div class="tbl-wrap"><table><thead><tr><th>Automobilis</th><th>Tipas</th><th>Terminas</th><th>SMS išsiųs</th><th></th></tr></thead>
+      <tbody id="rem-rows"></tbody></table></div>
+      <p class="muted-s" id="rem-cost"></p>
+    </div>
+  </div>
+
+  <!-- ══════════ 5. SĄMATA ══════════ -->
+  <div class="view" id="v-est">
+    <div class="card">
+      <h2>Sąmatos skaičiuoklė</h2>
+      <p class="hint">Vadybininkas pasirenka darbą — normatyvinis laikas įsikelia iš normatyvų lentelės, kaina paskaičiuojama pagal Jūsų valandinį įkainį. Detalės pridedamos iš pajamuotų važtaraščių arba ranka. Demo normatyvai — pavyzdiniai.</p>
+      <div class="row">
+        <div><label>Automobilis</label><select id="e-car"><option>VW Passat B8 2.0 TDI (2018)</option><option>Toyota RAV4 2.5 Hybrid (2020)</option><option>Škoda Octavia III 1.6 TDI (2016)</option></select></div>
+        <div><label>Valandinis įkainis, €/val.</label><input type="number" id="e-rate" value="45" min="10"></div>
+      </div>
+      <label>Pridėti darbą (normatyvai)</label>
+      <div style="display:flex;gap:8px"><select id="e-job" style="flex:1"></select><button class="btn sm" style="margin-top:0" onclick="addJob()">+ Pridėti</button></div>
+      <div class="tbl-wrap" style="margin-top:14px"><table><thead><tr><th>Darbas</th><th>Norma, val.</th><th>Kaina, €</th><th></th></tr></thead><tbody id="e-jobs"></tbody></table></div>
+      <label style="margin-top:16px">Detalės</label>
+      <div class="row">
+        <div><input id="e-p-name" placeholder="Detalė, pvz. Stabdžių diskai (pora)"></div>
+        <div style="display:flex;gap:8px"><input type="number" id="e-p-price" placeholder="Kaina €" style="flex:1"><button class="btn sm" style="margin-top:0" onclick="addPart()">+ </button></div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:8px"><table><tbody id="e-parts"></tbody></table></div>
+      <div style="max-width:380px;margin-left:auto;margin-top:14px">
+        <div class="total-line"><span>Darbai</span><b id="t-labor">0,00 €</b></div>
+        <div class="total-line"><span>Detalės</span><b id="t-parts">0,00 €</b></div>
+        <div class="total-line"><span>PVM 21 %</span><b id="t-vat">0,00 €</b></div>
+        <div class="total-line grand"><span>Iš viso</span><span id="t-grand">0,00 €</span></div>
+      </div>
+      <button class="btn ghost no-print" onclick="window.print()">🖨️ Spausdinti / išsaugoti PDF</button>
+    </div>
+  </div>
+
+  <!-- ══════════ 6. PAJAMAVIMAS ══════════ -->
+  <div class="view" id="v-parts">
+    <div class="card">
+      <h2>Detalių pajamavimas iš važtaraščio</h2>
+      <p class="hint">Įkeliate tiekėjo e-važtaraštį (arba nukopijuojate jo tekstą) — sistema pati atpažįsta kodus, pavadinimus, kiekius ir kainas. Beliks vienu paspaudimu priskirti automobiliui ir eksportuoti į Jūsų apskaitos programą. Jokio perrašinėjimo ranka.</p>
+      <textarea id="p-src" placeholder="Įklijuokite važtaraščio eilutes…"></textarea>
+      <button class="btn ghost sm" style="margin-top:10px" onclick="loadSample()">Įkelti pavyzdinį važtaraštį</button>
+      <button class="btn sm" style="margin-top:10px" onclick="parseDoc()">Atpažinti detales →</button>
+      <div class="tbl-wrap" style="margin-top:14px"><table id="p-table" style="display:none"><thead><tr><th>Kodas</th><th>Pavadinimas</th><th>Kiekis</th><th>Kaina, €</th><th>Priskirti automobiliui</th></tr></thead><tbody id="p-rows"></tbody></table></div>
+      <div id="p-actions" style="display:none">
+        <button class="btn green" onclick="exportCSV()">⬇️ Eksportuoti CSV (į apskaitos programą)</button>
+        <p class="muted-s">CSV failą importuoja dauguma apskaitos programų; galima ir tiesioginė integracija, jei programa turi API.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer style="text-align:center;color:var(--muted);font-size:12px;padding:10px">
+    DEMO · visi duomenys išgalvoti · siūlo <b>Ignas</b> · projektai777.koduojam@gmail.com
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+// ── Būsenos ──
+const STATUSES = ['Automobilis priimtas','Atliekama diagnostika','Laukiama kliento sprendimo','Vykdomas remontas','Laukiama detalių','Paruoštas atsiimti'];
+const SMS_STATUSES = [2,5]; // svarbios būsenos — siunčiamas ir SMS
+const LS = 'autoaivas_demo';
+
+// ── Duomenys (localStorage) ──
+const seed = () => ({
+  orders: [
+    {id:'U-241', plate:'KJP 512', car:'VW Passat B8', name:'Tomas', phone:'+370 6xx 11111', status:3, comment:'Pakeisti priekiniai amortizatoriai, laukiame ramsčių guolių.', notifs:[['El. laiškas','Automobilis priimtas'],['El. laiškas + SMS','Laukiama kliento sprendimo'],['El. laiškas','Vykdomas remontas']]},
+    {id:'U-242', plate:'HRE 209', car:'Toyota RAV4', name:'Lina', phone:'+370 6xx 22222', status:1, comment:'', notifs:[['El. laiškas','Automobilis priimtas']]},
+    {id:'U-243', plate:'BDK 774', car:'Škoda Octavia', name:'Andrius', phone:'+370 6xx 33333', status:5, comment:'Viskas atlikta, sąskaita išsiųsta el. paštu.', notifs:[['El. laiškas','Automobilis priimtas'],['El. laiškas + SMS','Paruoštas atsiimti'],['SMS (po 2 val.)','Prašymas palikti atsiliepimą ⭐']]},
+  ],
+  requests: [],
+  reminders: [
+    {plate:'KJP 512', phone:'+370 6xx 11111', type:'Techninė apžiūra (TA)', date:'2027-03-10'},
+    {plate:'BDK 774', phone:'+370 6xx 33333', type:'Alyvos keitimas', date:'2027-01-20'},
+  ],
+});
+let DB;
+try { DB = JSON.parse(localStorage.getItem(LS)) || seed(); } catch(e){ DB = seed(); }
+const save = () => localStorage.setItem(LS, JSON.stringify(DB));
+const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const toast = m => { const t = document.getElementById('toast'); t.innerHTML = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 3200); };
+const eur = n => n.toFixed(2).replace('.',',') + ' €';
+
+// ── Tabs ──
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if(!b) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t===b));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on', v.id==='v-'+b.dataset.v));
+  render();
+});
+
+// ── 1. Registracija ──
+const slotsEl = document.getElementById('r-slots');
+['8:00','9:00','10:00','11:30','13:00','14:00','15:30','16:30'].forEach((s,i)=>{
+  if (i===2 || i===5) return; // "užimti" laikai — demo efektas
+  const d = document.createElement('div'); d.className='slot'; d.textContent=s;
+  d.onclick = () => { slotsEl.querySelectorAll('.slot').forEach(x=>x.classList.remove('on')); d.classList.add('on'); };
+  slotsEl.appendChild(d);
+});
+document.getElementById('r-date').valueAsDate = new Date(Date.now() + 2*864e5);
+document.getElementById('r-submit').onclick = () => {
+  const g = id => document.getElementById(id).value.trim();
+  const slot = slotsEl.querySelector('.slot.on');
+  if (!g('r-name') || !g('r-phone') || !slot) { toast('Užpildykite vardą, telefoną ir pasirinkite laiką'); return; }
+  DB.requests.push({service:g('r-service'), plate:g('r-plate')||'—', car:g('r-car')||'—', name:g('r-name'), phone:g('r-phone'), date:g('r-date'), time:slot.textContent, desc:g('r-desc')});
+  save();
+  document.getElementById('reg-form').style.display='none';
+  document.getElementById('reg-ok').style.display='block';
+  document.getElementById('reg-ok-info').textContent = `${g('r-service')} · ${g('r-date')} ${slot.textContent}`;
+  toast('📨 Klientui išsiųstas patvirtinimas SMS + el. paštu (demo)');
+};
+
+// ── 2. Kliento puslapis ──
+function renderClient(){
+  const o = DB.orders[0]; // demo: rodomas pirmas užsakymas
+  const el = document.getElementById('client-body');
+  el.innerHTML = `
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
+      <div style="font-size:30px">🚗</div>
+      <div><b style="font-size:17px">${esc(o.car)} · ${esc(o.plate)}</b><br><span class="muted-s">Užsakymas ${esc(o.id)} · Autoaivas, Dembava</span></div>
+    </div>
+    <ol class="steps">${STATUSES.map((s,i)=>`
+      <li class="${i<o.status?'done':i===o.status?'now':''}">
+        <span class="dot">${i<o.status?'✓':''}</span>
+        <div class="st-name">${esc(s)}</div>
+        ${i===o.status?'<div class="st-time">Dabartinė būsena</div>':''}
+      </li>`).join('')}
+    </ol>
+    ${o.comment ? `<div class="comment">💬 <b>Serviso komentaras:</b> ${esc(o.comment)}</div>` : ''}
+    <h3 style="margin-top:18px">Išsiųsti pranešimai</h3>
+    ${o.notifs.map(n=>`<div class="notif"><b>${esc(n[0])}</b> — ${esc(n[1])}</div>`).join('')}
+    ${o.status===5 ? `
+    <div class="review-box">
+      <b>Ačiū, kad rinkotės Autoaivas! 🙏</b><br>
+      <span style="font-size:13.5px;opacity:.85">Jūsų nuomonė mums labai svarbi — atsiliepimas užtruks vos minutę.</span><br>
+      <a href="#" onclick="return false">⭐ Google atsiliepimas</a>
+      <a href="#" onclick="return false">👍 Facebook atsiliepimas</a>
+      <div style="font-size:11.5px;opacity:.6;margin-top:10px">Šią žinutę klientas gauna SMS automatiškai, praėjus 2 val. po automobilio atsiėmimo.</div>
+    </div>` : `<p class="muted-s no-print" style="margin-top:14px">💡 Skiltyje „Vadybininkas“ pakeiskite šio užsakymo (${esc(o.id)}) būseną — pamatysite, kaip atsinaujina kliento vaizdas ir kada atsiranda atsiliepimo prašymas (būsena „Paruoštas atsiimti“).</p>`}`;
+}
+
+// ── 3. Vadybininkas ──
+function renderStaff(){
+  const stats = document.getElementById('staff-stats');
+  const active = DB.orders.filter(o=>o.status<5).length;
+  const ready = DB.orders.filter(o=>o.status===5).length;
+  const sms = DB.orders.reduce((a,o)=>a+o.notifs.filter(n=>n[0].includes('SMS')).length,0);
+  stats.innerHTML = `
+    <div class="stat"><b>${DB.orders.length}</b><span>užsakymai</span></div>
+    <div class="stat"><b>${active}</b><span>vykdomi</span></div>
+    <div class="stat"><b>${ready}</b><span>paruošti atsiimti</span></div>
+    <div class="stat"><b>${sms}</b><span>išsiųsta SMS</span></div>
+    <div class="stat"><b>${DB.reminders.length}</b><span>priminimai</span></div>`;
+  const list = document.getElementById('staff-orders');
+  list.innerHTML = DB.orders.map((o,oi)=>`
+    <div style="border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <b>${esc(o.plate)}</b> <span class="muted-s">${esc(o.car)} · ${esc(o.name)} · ${esc(o.phone)}</span>
+        <span class="pill st${o.status}" style="margin-left:auto">${esc(STATUSES[o.status])}</span>
+      </div>
+      <div class="status-btns">${STATUSES.map((s,si)=>`<button class="stb ${si===o.status?'cur':''}" onclick="setStatus(${oi},${si})">${esc(s)}</button>`).join('')}</div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <input placeholder="Komentaras klientui…" value="${esc(o.comment)}" onchange="setComment(${oi},this.value)" style="flex:1;min-width:200px">
+        <button class="btn ghost sm" onclick="showQr(${oi})">📱 QR / nuoroda</button>
+      </div>
+      <div id="qr-${oi}" style="display:none" class="qr-wrap">
+        <img alt="QR" width="150" height="150" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(location.origin+location.pathname+'?o='+o.id+'&k=demo')}">
+        <div class="muted-s">Unikali kliento nuoroda — atspausdinama ant priėmimo akto arba išsiunčiama SMS.<br>Klientas mato tik savo automobilį.</div>
+      </div>
+    </div>`).join('');
+  const nw = document.getElementById('staff-new');
+  if (DB.requests.length) nw.innerHTML = `<div class="tbl-wrap"><table><thead><tr><th>Klientas</th><th>Automobilis</th><th>Paslauga</th><th>Laikas</th><th></th></tr></thead><tbody>
+    ${DB.requests.map((r,i)=>`<tr><td>${esc(r.name)}<br><span class="muted-s">${esc(r.phone)}</span></td><td>${esc(r.plate)}<br><span class="muted-s">${esc(r.car)}</span></td><td>${esc(r.service)}</td><td>${esc(r.date)}<br>${esc(r.time)}</td>
+    <td><button class="btn sm green" onclick="acceptReq(${i})">Priimti → užsakymas</button></td></tr>`).join('')}</tbody></table></div>`;
+  else nw.innerHTML = '<p class="muted-s">Kol kas nėra — užpildykite formą skiltyje „Registracija“.</p>';
+}
+window.setStatus = (oi, si) => {
+  const o = DB.orders[oi]; if (o.status === si) return;
+  o.status = si;
+  const ch = SMS_STATUSES.includes(si) ? 'El. laiškas + SMS' : 'El. laiškas';
+  o.notifs.push([ch, STATUSES[si]]);
+  let msg = `📨 Klientui ${esc(o.name)} automatiškai išsiųsta: <b>${ch}</b> („${esc(STATUSES[si])}“)`;
+  if (si === 5) { o.notifs.push(['SMS (po 2 val.)','Prašymas palikti atsiliepimą ⭐']); msg += '<br>⭐ Po 2 val. bus išsiųstas atsiliepimo prašymas (Google + FB)'; }
+  save(); renderStaff(); toast(msg);
+};
+window.setComment = (oi, v) => { DB.orders[oi].comment = v; save(); toast('💬 Komentaras matomas kliento puslapyje'); };
+window.showQr = oi => { const el = document.getElementById('qr-'+oi); el.style.display = el.style.display==='none'?'block':'none'; };
+window.acceptReq = i => {
+  const r = DB.requests.splice(i,1)[0];
+  DB.orders.unshift({id:'U-'+(244+DB.orders.length), plate:r.plate, car:r.car+(r.service?' · '+r.service:''), name:r.name, phone:r.phone, status:0, comment:'', notifs:[['El. laiškas + SMS','Automobilis priimtas — nuoroda būsenai sekti']]});
+  save(); renderStaff(); toast('✅ Užsakymas sukurtas, klientui išsiųsta būsenos nuoroda');
+};
+
+// ── 4. Priminimai ──
+window.quickDate = m => { const d = new Date(); d.setMonth(d.getMonth()+m); document.getElementById('m-date').valueAsDate = d; };
+window.addReminder = () => {
+  const g = id => document.getElementById(id).value.trim();
+  if (!g('m-plate') || !g('m-date')) { toast('Įveskite valst. numerį ir datą'); return; }
+  DB.reminders.push({plate:g('m-plate').toUpperCase(), phone:g('m-phone')||'—', type:g('m-type'), date:g('m-date')});
+  DB.reminders.sort((a,b)=>a.date<b.date?-1:1);
+  save(); renderRem(); toast('⏰ Priminimas suplanuotas — SMS išsiųs automatiškai');
+};
+window.delReminder = i => { DB.reminders.splice(i,1); save(); renderRem(); };
+function renderRem(){
+  const tb = document.getElementById('rem-rows');
+  tb.innerHTML = DB.reminders.map((r,i)=>{
+    const send = new Date(new Date(r.date) - 7*864e5).toISOString().slice(0,10);
+    return `<tr><td><b>${esc(r.plate)}</b><br><span class="muted-s">${esc(r.phone)}</span></td><td>${esc(r.type)}</td><td>${esc(r.date)}</td><td>${send} <span class="muted-s">(likus 7 d.)</span></td>
+    <td><button class="stb" onclick="delReminder(${i})">✕</button></td></tr>`;
+  }).join('') || '<tr><td colspan="5" class="muted-s">Priminimų nėra</td></tr>';
+  document.getElementById('rem-cost').textContent = `Numatoma kaina: ${DB.reminders.length} SMS × ~0,03 € = ~${(DB.reminders.length*0.03).toFixed(2)} € (mokama tik už išsiųstas žinutes)`;
+}
+
+// ── 5. Sąmata ──
+const NORMS = [
+  ['Priekinių stabdžių diskų ir kaladėlių keitimas', 1.2],
+  ['Sankabos keitimas', 5.8],
+  ['Pakabos diagnostika + 3D ratų geometrija', 1.5],
+  ['Amortizatorių keitimas (priekis, pora)', 2.4],
+  ['Variklio alyvos ir filtrų keitimas', 0.8],
+  ['Kondicionieriaus pildymas', 1.0],
+  ['Paskirstymo diržo komplekto keitimas', 3.6],
+];
+document.getElementById('e-job').innerHTML = NORMS.map((n,i)=>`<option value="${i}">${esc(n[0])} — ${n[1]} val.</option>`).join('');
+let estJobs = [], estParts = [];
+window.addJob = () => { estJobs.push(+document.getElementById('e-job').value); renderEst(); };
+window.delJob = i => { estJobs.splice(i,1); renderEst(); };
+window.addPart = () => {
+  const n = document.getElementById('e-p-name').value.trim(), p = +document.getElementById('e-p-price').value;
+  if (!n || !p) return;
+  estParts.push([n,p]); document.getElementById('e-p-name').value=''; document.getElementById('e-p-price').value='';
+  renderEst();
+};
+window.delPart = i => { estParts.splice(i,1); renderEst(); };
+document.getElementById('e-rate').oninput = () => renderEst();
+function renderEst(){
+  const rate = +document.getElementById('e-rate').value || 0;
+  document.getElementById('e-jobs').innerHTML = estJobs.map((j,i)=>`<tr><td>${esc(NORMS[j][0])}</td><td>${NORMS[j][1]}</td><td>${eur(NORMS[j][1]*rate)}</td><td><button class="stb no-print" onclick="delJob(${i})">✕</button></td></tr>`).join('') || '<tr><td colspan="4" class="muted-s">Pridėkite darbą ↑</td></tr>';
+  document.getElementById('e-parts').innerHTML = estParts.map((p,i)=>`<tr><td>${esc(p[0])}</td><td style="text-align:right">${eur(p[1])}</td><td><button class="stb no-print" onclick="delPart(${i})">✕</button></td></tr>`).join('');
+  const labor = estJobs.reduce((a,j)=>a+NORMS[j][1]*rate,0), parts = estParts.reduce((a,p)=>a+p[1],0);
+  const net = labor+parts, vat = net*0.21;
+  document.getElementById('t-labor').textContent = eur(labor);
+  document.getElementById('t-parts').textContent = eur(parts);
+  document.getElementById('t-vat').textContent = eur(vat);
+  document.getElementById('t-grand').textContent = eur(net+vat);
+}
+
+// ── 6. Pajamavimas ──
+const SAMPLE = `VAŽTARAŠTIS Nr. VLN-2026-07841   Tiekėjas: UAB Detalių tiekimas
+BSG60-210-020  Stabdžių diskai priekiniai (pora)  1  86.40
+FIL-OC90       Alyvos filtras MANN OC 90          2  7.20
+BOS-0986AB1234 Kaladėlės priekinės BOSCH          1  42.10
+SKF-VKBA3644   Rato guolis SKF priekinis          2  38.50
+CAS-5W30-5L    Alyva Castrol Edge 5W-30 5L        1  54.90`;
+window.loadSample = () => { document.getElementById('p-src').value = SAMPLE; };
+window.parseDoc = () => {
+  const lines = document.getElementById('p-src').value.split('\n');
+  const items = [];
+  for (const ln of lines){
+    const m = ln.trim().match(/^(\S+)\s+(.+?)\s+(\d+)\s+([\d.,]+)$/);
+    if (m && !/važtaraštis/i.test(ln)) items.push({code:m[1], name:m[2].trim(), qty:+m[3], price:parseFloat(m[4].replace(',','.'))});
+  }
+  if (!items.length){ toast('Neatpažinta nė viena eilutė — įkelkite pavyzdį'); return; }
+  const opts = DB.orders.map(o=>`<option>${esc(o.plate)} (${esc(o.name)})</option>`).join('');
+  document.getElementById('p-rows').innerHTML = items.map(it=>`<tr><td><code>${esc(it.code)}</code></td><td>${esc(it.name)}</td><td>${it.qty}</td><td>${eur(it.price)}</td>
+    <td><select><option>— sandėlis —</option>${opts}</select></td></tr>`).join('');
+  document.getElementById('p-table').style.display='table';
+  document.getElementById('p-actions').style.display='block';
+  window._parsed = items;
+  toast(`✅ Atpažinta ${items.length} detalių — beliko priskirti ir eksportuoti`);
+};
+window.exportCSV = () => {
+  const rows = [['kodas','pavadinimas','kiekis','kaina','automobilis']];
+  document.querySelectorAll('#p-rows tr').forEach((tr,i)=>{
+    const it = window._parsed[i];
+    rows.push([it.code, it.name, it.qty, it.price, tr.querySelector('select').value]);
+  });
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['﻿'+csv], {type:'text/csv'}));
+  a.download = 'pajamavimas.csv'; a.click();
+  toast('⬇️ CSV paruoštas — importuokite į apskaitos programą');
+};
+
+// ── Render all ──
+function render(){ renderClient(); renderStaff(); renderRem(); renderEst(); }
+render();
+</script>
+</body>
+</html>
