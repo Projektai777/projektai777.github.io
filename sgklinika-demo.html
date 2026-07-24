@@ -110,6 +110,7 @@
       <button class="tab" data-v="vou">🎁 Dovanų kuponai</button>
       <button class="tab" data-v="rev">⭐ Atsiliepimai</button>
       <button class="tab" data-v="vid">🎥 Vaizdo konsultacijos</button>
+      <button class="tab" data-v="bot">💬 Asistentas</button>
     </div>
   </div>
 </div>
@@ -274,6 +275,24 @@
     <div class="card">
       <h3>Kuo tai naudinga klinikai</h3>
       <p class="hint" style="margin:0">💶 <b>Nulinė kaina už patį skambutį</b> — jokių mėnesinių mokesčių. 🔒 <b>Šifruotas ryšys</b>, prireikus galima laikyti ES serveryje (BDAR). 🌍 <b>Pacientas iš bet kur</b>: pakartotinės konsultacijos, tyrimų rezultatų aptarimas, receptų pratęsimas ar odos būklės peržiūra be atvykimo — patogu pacientui, papildomas pajamų srautas klinikai.</p>
+    </div>
+  </div>
+
+  <!-- ══════════ 8. ASISTENTAS (auto-atsakymai + savitarna registracija) ══════════ -->
+  <div class="view" id="v-bot">
+    <div class="card">
+      <h2>Automatinis pokalbių asistentas</h2>
+      <p class="hint">Dažniausius klausimus — „Kiek kainuoja…", „Ar atliekate…", „Kokie darbo laikai" — asistentas atsako pats, mandagiai ir tą pačią sekundę, bet kuriuo paros metu. Jei pacientas nori, čia pat pasiūlo laisvus laikus ir <b>užregistruoja be jokio skambučio</b>. Registratūrai lieka tik tikrai svarbūs pokalbiai. Pabandykite parašyti kaip pacientas 👇</p>
+      <div class="chat" id="chat"></div>
+      <div class="chat-input">
+        <input id="bot-in" placeholder="Parašykite kaip pacientas… pvz. „Kiek kainuoja lazerinė epiliacija?"" onkeydown="if(event.key==='Enter')botSend()">
+        <button class="btn sm" style="margin-top:0" onclick="botSend()">Siųsti</button>
+      </div>
+      <div class="suggest" id="bot-sugg"></div>
+    </div>
+    <div class="card">
+      <h3>Kuo tai naudinga klinikai</h3>
+      <p class="hint" style="margin:0">📉 <b>Mažiau pasikartojančių žinučių</b> Facebooke, Instagrame ir telefonu — asistentas atsako iškart, net naktį. 🗓️ <b>Dalis pacientų užsiregistruoja patys</b>, nespėję nė paskambinti. 🙂 Sudėtingus klausimus mandagiai perduoda registratūrai — žmogaus nepakeičia, tik atima rutiną.</p>
     </div>
   </div>
 
