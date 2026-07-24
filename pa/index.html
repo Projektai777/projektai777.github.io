@@ -1,0 +1,281 @@
+<!doctype html>
+<!-- © 2026. PA recruit PILOT — kliento valdymo pultas (Pastatų apdaila).
+     Slaptažodžiu saugomas (worker /auth, PA_PASS secret, 8 klaidos/10 min per IP).
+     Du vaizdai: (1) „Ko reikia šiandien?" — paspaudus mygtuką paieška įjungiama
+     automatiškai (Telegram įrašas jei sukonfigūruotas + tekstai kanalams + radaro
+     stebėjimas); (2) „Kandidatai" — dienos pabaigos ataskaita: kas užsiregistravo
+     (skambinti vienu paspaudimu), ką rado radaras, būsenų žymėjimas.
+     ?api=http://127.0.0.1:8787 — lokalus testas be endpoint.json. -->
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#16305e">
+<title>Pastatų apdaila — paieškos pultas</title>
+<style>
+  :root{--navy:#16305e;--navy2:#0e2144;--orange:#e8850c;--orange2:#c96f04;--bg:#f3f5f9;--card:#fff;--line:#dde3ee;--txt:#1d2534;--muted:#67718a;--good:#0e9f6e}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--txt)}
+  .top{background:linear-gradient(135deg,var(--navy2),var(--navy));color:#fff;padding:16px}
+  .top .inner{max-width:900px;margin:0 auto}
+  .brand{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .logo{width:44px;height:44px;border-radius:12px;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px}
+  .brand h1{margin:0;font-size:18px}.brand .sub{font-size:12.5px;opacity:.8}
+  .tabs{max-width:900px;margin:12px auto 0;display:flex;gap:6px}
+  .tab{border:0;background:rgba(255,255,255,.14);color:#fff;padding:9px 16px;border-radius:10px;font-size:13.5px;cursor:pointer}
+  .tab.on{background:var(--bg);color:var(--navy);font-weight:700}
+  .wrap{max-width:900px;margin:0 auto;padding:16px 14px 60px}
+  .view{display:none}.view.on{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+  h2{margin:0 0 4px;font-size:18px} h3{margin:0 0 8px;font-size:15.5px}
+  .hint{color:var(--muted);font-size:13px;margin:0 0 12px}
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+  input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--txt)}
+  textarea{min-height:110px;resize:vertical;font-size:13px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+  @media(max-width:560px){.row{grid-template-columns:1fr}}
+  .btn{display:inline-block;border:0;background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:12px 20px;border-radius:10px;cursor:pointer;margin-top:14px}
+  .btn:hover{background:var(--orange2)} .btn.sm{padding:7px 12px;font-size:13px;margin-top:0}
+  .btn.ghost{background:#eef2fa;color:var(--navy)} .btn.big{width:100%;font-size:16px;padding:14px}
+  .btn[disabled]{opacity:.6;cursor:wait}
+  .ok-box{background:#e6f7f0;border:1px solid #b5e6d3;border-radius:12px;padding:14px 16px;margin-top:14px}
+  .warn{background:#fdf6e3;border:1px solid #eadfa8;border-radius:12px;padding:12px 14px;margin-top:12px;font-size:13.5px}
+  .err{background:#fdecec;border:1px solid #f1c1c1;border-radius:10px;padding:10px 13px;font-size:13px;color:#8a1f1f;margin-top:12px;display:none}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;text-align:left;padding:8px 6px;border-bottom:2px solid var(--line)}
+  td{padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .tbl-wrap{overflow-x:auto}
+  .pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap;border:0;cursor:pointer}
+  .p-new{background:#fdf2d0;color:#8a6a00}.p-called{background:#def7ec;color:#0a7a54}
+  .p-reserve{background:#e2e9fa;color:#274d8f}.p-no{background:#eee;color:#777}
+  .t-app{background:#eef2fa;color:#274d8f}.t-sub{background:#fdeede;color:#9a5a06}
+  .src{display:inline-block;background:#eef2fa;color:#274d8f;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+  .stat b{display:block;font-size:22px;color:var(--navy)} .stat span{font-size:12px;color:var(--muted)}
+  .tel{font-weight:700;color:var(--navy);text-decoration:none;white-space:nowrap}
+  .copy-block{margin-top:10px}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--navy2);color:#fff;padding:11px 18px;border-radius:12px;font-size:13.5px;opacity:0;transition:.25s;z-index:50;max-width:92vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+  .muted-s{font-size:12px;color:var(--muted)}
+  #login{max-width:380px;margin:8vh auto}
+</style>
+</head>
+<body>
+<div class="top"><div class="inner">
+  <div class="brand">
+    <div class="logo">PA</div>
+    <div><h1>Darbuotojų paieškos pultas</h1><div class="sub">Pastatų apdaila · AB PST filialas</div></div>
+  </div>
+  <div class="tabs" id="tabs" style="display:none">
+    <button class="tab on" data-v="need">🔍 Ko reikia šiandien?</button>
+    <button class="tab" data-v="dash">📋 Kandidatai</button>
+  </div>
+</div></div>
+
+<!-- ── Prisijungimas ── -->
+<div id="login" class="card">
+  <h2>🔐 Prisijungimas</h2>
+  <p class="hint">Įveskite pulto slaptažodį.</p>
+  <input id="pw" type="password" placeholder="Slaptažodis" autocomplete="current-password">
+  <button class="btn big" id="pw-btn">Prisijungti</button>
+  <div class="err" id="pw-err"></div>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+
+  <!-- ── 1. Ko reikia šiandien? ── -->
+  <div class="view on" id="v-need">
+    <div class="card">
+      <h2>Ko reikia šiandien?</h2>
+      <p class="hint">Pasirinkite, ko trūksta — sistema pati įjungia paiešką visais kanalais. Vakare atsidarykite skiltį „📋 Kandidatai“ ir skambinkite atsiliepusiems.</p>
+      <div class="row">
+        <div><label>Specializacija</label><select id="n-trade"></select></div>
+        <div><label>Miestas / objektas</label><input id="n-city" value="Vilnius"></div>
+      </div>
+      <div class="row">
+        <div><label>Atlyginimas / įkainis <span style="font-weight:400">(nebūtina)</span></label><input id="n-pay" placeholder="pvz. 1 700–2 400 €/mėn."></div>
+        <div><label>Pastaba <span style="font-weight:400">(nebūtina)</span></label><input id="n-note" placeholder="pvz. darbo pradžia nuo 08-01"></div>
+      </div>
+      <button class="btn big" id="n-btn">🚀 Pradėti paiešką</button>
+      <div class="err" id="n-err"></div>
+      <div id="n-result"></div>
+    </div>
+    <div class="card">
+      <h3>Aktyvios paieškos</h3>
+      <div id="needs-list" class="hint" style="margin:0">—</div>
+    </div>
+  </div>
+
+  <!-- ── 2. Kandidatai (dienos ataskaita) ── -->
+  <div class="view" id="v-dash">
+    <div class="stats" id="d-stats"></div>
+    <div class="card">
+      <h2>Kas atsiliepė <button class="btn ghost sm" style="float:right" onclick="loadOverview()">🔄 Atnaujinti</button></h2>
+      <p class="hint">Užpildę anketą — skambinkite vienu paspaudimu. Būseną keiskite spustelėję ją (Naujas → Paskambinta → Rezervas → Netinka).</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th></th><th>Kas</th><th>Specializacija</th><th>Patirtis</th><th>Miestas</th><th>Iš kur</th><th>Kada</th><th>Būsena</th></tr></thead>
+        <tbody id="c-rows"></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h3>📡 Radaro radiniai — žmonės, kurie patys ieško darbo</h3>
+      <p class="hint">Skelbimai iš skelbiu.lt / alio.lt pranešimų (žr. instrukciją apačioje). Atsidarykite skelbimą ir paskambinkite.</p>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Skelbimas</th><th>Šaltinis</th><th>Rasta</th><th>Būsena</th></tr></thead>
+        <tbody id="r-rows"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+const TRADES = ['Gipso kartono montavimas','Glaistymas ir dažymas','Plytelių klojimas','Grindų įrengimas','Tinkavimas','Fasadų apdaila / šiltinimas','Elektros darbai','Santechnika','Kita'];
+document.getElementById('n-trade').innerHTML = TRADES.map(t=>`<option>${t}</option>`).join('');
+const esc = s => String(s??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const toast = m => { const t=document.getElementById('toast'); t.innerHTML=m; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),3400); };
+const qs = new URLSearchParams(location.search);
+
+let API = qs.get('api') || '';
+const ready = API ? Promise.resolve() :
+  fetch('./endpoint.json').then(r=>r.json()).then(c=>{ if(c.enabled && c.base) API = c.base; }).catch(()=>{});
+
+let PASS = sessionStorage.getItem('pa_pass') || '';
+const hdrs = () => ({'content-type':'application/json','x-pa-auth':PASS});
+const api = async (path, body) => {
+  await ready;
+  if (!API) throw new Error('Backend dar nepaleistas (endpoint.json tuščias).');
+  const r = await fetch(API + path, body !== undefined
+    ? {method:'POST', headers:hdrs(), body:JSON.stringify(body)}
+    : {headers:hdrs()});
+  const j = await r.json().catch(()=>({ok:false,error:'bad json'}));
+  if (r.status === 401) { sessionStorage.removeItem('pa_pass'); throw new Error('Neteisingas slaptažodis.'); }
+  if (r.status === 429) throw new Error('Per daug bandymų — palaukite 10 min.');
+  if (!j.ok && j.error) throw new Error(j.error);
+  return j;
+};
+
+// ── Login ──
+const showErr = (id,m) => { const e=document.getElementById(id); e.textContent=m||''; e.style.display=m?'block':'none'; };
+async function unlock(){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('tabs').style.display='flex';
+  loadOverview();
+}
+document.getElementById('pw-btn').onclick = async () => {
+  const p = document.getElementById('pw').value;
+  if (!p) return;
+  try {
+    await ready;
+    if (!API) { showErr('pw-err','Backend dar nepaleistas — bandykite vėliau.'); return; }
+    const r = await fetch(API + '/auth', {method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({pass:p})});
+    if ((await r.json()).ok) { PASS=p; sessionStorage.setItem('pa_pass',p); unlock(); }
+    else showErr('pw-err', r.status===429 ? 'Per daug bandymų — palaukite 10 min.' : 'Neteisingas slaptažodis.');
+  } catch(e){ showErr('pw-err','Nepavyko pasiekti serverio.'); }
+};
+document.getElementById('pw').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('pw-btn').click(); });
+if (PASS) unlock();
+
+// ── Tabs ──
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if(!b) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t===b));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));
+  if (b.dataset.v==='dash') loadOverview();
+});
+
+// ── 1. Pradėti paiešką ──
+document.getElementById('n-btn').onclick = async () => {
+  const g = id => document.getElementById(id).value.trim();
+  showErr('n-err','');
+  const btn = document.getElementById('n-btn'); btn.disabled=true; btn.textContent='Įjungiama…';
+  try {
+    const j = await api('/need', {trade:document.getElementById('n-trade').value, city:g('n-city'), pay:g('n-pay'), note:g('n-note')});
+    const tgOk = j.telegram === 'posted';
+    document.getElementById('n-result').innerHTML = `
+      <div class="ok-box"><b>✅ Paieška įjungta!</b>
+        <div style="margin-top:8px;font-size:13.5px">
+          ${tgOk ? '<span style="color:var(--good)">✅ Paskelbta Telegram kanale</span>'
+                 : '⚠️ Telegram kanalas dar neprijungtas — skelbimo tekstas paruoštas žemiau'}<br>
+          ✅ Radaras stebi „ieškau darbo“ skelbimus šiai specializacijai<br>
+          ✅ Anketa renka atsiliepusius — vakare žiūrėkite „📋 Kandidatai“
+        </div>
+      </div>
+      <div class="copy-block"><label>Skelbimo tekstas — Telegram / Viber</label>
+        <textarea id="t-tg" readonly>${esc(j.texts.telegram)}</textarea>
+        <button class="btn ghost sm" onclick="copyTxt('t-tg')">📋 Kopijuoti</button></div>
+      <div class="copy-block"><label>Skelbimo tekstas — Užimtumo tarnyba (uzt.lt) / portalai</label>
+        <textarea id="t-uzt" readonly>${esc(j.texts.uzt)}</textarea>
+        <button class="btn ghost sm" onclick="copyTxt('t-uzt')">📋 Kopijuoti</button></div>`;
+    loadNeeds();
+    toast('🚀 Paieška įjungta');
+  } catch(e){ showErr('n-err', e.message); }
+  btn.disabled=false; btn.textContent='🚀 Pradėti paiešką';
+};
+window.copyTxt = id => {
+  navigator.clipboard?.writeText(document.getElementById(id).value)
+    .then(()=>toast('📋 Nukopijuota')).catch(()=>toast('Pažymėkite tekstą ir kopijuokite ranka'));
+};
+
+async function loadNeeds(){
+  try {
+    const j = await api('/overview');
+    renderNeeds(j.needs);
+  } catch(e){}
+}
+function renderNeeds(needs){
+  document.getElementById('needs-list').innerHTML = (needs||[]).length
+    ? needs.map(n=>`<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)">
+        <div style="flex:1"><b>${esc(n.trade)}</b> · ${esc(n.city||'')} ${n.pay?'· '+esc(n.pay):''}
+          <span class="muted-s">· ${esc((n.created_at||'').slice(0,10))}</span>
+          ${n.tg_posted?' <span class="src">TG ✓</span>':''}</div>
+        <button class="btn ghost sm" onclick="closeNeed(${n.id})">Užbaigti</button></div>`).join('')
+    : 'Aktyvių paieškų nėra — pasirinkite specializaciją viršuje ir spauskite mygtuką.';
+}
+window.closeNeed = async id => { try { await api('/need-close',{id}); loadNeeds(); toast('Paieška užbaigta'); } catch(e){ toast(e.message); } };
+
+// ── 2. Dashboard ──
+const ST = { new:['Naujas','p-new'], called:['Paskambinta','p-called'], reserve:['Rezervas','p-reserve'], no:['Netinka','p-no'] };
+const ST_NEXT = { new:'called', called:'reserve', reserve:'no', no:'new' };
+const SRC_LABEL = { anketa:'anketa', tg:'Telegram', vb:'Viber', uzt:'UZT', ad:'portalas', qr:'QR', radar:'radaras' };
+
+async function loadOverview(){
+  try {
+    const j = await api('/overview');
+    const s = j.stats || {};
+    document.getElementById('d-stats').innerHTML = `
+      <div class="stat"><b>${s.c_today||0}</b><span>šiandien užsiregistravo</span></div>
+      <div class="stat"><b>${s.c_total||0}</b><span>iš viso bazėje</span></div>
+      <div class="stat"><b>${s.r_today||0}</b><span>radaro radiniai šiandien</span></div>
+      <div class="stat"><b>${s.r_new||0}</b><span>neperžiūrėti radiniai</span></div>`;
+    document.getElementById('c-rows').innerHTML = (j.candidates||[]).map(c=>`
+      <tr><td><span class="pill ${c.kind==='worker'?'t-app':'t-sub'}" style="cursor:default">${c.kind==='worker'?'👷':'🤝'}</span></td>
+      <td><b>${esc(c.name)}</b><br><a class="tel" href="tel:${esc(c.phone)}">📞 ${esc(c.phone)}</a></td>
+      <td>${esc(c.trade||'')}</td><td>${esc(c.exp||'')}${c.note?`<br><span class="muted-s">${esc(c.note)}</span>`:''}</td>
+      <td>${esc(c.city||'')}</td><td><span class="src">${esc(SRC_LABEL[c.source]||c.source||'')}</span></td>
+      <td><span class="muted-s">${esc((c.created_at||'').slice(0,16).replace('T',' '))}</span></td>
+      <td><button class="pill ${ST[c.status]?.[1]||'p-new'}" onclick="setSt('candidate',${c.id},'${ST_NEXT[c.status]||'called'}')">${ST[c.status]?.[0]||c.status}</button></td></tr>`).join('')
+      || '<tr><td colspan="8" class="muted-s">Kol kas anketų nėra.</td></tr>';
+    document.getElementById('r-rows').innerHTML = (j.radar||[]).map(r=>`
+      <tr><td><a href="${esc(r.url)}" target="_blank" rel="noopener"><b>${esc(r.title||r.url)}</b></a>${r.city?`<br><span class="muted-s">📍 ${esc(r.city)}</span>`:''}</td>
+      <td><span class="src">${esc(r.src||'')}</span></td>
+      <td><span class="muted-s">${esc((r.found_at||'').slice(0,16).replace('T',' '))}</span></td>
+      <td><button class="pill ${ST[r.status]?.[1]||'p-new'}" onclick="setSt('radar',${r.id},'${ST_NEXT[r.status]||'called'}')">${ST[r.status]?.[0]||r.status}</button></td></tr>`).join('')
+      || '<tr><td colspan="4" class="muted-s">Radiniai atsiras, kai bus įjungti skelbiu.lt / alio.lt el. pašto pranešimai (žr. diegimo instrukciją).</td></tr>';
+    renderNeeds(j.needs);
+  } catch(e){
+    if (String(e.message).includes('slaptažodis')) location.reload();
+    else toast(esc(e.message));
+  }
+}
+window.setSt = async (kind,id,status) => {
+  try { await api('/status',{kind,id,status}); loadOverview(); } catch(e){ toast(esc(e.message)); }
+};
+</script>
+</body>
+</html>

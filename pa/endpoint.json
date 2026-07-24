@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "base": "",
+  "note": "PA recruit backend (pa-worker/, Cloudflare Worker). base is EMPTY until the worker is deployed (needs one-time `npx wrangler login`); pages show an honest 'backend dar nepaleistas' notice meanwhile. After deploy paste the workers.dev URL here."
+}
