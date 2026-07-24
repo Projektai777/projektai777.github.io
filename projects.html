@@ -192,8 +192,8 @@
         reward:'Klinikos demo (4 filialai): registracija internetu, registratūros pultas, vizito + pakartotinio apsilankymo SMS priminimai, procedūrų kurso kortelė, dovanų kuponų patikra, Google atsiliepimai su QR kiekvienam filialui, vaizdo konsultacijos (Jitsi), automatinis pokalbių asistentas su savitarna registracija' },
       { name:'Pastatų apdaila (PST) — darbuotojų ir subrangovų paieška', slug:'pastatuapdaila (pastatuapdaila.lt)', url:'./pastatuapdaila-demo.html',
         reward:'Statybos įmonės demo: karjeros puslapis su anketa be CV (30 sek.), subrangovų/brigadų registracija, kandidatų bazė, AKTYVI paieška — skelbimų radaras, Telegram/Viber transliuotojas, subrangovų el. laiškai, SMS iš bazės, rekomendacijų grandinė (be Facebook), QR plakatas, kaštų palyginimas su CV portalais' },
-      { name:'Pastatų apdaila (PST) — paieškos PULTAS (pilotas)', slug:'pa (realus backend)', live:true, url:'./pa/index.html',
-        reward:'REALI sistema (ne demo): „Ko reikia šiandien?“ mygtukas → automatinė paieška (Telegram kanalas + radaro stebėjimas + tekstai UZT/portalams), vieša anketa /pa/anketa.html, dienos pabaigos kandidatų pultas su skambinimu vienu paspaudimu. Cloudflare Worker + D1; slaptažodis pas Igną' },
+      { name:'Pastatų apdaila (PST) — paieškos PULTAS (bandoma, DAR NE GYVA)', slug:'pa (bandoma)', url:'./pa/index.html',
+        reward:'⚠️ BANDOMOJI VERSIJA — dar NEVEIKIA gyvai (backend neįdiegtas, endpoint tuščias, radaras išjungtas). Sandara: „Ko reikia šiandien?“ mygtukas → automatinė paieška (skelbiu.lt „Ieško darbo“ radaras + tekstai UZT/portalams; Telegram praleistas), vieša anketa /pa/anketa.html, dienos pabaigos kandidatų pultas su skambinimu vienu paspaudimu. Cloudflare Worker + D1; slaptažodis pas Igną. Įjungiama tik Ignui pasakius „go-live“.' },
     ];
 
     const toast = (msg) => {
