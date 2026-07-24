@@ -1,7 +1,9 @@
 <!doctype html>
 <!-- © 2026. DEMO for Pastatų apdaila (pastatuapdaila.lt, AB PST filialas) —
-     darbuotojų ir subrangovų paieškos modulis. Self-contained, visi kandidatų
-     duomenys išgalvoti, būsena localStorage (pastatuapdaila_demo).
+     darbuotojų ir subrangovų paieškos modulis. Visi kandidatų duomenys išgalvoti,
+     būsena localStorage (pastatuapdaila_demo). Žinučių skiltis įkelia BENDRĄ
+     registrą ./pa/messages.js (tas pats šaltinis kaip realaus worker'io /need ir
+     pavyzdinių laiškų — pridėjus/pašalinus žinutės tipą, skiltis atsinaujina savaime).
      Covers: karjeros puslapis + anketa be CV, subrangovų registracija,
      kandidatų DB su filtrais/būsenomis/CSV, AKTYVI PAIEŠKA (2026-07-24, po
      A. Nakvoso atsakymo "per tinklapį neveiks"): skelbimų radaras (atsako į
@@ -90,6 +92,25 @@
   .calc{background:#eef2fa;border:1px solid #ccd8f0;border-radius:12px;padding:14px 16px;margin-top:14px}
   .calc output{font-weight:800;color:var(--navy);font-size:18px}
   input[type=range]{padding:0;accent-color:var(--orange)}
+  /* Žinučių skiltis (tik savininkui + Ignui) */
+  .msg-note{background:#eef2fa;border:1px solid #ccd8f0;border-radius:10px;padding:11px 14px;font-size:12.5px;color:#2d4670;margin-bottom:14px}
+  .mfilters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .mfchip{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:6px 12px;font-size:12.5px;cursor:pointer}
+  .mfchip.on{border-color:var(--navy);background:#eef2fa;color:var(--navy);font-weight:700}
+  .mcard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:#fff}
+  .mtop{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+  .mchan{font-size:11px;font-weight:800;letter-spacing:.3px;padding:3px 10px;border-radius:99px;color:#fff;text-transform:uppercase}
+  .mc-sms{background:#0e9f6e}.mc-mail{background:#2b57a8}.mc-chan{background:#4356b0}.mc-form{background:#e8850c}.mc-radar{background:#7a3fb0}
+  .mdir{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px}
+  .mo{background:#fdeede;color:#9a5a06}.mi{background:#e2e9fa;color:#274d8f}
+  .mphase{font-size:11px;color:var(--muted);margin-left:auto}
+  .mto{font-size:12.5px;color:var(--muted);margin-bottom:9px}
+  .m-sms{background:#eef7f0;border:1px solid #cfe6d6;border-radius:14px 14px 14px 4px;padding:11px 14px;font-size:13.5px;line-height:1.5;max-width:520px;color:#14351f;white-space:pre-wrap}
+  .m-sms.in{background:#eef2fa;border-color:#cdd9f0;border-radius:14px 14px 4px 14px;color:#22345a}
+  .m-email{border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:560px}
+  .m-subj{background:#f3f5f9;border-bottom:1px solid var(--line);padding:8px 12px;font-size:12.5px;font-weight:700;color:var(--navy)}
+  .m-email .m-ebody{padding:12px 14px;font-size:13.5px;line-height:1.5;white-space:pre-wrap}
+  .mnote{font-size:12px;color:var(--muted);margin-top:9px}
   @media print{
     .top,.tabs,.toast,footer,.no-print{display:none!important}
     body{background:#fff} .card{border:0;margin:0}
@@ -300,6 +321,20 @@
     </div>
   </div>
 
+  <!-- ══════════ 6. ŽINUTĖS (tik savininkui + Ignui; iš bendro registro pa/messages.js) ══════════ -->
+  <div class="view" id="v-msgs">
+    <div class="card">
+      <h2>Visos sistemos žinutės — ką siunčiame ir ką gauname</h2>
+      <div class="msg-note">🔒 Ši skiltis skirta <b>tik Jums (savininkui)</b> ir <b>Ignui</b> — čia matote KIEKVIENOS sistemos žinutės pavyzdį su kanalo žyma (SMS, el. paštas ir kt.). Klientai ir darbuotojai šios skilties nemato. Sąrašas atsinaujina automatiškai, kai pridedame ar pašaliname žinutės tipą. Iš viso tipų: <b id="msgs-count">0</b>.</div>
+      <div class="mfilters" id="msg-filters">
+        <button class="mfchip on" data-mf="all">Visos</button>
+        <button class="mfchip" data-mf="out">📤 Siunčiamos</button>
+        <button class="mfchip" data-mf="in">📥 Gaunamos</button>
+      </div>
+      <div id="msgs-list"></div>
+    </div>
+  </div>
+
   <!-- ══════════ 5. KODĖL TAI PIGIAU ══════════ -->
   <div class="view" id="v-cost">
     <div class="stats">
@@ -341,6 +376,8 @@
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- Bendras žinučių registras (tas pats šaltinis kaip realaus worker'io ir pavyzdinių laiškų) -->
+<script src="./pa/messages.js"></script>
 <script>
 'use strict';
 const LS = 'pastatuapdaila_demo';
@@ -600,14 +637,48 @@ window.calc = () => {
   document.getElementById('calc-out').textContent = `~${(n*200).toLocaleString('lt-LT')} € kasmet`;
 };
 
+// ── 6. Žinutės (iš bendro registro public/pa/messages.js — pridėjus/pašalinus tipą čia atsinaujina savaime) ──
+let msgFilter = 'all';
+function chanClass(c){
+  if(/SMS/.test(c)) return 'mc-sms';
+  if(/paštas/.test(c)) return 'mc-mail';
+  if(/Anketa/.test(c)) return 'mc-form';
+  if(/Radaras/.test(c)) return 'mc-radar';
+  return 'mc-chan';
+}
+function phaseLabel(p){ return p===1 ? '✅ 1 etapas (paruošta)' : p+' etapas'; }
+function renderMsgs(){
+  const host = document.getElementById('msgs-list'); if(!host) return;
+  if (typeof PA === 'undefined' || !PA.MESSAGES){ host.innerHTML = '<p class="hint">Žinučių registras nepasiekiamas (pa/messages.js neįkeltas).</p>'; return; }
+  const cnt = document.getElementById('msgs-count'); if(cnt) cnt.textContent = PA.MESSAGES.length;
+  const list = PA.MESSAGES.filter(m => msgFilter==='all' || m.dir===msgFilter);
+  host.innerHTML = list.map(m => {
+    const dir = m.dir==='out' ? '<span class="mdir mo">📤 Siunčiama</span>' : '<span class="mdir mi">📥 Gaunama</span>';
+    const isEmail = /paštas/.test(m.channel);
+    const bodyHtml = esc(m.body).replace(/\n/g,'<br>');
+    const bubble = isEmail
+      ? `<div class="m-email">${m.subject?`<div class="m-subj">✉️ Tema: ${esc(m.subject)}</div>`:''}<div class="m-ebody">${bodyHtml}</div></div>`
+      : `<div class="m-sms ${m.dir==='in'?'in':''}">${bodyHtml}</div>`;
+    return `<div class="mcard">
+      <div class="mtop"><span class="mchan ${chanClass(m.channel)}">${esc(m.channel)}</span>${dir}<span class="mphase">${phaseLabel(m.phase)}</span></div>
+      <div class="mto">${esc(m.to)}</div>
+      ${bubble}
+      <div class="mnote">ℹ️ ${esc(m.note)}</div>
+    </div>`;
+  }).join('') || '<p class="hint">Pagal filtrą žinučių nėra.</p>';
+}
+document.querySelectorAll('#msg-filters .mfchip').forEach(b=>{
+  b.onclick = () => { document.querySelectorAll('#msg-filters .mfchip').forEach(x=>x.classList.toggle('on', x===b)); msgFilter = b.dataset.mf; renderMsgs(); };
+});
+
 // ── Render all ──
-function render(){ renderJobs(); renderAdm(); renderRadar(); calc(); }
+function render(){ renderJobs(); renderAdm(); renderRadar(); renderMsgs(); calc(); }
 render();
 
 // Gilios nuorodos (po init, kad viskas jau būtų paruošta):
 // #anketa (QR iš plakato), #subs, #adm, #ads, #cost
 if (location.hash === '#anketa'){ openTab('jobs'); setTimeout(()=>document.getElementById('anketa').scrollIntoView({behavior:'smooth'}), 150); }
-else if (['#subs','#adm','#ads','#cost'].includes(location.hash)) openTab(location.hash.slice(1));
+else if (['#subs','#adm','#ads','#cost','#msgs'].includes(location.hash)) openTab(location.hash.slice(1));
 </script>
 </body>
 </html>
