@@ -184,6 +184,10 @@
 
     // Ne-tenant projektai (atskiros svetainės/aplikacijos, kurios NĖRA tenants.js įrašai).
     // Pridėkite čia ranka. live:true -> rodoma „Tikri klientai" skiltyje.
+    // GRUPAVIMAS: to paties kliento/projekto variantai sujungiami į vieną kortelę
+    // AUTOMATIŠKAI pagal pavadinimo pradžią (iki „ — " ar „ ("). Tad naują tos pačios
+    // įmonės modulį pavadinkite ta pačia pradžia (pvz. „Pastatų apdaila (PST) — X").
+    // Jei pavadinimai skiriasi, bet nori sujungti — pridėkite vienodą client:'...'.
     const EXTRA_PROJECTS = [
       // { name:'Pavyzdys', slug:'—', live:true, url:'https://...', reward:'Aprašymas' },
       { name:'Autoaivas — serviso modulis', slug:'autoaivas (aivas.lt)', url:'./autoaivas-demo.html',
@@ -276,10 +280,16 @@
 
     // Normalizuoti projektą į vieną formą (tenant arba extra).
     const projId    = (it) => it.kind === 'tenant' ? it.slug : 'x:' + (it.p.url || it.p.name);
-    const clientKey = (it) => (it.kind === 'tenant'
-      ? (it.t.business_name || it.slug) : (it.p.client || it.p.name || '')).trim().toLowerCase();
+    // AUTOMATINIS GRUPAVIMAS: to paties projekto variantai (pvz. demo + pultas)
+    // grupuojami kartu SAVAIME. Grupės pavadinimas = viskas iki pirmo „ — " (brūkšnio)
+    // arba „ (" pavadinime: „Pastatų apdaila (PST) — pultas" ir „…— demo" -> abu
+    // „Pastatų apdaila". Nieko nereikia žymėti ranka. Norint priverstinai sujungti
+    // kitaip pavadintus projektus (ar atskirti), extra įrašui nurodykite client:'...'.
+    const autoGroupName = (name='') => (String(name).split(/\s[—–-]\s|\s\(/)[0].trim() || String(name).trim());
     const clientLabel = (it) => it.kind === 'tenant'
-      ? (it.t.business_name || it.slug) : (it.p.client || it.p.name);
+      ? (it.t.business_name || it.slug)
+      : (it.p.client || autoGroupName(it.p.name));
+    const clientKey = (it) => clientLabel(it).trim().toLowerCase();
     const cardHtml  = (it) => {
       const id = projId(it), hid = HIDDEN.has(id);
       return it.kind === 'tenant' ? tenantCard(it.slug, it.t, id, hid) : extraCard(it.p, id, hid);
