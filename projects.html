@@ -81,6 +81,28 @@
       color:var(--muted); background:rgba(255,255,255,.015)
     }
     .extra .links a{flex-basis:100%}
+    /* hide-toggle controls */
+    .controls{display:flex; justify-content:center; margin-top:14px; min-height:0}
+    .ctrl-btn{background:var(--panel); border:1px solid var(--line); color:var(--muted);
+      border-radius:999px; padding:7px 15px; font-size:13px; cursor:pointer; font:inherit}
+    .ctrl-btn:hover{border-color:var(--accent); color:var(--txt)}
+    /* per-card hide button */
+    .hide-btn{flex:0 0 auto; margin-left:auto; align-self:flex-start; background:transparent;
+      border:1px solid var(--line); color:var(--muted); width:30px; height:30px; border-radius:9px;
+      cursor:pointer; font-size:14px; line-height:1; display:grid; place-items:center; padding:0}
+    .hide-btn:hover{border-color:var(--accent); color:var(--txt)}
+    .card.is-hidden{opacity:.45}
+    .card.is-hidden .hide-btn{border-color:var(--accent); color:var(--accent)}
+    /* same-client group */
+    .client-group{grid-column:1 / -1; border:1px solid var(--line); border-radius:18px;
+      padding:14px 14px 4px; background:rgba(91,140,255,.05)}
+    .client-group-head{display:flex; align-items:center; gap:10px; margin:2px 4px 12px}
+    .client-group-head .logo{width:34px; height:34px; flex:0 0 34px; font-size:15px; border-radius:9px}
+    .cg-name{font-weight:700; font-size:16px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+    .cg-count{font-size:12px; color:var(--muted); background:var(--panel);
+      border:1px solid var(--line); border-radius:999px; padding:2px 10px; white-space:nowrap}
+    .client-group .grid{margin:0}
+    .grid > .empty{grid-column:1 / -1}
     footer{margin-top:48px; text-align:center; color:var(--muted); font-size:12px}
     a.ext{color:var(--accent)}
     .toast{
@@ -124,6 +146,7 @@
       <h1>🗂️ Lojalumas — projektai</h1>
       <p>Visos demonstracijos ir tikri klientai vienoje vietoje.</p>
       <div class="stat" id="stat"></div>
+      <div class="controls" id="controls"></div>
     </header>
 
     <section id="demosSec">
@@ -190,7 +213,13 @@
       return `<div class="logo" style="background:${color}">${letter}</div>`;
     }
 
-    function tenantCard(slug, t){
+    // Slėpimo mygtukas kortelės viršuje. Paslėpta -> 👁 (grąžinti), matoma -> 🙈 (slėpti).
+    function hideBtn(id, isHidden){
+      return `<button class="hide-btn" data-hide="${esc(id)}"
+        title="${isHidden ? 'Grąžinti į sąrašą' : 'Slėpti projektą'}">${isHidden ? '👁' : '🙈'}</button>`;
+    }
+
+    function tenantCard(slug, t, id, isHidden){
       const reward = t.reward_text ? `<span class="tag">🎁</span>${esc(t.reward_text)}` : '';
       const stamps = t.stamps_needed ? ` · ${t.stamps_needed} antsp.` : '';
       const mode = t.poster ? ' · 🪧 statinis QR' : ''; // skiria „ant stalo" versiją nuo darbuotojo-QR
@@ -198,13 +227,14 @@
         ? `<div class="pass">🔑 darbuotojo slaptažodis:
              <code onclick="navigator.clipboard?.writeText('${esc(t.staff_demo_pass)}')">${esc(t.staff_demo_pass)}</code></div>`
         : '';
-      return `<div class="card">
+      return `<div class="card${isHidden ? ' is-hidden' : ''}" data-id="${esc(id)}">
         <div class="card-top">
           ${logoHtml(slug, t)}
           <div class="meta">
             <div class="name">${esc(t.business_name || slug)}</div>
             <div class="slug">?b=${esc(slug)}${stamps}${mode}</div>
           </div>
+          ${hideBtn(id, isHidden)}
         </div>
         <p class="reward">${reward}</p>
         <div class="links">
@@ -218,56 +248,111 @@
       </div>`;
     }
 
-    function extraCard(p){
-      return `<div class="card">
+    function extraCard(p, id, isHidden){
+      return `<div class="card${isHidden ? ' is-hidden' : ''}" data-id="${esc(id)}">
         <div class="card-top">
           <div class="logo" style="background:#2d3a5e">🌐</div>
           <div class="meta">
             <div class="name">${esc(p.name)}</div>
             <div class="slug">${esc(p.slug || '')}</div>
           </div>
+          ${hideBtn(id, isHidden)}
         </div>
         <p class="reward">${esc(p.reward || '')}</p>
         <div class="links"><a class="primary" href="${esc(p.url)}" target="_blank" rel="noopener">Atidaryti →</a></div>
       </div>`;
     }
 
+    // ── Paslėptų projektų būsena (išsaugoma naršyklėje) ────────────
+    const HKEY = 'projects_hidden';
+    let HIDDEN = new Set();
+    try { HIDDEN = new Set(JSON.parse(localStorage.getItem(HKEY) || '[]')); } catch {}
+    let showHidden = false; // ar rodyti paslėptus (pritemdytus) šioje sesijoje
+    const saveHidden = () => { try { localStorage.setItem(HKEY, JSON.stringify([...HIDDEN])); } catch {} };
+
+    // Normalizuoti projektą į vieną formą (tenant arba extra).
+    const projId    = (it) => it.kind === 'tenant' ? it.slug : 'x:' + (it.p.url || it.p.name);
+    const clientKey = (it) => (it.kind === 'tenant'
+      ? (it.t.business_name || it.slug) : (it.p.client || it.p.name || '')).trim().toLowerCase();
+    const clientLabel = (it) => it.kind === 'tenant'
+      ? (it.t.business_name || it.slug) : (it.p.client || it.p.name);
+    const cardHtml  = (it) => {
+      const id = projId(it), hid = HIDDEN.has(id);
+      return it.kind === 'tenant' ? tenantCard(it.slug, it.t, id, hid) : extraCard(it.p, id, hid);
+    };
+    // Grupės antraštės logotipas (pirmo nario).
+    const groupLogo = (it) => it.kind === 'tenant'
+      ? logoHtml(it.slug, it.t)
+      : `<div class="logo" style="background:#2d3a5e">🌐</div>`;
+
+    // Vienos skilties turinys: išfiltruoti paslėptus, sugrupuoti pagal klientą.
+    function sectionHtml(items){
+      const shown = items.filter(it => showHidden || !HIDDEN.has(projId(it)));
+      const order = [], groups = new Map();
+      for (const it of shown){
+        const k = clientKey(it) || projId(it);
+        if (!groups.has(k)){ groups.set(k, []); order.push(k); }
+        groups.get(k).push(it);
+      }
+      let html = '';
+      for (const k of order){
+        const members = groups.get(k);
+        if (members.length === 1){
+          html += cardHtml(members[0]);
+        } else {
+          // Tas pats klientas -> viena grupė su antrašte.
+          html += `<div class="client-group">
+            <div class="client-group-head">
+              ${groupLogo(members[0])}
+              <div class="cg-name">${esc(clientLabel(members[0]))}</div>
+              <span class="cg-count">${members.length} projektai</span>
+            </div>
+            <div class="grid">${members.map(cardHtml).join('')}</div>
+          </div>`;
+        }
+      }
+      return html;
+    }
+
     // ── Render (paleidžiama TIK atrakinus) ─────────────────────────
     function renderAll(){
-      const demoEl = document.getElementById('demos');
-      const liveEl = document.getElementById('live');
       const demos = [], live = [];
-
       for (const [slug, t] of Object.entries(TENANTS)){
         // The bare 'demo' slug is just the template for parameterized sales demos
         // (/?b=demo&n=Name&c=...&r=...), not a real project — don't list its placeholder card.
         if (slug === 'demo') continue;
-        (isDemo(slug, t) ? demos : live).push([slug, t]);
+        (isDemo(slug, t) ? demos : live).push({ kind:'tenant', slug, t });
       }
-      for (const p of EXTRA_PROJECTS){ (p.live ? live : demos).push(['extra', p]); }
+      for (const p of EXTRA_PROJECTS){ (p.live ? live : demos).push({ kind:'extra', p }); }
 
-      demoEl.innerHTML = demos.map(([s, t]) =>
-        s === 'extra' ? extraCard(t) : tenantCard(s, t)).join('');
+      document.getElementById('demos').innerHTML = sectionHtml(demos);
+      document.getElementById('live').innerHTML = sectionHtml(live) || `<div class="empty">
+        Kol kas nėra įdiegtų tikrų klientų.<br>
+        Įdiegus klientą (<code>server: true</code> arba pašalinus <code>preview</code>) jis čia atsiras automatiškai.
+      </div>`;
 
-      if (live.length){
-        liveEl.innerHTML = live.map(([s, t]) => s === 'extra' ? extraCard(t) : tenantCard(s, t)).join('');
-      } else {
-        liveEl.outerHTML = `<div class="empty" id="live">
-          Kol kas nėra įdiegtų tikrų klientų.<br>
-          Įdiegus klientą (<code>server: true</code> arba pašalinus <code>preview</code>) jis čia atsiras automatiškai.
-        </div>`;
-      }
-
-      document.getElementById('demoCount').textContent = demos.length;
-      document.getElementById('liveCount').textContent = live.length;
+      // Skaičiai rodo AKTYVIUS (nepaslėptus) projektus.
+      const visN = (arr) => arr.filter(it => !HIDDEN.has(projId(it))).length;
+      const nD = visN(demos), nL = visN(live), nH = HIDDEN.size;
+      document.getElementById('demoCount').textContent = nD;
+      document.getElementById('liveCount').textContent = nL;
       document.getElementById('stat').innerHTML =
-        `<span class="pill"><b>${demos.length + live.length}</b> projektai iš viso</span>
-         <span class="pill">🎬 <b>${demos.length}</b> demo</span>
-         <span class="pill">🚀 <b>${live.length}</b> gyvi</span>`;
+        `<span class="pill"><b>${nD + nL}</b> aktyvūs projektai</span>
+         <span class="pill">🎬 <b>${nD}</b> demo</span>
+         <span class="pill">🚀 <b>${nL}</b> gyvi</span>
+         ${nH ? `<span class="pill">🙈 <b>${nH}</b> paslėpti</span>` : ''}`;
+
+      document.getElementById('controls').innerHTML = nH
+        ? `<button class="ctrl-btn" data-toggle-hidden>${showHidden ? '🙈 Slėpti paslėptus' : '👁 Rodyti paslėptus'} (${nH})</button>`
+        : '';
     }
 
-    // click-to-copy passwords -> toast
+    // ── Paspaudimai: slėpti/grąžinti, perjungti rodymą, kopijuoti slaptažodį ──
     document.addEventListener('click', e => {
+      const h = e.target.closest('[data-hide]');
+      if (h){ const id = h.getAttribute('data-hide');
+        HIDDEN.has(id) ? HIDDEN.delete(id) : HIDDEN.add(id); saveHidden(); renderAll(); return; }
+      if (e.target.closest('[data-toggle-hidden]')){ showHidden = !showHidden; renderAll(); return; }
       const c = e.target.closest('.pass code'); if (c) copy(c.textContent.trim());
     });
 
