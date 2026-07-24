@@ -3,8 +3,12 @@
      darbuotojų ir subrangovų paieškos modulis. Self-contained, visi kandidatų
      duomenys išgalvoti, būsena localStorage (pastatuapdaila_demo).
      Covers: karjeros puslapis + anketa be CV, subrangovų registracija,
-     kandidatų DB su filtrais/būsenomis/CSV, sklaida (QR plakatas + skelbimų
-     tekstai), kaštų palyginimas su CV portalais. -->
+     kandidatų DB su filtrais/būsenomis/CSV, AKTYVI PAIEŠKA (2026-07-24, po
+     A. Nakvoso atsakymo "per tinklapį neveiks"): skelbimų radaras (atsako į
+     "ieškau darbo" skelbimus), objektų transliuotojas (Telegram/Viber/portalai,
+     SĄMONINGAI BE Facebook — kliento/user pasirinkimas), subrangovų B2B el.
+     laiškų variklis, automatinis siūlymas iš bazės (SMS matching), rekomendacijų
+     grandinė; kaštų palyginimas su CV portalais. -->
 <html lang="lt">
 <head>
 <meta charset="utf-8">
@@ -80,6 +84,9 @@
   .poster-card img{border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff}
   .cmp td:first-child{font-weight:600}
   .cmp .best{background:#f0f7ee}
+  .chk{color:var(--good);font-weight:700}
+  .rad-sent{opacity:.6}
+  .src-tag{display:inline-block;background:#eef2fa;color:#274d8f;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700}
   .calc{background:#eef2fa;border:1px solid #ccd8f0;border-radius:12px;padding:14px 16px;margin-top:14px}
   .calc output{font-weight:800;color:var(--navy);font-size:18px}
   input[type=range]{padding:0;accent-color:var(--orange)}
@@ -108,7 +115,7 @@
       <button class="tab on" data-v="jobs">👷 Darbo skelbimai</button>
       <button class="tab" data-v="subs">🤝 Subrangovams</button>
       <button class="tab" data-v="adm">🖥️ Kandidatų bazė</button>
-      <button class="tab" data-v="ads">📣 Sklaida (QR + skelbimai)</button>
+      <button class="tab" data-v="ads">📡 Aktyvi paieška</button>
       <button class="tab" data-v="cost">💶 Kodėl tai pigiau</button>
     </div>
   </div>
@@ -224,26 +231,71 @@
     </div>
   </div>
 
-  <!-- ══════════ 4. SKLAIDA ══════════ -->
+  <!-- ══════════ 4. AKTYVI PAIEŠKA (be Facebook — sąmoningai) ══════════ -->
   <div class="view" id="v-ads">
     <div class="card">
-      <h2>Kaip kandidatai suras anketą</h2>
-      <p class="hint">Anketos nuoroda dedama visur, kur jau esate ir kas nieko nekainuoja: QR plakatas ant objekto tvoros ir vagonėlio, Facebook grupės, skelbimų portalai, parašas el. laiškuose. Visi keliai veda į tą pačią anketą — o kiekviena anketa lieka jūsų bazėje visam laikui.</p>
+      <h2>Sistema ne laukia — pati eina pas darbuotojus</h2>
+      <p class="hint">Vien skelbimas tinklapyje neveikia — niekas pats nesikreipia. Todėl sistemos pagrindas yra <b>aktyvi paieška</b>: ji pati suranda darbo ieškančius žmones, pati siunčia pasiūlymus SMS, el. paštu, Telegram ir Viber kanalais — o anketa tik surenka atsiliepusius į jūsų bazę. Žemiau — visi 5 varikliai (demonstracija, spauskite mygtukus).</p>
     </div>
-    <div class="card poster-card">
-      <div class="pt">IEŠKOME APDAILININKŲ</div>
-      <div class="ps">Atsiliepkite per 30 sekundžių — be CV. Nuskenuokite telefonu:</div>
-      <img alt="Anketos QR" width="220" height="220" id="poster-qr">
-      <div class="muted-s" style="margin-top:10px">pastatuapdaila.lt/karjera · +370 5 215 7211</div>
-      <div class="no-print"><button class="btn ghost sm" style="margin-top:14px" onclick="printPoster()">🖨️ Spausdinti plakatą (A4 — ant tvoros / vagonėlio)</button></div>
-    </div>
+
     <div class="card">
-      <h3>Skelbimo tekstas Facebook grupėms / portalams — sugeneruojamas automatiškai</h3>
-      <p class="hint">Pasirinkite poziciją — tekstas paruoštas kopijavimui į „Darbas Vilniuje“ tipo FB grupes ar skelbimų portalus. Vietoj „atsiųskite CV žinute“ kandidatas gauna nuorodą į anketą — nieko nepasimeta Messengeryje.</p>
+      <h3>📡 1. Skelbimų radaras — randa tuos, kurie patys ieško darbo</h3>
+      <p class="hint">Sistema kasdien peržiūri „ieškau darbo“ skelbimus (skelbiu.lt, alio.lt ir kt.) pagal jūsų specializacijas ir kiekvienam paruošia asmeninį pasiūlymą SMS žinute. Žmogus pats paskelbė kontaktą darbo paieškai — kreipimasis yra <b>atsakymas į jo skelbimą</b>, ne brukalas.</p>
+      <div id="radar-feed"></div>
+    </div>
+
+    <div class="card">
+      <h3>📣 2. Objektų transliuotojas — vienas mygtukas, visi kanalai</h3>
+      <p class="hint">Įdėjote naują poziciją → sistema sugeneruoja skelbimą ir išplatina jį į įmonės <b>Telegram ir Viber kanalus</b> (aktualu ir rusakalbėms bei ukrainiečių brigadoms) bei paruošia tekstus skelbimų portalams. Kiekviena nuoroda pažymėta, tad bazėje matosi, kuris kanalas realiai atveda anketas.</p>
       <label>Pozicija</label>
       <select id="ad-pos"></select>
       <textarea id="ad-text" spellcheck="false"></textarea>
-      <button class="btn sm ghost" style="margin-top:10px" onclick="copyAd()">📋 Kopijuoti tekstą</button>
+      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn sm navy" onclick="broadcastAd()">🚀 Paskelbti į kanalus</button>
+        <button class="btn sm ghost" onclick="copyAd()">📋 Kopijuoti tekstą</button>
+      </div>
+      <div id="bc-result" style="margin-top:10px;font-size:13.5px"></div>
+    </div>
+
+    <div class="card">
+      <h3>✉️ 3. Subrangovų el. laiškų variklis — brigados pasiekiamos tiesiogiai</h3>
+      <p class="hint">Apdailos, tinkavimo ir fasadų įmonių (MB, UAB, IĮ) el. paštai yra <b>vieši</b> — rekvizitai.lt ir paslaugų skelbimuose. Sistema jas susirenka ir kasdien saugiu tempu išsiunčia po keliolika kvietimų registruotis į partnerių sąrašą (B2B, su galimybe atsisakyti). Atsiliepusios brigados pačios užsipildo registraciją — skiltis „Subrangovams“.</p>
+      <div class="sms"><b>El. laiškas įmonei (pavyzdys)</b>Sveiki! „Pastatų apdaila“ (AB „Panevėžio statybos trestas“ filialas) nuolat ieško patikimų apdailos brigadų objektams Vilniuje ir visoje Lietuvoje. Užsiregistravusios brigados pasiūlymus apie naujus objektus gauna pirmos — registracija užtrunka 1 min.: pastatuapdaila.lt/subrangovams. Jei laiškai neaktualūs — atsakykite „nedomina“, daugiau nerašysime.</div>
+      <div class="stats" style="margin-top:12px;margin-bottom:0">
+        <div class="stat"><b>214</b><span>viešų įmonių kontaktų (iliustracija)</span></div>
+        <div class="stat"><b>~12/d.</b><span>laiškų saugiu tempu</span></div>
+        <div class="stat"><b>1 min.</b><span>brigados registracija</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🎯 4. Automatinis siūlymas iš bazės — antra paieška kainuoja 0 €</h3>
+      <p class="hint">Atsirado naujas objektas → sistema pati atrenka tinkamus žmones ir brigadas iš <b>jūsų bazės</b> ir išsiunčia jiems SMS. Atsakiusieji „TAIP“ sugula į sąrašą darbų vadovui — skambinate tik norintiems.</p>
+      <div class="row">
+        <div><label>Naujo objekto specializacija</label><select id="m-trade"></select></div>
+        <div><label>Miestas</label><input id="m-city" value="Vilnius"></div>
+      </div>
+      <button class="btn navy" onclick="findMatch()">🔍 Atrinkti iš bazės ir paruošti SMS</button>
+      <div id="m-result"></div>
+    </div>
+
+    <div class="card">
+      <h3>🤝 5. Rekomendacijų grandinė — darbuotojai atveda darbuotojus</h3>
+      <p class="hint">Statybose geriausi žmonės ateina per pažįstamus. Kiekvienas bazės darbuotojas gauna asmeninę nuorodą — už rekomenduotą žmogų, atidirbusį 2 savaites, skiriama premija (pvz. 50 €). Sistema pati seka, kas ką atvedė, ir primena apie premijas.</p>
+      <div class="sms"><b>SMS darbuotojui (pavyzdys)</b>Pastatų apdaila: Tomai, pažįstate gerą glaistytoją? Pasidalinkite savo nuoroda pastatuapdaila.lt/r/tomas-17 — jam atidirbus 2 sav., Jums 50 € premija prie algos.</div>
+      <div class="stats" style="margin-top:12px;margin-bottom:0">
+        <div class="stat"><b>2</b><span>Tomo atvesti žmonės (iliustracija)</span></div>
+        <div class="stat"><b>100 €</b><span>išmokėta premijų</span></div>
+        <div class="stat"><b>0 €</b><span>skelbimų kaštai šiam kanalui</span></div>
+      </div>
+    </div>
+
+    <div class="card poster-card">
+      <div class="pt">IEŠKOME APDAILININKŲ</div>
+      <div class="ps">Pasyvi sklaida irgi lieka — QR plakatas ant tvoros / vagonėlio:</div>
+      <img alt="Anketos QR" width="220" height="220" id="poster-qr">
+      <div class="muted-s" style="margin-top:10px">pastatuapdaila.lt/karjera · +370 5 215 7211</div>
+      <div class="no-print"><button class="btn ghost sm" style="margin-top:14px" onclick="printPoster()">🖨️ Spausdinti plakatą (A4 — ant tvoros / vagonėlio)</button></div>
     </div>
   </div>
 
@@ -263,7 +315,7 @@
           <tr><td>CV portalas</td><td>~150–300 € už <b>vieną</b> skelbimą 30-čiai dienų</td><td>Skelbimas dingsta pasibaigus terminui — kitam objektui mokate iš naujo</td></tr>
           <tr><td>Personalo atrankos agentūra</td><td>~1 mėn. atlyginimo dydžio mokestis už <b>vieną</b> darbuotoją</td><td>1 darbuotojas</td></tr>
           <tr><td>FB grupės + Messenger</td><td>nemokama</td><td>Kandidatai pasimeta žinutėse, jokios bazės, viskas iš naujo kas kartą</td></tr>
-          <tr class="best"><td>Sava paieškos sistema</td><td><b>vienkartinė kaina</b>, po to 0 € už skelbimą</td><td>Neriboti skelbimai + <b>auganti sava darbuotojų ir subrangovų bazė</b> + QR sklaida + pranešimai</td></tr>
+          <tr class="best"><td>Sava paieškos sistema</td><td><b>vienkartinė kaina</b>, po to 0 € už skelbimą</td><td>Neriboti skelbimai + <b>auganti sava bazė</b> + <b>aktyvi paieška</b> (skelbimų radaras, Telegram/Viber kanalai, subrangovų el. laiškai, SMS iš bazės, rekomendacijos)</td></tr>
         </tbody>
       </table></div>
       <div class="calc">
@@ -278,7 +330,7 @@
     </div>
     <div class="card">
       <h3>Diegimas</h3>
-      <p class="hint" style="margin:0">🌐 Įkeliama į jūsų svetainę adresu <b>pastatuapdaila.lt/karjera</b> (arba karjera.pastatuapdaila.lt) su įmonės logotipu ir spalvomis. 📱 Veikia telefone be jokių programėlių. 🔒 Duomenys ES serveryje, BDAR tvarka suderinama su PST reikalavimais. 🛠️ Skelbimus ir bazę valdote patys — mokymai užtrunka 15 minučių.</p>
+      <p class="hint" style="margin:0">🌐 Įkeliama į jūsų svetainę adresu <b>pastatuapdaila.lt/karjera</b> (arba karjera.pastatuapdaila.lt) su įmonės logotipu ir spalvomis. 📱 Veikia telefone be jokių programėlių. 🔒 Duomenys ES serveryje, BDAR tvarka suderinama su PST reikalavimais. 🛠️ Skelbimus ir bazę valdote patys — mokymai užtrunka 15 minučių. 🧩 <b>Diegiama etapais:</b> 1) anketa + bazė + skelbimų radaras · 2) objektų transliuotojas (Telegram/Viber) + subrangovų el. laiškų variklis · 3) automatinis siūlymas iš bazės + rekomendacijų programa — pradedate nuo to, kas duoda greičiausią rezultatą.</p>
     </div>
   </div>
 
@@ -459,12 +511,44 @@ window.addPos = () => {
   toast('✅ Skelbimas paskelbtas — matomas skiltyje „Darbo skelbimai“. Kaina: 0 €');
 };
 
-// ── 4. Sklaida ──
+// ── 4. Aktyvi paieška ──
 const APP_URL = 'https://projektai777.github.io/pastatuapdaila-demo.html#anketa';
 document.getElementById('poster-qr').src =
   'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=' + encodeURIComponent(APP_URL);
 window.printPoster = () => { document.body.classList.add('pp'); window.print(); };
 window.onafterprint = () => document.body.classList.remove('pp');
+
+// 4.1 Skelbimų radaras — išgalvoti "ieškau darbo" skelbimai + pasiūlymo simuliacija
+const RADAR = [
+  {name:'Vytautas', trade:'Plytelių klojimas', city:'Vilnius', src:'skelbiu.lt', ago:'prieš 2 val.', txt:'Plytelių klojėjas, 12 m. patirtis, ieškau darbo Vilniuje'},
+  {name:'Oleg', trade:'Glaistymas ir dažymas', city:'Vilnius', src:'alio.lt', ago:'prieš 5 val.', txt:'Glaistytojas–dažytojas, galiu pradėti iš karto'},
+  {name:'Brigada (3 žm.)', trade:'Gipso kartono montavimas', city:'Kaunas–Vilnius', src:'skelbiu.lt', ago:'vakar', txt:'GKP montuotojų brigada ieško objektų'},
+  {name:'Saulius', trade:'Tinkavimas', city:'Vilnius', src:'skelbiu.lt', ago:'vakar', txt:'Tinkuotojas, 8 m. patirtis, domina nuolatinis darbas'},
+];
+const radarSent = {};
+function renderRadar(){
+  document.getElementById('radar-feed').innerHTML = RADAR.map((r,i)=>`
+    <div class="job ${radarSent[i]?'rad-sent':''}">
+      <div class="jt"><b>${esc(r.name)}</b> <span class="src-tag">${esc(r.src)}</span>
+        <div class="meta">„${esc(r.txt)}“ · 📍 ${esc(r.city)} · ${esc(r.ago)}</div>
+        ${radarSent[i]?`<div class="sms"><b>Išsiųsta SMS (demo)</b>Sveiki! Matėme Jūsų skelbimą ${esc(r.src)}. „Pastatų apdaila“ (AB PST filialas) ieško: ${esc(r.trade.toLowerCase())} — ${esc(r.city.split('–')[0])}, laiku mokamas atlyginimas. Anketa per 30 sek. (be CV): ${APP_URL}</div>`:''}
+      </div>
+      ${radarSent[i]?'<span class="pill p-ok">✅ Pasiūlyta</span>':`<button class="btn sm" onclick="sendRadar(${i})">📨 Siųsti pasiūlymą</button>`}
+    </div>`).join('');
+}
+window.sendRadar = i => {
+  if (radarSent[i]) return;
+  radarSent[i] = true; renderRadar();
+  toast('📨 Asmeninis pasiūlymas išsiųstas SMS žinute (demo)');
+  setTimeout(()=>{                       // simuliacija: žmogus atsiliepia ir užpildo anketą
+    const r = RADAR[i];
+    DB.apps.unshift({name:r.name, phone:'+370 6xx 88888', trade:r.trade, exp:'10+ m.', city:r.city.split('–')[0], note:'atėjo per skelbimų radarą', st:'new', at:'šiandien'});
+    save(); renderAdm();
+    toast(`✍️ ${r.name} užpildė anketą — žr. „Kandidatų bazė“ (demo simuliacija)`);
+  }, 2600);
+};
+
+// 4.2 Objektų transliuotojas
 function genAd(){
   const v = document.getElementById('ad-pos').value;
   const p = DB.pos.find(x=>x.t===v);
@@ -475,8 +559,37 @@ function genAd(){
 document.getElementById('ad-pos').onchange = genAd;
 window.copyAd = () => {
   navigator.clipboard?.writeText(document.getElementById('ad-text').value)
-    .then(()=>toast('📋 Nukopijuota — įklijuokite į FB grupę ar portalą'))
+    .then(()=>toast('📋 Nukopijuota — įklijuokite į portalą ar kanalą'))
     .catch(()=>toast('Pažymėkite tekstą ir kopijuokite ranka'));
+};
+window.broadcastAd = () => {
+  const out = document.getElementById('bc-result');
+  const steps = [
+    '<span class="chk">✅</span> Telegram kanalas „PA objektai“ — paskelbta',
+    '<span class="chk">✅</span> Viber bendruomenė — paskelbta',
+    '<span class="chk">✅</span> Tekstai paruošti skelbiu.lt / darbo portalams (kopijuoti ↑)',
+    '📊 Nuorodos pažymėtos — statistika, kuris kanalas atveda anketas, kaupsis bazėje',
+  ];
+  out.innerHTML = '';
+  steps.forEach((s,i)=>setTimeout(()=>{ out.innerHTML += s + '<br>'; }, 350*(i+1)));
+  toast('🚀 Skelbimas platinamas į kanalus (demo)');
+};
+
+// 4.4 Automatinis siūlymas iš bazės
+const mTrade = document.getElementById('m-trade');
+mTrade.innerHTML = TRADES.map(t=>`<option>${esc(t)}</option>`).join('');
+window.findMatch = () => {
+  const tr = mTrade.value, city = document.getElementById('m-city').value.trim() || 'Vilnius';
+  const people = DB.apps.filter(a=>a.trade===tr && a.st!=='no');
+  const brig  = DB.subs.filter(s=>s.trades.includes(tr) && s.st!=='no');
+  const n = people.length + brig.length;
+  const sms = `Pastatų apdaila: naujas objektas — ${city}, reikalingi: ${tr.toLowerCase()}. Darbas nuo kitos savaitės, laiku mokamas atlyginimas. Jei domina — atsakykite TAIP, perskambinsime.`;
+  document.getElementById('m-result').innerHTML = n
+    ? `<div class="ok-box"><b>🎯 Bazėje rasta: ${people.length} darbuotojai, ${brig.length} brigados</b>
+       <p style="margin:8px 0 0" class="muted-s">${[...people.map(a=>a.name), ...brig.map(s=>s.co)].map(esc).join(' · ')}</p>
+       <div class="sms"><b>SMS visiems atrinktiems (pavyzdys)</b>${esc(sms)}</div>
+       <button class="btn green sm" style="margin-top:12px" onclick="toast('📨 Išsiųsta ${n} SMS — atsakę TAIP suguls į sąrašą darbų vadovui (demo)')">📨 Išsiųsti ${n} SMS</button></div>`
+    : `<div class="gdpr" style="margin-top:14px">Bazėje su šia specializacija dar nieko nėra — radaras ir transliuotojas ją pildo kasdien.</div>`;
 };
 
 // ── 5. Skaičiuoklė ──
@@ -487,7 +600,7 @@ window.calc = () => {
 };
 
 // ── Render all ──
-function render(){ renderJobs(); renderAdm(); calc(); }
+function render(){ renderJobs(); renderAdm(); renderRadar(); calc(); }
 render();
 
 // Gilios nuorodos (po init, kad viskas jau būtų paruošta):
