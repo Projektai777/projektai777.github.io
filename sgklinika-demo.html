@@ -505,6 +505,105 @@ window.joinVideo = (doctor) => {
     : '🎥 Atidarytas vaizdo kambarys — pacientas prisijungtų šia nuoroda iš SMS');
 };
 
+// ── 8. Asistentas (auto-atsakymai + savitarna registracija) ──
+// Žinių bazė: paslauga + demonstracinis įkainis + raktažodžiai (be lietuviškų raidžių — tekstas „nulietuvinamas").
+const KB = [
+  {svc:'Šeimos gydytojo konsultacija', price:'nuo 40 €', aliases:['seimos gydytoj','bendrosios praktik','terapeut','gydytojo konsultac']},
+  {svc:'Dermatologo konsultacija', price:'nuo 55 €', aliases:['dermatolog','odos gydytoj','apgam','odos konsultac','bemol']},
+  {svc:'Vaikų ligų gydytojo konsultacija', price:'nuo 45 €', aliases:['vaiku gydytoj','pediatr','vaiku lig']},
+  {svc:'Neurologo konsultacija', price:'nuo 55 €', aliases:['neurolog','galvos skausm','nugaros skausm']},
+  {svc:'Lazerinė epiliacija', price:'nuo 30 €', aliases:['epiliac','lazerine epiliac','plauku salinim','depiliac','plauku pasalinim']},
+  {svc:'Injekcinės procedūros (botulinas, užpildai)', price:'nuo 150 €', aliases:['botoks','botulin','uzpild','hialuron','rauksl','injekcin']},
+  {svc:'Gilus veido valymas', price:'nuo 45 €', aliases:['veido valym','odos valym','kosmetolog','veido procedur']},
+  {svc:'Lazerinis odos atjauninimas', price:'nuo 90 €', aliases:['odos atjaunin','lazerinis odos','fotoatjaunin','pigment']},
+  {svc:'Plaukų slinkimo gydymas', price:'nuo 70 €', aliases:['plauku slinkim','plaukai slenka','plikim','plauku gydym']},
+  {svc:'Echoskopija', price:'nuo 40 €', aliases:['echoskop','ultragars','uzs tyrim']},
+  {svc:'Mamografija', price:'nuo 35 €', aliases:['mamograf','krutu tyrim','krutu patikr']},
+  {svc:'Rentgenas', price:'nuo 20 €', aliases:['rentgen','nuotrauka plauci']},
+  {svc:'Kraujo tyrimai', price:'nuo 15 €', aliases:['kraujo tyrim','analiz','tyrimai kraujo']},
+  {svc:'Vairuotojų sveikatos pažyma', price:'nuo 20 €', aliases:['vairuotoj','medicinine pazym','pazyma vairav']},
+  {svc:'Jūrininkų sveikatos patikrinimas', price:'nuo 60 €', aliases:['jurinink','jureiv']},
+  {svc:'Profilaktinis sveikatos patikrinimas', price:'nuo 50 €', aliases:['profilaktin','sveikatos patikr','pilnas patikr','bendras patikr']},
+];
+const CHAT = () => document.getElementById('chat');
+const fold = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+let botState = { pending:null, offers:null, book:null };
+function addMsg(html, who){ const d=document.createElement('div'); d.className='msg '+who; d.innerHTML=html; CHAT().appendChild(d); CHAT().scrollTop=CHAT().scrollHeight; return d; }
+function botReplyDelayed(html, book){
+  const t=document.createElement('div'); t.className='typing'; t.textContent='asistentas rašo…';
+  CHAT().appendChild(t); CHAT().scrollTop=CHAT().scrollHeight;
+  setTimeout(()=>{ t.remove(); addMsg(html,'bot'); if(book) offerBooking(book.svc, book.branch); }, 650);
+}
+function findService(f){ return KB.find(k => k.aliases.some(a=>f.includes(a)) || f.includes(fold(k.svc))) || null; }
+function findBranch(f){ const b = BRANCHES.find(x=>f.includes(fold(x.n))); return b ? b.n : 'Klaipėda'; }
+function slotOffers(){
+  const d1=plusDays(1), d2=plusDays(2);
+  return [ {label:'Rytoj 10:30',date:d1,time:'10:30'}, {label:'Rytoj 13:30',date:d1,time:'13:30'},
+           {label:'Poryt 9:00',date:d2,time:'9:00'}, {label:'Poryt 15:30',date:d2,time:'15:30'} ];
+}
+function offerBooking(svc, branch){
+  botState.book = {svc, branch}; botState.offers = slotOffers();
+  addMsg(`Mielai! Pasirinkite laisvą laiką <b>${esc(branch)}</b> klinikoje — užregistruosiu iškart, be skambučio <span style="opacity:.6;font-size:12px">(kita klinika? tik parašykite)</span>:`, 'bot');
+  const wrap=document.createElement('div'); wrap.className='suggest';
+  botState.offers.forEach((o,i)=>{ const c=document.createElement('div'); c.className='chip'; c.textContent='🕐 '+o.label; c.onclick=()=>pickSlot(i); wrap.appendChild(c); });
+  CHAT().appendChild(wrap); CHAT().scrollTop=CHAT().scrollHeight;
+}
+function pickSlot(i){
+  const o=botState.offers[i];
+  botState.pending = {svc:botState.book.svc, branch:botState.book.branch, date:o.date, time:o.time};
+  addMsg('🕐 '+esc(o.label), 'user');
+  botReplyDelayed('Puiku! Kad užbaigčiau registraciją, parašykite savo <b>vardą ir telefoną</b> (pvz. „Rūta, +370 612 34567").');
+}
+function completeBooking(text){
+  const b=botState.pending; botState.pending=null;
+  const phone=(text.match(/(\+?370[\s\d]{6,}|\b8[\s\d]{7,})/)||[''])[0].trim();
+  const name=(text.replace(phone,'').replace(/[,;]/g,' ').trim().split(/\s+/)[0]) || 'Pacientas';
+  DB.bookings.unshift({br:b.branch, name, phone:phone||'—', svc:b.svc, date:b.date, time:b.time, st:'new'});
+  DB.reminders.push({name, phone:phone||'—', type:'Vizito priminimas (automatinis)', date:b.date});
+  save(); renderAdm(); renderRem();
+  const br=BRANCHES.find(x=>x.n===b.branch);
+  botReplyDelayed(`✅ <b>Užregistravau!</b>\n${esc(b.svc)} — ${esc(b.date)} ${esc(b.time)}, ${esc(b.branch)}${br?', '+esc(br.a):''}.\nPatvirtinimą išsiuntėme SMS, likus parai gausite priminimą. Iki pasimatymo! 😊\n<span style="opacity:.6;font-size:12px">(registracija matoma skiltyje „Registratūra")</span>`);
+  toast('✅ Pacientas užsiregistravo per asistentą — matoma „Registratūra"');
+}
+function botAnswer(raw){
+  const f=fold(raw), svc=findService(f), has=(...w)=>w.some(x=>f.includes(x));
+  if (has('labas','sveiki','laba dien','laba ryt','hello','sveika ')) return {text:'Sveiki! 👋 Galiu pasakyti kainas, ar atliekame procedūrą, darbo laikus — arba iškart užregistruoti vizitą. Ko norėtumėte?'};
+  if (has('aciu','dekoj','super atsak')) return {text:'Prašom! 😊 Jei norite, iškart užregistruosiu — tik parašykite, kokiai paslaugai.'};
+  if (has('zmog','operator','administrator','gyva ')) return {text:'Žinoma — registratūra susisieks darbo valandomis (Klaipėda +370 615 45644). O galiu ir dabar iškart užregistruoti, jei patogu. 🙂'};
+  if (has('registr','uzsiras','noriu vizit','noriu atvyk','noriu uzsi','uzsirasyt')){
+    if (svc) return {text:`Mielai užregistruosiu „${esc(svc.svc)}".`, book:{svc:svc.svc, branch:findBranch(f)}};
+    return {text:'Su malonumu užregistruosiu! Kokios paslaugos pageidaujate? Pvz. „lazerinė epiliacija", „šeimos gydytojo konsultacija", „mamografija"…'};
+  }
+  if (has('kiek kainuoja','kaina','kainos','kainuoja','ikainis','uz kiek','kiek uz')){
+    if (svc) return {text:`„${esc(svc.svc)}" — <b>${esc(svc.price)}</b> <span style="opacity:.6;font-size:12px">(demonstracinis įkainis; tikslią kainą patvirtiname prieš vizitą)</span>. Norite, kad iškart užregistruočiau? 🙂`, book:{svc:svc.svc, branch:findBranch(f)}};
+    return {text:'Mielai pasakysiu kainą — kokia paslauga domina? Pvz.: lazerinė epiliacija, dermatologo konsultacija, mamografija, vairuotojo pažyma…'};
+  }
+  if (has('ar atliekat','ar darot','ar teikiat','ar galima','ar turit','ar yra','ar priimat','ar konsultuoja','ar darat')){
+    if (svc) return {text:`Taip, „${esc(svc.svc)}" atliekame ✔️ Kaina ${esc(svc.price)}. Ar užregistruoti Jus? Parodysiu laisvus laikus.`, book:{svc:svc.svc, branch:findBranch(f)}};
+    return {text:'Gali būti, kad tokią paslaugą teikiame — patikslinsiu su specialistu. Parašykite tiksliau, kokios procedūros ieškote, arba palikite telefoną ir registratūra susisieks. 🙂'};
+  }
+  if (has('darbo laik','kada dirbat','valand','dirbat','atidaryt','uzdaryt','savaitgal','kada atvyk')) return {text:'Darbo laikai:\n• Klaipėda: I–V 8–19, VI 9–15\n• Plungė: I–V 8–20, VI 8–16\n• Mažeikiai: I–V 8–18\n• Palanga: I–V 8–18\nNorite užsiregistruoti konkrečiam laikui?'};
+  if (has('kur esat','adres','kur jus','kur yra','filial','kuriuose miest','kaip rasti','vieta')) return {text:'Dirbame keturiose klinikose:\n• Klaipėda, S. Daukanto g. 22\n• Mažeikiai, Naftininkų g. 9\n• Plungė, Telšių g. 13\n• Palanga, Vytauto g. 27'};
+  if (has('dovanu kupon','kupon','dovana','padovanot','dovanoti')) return {text:'Taip! 🎁 Dovanų kuponą galima įsigyti bet kuriai paslaugai ar konkrečiai sumai — puiki dovana. Įsigyjama klinikoje arba svetainėje.'};
+  if (has('vaizdo konsultac','nuotolin','online konsultac','video konsultac','distancin','per interneta')) return {text:'Taip, siūlome vaizdo konsultacijas su gydytoju 🎥 — prisijungiate iš namų, be programėlių. Užregistruoti Jus vaizdo konsultacijai?', book:{svc:'Vaizdo konsultacija', branch:findBranch(f)}};
+  if (has('telefon','numeris','paskambin','susisiek','el pasta','kontakt')) return {text:'Susisiekite:\n• Klaipėda +370 615 45644\n• Mažeikiai +370 698 52219\n• Plungė +370 615 34806\n• Palanga +370 683 61113\nEl. paštas info@sgklinika.lt — bet galiu ir dabar iškart užregistruoti. 🙂'};
+  if (has('siuntim','kompensuoj','ligoniu kas','draudim','nemokam','valstyb')) return {text:'Konsultacijos mokamos, siuntimo nereikia — atvykstate patogiu laiku be eilių. Dėl kompensavimo pasitikslinkite savo draudimo bendrovėje. Norite užsiregistruoti?'};
+  if (svc) return {text:`„${esc(svc.svc)}" — atliekame, kaina ${esc(svc.price)}. Norite daugiau informacijos ar iškart užregistruoti?`, book:{svc:svc.svc, branch:findBranch(f)}};
+  return {text:'Atleiskite, ne visai supratau 🙂 Galiu padėti dėl kainų, ar atliekame procedūrą, darbo laikų, adresų, dovanų kuponų ir vizito registracijos. Pvz. parašykite „Kiek kainuoja veido valymas?" arba „Noriu registruotis pas dermatologą".'};
+}
+window.botSend = () => {
+  const inp=document.getElementById('bot-in'); const text=inp.value.trim(); if(!text) return;
+  addMsg(esc(text),'user'); inp.value='';
+  if (botState.pending){ completeBooking(text); return; }
+  const r=botAnswer(text); botReplyDelayed(r.text, r.book);
+};
+window.botChip = t => { document.getElementById('bot-in').value=t; botSend(); };
+(function initBot(){
+  addMsg('Sveiki! 👋 Esu SG klinikos virtualus asistentas. Paklauskite apie kainas, procedūras ar darbo laikus — arba iškart užregistruosiu Jus vizitui. Kuo galiu padėti?','bot');
+  const SUGG=['Kiek kainuoja lazerinė epiliacija?','Ar atliekate mamografiją?','Noriu registruotis pas dermatologą','Kokie darbo laikai?','Vairuotojo pažyma?'];
+  document.getElementById('bot-sugg').innerHTML = SUGG.map(s=>`<button class="chip" onclick="botChip(this.textContent)">${esc(s)}</button>`).join('');
+})();
+
 // ── Render all ──
 function render(){ renderAdm(); renderRem(); renderCard(); renderRev(); }
 render();
