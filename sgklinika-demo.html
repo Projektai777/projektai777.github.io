@@ -77,7 +77,17 @@
   .qr-card b{display:block;font-size:15px;color:var(--wine2);margin-bottom:8px}
   .qr-card img{border:1px solid var(--line);border-radius:8px;padding:5px;background:#fff}
   .flow{margin:14px 0 0;padding-left:20px} .flow li{margin:0 0 8px;font-size:14px}
-  .vid-frame{width:100%;aspect-ratio:16/10;border:0;border-radius:12px;background:#000;margin-top:12px;display:none}
+  .chat{background:#f6f2f2;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:240px;max-height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:84%;padding:9px 13px;border-radius:14px;font-size:14px;line-height:1.45;white-space:pre-line}
+  .msg.bot{background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px;align-self:flex-start}
+  .msg.user{background:var(--wine);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+  .msg.bot b{color:var(--wine2)}
+  .chat-input{display:flex;gap:8px;margin-top:12px}
+  .chat-input input{flex:1}
+  .suggest{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .chip{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:6px 12px;font-size:12.5px;cursor:pointer;color:var(--wine2)}
+  .chip:hover{border-color:var(--wine);background:#fbeeef}
+  .typing{align-self:flex-start;font-size:13px;color:var(--muted);font-style:italic}
   @media print{.top,.tabs,.no-print{display:none!important}.card{border:0}}
 </style>
 </head>
@@ -260,7 +270,6 @@
         <button class="btn ghost sm" onclick="joinVideo(true)" style="margin-left:8px">👨‍⚕️ Gydytojo pusė (tas pats kambarys)</button>
       </div>
       <p class="muted-s" style="margin-top:10px">Atsidarys tikras, saugus vaizdo kambarys naršyklėje. Kad pamatytumėte abi puses vienu metu, atidarykite tą pačią nuorodą antrame įrenginyje arba paspauskite „Gydytojo pusė".</p>
-      <iframe id="vid-frame" class="vid-frame no-print" allow="camera; microphone; fullscreen; display-capture; autoplay"></iframe>
     </div>
     <div class="card">
       <h3>Kuo tai naudinga klinikai</h3>
