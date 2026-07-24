@@ -63,7 +63,7 @@
       body: 'Sveiki! Matėme Jūsų skelbimą skelbiu.lt „Ieško darbo“ skiltyje. ' + ORG +
             ' ieško ' + S.trade_lc + ' ' + S.city + ' — nuolatinis darbas, laiku mokamas atlyginimas.\n\n' +
             'Jei domina, užpildykite trumpą anketą (30 sek., be CV): ' + ANKETA + '?s=radaras\nArba skambinkite ' + PHONE + '.',
-      note: 'Dabar sistema suranda skelbimą, o Jūs paskambinate. Automatinis SMS — 3 etape.' },
+      note: 'Sistema pati išsiunčia pasiūlymą KIEKVIENAM rastam žmogui — jokio rankinio darbo; atsiliepę užsiregistruoja per anketą ir patenka į pultą. (Automatiniam SMS reikia SMS šliuzo — įjungiama diegimo metu; iki tol radaras parodo radinį pulte.)' },
 
     { id: 'base-offer', dir: 'out', channel: 'SMS',
       to: 'Tinkamiems žmonėms iš Jūsų bazės', phase: 3,

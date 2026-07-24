@@ -257,13 +257,15 @@
   <div class="view" id="v-ads">
     <div class="card">
       <h2>Sistema ne laukia — pati eina pas darbuotojus</h2>
-      <p class="hint">Vien skelbimas tinklapyje neveikia — niekas pats nesikreipia. Todėl sistemos pagrindas yra <b>aktyvi paieška</b>: ji pati suranda darbo ieškančius žmones, pati siunčia pasiūlymus SMS, el. paštu, Telegram ir Viber kanalais — o anketa tik surenka atsiliepusius į jūsų bazę. Žemiau — visi 5 varikliai (demonstracija, spauskite mygtukus).</p>
+      <p class="hint">Vien skelbimas tinklapyje neveikia — niekas pats nesikreipia. Todėl sistemos pagrindas yra <b>aktyvi paieška</b>: ji pati suranda darbo ieškančius žmones, pati siunčia pasiūlymus SMS, el. paštu, Telegram ir Viber kanalais — o anketa tik surenka atsiliepusius į jūsų bazę. Jums nereikia siųsti nieko ranka. Žemiau — visi 5 varikliai (demonstracija).</p>
     </div>
 
     <div class="card">
       <h3>📡 1. Skelbimų radaras — randa tuos, kurie patys ieško darbo</h3>
-      <p class="hint">Sistema kasdien peržiūri „ieškau darbo“ skelbimus (skelbiu.lt, alio.lt ir kt.) pagal jūsų specializacijas ir kiekvienam paruošia asmeninį pasiūlymą SMS žinute. Žmogus pats paskelbė kontaktą darbo paieškai — kreipimasis yra <b>atsakymas į jo skelbimą</b>, ne brukalas.</p>
+      <p class="hint">Sistema kasdien <b>pati</b> peržiūri „ieškau darbo“ skelbimus (skelbiu.lt, alio.lt ir kt.) pagal jūsų specializacijas ir <b>automatiškai kiekvienam išsiunčia</b> asmeninį pasiūlymą su anketos nuoroda. <b>Jums nereikia nieko spausti.</b> Žmogus pats paskelbė kontaktą darbo paieškai — kreipimasis yra atsakymas į jo skelbimą, ne brukalas.</p>
       <div id="radar-feed"></div>
+      <button class="btn sm ghost" style="margin-top:12px" onclick="replayRadar()">▶️ Peržiūrėti, kaip tai vyksta</button>
+      <p class="muted-s" style="margin-top:8px">👆 Šie pasiūlymai išsiųsti <b>automatiškai</b>. Realiai tai vyksta savaime kas dieną — jūs tik atsidarote „Kandidatų bazę“ ir paskambinate tiems, kurie <b>užsiregistravo</b>.</p>
     </div>
 
     <div class="card">
@@ -563,27 +565,34 @@ const RADAR = [
   {name:'Brigada (3 žm.)', trade:'Gipso kartono montavimas', city:'Kaunas–Vilnius', src:'skelbiu.lt', ago:'vakar', txt:'GKP montuotojų brigada ieško objektų'},
   {name:'Saulius', trade:'Tinkavimas', city:'Vilnius', src:'skelbiu.lt', ago:'vakar', txt:'Tinkuotojas, 8 m. patirtis, domina nuolatinis darbas'},
 ];
+// Sistema tai daro AUTOMATIŠKAI — todėl pradinė būsena visų yra „jau pasiūlyta"
+// (jokių rankinių „siųsti" mygtukų). „replayRadar" tik peržaidžia animaciją.
 const radarSent = {};
+RADAR.forEach((_,i)=>radarSent[i]=true);
 function renderRadar(){
-  document.getElementById('radar-feed').innerHTML = RADAR.map((r,i)=>`
-    <div class="job ${radarSent[i]?'rad-sent':''}">
+  document.getElementById('radar-feed').innerHTML = RADAR.map((r,i)=>{
+    const sent = radarSent[i], showSms = sent && i===0;   // SMS pavyzdys tik pirmam, kad neužgriozdintų
+    return `<div class="job ${sent?'rad-sent':''}">
       <div class="jt"><b>${esc(r.name)}</b> <span class="src-tag">${esc(r.src)}</span>
         <div class="meta">„${esc(r.txt)}“ · 📍 ${esc(r.city)} · ${esc(r.ago)}</div>
-        ${radarSent[i]?`<div class="sms"><b>Išsiųsta SMS (demo)</b>Sveiki! Matėme Jūsų skelbimą ${esc(r.src)}. „Pastatų apdaila“ (AB PST filialas) ieško: ${esc(r.trade.toLowerCase())} — ${esc(r.city.split('–')[0])}, laiku mokamas atlyginimas. Anketa per 30 sek. (be CV): ${APP_URL}</div>`:''}
+        ${showSms?`<div class="sms"><b>Automatiškai išsiųsta SMS (pavyzdys)</b>Sveiki! Matėme Jūsų skelbimą ${esc(r.src)}. „Pastatų apdaila“ (AB PST filialas) ieško: ${esc(r.trade.toLowerCase())} — ${esc(r.city.split('–')[0])}, laiku mokamas atlyginimas. Anketa per 30 sek. (be CV): ${APP_URL}</div>`:''}
       </div>
-      ${radarSent[i]?'<span class="pill p-ok">✅ Pasiūlyta</span>':`<button class="btn sm" onclick="sendRadar(${i})">📨 Siųsti pasiūlymą</button>`}
-    </div>`).join('');
+      ${sent?'<span class="pill p-ok">✅ Pasiūlyta automatiškai</span>':'<span class="pill p-new">⏳ Eilėje…</span>'}
+    </div>`;
+  }).join('');
 }
-window.sendRadar = i => {
-  if (radarSent[i]) return;
-  radarSent[i] = true; renderRadar();
-  toast('📨 Asmeninis pasiūlymas išsiųstas SMS žinute (demo)');
-  setTimeout(()=>{                       // simuliacija: žmogus atsiliepia ir užpildo anketą
-    const r = RADAR[i];
-    DB.apps.unshift({name:r.name, phone:'+370 6xx 88888', trade:r.trade, exp:'10+ m.', city:r.city.split('–')[0], note:'atėjo per skelbimų radarą', st:'new', at:'šiandien'});
-    save(); renderAdm();
-    toast(`✍️ ${r.name} užpildė anketą — žr. „Kandidatų bazė“ (demo simuliacija)`);
-  }, 2600);
+window.replayRadar = () => {
+  RADAR.forEach((_,i)=>radarSent[i]=false); renderRadar();
+  toast('▶️ Radaras dirba — automatiškai siunčia pasiūlymus');
+  RADAR.forEach((_,i)=> setTimeout(()=>{ radarSent[i]=true; renderRadar(); }, 550*(i+1)));
+  setTimeout(()=>{                       // vienas atsiliepia ir PATS užsiregistruoja per anketą
+    const r = RADAR[0];
+    if (!DB.apps.some(a=>a.name===r.name)){
+      DB.apps.unshift({name:r.name, phone:'+370 6xx 88888', trade:r.trade, exp:'10+ m.', city:r.city.split('–')[0], note:'atėjo per skelbimų radarą (automatiškai)', st:'new', at:'šiandien'});
+      save(); renderAdm();
+    }
+    toast(`✍️ ${r.name} užsiregistravo per anketą — žr. „Kandidatų bazė“`);
+  }, 550*(RADAR.length+1)+300);
 };
 
 // 4.2 Objektų transliuotojas
