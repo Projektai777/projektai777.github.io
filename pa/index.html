@@ -120,8 +120,8 @@
       </table></div>
     </div>
     <div class="card">
-      <h3>📡 Radaro radiniai — žmonės, kurie patys ieško darbo</h3>
-      <p class="hint">Skelbimai iš skelbiu.lt / alio.lt pranešimų (žr. instrukciją apačioje). Atsidarykite skelbimą ir paskambinkite.</p>
+      <h3>📡 Radaro radiniai — meistrai ir brigados iš „Ieško darbo“</h3>
+      <p class="hint">Sistema pati kasdien surenka skelbimus iš skelbiu.lt „Ieško darbo“ skilties pagal statybos specializacijas. Atsidarykite skelbimą ir paskambinkite žmogui, kuris pats siūlosi dirbti.</p>
       <div class="tbl-wrap"><table>
         <thead><tr><th>Skelbimas</th><th>Šaltinis</th><th>Rasta</th><th>Būsena</th></tr></thead>
         <tbody id="r-rows"></tbody>
@@ -266,7 +266,7 @@ async function loadOverview(){
       <td><span class="src">${esc(r.src||'')}</span></td>
       <td><span class="muted-s">${esc((r.found_at||'').slice(0,16).replace('T',' '))}</span></td>
       <td><button class="pill ${ST[r.status]?.[1]||'p-new'}" onclick="setSt('radar',${r.id},'${ST_NEXT[r.status]||'called'}')">${ST[r.status]?.[0]||r.status}</button></td></tr>`).join('')
-      || '<tr><td colspan="4" class="muted-s">Radiniai atsiras, kai bus įjungti skelbiu.lt / alio.lt el. pašto pranešimai (žr. diegimo instrukciją).</td></tr>';
+      || '<tr><td colspan="4" class="muted-s">Radiniai atsiras po pirmo radaro paleidimo (skelbiu.lt „Ieško darbo“ skiltis, pagal statybos specializacijas).</td></tr>';
     renderNeeds(j.needs);
   } catch(e){
     if (String(e.message).includes('slaptažodis')) location.reload();
