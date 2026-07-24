@@ -329,9 +329,6 @@ function openTab(v){
 document.getElementById('tabs').addEventListener('click', e => {
   const b = e.target.closest('.tab'); if(!b) return; openTab(b.dataset.v);
 });
-// Gilios nuorodos: #anketa (QR iš plakato), #subs, #adm, #ads, #cost
-if (location.hash === '#anketa'){ openTab('jobs'); setTimeout(()=>document.getElementById('anketa').scrollIntoView({behavior:'smooth'}), 150); }
-else if (['#subs','#adm','#ads','#cost'].includes(location.hash)) openTab(location.hash.slice(1));
 
 // ── 1. Skelbimai + anketa ──
 const tradeSel = document.getElementById('a-trade');
@@ -492,6 +489,11 @@ window.calc = () => {
 // ── Render all ──
 function render(){ renderJobs(); renderAdm(); calc(); }
 render();
+
+// Gilios nuorodos (po init, kad viskas jau būtų paruošta):
+// #anketa (QR iš plakato), #subs, #adm, #ads, #cost
+if (location.hash === '#anketa'){ openTab('jobs'); setTimeout(()=>document.getElementById('anketa').scrollIntoView({behavior:'smooth'}), 150); }
+else if (['#subs','#adm','#ads','#cost'].includes(location.hash)) openTab(location.hash.slice(1));
 </script>
 </body>
 </html>
