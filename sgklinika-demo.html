@@ -72,6 +72,13 @@
   .bp{border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;cursor:pointer;background:#fff}
   .bp.on{border-color:var(--wine);background:#fbeeef}
   .bp b{display:block;font-size:14.5px} .bp span{font-size:12px;color:var(--muted)}
+  .qr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:10px}
+  .qr-card{border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;background:#fff}
+  .qr-card b{display:block;font-size:15px;color:var(--wine2);margin-bottom:8px}
+  .qr-card img{border:1px solid var(--line);border-radius:8px;padding:5px;background:#fff}
+  .flow{margin:14px 0 0;padding-left:20px} .flow li{margin:0 0 8px;font-size:14px}
+  .vid-frame{width:100%;aspect-ratio:16/10;border:0;border-radius:12px;background:#000;margin-top:12px;display:none}
+  @media print{.top,.tabs,.no-print{display:none!important}.card{border:0}}
 </style>
 </head>
 <body>
@@ -92,6 +99,7 @@
       <button class="tab" data-v="card">💎 Procedūrų kursas</button>
       <button class="tab" data-v="vou">🎁 Dovanų kuponai</button>
       <button class="tab" data-v="rev">⭐ Atsiliepimai</button>
+      <button class="tab" data-v="vid">🎥 Vaizdo konsultacijos</button>
     </div>
   </div>
 </div>
@@ -217,6 +225,7 @@
     <div class="card">
       <h2>Atsiliepimų rinkimas po vizito</h2>
       <p class="hint">Praėjus porai valandų po vizito pacientas automatiškai gauna trumpą žinutę su tiesiogine nuoroda palikti Google atsiliepimą — kiekviena klinika renka atsiliepimus į savo profilį. Daugiau ir šviežesnių atsiliepimų = aukštesnė vieta Google žemėlapyje, kai žmogus ieško „klinika Klaipėda“.</p>
+      <h3 style="margin-top:4px">1. Automatinė SMS po vizito</h3>
       <label>Klinika</label>
       <select id="rv-branch"></select>
       <div class="sms"><b>SMS pavyzdys</b><span id="rv-sms"></span></div>
@@ -224,6 +233,38 @@
         <b>Kodėl verta:</b><br>
         <span style="font-size:13.5px;opacity:.9">Žinutę gauna tik realiai apsilankę pacientai, todėl atsiliepimai — tikri. Nepatenkintas pacientas dažniau paskambins, o patenkintas — paliks žvaigždutes, kurios dirba jums kasdien.</span>
       </div>
+    </div>
+    <div class="card">
+      <h3>2. QR kodas ant registratūros / stalo — kiekvienai klinikai savas</h3>
+      <p class="hint">Kiekvienos klinikos QR veda TIESIAI į tos klinikos Google atsiliepimų langą — pacientas nuskenuoja telefonu ir vienu paspaudimu palieka žvaigždutes. Atsispausdinkite ir padėkite ant kiekvienos klinikos registratūros ar staliuko. Vienas filialas ≠ kito: QR sugeneruotas atskirai kiekvienam adresui.</p>
+      <div class="qr-grid" id="rv-qr"></div>
+      <button class="btn ghost sm no-print" style="margin-top:14px" onclick="window.print()">🖨️ Spausdinti QR korteles</button>
+      <div class="gdpr" style="margin-top:12px">💡 <b>Produkcijoje:</b> įrašius kiekvienos klinikos <b>Google Place ID</b> (paimamas per Google „Place ID Finder"), QR ves vienu paspaudimu tiesiai į žvaigždučių rašymo langą. Kol Place ID neįrašytas — QR veda į tos klinikos Google žemėlapio kortelę su atsiliepimais (irgi veikia iškart).</div>
+    </div>
+  </div>
+
+  <!-- ══════════ 7. VAIZDO KONSULTACIJOS ══════════ -->
+  <div class="view" id="v-vid">
+    <div class="card">
+      <h2>Vaizdo konsultacija su gydytoju</h2>
+      <p class="hint">Pacientas pasirenka „vaizdo konsultaciją", gauna asmeninę nuorodą SMS žinute ir sutartu laiku prisijungia tiesiai iš telefono ar kompiuterio — <b>jokios programėlės diegti nereikia, jokių registracijų ar slaptažodžių</b>. Gydytojas prisijungia iš registratūros ta pačia nuoroda.</p>
+      <ol class="flow">
+        <li>Pacientas registruojasi „Vaizdo konsultacijai" (kaip įprastam vizitui).</li>
+        <li>Gauna SMS su asmenine, vienkartine nuoroda ir laiku.</li>
+        <li>Sutartu laiku paspaudžia nuorodą — vaizdo kambarys atsidaro tiesiai naršyklėje.</li>
+        <li>Gydytojas prisijungia iš registratūros — konsultacija vyksta saugiai, be jokių programėlių.</li>
+      </ol>
+      <div class="sms"><b>SMS pavyzdys</b>SG klinika: Jūsų vaizdo konsultacija rytoj 15:00. Prisijunkite paspaudę: meet.jit.si/SGKlinika-priem-8241 (nieko diegti nereikia).</div>
+      <div style="margin-top:14px">
+        <button class="btn" onclick="joinVideo(false)">🎥 Atidaryti vaizdo skambutį (demo)</button>
+        <button class="btn ghost sm" onclick="joinVideo(true)" style="margin-left:8px">👨‍⚕️ Gydytojo pusė (tas pats kambarys)</button>
+      </div>
+      <p class="muted-s" style="margin-top:10px">Atsidarys tikras, saugus vaizdo kambarys naršyklėje. Kad pamatytumėte abi puses vienu metu, atidarykite tą pačią nuorodą antrame įrenginyje arba paspauskite „Gydytojo pusė".</p>
+      <iframe id="vid-frame" class="vid-frame no-print" allow="camera; microphone; fullscreen; display-capture; autoplay"></iframe>
+    </div>
+    <div class="card">
+      <h3>Kuo tai naudinga klinikai</h3>
+      <p class="hint" style="margin:0">💶 <b>Nulinė kaina už patį skambutį</b> — jokių mėnesinių mokesčių. 🔒 <b>Šifruotas ryšys</b>, prireikus galima laikyti ES serveryje (BDAR). 🌍 <b>Pacientas iš bet kur</b>: pakartotinės konsultacijos, tyrimų rezultatų aptarimas, receptų pratęsimas ar odos būklės peržiūra be atvykimo — patogu pacientui, papildomas pajamų srautas klinikai.</p>
     </div>
   </div>
 
@@ -237,11 +278,16 @@
 'use strict';
 const LS = 'sgklinika_demo';
 const BRANCHES = [
-  {n:'Klaipėda', a:'S. Daukanto g. 22', h:'I–V 8–19, VI 9–15'},
-  {n:'Mažeikiai', a:'Naftininkų g. 9', h:'I–V 8–18'},
-  {n:'Plungė', a:'Telšių g. 13', h:'I–V 8–20, VI 8–16'},
-  {n:'Palanga', a:'Vytauto g. 27', h:'I–V 8–18'},
+  // placeId: įrašius kiekvienos klinikos Google Place ID, QR ves TIESIAI į žvaigždučių langą
+  // (vienu paspaudimu). Kol tuščia — QR veda į tos klinikos Google žemėlapio kortelę su atsiliepimais.
+  {n:'Klaipėda', a:'S. Daukanto g. 22', h:'I–V 8–19, VI 9–15', placeId:''},
+  {n:'Mažeikiai', a:'Naftininkų g. 9', h:'I–V 8–18', placeId:''},
+  {n:'Plungė', a:'Telšių g. 13', h:'I–V 8–20, VI 8–16', placeId:''},
+  {n:'Palanga', a:'Vytauto g. 27', h:'I–V 8–18', placeId:''},
 ];
+// ── Vaizdo konsultacijų tiekėjas (demo: Jitsi Meet — nemokama, be paskyrų, be programėlių) ──
+const VIDEO = { name:'Jitsi Meet', base:'https://meet.jit.si/' };
+const newRoom = () => 'SGKlinika-' + Math.random().toString(36).slice(2,8);
 const AREAS = {
   'Gydytojų konsultacijos': ['Šeimos gydytojo konsultacija','Dermatovenerologo konsultacija','Vaikų ligų gydytojo konsultacija','Neurologo konsultacija'],
   'Tyrimai ir diagnostika': ['Echoskopija','Kraujo tyrimai','Rentgenas','Mamografija'],
@@ -396,11 +442,40 @@ window.useVoucher = c => { DB.vouchers[c].used = true; save(); checkVoucher(); t
 // ── 6. Atsiliepimai ──
 const rvB = document.getElementById('rv-branch');
 rvB.innerHTML = BRANCHES.map(b=>`<option>${esc(b.n)}</option>`).join('');
+// Kiekvienai klinikai — nuoroda TIESIAI į jos Google atsiliepimus.
+// Su Place ID: vienu paspaudimu atsidaro žvaigždučių rašymo langas.
+// Be jo: atsidaro tos klinikos Google žemėlapio kortelė (query nukreipia į konkretų adresą).
+function reviewLink(b){
+  return b.placeId
+    ? `https://search.google.com/local/writereview?placeid=${encodeURIComponent(b.placeId)}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('SG Klinika ' + b.n)}`;
+}
 function renderRev(){
   document.getElementById('rv-sms').textContent =
     `Ačiū, kad lankėtės SG klinikoje (${rvB.value})! Jei liko gera nuomonė, būsime dėkingi už atsiliepimą — tai užtrunka minutę: g.page/sg-${rvB.value.toLowerCase().slice(0,4)}/review`;
+  document.getElementById('rv-qr').innerHTML = BRANCHES.map(b=>{
+    const url = reviewLink(b);
+    return `<div class="qr-card">
+      <b>${esc(b.n)}</b>
+      <img alt="Google atsiliepimų QR — ${esc(b.n)}" width="170" height="170"
+           src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&margin=0&data=${encodeURIComponent(url)}">
+      <div class="muted-s" style="margin-top:8px">${esc(b.a)}</div>
+      <a class="btn ghost sm no-print" style="margin-top:10px" href="${url}" target="_blank" rel="noopener">Atidaryti atsiliepimų langą →</a>
+    </div>`;
+  }).join('');
 }
 rvB.onchange = renderRev;
+
+// ── 7. Vaizdo konsultacijos ──
+let _room = null;
+window.joinVideo = (doctor) => {
+  if (!_room) _room = newRoom();
+  const url = VIDEO.base + _room + '#userInfo.displayName=' + encodeURIComponent(doctor ? 'Gydytojas' : 'Pacientas');
+  window.open(url, '_blank', 'noopener');
+  toast(doctor
+    ? '👨‍⚕️ Atidaryta gydytojo pusė — tas pats kambarys, kaip paciento'
+    : '🎥 Atidarytas vaizdo kambarys — pacientas prisijungtų šia nuoroda iš SMS');
+};
 
 // ── Render all ──
 function render(){ renderAdm(); renderRem(); renderCard(); renderRev(); }
