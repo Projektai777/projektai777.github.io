@@ -1,0 +1,497 @@
+<!doctype html>
+<!-- © 2026. DEMO for Pastatų apdaila (pastatuapdaila.lt, AB PST filialas) —
+     darbuotojų ir subrangovų paieškos modulis. Self-contained, visi kandidatų
+     duomenys išgalvoti, būsena localStorage (pastatuapdaila_demo).
+     Covers: karjeros puslapis + anketa be CV, subrangovų registracija,
+     kandidatų DB su filtrais/būsenomis/CSV, sklaida (QR plakatas + skelbimų
+     tekstai), kaštų palyginimas su CV portalais. -->
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#16305e">
+<title>Pastatų apdaila — darbuotojų ir subrangovų paieška (DEMO)</title>
+<style>
+  :root{
+    --navy:#16305e; --navy2:#0e2144; --blue:#2b57a8; --orange:#e8850c; --orange2:#c96f04;
+    --bg:#f3f5f9; --card:#ffffff; --line:#dde3ee; --txt:#1d2534; --muted:#67718a;
+    --good:#0e9f6e; --radius:14px;
+  }
+  *{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+  body{margin:0;font:15px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--txt)}
+  .top{background:linear-gradient(135deg,var(--navy2),var(--navy));color:#fff;padding:18px 16px 14px}
+  .top .inner{max-width:1060px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .brand .logo{width:46px;height:46px;border-radius:12px;background:var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;letter-spacing:-.5px}
+  .brand h1{margin:0;font-size:20px;letter-spacing:.3px}
+  .brand .sub{font-size:12.5px;opacity:.8}
+  .demo-badge{margin-left:auto;background:#ffb020;color:#3a2a00;font-weight:700;font-size:12px;padding:4px 10px;border-radius:99px}
+  .tabs{max-width:1060px;margin:12px auto 0;display:flex;flex-wrap:wrap;gap:6px;padding-bottom:2px}
+  .tab{flex:0 1 auto;border:0;background:rgba(255,255,255,.14);color:#fff;padding:9px 14px;border-radius:10px;font-size:13.5px;cursor:pointer;white-space:nowrap}
+  .tab.on{background:var(--bg);color:var(--navy);font-weight:700}
+  .wrap{max-width:1060px;margin:0 auto;padding:18px 14px 60px}
+  .view{display:none}.view.on{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+  h2{margin:0 0 4px;font-size:18px} h3{margin:0 0 10px;font-size:15.5px}
+  .hint{color:var(--muted);font-size:13px;margin:0 0 14px}
+  label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin:10px 0 4px}
+  input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--txt)}
+  textarea{min-height:96px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  @media(max-width:640px){.row{grid-template-columns:1fr}}
+  .btn{display:inline-block;border:0;background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:11px 18px;border-radius:10px;cursor:pointer;margin-top:14px}
+  .btn:hover{background:var(--orange2)} .btn.sm{padding:7px 12px;font-size:13px;margin-top:0}
+  .btn.ghost{background:#eef2fa;color:var(--navy)} .btn.green{background:var(--good)} .btn.navy{background:var(--navy)}
+  .ok-box{background:#e6f7f0;border:1px solid #b5e6d3;border-radius:12px;padding:16px;margin-top:14px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;text-align:left;padding:8px 8px;border-bottom:2px solid var(--line)}
+  td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+  .tbl-wrap{overflow-x:auto}
+  .pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer;border:0}
+  .p-new{background:#fdf2d0;color:#8a6a00}.p-ok{background:#def7ec;color:#0a7a54}
+  .p-res{background:#e2e9fa;color:#274d8f}.p-no{background:#eee;color:#777}
+  .t-app{background:#eef2fa;color:#274d8f}.t-sub{background:#fdeede;color:#9a5a06}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:center}
+  .stat b{display:block;font-size:22px;color:var(--navy)} .stat span{font-size:12px;color:var(--muted)}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--navy2);color:#fff;padding:11px 18px;border-radius:12px;font-size:13.5px;opacity:0;transition:.25s;z-index:50;max-width:92vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+  .muted-s{font-size:12px;color:var(--muted)}
+  .sms{background:#f1f4f1;border:1px solid #cfdccf;border-radius:14px 14px 14px 4px;padding:12px 14px;font-size:13.5px;max-width:460px;margin-top:10px}
+  .sms b{display:block;font-size:11px;color:#5c7a5c;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .gdpr{background:#eef2fa;border:1px solid #ccd8f0;border-radius:10px;padding:10px 13px;font-size:12.5px;color:#2d4670;margin-top:12px}
+  .job{border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#fff}
+  .job .jt{flex:1;min-width:200px}
+  .job b{font-size:15.5px;color:var(--navy)}
+  .job .meta{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .chip{border:1.5px solid var(--line);background:#fff;border-radius:99px;padding:6px 12px;font-size:12.5px;cursor:pointer;user-select:none}
+  .chip.on{border-color:var(--orange);background:#fdeede;color:#9a5a06;font-weight:700}
+  .fchip{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:6px 12px;font-size:12.5px;cursor:pointer}
+  .fchip.on{border-color:var(--navy);background:#eef2fa;color:var(--navy);font-weight:700}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+  .filters select,.filters input{width:auto}
+  .why{background:linear-gradient(135deg,var(--navy2),var(--navy));color:#fff;border-radius:12px;padding:16px;margin-top:14px}
+  .why b{color:#ffd28a}
+  .poster-card{border:2px solid var(--navy);text-align:center}
+  .poster-card .pt{font-size:26px;font-weight:800;color:var(--navy);letter-spacing:-.5px;margin:6px 0 2px}
+  .poster-card .ps{font-size:15px;color:var(--muted);margin-bottom:12px}
+  .poster-card img{border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff}
+  .cmp td:first-child{font-weight:600}
+  .cmp .best{background:#f0f7ee}
+  .calc{background:#eef2fa;border:1px solid #ccd8f0;border-radius:12px;padding:14px 16px;margin-top:14px}
+  .calc output{font-weight:800;color:var(--navy);font-size:18px}
+  input[type=range]{padding:0;accent-color:var(--orange)}
+  @media print{
+    .top,.tabs,.toast,footer,.no-print{display:none!important}
+    body{background:#fff} .card{border:0;margin:0}
+    body.pp .view{display:none!important} body.pp #v-ads{display:block!important}
+    body.pp #v-ads .card:not(.poster-card){display:none!important}
+    .poster-card{border:0;padding-top:60px}
+    .poster-card .pt{font-size:40px} .poster-card .ps{font-size:20px}
+  }
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="inner">
+    <div class="brand">
+      <div class="logo">PA</div>
+      <div>
+        <h1>PASTATŲ APDAILA — darbuotojų ir subrangovų paieška</h1>
+        <div class="sub">AB „Panevėžio statybos trestas“ filialas · Vilnius · demonstracinė versija</div>
+      </div>
+      <div class="demo-badge">DEMO — visi kandidatų duomenys išgalvoti</div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-v="jobs">👷 Darbo skelbimai</button>
+      <button class="tab" data-v="subs">🤝 Subrangovams</button>
+      <button class="tab" data-v="adm">🖥️ Kandidatų bazė</button>
+      <button class="tab" data-v="ads">📣 Sklaida (QR + skelbimai)</button>
+      <button class="tab" data-v="cost">💶 Kodėl tai pigiau</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ══════════ 1. DARBO SKELBIMAI (kandidato pusė) ══════════ -->
+  <div class="view on" id="v-jobs">
+    <div class="card">
+      <h2>Karjera — laisvos pozicijos</h2>
+      <p class="hint">Taip atrodytų įmonės karjeros puslapis, pvz. <b>pastatuapdaila.lt/karjera</b>. Skelbimų kiekis neribotas ir <b>nieko nekainuoja</b> — įmonė įsideda ir keičia juos pati (žr. skiltį „Kandidatų bazė“). Kandidatas anketą užpildo <b>per 30 sekundžių, be CV</b> — statybų meistrai retai turi CV, o telefono numerio visiškai užtenka.</p>
+      <div id="job-list"></div>
+    </div>
+    <div class="card" id="anketa">
+      <h2>Anketa — užtrunka 30 sekundžių</h2>
+      <p class="hint">Jokio CV, jokių prisijungimų. Užpildyta anketa akimirksniu atsiranda įmonės kandidatų bazėje, o atsakingas asmuo gauna pranešimą el. paštu.</p>
+      <div id="app-form">
+        <div class="row">
+          <div><label>Vardas</label><input id="a-name" placeholder="Vardas"></div>
+          <div><label>Telefonas</label><input id="a-phone" placeholder="+370 6xx xxxxx"></div>
+        </div>
+        <div class="row">
+          <div><label>Specializacija</label><select id="a-trade"></select></div>
+          <div><label>Patirtis</label><select id="a-exp"><option>iki 1 m.</option><option>1–3 m.</option><option selected>3–10 m.</option><option>10+ m.</option></select></div>
+        </div>
+        <div class="row">
+          <div><label>Miestas</label><input id="a-city" placeholder="pvz. Vilnius"></div>
+          <div><label>Komentaras <span class="muted-s">(nebūtina)</span></label><input id="a-note" placeholder="pvz. galiu pradėti nuo rugpjūčio"></div>
+        </div>
+        <button class="btn" id="a-submit">Siųsti anketą</button>
+        <div class="gdpr">🔒 <b>Duomenų apsauga:</b> prašoma tik vardo ir telefono — duomenys naudojami tik atrankai, saugomi ES ir ištrinami pagal įmonės BDAR tvarką. Jokių slaptažodžių ar registracijų.</div>
+      </div>
+      <div id="app-ok" style="display:none" class="ok-box">
+        <b>✅ Anketa išsiųsta!</b>
+        <p style="margin:8px 0 0">Su Jumis susisieksime per 1 darbo dieną.<br><span class="muted-s" id="app-ok-info"></span></p>
+        <div class="sms"><b>SMS kandidatui (pavyzdys)</b><span id="app-ok-sms"></span></div>
+        <button class="btn ghost sm" style="margin-top:12px" onclick="resetAppForm()">Nauja anketa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ 2. SUBRANGOVAMS ══════════ -->
+  <div class="view" id="v-subs">
+    <div class="card">
+      <h2>Subrangovų registracija</h2>
+      <p class="hint">Brigados ir įmonės, norinčios dirbti objektuose, užsiregistruoja pačios — be skambučių ir be tarpininkų. Registracija atsiranda subrangovų bazėje su specializacija, komandos dydžiu ir data, nuo kada gali pradėti. Atėjus naujam objektui, tinkami subrangovai susirandami <b>per kelias sekundes</b>, o ne skambinant po visą Lietuvą.</p>
+      <div id="sub-form">
+        <div class="row">
+          <div><label>Įmonė / brigada</label><input id="s-co" placeholder="pvz. MB „Meistrų brigada“"></div>
+          <div><label>Kontaktinis asmuo</label><input id="s-person" placeholder="Vardas"></div>
+        </div>
+        <div class="row">
+          <div><label>Telefonas</label><input id="s-phone" placeholder="+370 6xx xxxxx"></div>
+          <div><label>El. paštas <span class="muted-s">(nebūtina)</span></label><input id="s-email" placeholder="info@..."></div>
+        </div>
+        <label>Specializacijos <span class="muted-s">(galima kelias)</span></label>
+        <div class="chips" id="s-trades"></div>
+        <div class="row">
+          <div><label>Komandos dydis</label><select id="s-size"><option>1</option><option>2–4</option><option selected>5–9</option><option>10+</option></select></div>
+          <div><label>Gali pradėti nuo</label><input type="date" id="s-from"></div>
+        </div>
+        <div class="row">
+          <div><label>Regionas</label><select id="s-region"><option>Vilnius</option><option>Kaunas</option><option>Klaipėda</option><option>Panevėžys</option><option selected>Visa Lietuva</option></select></div>
+          <div><label>Įkainio pastaba <span class="muted-s">(nebūtina)</span></label><input id="s-rate" placeholder="pvz. glaistymas nuo 7 €/m²"></div>
+        </div>
+        <button class="btn" id="s-submit">Registruoti brigadą</button>
+        <div class="gdpr">🔒 Registracija — tik įmonės/brigados kontaktai darbo pasiūlymams. Jokių sutarčių ar įsipareigojimų šiame žingsnyje.</div>
+      </div>
+      <div id="sub-ok" style="display:none" class="ok-box">
+        <b>✅ Registracija priimta!</b>
+        <p style="margin:8px 0 0">Atsiradus tinkamam objektui, su Jumis susisieks darbų vadovas.<br><span class="muted-s" id="sub-ok-info"></span></p>
+        <button class="btn ghost sm" style="margin-top:12px" onclick="resetSubForm()">Nauja registracija</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Kuo tai naudinga įmonei</h3>
+      <p class="hint" style="margin:0">📇 <b>Sava subrangovų kartoteka</b> — kaupiasi metai iš metų ir priklauso tik jums. 🏗️ Naujas objektas → filtras pagal specializaciją ir regioną → sąrašas kam skambinti per minutę. 💶 Jokių tarpininkų mokesčių — brigados ateina tiesiai pas jus per QR ant tvoros, skelbimą ar rekomendaciją.</p>
+    </div>
+  </div>
+
+  <!-- ══════════ 3. KANDIDATŲ BAZĖ (įmonės pusė) ══════════ -->
+  <div class="view" id="v-adm">
+    <div class="stats" id="adm-stats"></div>
+    <div class="card">
+      <h2>Kandidatų ir subrangovų bazė</h2>
+      <p class="hint">Visos anketos — vienoje vietoje, o ne pasimetusios Messengeryje, el. pašte ir ant lapelių. Spustelėkite <b>būseną</b>, kad ją pakeistumėte (Naujas → Susisiekta → Rezervas → Netinka). Bazė kaupiasi metai iš metų: kitam objektui pirmiausia peržiūrite „Rezervą“ — dažnai net nebereikia naujo skelbimo.</p>
+      <div class="filters">
+        <button class="fchip on" data-f="all">Visi</button>
+        <button class="fchip" data-f="app">👷 Darbuotojai</button>
+        <button class="fchip" data-f="sub">🤝 Subrangovai</button>
+        <select id="f-trade"><option value="">Visos specializacijos</option></select>
+        <input id="f-q" placeholder="🔍 Paieška…" style="flex:1;min-width:140px">
+        <button class="btn ghost sm" onclick="exportCsv()">⬇️ CSV / Excel</button>
+      </div>
+      <div class="tbl-wrap"><table><thead><tr><th>Tipas</th><th>Kas</th><th>Specializacija</th><th>Patirtis / komanda</th><th>Regionas</th><th>Gauta</th><th>Būsena</th><th></th></tr></thead>
+      <tbody id="adm-rows"></tbody></table></div>
+    </div>
+    <div class="card">
+      <h3>📧 Pranešimas apie kiekvieną naują anketą</h3>
+      <p class="hint">Nieko nereikia tikrinti — vos kandidatas ar brigada užpildo formą, atsakingas asmuo gauna laišką (galima ir SMS):</p>
+      <div class="sms"><b>El. laiškas vadovui (pavyzdys)</b>Nauja darbuotojo anketa: Tomas · Glaistymas ir dažymas · 3–10 m. patirtis · Vilnius · +370 6xx 11111. Visa bazė: pastatuapdaila.lt/karjera/adminas</div>
+    </div>
+    <div class="card">
+      <h3>➕ Naujas darbo skelbimas — 0 € už skelbimą</h3>
+      <p class="hint">CV portale kiekvienas skelbimas kainuoja ir dingsta po 30 d. Čia skelbimą įsidedate patys per pusę minutės — jis kabo kiek reikia ir nieko nekainuoja.</p>
+      <div class="row">
+        <div><label>Pareigos</label><input id="p-title" placeholder="pvz. Tinkuotojas (-a)"></div>
+        <div><label>Atlyginimas / įkainis</label><input id="p-pay" placeholder="pvz. 1 600–2 200 €/mėn."></div>
+      </div>
+      <label>Vieta</label><input id="p-city" placeholder="pvz. Vilnius / objektai LT">
+      <button class="btn navy" onclick="addPos()">Paskelbti</button>
+    </div>
+  </div>
+
+  <!-- ══════════ 4. SKLAIDA ══════════ -->
+  <div class="view" id="v-ads">
+    <div class="card">
+      <h2>Kaip kandidatai suras anketą</h2>
+      <p class="hint">Anketos nuoroda dedama visur, kur jau esate ir kas nieko nekainuoja: QR plakatas ant objekto tvoros ir vagonėlio, Facebook grupės, skelbimų portalai, parašas el. laiškuose. Visi keliai veda į tą pačią anketą — o kiekviena anketa lieka jūsų bazėje visam laikui.</p>
+    </div>
+    <div class="card poster-card">
+      <div class="pt">IEŠKOME APDAILININKŲ</div>
+      <div class="ps">Atsiliepkite per 30 sekundžių — be CV. Nuskenuokite telefonu:</div>
+      <img alt="Anketos QR" width="220" height="220" id="poster-qr">
+      <div class="muted-s" style="margin-top:10px">pastatuapdaila.lt/karjera · +370 5 215 7211</div>
+      <div class="no-print"><button class="btn ghost sm" style="margin-top:14px" onclick="printPoster()">🖨️ Spausdinti plakatą (A4 — ant tvoros / vagonėlio)</button></div>
+    </div>
+    <div class="card">
+      <h3>Skelbimo tekstas Facebook grupėms / portalams — sugeneruojamas automatiškai</h3>
+      <p class="hint">Pasirinkite poziciją — tekstas paruoštas kopijavimui į „Darbas Vilniuje“ tipo FB grupes ar skelbimų portalus. Vietoj „atsiųskite CV žinute“ kandidatas gauna nuorodą į anketą — nieko nepasimeta Messengeryje.</p>
+      <label>Pozicija</label>
+      <select id="ad-pos"></select>
+      <textarea id="ad-text" spellcheck="false"></textarea>
+      <button class="btn sm ghost" style="margin-top:10px" onclick="copyAd()">📋 Kopijuoti tekstą</button>
+    </div>
+  </div>
+
+  <!-- ══════════ 5. KODĖL TAI PIGIAU ══════════ -->
+  <div class="view" id="v-cost">
+    <div class="stats">
+      <div class="stat"><b>0 €</b><span>už skelbimą</span></div>
+      <div class="stat"><b>∞</b><span>skelbimų ir anketų</span></div>
+      <div class="stat"><b>1×</b><span>mokate vieną kartą</span></div>
+      <div class="stat"><b>Jūsų</b><span>bazė lieka jums</span></div>
+    </div>
+    <div class="card">
+      <h2>Palyginimas su įprastais paieškos būdais</h2>
+      <div class="tbl-wrap"><table class="cmp">
+        <thead><tr><th>Būdas</th><th>Kaina</th><th>Kas lieka įmonei</th></tr></thead>
+        <tbody>
+          <tr><td>CV portalas</td><td>~150–300 € už <b>vieną</b> skelbimą 30-čiai dienų</td><td>Skelbimas dingsta pasibaigus terminui — kitam objektui mokate iš naujo</td></tr>
+          <tr><td>Personalo atrankos agentūra</td><td>~1 mėn. atlyginimo dydžio mokestis už <b>vieną</b> darbuotoją</td><td>1 darbuotojas</td></tr>
+          <tr><td>FB grupės + Messenger</td><td>nemokama</td><td>Kandidatai pasimeta žinutėse, jokios bazės, viskas iš naujo kas kartą</td></tr>
+          <tr class="best"><td>Sava paieškos sistema</td><td><b>vienkartinė kaina</b>, po to 0 € už skelbimą</td><td>Neriboti skelbimai + <b>auganti sava darbuotojų ir subrangovų bazė</b> + QR sklaida + pranešimai</td></tr>
+        </tbody>
+      </table></div>
+      <div class="calc">
+        <label style="margin-top:0">Kiek darbo skelbimų įdedate per metus? <b id="calc-n">6</b></label>
+        <input type="range" min="1" max="20" value="6" id="calc-r" oninput="calc()">
+        <div style="margin-top:8px">CV portaluose tai kainuotų <output id="calc-out">~1 200 € kasmet</output> — čia po vienkartinio diegimo <b>0 € kasmet</b>.</div>
+      </div>
+      <div class="why">
+        <b>Svarbiausia ne skelbimai, o bazė.</b><br>
+        <span style="font-size:13.5px;opacity:.92">Kiekviena anketa ir kiekviena brigada lieka jūsų kartotekoje. Po metų naujam objektui darbuotojų pirmiausia ieškote <b>savoje bazėje</b> — nemokamai ir per kelias minutes, o ne pradedate nuo nulio su nauju mokamu skelbimu.</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Diegimas</h3>
+      <p class="hint" style="margin:0">🌐 Įkeliama į jūsų svetainę adresu <b>pastatuapdaila.lt/karjera</b> (arba karjera.pastatuapdaila.lt) su įmonės logotipu ir spalvomis. 📱 Veikia telefone be jokių programėlių. 🔒 Duomenys ES serveryje, BDAR tvarka suderinama su PST reikalavimais. 🛠️ Skelbimus ir bazę valdote patys — mokymai užtrunka 15 minučių.</p>
+    </div>
+  </div>
+
+  <footer style="text-align:center;color:var(--muted);font-size:12px;padding:10px">
+    DEMO · visi kandidatų duomenys išgalvoti · siūlo <b>Ignas</b> · projektai777.koduojam@gmail.com
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+const LS = 'pastatuapdaila_demo';
+const TRADES = ['Gipso kartono montavimas','Glaistymas ir dažymas','Plytelių klojimas','Grindų įrengimas','Tinkavimas','Fasadų apdaila / šiltinimas','Elektros darbai','Santechnika','Kita'];
+const seed = () => ({
+  pos: [
+    {t:'Apdailininkas (-ė)', pay:'1 700–2 400 €/mėn. į rankas', city:'Vilnius'},
+    {t:'Dažytojas (-a) / glaistytojas (-a)', pay:'1 600–2 200 €/mėn.', city:'Vilnius'},
+    {t:'Plytelių klojėjas (-a)', pay:'nuo 15 €/val. arba vienetinis', city:'Vilnius / objektai LT'},
+    {t:'Gipso kartono montuotojas (-a)', pay:'1 600–2 300 €/mėn.', city:'Vilnius'},
+    {t:'Fasado apdailos meistras (-ė)', pay:'vienetinis įkainis', city:'objektai visoje LT'},
+  ],
+  apps: [
+    {name:'Tomas', phone:'+370 6xx 11111', trade:'Glaistymas ir dažymas', exp:'3–10 m.', city:'Vilnius', note:'', st:'new', at:'šiandien'},
+    {name:'Andrej', phone:'+370 6xx 22222', trade:'Plytelių klojimas', exp:'10+ m.', city:'Vilnius', note:'gali pradėti iškart', st:'ok', at:'vakar'},
+    {name:'Mindaugas', phone:'+370 6xx 33333', trade:'Gipso kartono montavimas', exp:'1–3 m.', city:'Kaunas', note:'', st:'new', at:'šiandien'},
+    {name:'Valdas', phone:'+370 6xx 66666', trade:'Tinkavimas', exp:'10+ m.', city:'Vilnius', note:'dirbo NT projektuose', st:'res', at:'prieš 5 d.'},
+  ],
+  subs: [
+    {co:'MB „Glaistymo meistrai“', person:'Darius', phone:'+370 6xx 44444', trades:['Glaistymas ir dažymas'], size:'2–4', region:'Vilnius', from:'2026-08-01', rate:'glaistymas nuo 7 €/m²', st:'new', at:'šiandien'},
+    {co:'Brigada „Plytelė LT“', person:'Sergejus', phone:'+370 6xx 55555', trades:['Plytelių klojimas','Grindų įrengimas'], size:'5–9', region:'Visa Lietuva', from:'2026-09-01', rate:'', st:'res', at:'prieš 3 d.'},
+    {co:'UAB „Fasadai plius“', person:'Rokas', phone:'+370 6xx 77777', trades:['Fasadų apdaila / šiltinimas','Tinkavimas'], size:'10+', region:'Vilnius', from:'2026-08-15', rate:'', st:'ok', at:'vakar'},
+  ],
+});
+let DB;
+try { DB = JSON.parse(localStorage.getItem(LS)) || seed(); } catch(e){ DB = seed(); }
+const save = () => localStorage.setItem(LS, JSON.stringify(DB));
+const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const toast = m => { const t = document.getElementById('toast'); t.innerHTML = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 3400); };
+const ST = { new:['Naujas','p-new'], ok:['Susisiekta','p-ok'], res:['Rezervas','p-res'], no:['Netinka','p-no'] };
+const ST_NEXT = { new:'ok', ok:'res', res:'no', no:'new' };
+
+// ── Tabs (+ #anketa nuoroda iš QR atidaro anketą) ──
+function openTab(v){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.v===v));
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on', x.id==='v-'+v));
+  render();
+}
+document.getElementById('tabs').addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if(!b) return; openTab(b.dataset.v);
+});
+// Gilios nuorodos: #anketa (QR iš plakato), #subs, #adm, #ads, #cost
+if (location.hash === '#anketa'){ openTab('jobs'); setTimeout(()=>document.getElementById('anketa').scrollIntoView({behavior:'smooth'}), 150); }
+else if (['#subs','#adm','#ads','#cost'].includes(location.hash)) openTab(location.hash.slice(1));
+
+// ── 1. Skelbimai + anketa ──
+const tradeSel = document.getElementById('a-trade');
+tradeSel.innerHTML = TRADES.map(t=>`<option>${esc(t)}</option>`).join('');
+function guessTrade(title){
+  const f = title.toLowerCase();
+  if (f.includes('dažytoj')||f.includes('glaist')) return 'Glaistymas ir dažymas';
+  if (f.includes('plytel')) return 'Plytelių klojimas';
+  if (f.includes('gipso')) return 'Gipso kartono montavimas';
+  if (f.includes('fasad')) return 'Fasadų apdaila / šiltinimas';
+  if (f.includes('tinku')) return 'Tinkavimas';
+  if (f.includes('grind')) return 'Grindų įrengimas';
+  return 'Kita';
+}
+function renderJobs(){
+  document.getElementById('job-list').innerHTML = DB.pos.map(p=>`
+    <div class="job"><div class="jt"><b>${esc(p.t)}</b><div class="meta">💶 ${esc(p.pay)} <span class="muted-s">(demonstracinis)</span> · 📍 ${esc(p.city)}</div></div>
+    <button class="btn sm" onclick="applyTo('${esc(p.t).replace(/'/g,"\\'")}')">Kandidatuoti →</button></div>`).join('');
+  const sel = document.getElementById('ad-pos');
+  sel.innerHTML = DB.pos.map(p=>`<option>${esc(p.t)}</option>`).join('') + '<option>🤝 Subrangovų paieška</option>';
+  genAd();
+}
+window.applyTo = t => {
+  const g = guessTrade(t);
+  [...tradeSel.options].forEach(o=>{ if(o.value===g) tradeSel.value=g; });
+  document.getElementById('anketa').scrollIntoView({behavior:'smooth'});
+  toast('👇 Užpildykite anketą — 30 sekundžių');
+};
+document.getElementById('a-submit').onclick = () => {
+  const g = id => document.getElementById(id).value.trim();
+  if (!g('a-name') || !g('a-phone')){ toast('Įveskite vardą ir telefoną'); return; }
+  DB.apps.unshift({name:g('a-name'), phone:g('a-phone'), trade:tradeSel.value, exp:document.getElementById('a-exp').value, city:g('a-city')||'—', note:g('a-note'), st:'new', at:'šiandien'});
+  save();
+  document.getElementById('app-form').style.display='none';
+  document.getElementById('app-ok').style.display='block';
+  document.getElementById('app-ok-info').textContent = `${tradeSel.value} · ${document.getElementById('a-exp').value} patirtis`;
+  document.getElementById('app-ok-sms').textContent = `Pastatų apdaila: ačiū, ${g('a-name')}! Jūsų anketa gauta — susisieksime per 1 d.d. dėl darbo pokalbio.`;
+  toast('📧 Vadovui išsiųstas pranešimas apie naują anketą (demo) — matoma „Kandidatų bazė“');
+};
+window.resetAppForm = () => {
+  document.getElementById('app-form').style.display='block';
+  document.getElementById('app-ok').style.display='none';
+  ['a-name','a-phone','a-city','a-note'].forEach(id=>document.getElementById(id).value='');
+};
+
+// ── 2. Subrangovai ──
+const sTrades = document.getElementById('s-trades');
+TRADES.forEach(t=>{
+  const c = document.createElement('div'); c.className='chip'; c.textContent=t;
+  c.onclick = () => c.classList.toggle('on');
+  sTrades.appendChild(c);
+});
+document.getElementById('s-from').valueAsDate = new Date(Date.now() + 14*864e5);
+document.getElementById('s-submit').onclick = () => {
+  const g = id => document.getElementById(id).value.trim();
+  const picked = [...sTrades.querySelectorAll('.chip.on')].map(c=>c.textContent);
+  if (!g('s-co') || !g('s-phone')){ toast('Įveskite įmonę/brigadą ir telefoną'); return; }
+  if (!picked.length){ toast('Pažymėkite bent vieną specializaciją'); return; }
+  DB.subs.unshift({co:g('s-co'), person:g('s-person')||'—', phone:g('s-phone'), trades:picked, size:document.getElementById('s-size').value, region:document.getElementById('s-region').value, from:g('s-from'), rate:g('s-rate'), st:'new', at:'šiandien'});
+  save();
+  document.getElementById('sub-form').style.display='none';
+  document.getElementById('sub-ok').style.display='block';
+  document.getElementById('sub-ok-info').textContent = `${picked.join(', ')} · komanda ${document.getElementById('s-size').value} · nuo ${g('s-from')}`;
+  toast('📧 Darbų vadovui išsiųstas pranešimas apie naują brigadą (demo)');
+};
+window.resetSubForm = () => {
+  document.getElementById('sub-form').style.display='block';
+  document.getElementById('sub-ok').style.display='none';
+  ['s-co','s-person','s-phone','s-email','s-rate'].forEach(id=>document.getElementById(id).value='');
+  sTrades.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
+};
+
+// ── 3. Bazė ──
+let fType = 'all';
+document.querySelectorAll('.fchip').forEach(b=>{
+  b.onclick = () => { document.querySelectorAll('.fchip').forEach(x=>x.classList.toggle('on', x===b)); fType = b.dataset.f; renderAdm(); };
+});
+const fTrade = document.getElementById('f-trade');
+fTrade.innerHTML += TRADES.map(t=>`<option>${esc(t)}</option>`).join('');
+fTrade.onchange = () => renderAdm();
+document.getElementById('f-q').oninput = () => renderAdm();
+function rowsData(){
+  const q = document.getElementById('f-q').value.trim().toLowerCase(), tr = fTrade.value;
+  const rows = [];
+  DB.apps.forEach((a,i)=>rows.push({kind:'app', i, who:`<b>${esc(a.name)}</b><br><span class="muted-s">${esc(a.phone)}</span>`, trade:a.trade, extra:a.exp, region:a.city, at:a.at, st:a.st, txt:(a.name+' '+a.trade+' '+a.city+' '+(a.note||'')).toLowerCase()}));
+  DB.subs.forEach((s,i)=>rows.push({kind:'sub', i, who:`<b>${esc(s.co)}</b><br><span class="muted-s">${esc(s.person)} · ${esc(s.phone)}</span>`, trade:s.trades.join(', '), extra:'👥 '+s.size+(s.rate?` · ${esc(s.rate)}`:''), region:s.region+`<br><span class="muted-s">nuo ${esc(s.from)}</span>`, at:s.at, st:s.st, txt:(s.co+' '+s.person+' '+s.trades.join(' ')+' '+s.region).toLowerCase()}));
+  return rows.filter(r =>
+    (fType==='all' || r.kind===fType) &&
+    (!tr || r.trade.includes(tr)) &&
+    (!q || r.txt.includes(q)));
+}
+function renderAdm(){
+  const newA = DB.apps.filter(a=>a.st==='new').length, newS = DB.subs.filter(s=>s.st==='new').length;
+  document.getElementById('adm-stats').innerHTML = `
+    <div class="stat"><b>${newA+newS}</b><span>naujos anketos</span></div>
+    <div class="stat"><b>${DB.apps.length}</b><span>kandidatai bazėje</span></div>
+    <div class="stat"><b>${DB.subs.length}</b><span>subrangovai bazėje</span></div>
+    <div class="stat"><b>${DB.pos.length}</b><span>aktyvūs skelbimai · 0 €</span></div>`;
+  document.getElementById('adm-rows').innerHTML = rowsData().map(r=>`
+    <tr><td><span class="pill ${r.kind==='app'?'t-app':'t-sub'}" style="cursor:default">${r.kind==='app'?'👷':'🤝'}</span></td>
+    <td>${r.who}</td><td>${esc(r.trade)}</td><td>${r.extra}</td><td>${r.region}</td>
+    <td><span class="muted-s">${esc(r.at)}</span></td>
+    <td><button class="pill ${ST[r.st][1]}" onclick="cycleSt('${r.kind}',${r.i})" title="Spustelėkite — pakeisti būseną">${ST[r.st][0]}</button></td>
+    <td><button class="pill p-no" onclick="delRow('${r.kind}',${r.i})" title="Pašalinti">✕</button></td></tr>`).join('')
+    || '<tr><td colspan="8" class="muted-s">Pagal filtrą įrašų nėra</td></tr>';
+}
+window.cycleSt = (kind,i) => {
+  const arr = kind==='app' ? DB.apps : DB.subs;
+  arr[i].st = ST_NEXT[arr[i].st]; save(); renderAdm();
+  toast(`Būsena: <b>${ST[arr[i].st][0]}</b>`);
+};
+window.delRow = (kind,i) => { (kind==='app'?DB.apps:DB.subs).splice(i,1); save(); renderAdm(); };
+window.exportCsv = () => {
+  const head = 'Tipas;Kas;Kontaktas;Specializacija;Patirtis/komanda;Regionas;Būsena\n';
+  const strip = h => h.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  const body = rowsData().map(r=>[r.kind==='app'?'Darbuotojas':'Subrangovas', strip(r.who), '', r.trade, strip(String(r.extra)), strip(String(r.region)), ST[r.st][0]].join(';')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,﻿' + encodeURIComponent(head+body);
+  a.download = 'kandidatai.csv'; a.click();
+  toast('⬇️ Atsisiųsta kandidatai.csv — atsidaro su Excel');
+};
+window.addPos = () => {
+  const g = id => document.getElementById(id).value.trim();
+  if (!g('p-title')){ toast('Įrašykite pareigas'); return; }
+  DB.pos.unshift({t:g('p-title'), pay:g('p-pay')||'pagal susitarimą', city:g('p-city')||'Vilnius'});
+  save(); renderJobs(); renderAdm();
+  ['p-title','p-pay','p-city'].forEach(id=>document.getElementById(id).value='');
+  toast('✅ Skelbimas paskelbtas — matomas skiltyje „Darbo skelbimai“. Kaina: 0 €');
+};
+
+// ── 4. Sklaida ──
+const APP_URL = 'https://projektai777.github.io/pastatuapdaila-demo.html#anketa';
+document.getElementById('poster-qr').src =
+  'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=' + encodeURIComponent(APP_URL);
+window.printPoster = () => { document.body.classList.add('pp'); window.print(); };
+window.onafterprint = () => document.body.classList.remove('pp');
+function genAd(){
+  const v = document.getElementById('ad-pos').value;
+  const p = DB.pos.find(x=>x.t===v);
+  document.getElementById('ad-text').value = p
+    ? `👷 IEŠKOME: ${p.t} — ${p.city}.\n\nSiūlome: ${p.pay}, laiku mokamą atlyginimą ir nuolatinį darbą su didelės statybos įmonės objektais.\n\n✍️ Kandidatuokite per 30 sekundžių, be CV:\n${APP_URL}\n\nPastatų apdaila (AB „Panevėžio statybos trestas“ filialas)`
+    : `🤝 KVIEČIAME SUBRANGOVUS — apdailos, tinkavimo, plytelių, fasadų brigadas.\n\nNuolatiniai objektai Vilniuje ir visoje Lietuvoje, aiškios sutartys, laiku mokami atsiskaitymai.\n\n✍️ Registruokite brigadą per 1 minutę:\n${APP_URL}\n\nPastatų apdaila (AB „Panevėžio statybos trestas“ filialas)`;
+}
+document.getElementById('ad-pos').onchange = genAd;
+window.copyAd = () => {
+  navigator.clipboard?.writeText(document.getElementById('ad-text').value)
+    .then(()=>toast('📋 Nukopijuota — įklijuokite į FB grupę ar portalą'))
+    .catch(()=>toast('Pažymėkite tekstą ir kopijuokite ranka'));
+};
+
+// ── 5. Skaičiuoklė ──
+window.calc = () => {
+  const n = +document.getElementById('calc-r').value;
+  document.getElementById('calc-n').textContent = n;
+  document.getElementById('calc-out').textContent = `~${(n*200).toLocaleString('lt-LT')} € kasmet`;
+};
+
+// ── Render all ──
+function render(){ renderJobs(); renderAdm(); calc(); }
+render();
+</script>
+</body>
+</html>
