@@ -100,6 +100,10 @@
         <div><label>Atlyginimas / įkainis <span style="font-weight:400">(nebūtina)</span></label><input id="n-pay" placeholder="pvz. 1 700–2 400 €/mėn."></div>
         <div><label>Pastaba <span style="font-weight:400">(nebūtina)</span></label><input id="n-note" placeholder="pvz. darbo pradžia nuo 08-01"></div>
       </div>
+      <div class="row">
+        <div><label>Kontaktinis telefonas skelbime</label><input id="n-phone" placeholder="+370 6xx xxxxx" autocomplete="tel"></div>
+        <div><label>&nbsp;</label><div class="hint" style="margin:0">Šiuo numeriu Jums skambins darbuotojai. Jei paliksite tuščią, skelbime bus rodomas viešas filialo numeris.</div></div>
+      </div>
       <button class="btn big" id="n-btn">🚀 Pradėti paiešką</button>
       <div class="err" id="n-err"></div>
       <div id="n-result"></div>
@@ -138,6 +142,7 @@
 'use strict';
 const TRADES = ['Gipso kartono montavimas','Glaistymas ir dažymas','Plytelių klojimas','Grindų įrengimas','Tinkavimas','Fasadų apdaila / šiltinimas','Elektros darbai','Santechnika','Kita'];
 document.getElementById('n-trade').innerHTML = TRADES.map(t=>`<option>${t}</option>`).join('');
+try { document.getElementById('n-phone').value = localStorage.getItem('pa_phone') || ''; } catch(e){}
 const esc = s => String(s??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const toast = m => { const t=document.getElementById('toast'); t.innerHTML=m; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),3400); };
 const qs = new URLSearchParams(location.search);
@@ -197,18 +202,20 @@ document.getElementById('n-btn').onclick = async () => {
   showErr('n-err','');
   const btn = document.getElementById('n-btn'); btn.disabled=true; btn.textContent='Įjungiama…';
   try {
-    const j = await api('/need', {trade:document.getElementById('n-trade').value, city:g('n-city'), pay:g('n-pay'), note:g('n-note')});
+    const j = await api('/need', {trade:document.getElementById('n-trade').value, city:g('n-city'),
+                                  pay:g('n-pay'), note:g('n-note'), phone:g('n-phone')});
+    try { localStorage.setItem('pa_phone', g('n-phone')); } catch(e){}   // remember for next time
     const tgOk = j.telegram === 'posted';
     document.getElementById('n-result').innerHTML = `
       <div class="ok-box"><b>✅ Paieška įjungta!</b>
         <div style="margin-top:8px;font-size:13.5px">
-          ${tgOk ? '<span style="color:var(--good)">✅ Paskelbta Telegram kanale</span>'
-                 : '⚠️ Telegram kanalas dar neprijungtas — skelbimo tekstas paruoštas žemiau'}<br>
-          ✅ Radaras stebi „ieškau darbo“ skelbimus šiai specializacijai<br>
-          ✅ Anketa renka atsiliepusius — vakare žiūrėkite „📋 Kandidatai“
+          ✅ Radaras 2×/d. renka „ieškau darbo“ skelbimus pagal šią specializaciją<br>
+          ✅ Anketa renka atsiliepusius — vakare žiūrėkite „📋 Kandidatai“<br>
+          ${tgOk ? '<span style="color:var(--good)">✅ Paskelbta Jūsų Telegram kanale</span>'
+                 : '📋 Skelbimo tekstai paruošti — nukopijuokite ir įklijuokite ten, kur norite (UZT, portalai, darbo grupės)'}
         </div>
       </div>
-      <div class="copy-block"><label>Skelbimo tekstas — Telegram / Viber</label>
+      <div class="copy-block"><label>Skelbimo tekstas — grupėms (Viber / Telegram / Facebook)</label>
         <textarea id="t-tg" readonly>${esc(j.texts.telegram)}</textarea>
         <button class="btn ghost sm" onclick="copyTxt('t-tg')">📋 Kopijuoti</button></div>
       <div class="copy-block"><label>Skelbimo tekstas — Užimtumo tarnyba (uzt.lt) / portalai</label>

@@ -37,12 +37,14 @@
   var ORG     = 'AB „Panevėžio statybos trestas“ filialo „Pastatų apdaila“';
 
   // Canonical ad-post text — used by the REAL worker /need AND the demo preview.
+  // need.phone: the CLIENT types the contact number in the console; PHONE is only a
+  // fallback (their public branch line) so an ad is never published without a contact.
   function adPost(need, src) {
     var pay  = need.pay  ? '\n💶 ' + need.pay   : '';
     var note = need.note ? '\n'   + need.note   : '';
     return '👷 IEŠKOME: ' + need.trade + ' — ' + (need.city || 'Vilnius') + '.' + pay + note + '\n'
       + 'Nuolatinis darbas su ' + ORG + ' objektais, laiku mokamas atlyginimas.\n'
-      + '✍️ Anketa per 30 sek. (be CV): ' + ANKETA + '?s=' + src + '\n📞 ' + PHONE;
+      + '✍️ Anketa per 30 sek. (be CV): ' + ANKETA + '?s=' + src + '\n📞 ' + (need.phone || PHONE);
   }
 
   // Example values so the previews read like real messages.
