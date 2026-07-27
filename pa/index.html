@@ -71,6 +71,7 @@
   <div class="tabs" id="tabs" style="display:none">
     <button class="tab on" data-v="need">🔍 Ko reikia šiandien?</button>
     <button class="tab" data-v="dash">📋 Kandidatai</button>
+    <button class="tab" data-v="pass">🔐 Slaptažodis</button>
   </div>
 </div></div>
 
@@ -95,6 +96,13 @@
 
   <!-- ── 1. Ko reikia šiandien? ── -->
   <div class="view on" id="v-need">
+    <div class="card" id="pass-nudge" style="display:none;border-left:4px solid #ffb020">
+      <h3 style="margin-top:0">🔐 Pirmiausia — pasikeiskite slaptažodį</h3>
+      <p class="hint">Dabar galioja mūsų Jums duotas slaptažodis. Pasikeitę jį į savo,
+        būsite vienintelis, kuris mato kandidatų vardus ir telefonus — jo nebematysime
+        nei mes, nei niekas kitas.</p>
+      <button class="btn" onclick="goPass()">Pasikeisti slaptažodį</button>
+    </div>
     <div class="card">
       <h2>Ko reikia šiandien?</h2>
       <p class="hint">Jūs pasirenkate, ko trūksta — sistema pagal tai įjungia radarą ir paruošia skelbimo tekstus.
@@ -121,15 +129,23 @@
       <div id="needs-list" class="hint" style="margin:0">—</div>
     </div>
 
+  </div>
+
+  <!-- ── 3. Slaptažodis (atskira skiltis, kad būtų lengva rasti) ── -->
+  <div class="view" id="v-pass">
     <div class="card" id="pass-card">
-      <h3>🔐 Slaptažodis</h3>
+      <h2>🔐 Slaptažodis</h2>
       <p class="hint" id="pass-hint"></p>
       <div class="row">
         <div><label>Naujas slaptažodis (bent 8 simboliai)</label><input id="np" type="password" autocomplete="new-password"></div>
         <div><label>Pakartokite</label><input id="np2" type="password" autocomplete="new-password"></div>
       </div>
-      <button class="btn ghost" id="np-btn">Pakeisti slaptažodį</button>
+      <button class="btn big" id="np-btn">Pakeisti slaptažodį</button>
       <div class="err" id="np-err"></div>
+      <p class="hint" style="margin-top:14px">
+        Pasikeitus slaptažodį, senasis nustoja veikti iš karto. Pasižymėkite naująjį —
+        jei pamirštumėte, atstatyti galime tik mes, o to norime išvengti.
+      </p>
     </div>
   </div>
 
@@ -206,12 +222,25 @@ async function unlock(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('tabs').style.display='flex';
-  document.getElementById('pass-hint').textContent = OWN_PASS
-    ? 'Slaptažodis yra Jūsų — mes jo nežinome. Galite jį pasikeisti bet kada.'
-    : 'Rekomenduojame iškart pasikeisti slaptažodį į savo. Nuo to momento pradinis '
-      + 'slaptažodis nustoja veikti ir kandidatų duomenų nemato niekas kitas, įskaitant mus.';
+  paintPassState();
   loadOverview();
 }
+// The password screen is a tab of its own AND, until the client takes ownership, a
+// notice on the first screen — it was easy to miss when it lived at the bottom of the page.
+function paintPassState(){
+  document.getElementById('pass-hint').textContent = OWN_PASS
+    ? 'Slaptažodis yra Jūsų — mes jo nežinome. Galite jį pasikeisti bet kada.'
+    : 'Dabar galioja mūsų Jums duotas slaptažodis. Įrašykite savo — nuo to momento '
+      + 'pradinis nustoja veikti ir kandidatų duomenų nemato niekas kitas, įskaitant mus.';
+  document.getElementById('pass-nudge').style.display = OWN_PASS ? 'none' : 'block';
+}
+window.goPass = () => {
+  const b = document.querySelector('.tab[data-v="pass"]');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t===b));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-pass'));
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('np').focus();
+};
 document.getElementById('np-btn').onclick = async () => {
   const a = document.getElementById('np').value, b = document.getElementById('np2').value;
   showErr('np-err','');
@@ -221,8 +250,8 @@ document.getElementById('np-btn').onclick = async () => {
     await api('/setpass', {new:a});
     PASS = a; sessionStorage.setItem('pa_pass', a); OWN_PASS = true;
     document.getElementById('np').value = document.getElementById('np2').value = '';
-    document.getElementById('pass-hint').textContent = 'Slaptažodis yra Jūsų — mes jo nežinome. Galite jį pasikeisti bet kada.';
-    toast('🔐 Slaptažodis pakeistas');
+    paintPassState();
+    toast('🔐 Slaptažodis pakeistas — nuo šiol galioja tik Jūsų');
   } catch(e){ showErr('np-err', e.message); }
 };
 document.getElementById('pw-btn').onclick = async () => {
