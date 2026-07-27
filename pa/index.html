@@ -83,6 +83,14 @@
   <div class="err" id="pw-err"></div>
 </div>
 
+<!-- ── Bandomasis laikotarpis baigėsi ── -->
+<div id="expired" class="card" style="display:none;max-width:520px;margin:8vh auto">
+  <h2>🔒 Bandomasis laikotarpis baigėsi</h2>
+  <p class="hint" id="expired-msg"></p>
+  <p class="hint">Jūsų sukaupti duomenys nėra ištrinti — jie išsaugoti ir bet kada
+     perduodami Jums. Norėdami tęsti, tiesiog atsakykite į mūsų laišką.</p>
+</div>
+
 <div class="wrap" id="app" style="display:none">
 
   <!-- ── 1. Ko reikia šiandien? ── -->
@@ -163,11 +171,22 @@ const api = async (path, body) => {
     ? {method:'POST', headers:hdrs(), body:JSON.stringify(body)}
     : {headers:hdrs()});
   const j = await r.json().catch(()=>({ok:false,error:'bad json'}));
+  if (r.status === 403 && j.error === 'trial-expired') { showExpired(j.message); throw new Error(j.message); }
   if (r.status === 401) { sessionStorage.removeItem('pa_pass'); throw new Error('Neteisingas slaptažodis.'); }
   if (r.status === 429) throw new Error('Per daug bandymų — palaukite 10 min.');
   if (!j.ok && j.error) throw new Error(j.error);
   return j;
 };
+
+// Trial lockout — the worker refuses everything after TRIAL_ENDS; say so plainly
+// instead of showing a broken page.
+function showExpired(msg){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='none';
+  document.getElementById('tabs').style.display='none';
+  document.getElementById('expired').style.display='block';
+  document.getElementById('expired-msg').textContent = msg || '';
+}
 
 // ── Login ──
 const showErr = (id,m) => { const e=document.getElementById(id); e.textContent=m||''; e.style.display=m?'block':'none'; };
@@ -184,7 +203,9 @@ document.getElementById('pw-btn').onclick = async () => {
     await ready;
     if (!API) { showErr('pw-err','Backend dar nepaleistas — bandykite vėliau.'); return; }
     const r = await fetch(API + '/auth', {method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({pass:p})});
-    if ((await r.json()).ok) { PASS=p; sessionStorage.setItem('pa_pass',p); unlock(); }
+    const j = await r.json().catch(()=>({}));
+    if (r.status === 403 && j.error === 'trial-expired') { showExpired(j.message); return; }
+    if (j.ok) { PASS=p; sessionStorage.setItem('pa_pass',p); OWN_PASS=!!j.own_pass; unlock(); }
     else showErr('pw-err', r.status===429 ? 'Per daug bandymų — palaukite 10 min.' : 'Neteisingas slaptažodis.');
   } catch(e){ showErr('pw-err','Nepavyko pasiekti serverio.'); }
 };
