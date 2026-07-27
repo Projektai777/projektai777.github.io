@@ -655,7 +655,7 @@ function chanClass(c){
   if(/Radaras/.test(c)) return 'mc-radar';
   return 'mc-chan';
 }
-function phaseLabel(p){ return p===1 ? '✅ 1 etapas (paruošta)' : p+' etapas'; }
+function phaseLabel(p){ return p===1 ? '✅ Veikia bandomojoje versijoje' : p+' etapas (papildoma paslauga)'; }
 function renderMsgs(){
   const host = document.getElementById('msgs-list'); if(!host) return;
   if (typeof PA === 'undefined' || !PA.MESSAGES){ host.innerHTML = '<p class="hint">Žinučių registras nepasiekiamas (pa/messages.js neįkeltas).</p>'; return; }

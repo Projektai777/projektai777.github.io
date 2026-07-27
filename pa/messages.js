@@ -53,30 +53,36 @@
 
   var MESSAGES = [
     // ─────────── SIUNČIAMA (out) ───────────
-    { id: 'ad-post', dir: 'out', channel: 'Telegram / Viber / Portalas',
+    { id: 'ad-post', dir: 'out', channel: 'Portalai / Viber / Telegram',
       to: 'Darbuotojams — skelbimas kanaluose', phase: 1,
       body: adPost({ trade: S.trade, city: S.city, pay: S.pay, note: S.note }, 'tg'),
-      note: 'Paspaudus „Pradėti paiešką“. Telegram šiuo metu praleistas Jūsų prašymu — tekstą į Viber/UZT/portalus įkeliate vienu paspaudimu iš pulto.' },
+      note: 'Tekstą sistema paruošia iškart, kai paspaudžiate „Pradėti paiešką“ — įkeliate vienu paspaudimu ' +
+            '(nukopijuojate ir įklijuojate) į UZT, portalus ar darbo grupes. SVARBU: į SVETIMAS Facebook / Viber / ' +
+            'Telegram grupes automatiškai rašyti negali niekas — „Meta“ 2024 m. visiškai uždarė grupių API, o ' +
+            'Telegram/Viber botas gali rašyti tik ten, kur tos grupės administratorius jį įsileidžia. Todėl čia ' +
+            'sąmoningai paliekame vieną paspaudimą žmogui — be išgalvotų pažadų.' },
 
     { id: 'radar-out', dir: 'out', channel: 'SMS',
-      to: 'Darbo ieškančiam žmogui (radaro radinys)', phase: 1,
+      to: 'Darbo ieškančiam žmogui (radaro radinys)', phase: 2,
       body: 'Sveiki! Matėme Jūsų skelbimą skelbiu.lt „Ieško darbo“ skiltyje. ' + ORG +
             ' ieško ' + S.trade_lc + ' ' + S.city + ' — nuolatinis darbas, laiku mokamas atlyginimas.\n\n' +
             'Jei domina, užpildykite trumpą anketą (30 sek., be CV): ' + ANKETA + '?s=radaras\nArba skambinkite ' + PHONE + '.',
-      note: 'Sistema pati išsiunčia pasiūlymą KIEKVIENAM rastam žmogui — jokio rankinio darbo; atsiliepę užsiregistruoja per anketą ir patenka į pultą. (Automatiniam SMS reikia SMS šliuzo — įjungiama diegimo metu; iki tol radaras parodo radinį pulte.)' },
+      note: 'PILOTINĖJE VERSIJOJE NEĮJUNGTA. Automatinėms SMS reikia mokamo SMS šliuzo (mokama už kiekvieną žinutę), ' +
+            'todėl bandomuoju laikotarpiu jo neįjungiame — radaras parodo radinį pulte su nuoroda į skelbimą, ' +
+            'o Jūs paskambinate pats. Nusprendus tęsti, SMS įjungiame kaip atskirą paslaugą.' },
 
     { id: 'base-offer', dir: 'out', channel: 'SMS',
       to: 'Tinkamiems žmonėms iš Jūsų bazės', phase: 3,
       body: '„Pastatų apdaila“: naujas objektas ' + S.city + ' — reikalingi glaistytojai–dažytojai. ' +
             'Darbas nuo kitos savaitės, laiku mokamas atlyginimas.\n\nJei domina — atsakykite TAIP, ir darbų vadovas Jums perskambins.',
-      note: 'Naujas objektas → sistema pati atrenka tinkamus iš sukauptos bazės ir išsiunčia SMS.' },
+      note: 'Naujas objektas → sistema pati atrenka tinkamus iš sukauptos bazės ir išsiunčia SMS. Reikia SMS šliuzo (mokama už žinutes) — atskira paslauga.' },
 
     { id: 'referral', dir: 'out', channel: 'SMS',
       to: 'Esamam darbuotojui (rekomendacija)', phase: 3,
       body: '„Pastatų apdaila“: ' + S.name + ', pažįstate gerą glaistytoją ar dažytoją? ' +
             'Pasidalinkite savo asmenine nuoroda: ' + ANKETA + '?s=rek-tomas\n\n' +
             'Jam atidirbus 2 savaites — Jums 50 € premija prie atlyginimo. Ačiū!',
-      note: 'Kiekvienas darbuotojas gauna asmeninę nuorodą; premija už rekomenduotą žmogų.' },
+      note: 'Kiekvienas darbuotojas gauna asmeninę nuorodą; premija už rekomenduotą žmogų. Nuorodas galima dalinti ir be SMS (ranka), automatiniam išsiuntimui reikia SMS šliuzo.' },
 
     { id: 'subcontractor', dir: 'out', channel: 'El. paštas',
       to: 'Statybos brigadoms / įmonėms (subrangovams)', phase: 2,
@@ -93,13 +99,13 @@
       to: 'Ką tik užpildžiusiam anketą kandidatui', phase: 2,
       body: '„Pastatų apdaila“: ačiū, ' + S.name + '! Jūsų anketa gauta. Su Jumis susisieksime per 1 darbo dieną ' +
             'dėl darbo pokalbio. Skubu? Skambinkite ' + PHONE + '.',
-      note: 'Patvirtinimas kandidatui iškart po anketos užpildymo.' },
+      note: 'Patvirtinimas kandidatui iškart po anketos užpildymo. Reikia SMS šliuzo — atskira paslauga; pilotinėje versijoje kandidatas patvirtinimą mato ekrane po anketos išsiuntimo.' },
 
     // ─────────── GAUNAMA (in) ───────────
     { id: 'radar-find', dir: 'in', channel: 'Radaras',
       to: 'Sistema → Jūsų pultas (rastas skelbimas)', phase: 1,
       body: 'Plytelių klojėjas, 12 m. patirtis, ieškau darbo Vilniuje\nskelbiu.lt · „Ieško darbo“ · prieš 2 val.',
-      note: 'Automatiškai surenkama 2×/d. iš „Ieško darbo“ skilties; pulte atsidarote skelbimą ir skambinate.' },
+      note: 'ŠIRDIS. Automatiškai surenkama 2×/d. iš skelbiu.lt „Ieško darbo“ skilties (šiandien, 07-27: 48 skelbimai, iš jų 18 statybos/apdailos). Pulte atsidarote skelbimą, matote žmogaus telefoną ir skambinate.' },
 
     { id: 'anketa-received', dir: 'in', channel: 'Anketa',
       to: 'Iš kandidato → į Jūsų bazę', phase: 1,
@@ -108,12 +114,12 @@
       note: 'Iškart atsiranda pulto skiltyje „Kandidatai“ su mygtuku skambinti vienu paspaudimu.' },
 
     { id: 'manager-alert', dir: 'in', channel: 'El. paštas',
-      to: 'Jums (savininkui / vadovui)', phase: 1,
+      to: 'Jums (savininkui / vadovui)', phase: 2,
       subject: 'Nauja anketa — Glaistymas ir dažymas (Vilnius)',
       body: 'Nauja darbuotojo anketa „Pastatų apdaila“ sistemoje:\n\nVardas: Tomas Petraitis\nTelefonas: +370 6xx xxxxx\n' +
             'Specializacija: Glaistymas ir dažymas\nPatirtis: 3–10 m.\nMiestas: Vilnius\nIš kur: Telegram\n\n' +
             'Peržiūrėti visus kandidatus: ' + CONSOLE,
-      note: 'Galima įjungti iškart — gausite laišką (arba SMS) apie kiekvieną naują anketą.' },
+      note: 'Papildoma paslauga. Pilotinėje versijoje naujas anketas matote pulte (skiltis „Kandidatai“) — atsidarote vakare ir skambinate. Pageidaujant įjungiame pranešimą el. paštu apie kiekvieną naują anketą.' },
 
     { id: 'reply-taip', dir: 'in', channel: 'SMS',
       to: 'Iš žmogaus → Jums (atsakymas į pasiūlymą)', phase: 3,
