@@ -201,8 +201,95 @@ const shortTitle = t => { t = String(t||''); return t.length > 95 ? t.slice(0,95
 const toast = m => { const t=document.getElementById('toast'); t.innerHTML=m; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),3400); };
 const qs = new URLSearchParams(location.search);
 
+// ── DEMO MODE (?demo=1) ──────────────────────────────────────────────────────
+// The SAME page, the same buttons and the same flows as the live pult — only the
+// backend is swapped for an in-browser fake. That is deliberate: a separate mock
+// page would drift from the real one within a week, and then we would be showing
+// something that no longer exists. Everything below lives in localStorage
+// (`pa_demo`), so nothing here can ever touch a client's real data.
+const DEMO = qs.get('demo') === '1';
+const DEMO_KEY = 'pa_demo';
+const today = () => new Date().toISOString().slice(0,16).replace('T',' ');
+const daysAgo = n => new Date(Date.now()-n*864e5).toISOString().slice(0,16).replace('T',' ');
+
+function demoSeed(){
+  return {
+    seq: 100,
+    candidates: [
+      {id:1, kind:'worker', name:'Tomas Petraitis', phone:'+370 600 11111', trade:'Glaistymas ir dažymas', exp:'3–10 m.', city:'Vilnius', note:'galiu pradėti nuo pirmadienio', source:'anketa', status:'new', created_at:today()},
+      {id:2, kind:'worker', name:'Rimas Jankauskas', phone:'+370 600 22222', trade:'Gipso kartono montavimas', exp:'daugiau nei 10 m.', city:'Vilnius', note:'', source:'radar', status:'called', created_at:daysAgo(1)},
+      {id:3, kind:'brigade', name:'MB „Apdailos meistrai“', phone:'+370 600 33333', trade:'Tinkavimas', exp:'👥 4 žmonės', city:'Kaunas', note:'turime savo įrankius ir transportą', source:'anketa', status:'reserve', created_at:daysAgo(2)},
+      {id:4, kind:'worker', name:'Andrej Kovalenko', phone:'+370 600 44444', trade:'Plytelių klojimas', exp:'3–10 m.', city:'Vilnius', note:'', source:'ad', status:'new', created_at:daysAgo(2)},
+    ],
+    radar: [
+      {id:1, src:'alio.lt',    title:'Ieškau apdailos darbų pagalbinio darbininko darbo', url:'https://www.alio.lt/darbas-mokslas/iesko/darbo.html', city:'Vilnius', trade_guess:'Apdaila (bendra)', status:'new', found_at:today()},
+      {id:2, src:'alio.lt',    title:'Tinkuotojas vyras ieško tinkuotojo darbo, gali dirbti visoje Lietuvoje', url:'https://www.alio.lt/darbas-mokslas/iesko/darbo.html', city:'Kaunas', trade_guess:'Tinkavimas', status:'new', found_at:today()},
+      {id:3, src:'skelbiu.lt', title:'Gipso kartono montavimas, glaistymas dažymas — brigada', url:'https://www.skelbiu.lt/skelbimai/paslaugos-darbas/iesko-darbo/', city:'Vilnius', trade_guess:'Gipso kartono montavimas', status:'called', found_at:daysAgo(1)},
+      {id:4, src:'skelbiu.lt', title:'Stalius ieško darbo rimtoj įmonėj, 30 metų patirtis', url:'https://www.skelbiu.lt/skelbimai/paslaugos-darbas/iesko-darbo/', city:'Kaunas', trade_guess:'Staliaus darbai', status:'new', found_at:daysAgo(1)},
+      {id:5, src:'alio.lt',    title:'Suvirintojo darbo — stažas 31 m., turiu savo įrangą', url:'https://www.alio.lt/darbas-mokslas/iesko/darbo.html', city:'Vilnius', trade_guess:'Suvirinimas', status:'new', found_at:daysAgo(3)},
+    ],
+    needs: [{id:1, trade:'Glaistymas ir dažymas', city:'Vilnius', pay:'1 700–2 400 €/mėn.', note:'Darbo pradžia nuo rugpjūčio.', phone:'+370 600 00000', active:1, tg_posted:0, created_at:daysAgo(1)}],
+    channels: [{id:1, name:'Užimtumo tarnyba', url:'https://uzt.lt/'}, {id:2, name:'skelbiu.lt', url:'https://www.skelbiu.lt/naujas-skelbimas/'}],
+    posts: [{need_id:1, channel_id:2}],
+    pass_set: false,
+  };
+}
+const demoLoad = () => { try { return JSON.parse(localStorage.getItem(DEMO_KEY)) || demoSeed(); } catch(e){ return demoSeed(); } };
+const demoSave = d => { try { localStorage.setItem(DEMO_KEY, JSON.stringify(d)); } catch(e){} };
+window.demoReset = () => { localStorage.removeItem(DEMO_KEY); location.reload(); };
+
+// Mirrors the worker's routes 1:1 — same paths, same shapes, same validation
+// messages, so what you click here is what happens live.
+async function demoApi(path, body){
+  const d = demoLoad();
+  const ok = extra => (demoSave(d), Object.assign({ok:true}, extra||{}));
+  switch (path) {
+    case '/auth':      return ok({own_pass:d.pass_set});
+    case '/setpass':
+      if (!body || String(body.new||'').length < 8) throw new Error('Slaptažodis per trumpas (bent 8 simboliai).');
+      d.pass_set = true; return ok();
+    case '/overview':
+      return ok({needs:d.needs.filter(n=>n.active), candidates:d.candidates, radar:d.radar,
+        channels:d.channels, posts:d.posts,
+        stats:{c_today:d.candidates.filter(c=>c.created_at.slice(0,10)===new Date().toISOString().slice(0,10)).length,
+               c_total:d.candidates.length,
+               r_today:d.radar.filter(r=>r.found_at.slice(0,10)===new Date().toISOString().slice(0,10)).length,
+               r_new:d.radar.filter(r=>r.status==='new').length}});
+    case '/need': {
+      if (!body.trade) throw new Error('trade required');
+      const id = ++d.seq;
+      d.needs.unshift({id, trade:body.trade, city:body.city, pay:body.pay, note:body.note, phone:body.phone,
+                       active:1, tg_posted:0, created_at:today()});
+      const org = 'AB „Panevėžio statybos trestas“ filialo „Pastatų apdaila“';
+      const text = `👷 IEŠKOME: ${body.trade} — ${body.city||'Vilnius'}.` + (body.pay?`\n💶 ${body.pay}`:'') +
+        (body.note?`\n${body.note}`:'') + `\nNuolatinis darbas su ${org} objektais, laiku mokamas atlyginimas.` +
+        `\n✍️ Anketa per 30 sek. (be CV): https://projektai777.github.io/pa/anketa.html?s=demo\n📞 ${body.phone||'+370 5 215 7211'}`;
+      return ok({id, telegram:'not-configured', texts:{telegram:text, uzt:text, portal:text}});
+    }
+    case '/need-close':  d.needs = d.needs.map(n=>n.id===+body.id?{...n,active:0}:n); return ok();
+    case '/status': {
+      const arr = body.kind==='radar' ? d.radar : d.candidates;
+      const it = arr.find(x=>x.id===+body.id); if (it) it.status = body.status;
+      return ok();
+    }
+    case '/channel': {
+      if (!String(body.name||'').trim()) throw new Error('Įrašykite pavadinimą.');
+      let url = String(body.url||'').trim(); if (url && !/^https?:\/\//i.test(url)) url = 'https://'+url;
+      const id = ++d.seq; d.channels.push({id, name:body.name, url}); return ok({id});
+    }
+    case '/channel-del':
+      d.channels = d.channels.filter(c=>c.id!==+body.id);
+      d.posts = d.posts.filter(p=>p.channel_id!==+body.id); return ok();
+    case '/need-post':
+      d.posts = d.posts.filter(p=>!(p.need_id===+body.need_id && p.channel_id===+body.channel_id));
+      if (body.done) d.posts.push({need_id:+body.need_id, channel_id:+body.channel_id});
+      return ok();
+    default: throw new Error('not found');
+  }
+}
+
 let API = qs.get('api') || '';
-const ready = API ? Promise.resolve() :
+const ready = (DEMO || API) ? Promise.resolve() :
   fetch('./endpoint.json').then(r=>r.json()).then(c=>{ if(c.enabled && c.base) API = c.base; }).catch(()=>{});
 
 let PASS = sessionStorage.getItem('pa_pass') || '';
@@ -210,6 +297,7 @@ let OWN_PASS = false;   // true once the client has set his own password (we can
 const hdrs = () => ({'content-type':'application/json','x-pa-auth':PASS});
 const api = async (path, body) => {
   await ready;
+  if (DEMO) { await new Promise(r=>setTimeout(r,180)); return demoApi(path, body); }  // small delay = realistic feel
   if (!API) throw new Error('Backend dar nepaleistas (endpoint.json tuščias).');
   const r = await fetch(API + path, body !== undefined
     ? {method:'POST', headers:hdrs(), body:JSON.stringify(body)}
@@ -273,6 +361,7 @@ document.getElementById('np-btn').onclick = async () => {
 document.getElementById('pw-btn').onclick = async () => {
   const p = document.getElementById('pw').value;
   if (!p) return;
+  if (DEMO) { PASS=p; OWN_PASS = demoLoad().pass_set; unlock(); return; }   // demo: any password
   try {
     await ready;
     if (!API) { showErr('pw-err','Backend dar nepaleistas — bandykite vėliau.'); return; }
