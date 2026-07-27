@@ -1,5 +1,5 @@
 {
   "enabled": true,
-  "base": "",
-  "note": "PA recruit backend (pa-worker/, Cloudflare Worker). base is EMPTY until the worker is deployed (needs one-time `npx wrangler login`); pages show an honest 'backend dar nepaleistas' notice meanwhile. After deploy paste the workers.dev URL here."
+  "base": "https://pa-recruit.projektai777.workers.dev",
+  "note": "PA recruit backend (pa-worker/, Cloudflare Worker). LIVE since 2026-07-27 — D1 pa-recruit (ae009b53-41b2-4732-872b-9ebecd235259, region EEUR). Console password = the PA_PASS worker secret; given to the client separately, never stored in the repo."
 }
