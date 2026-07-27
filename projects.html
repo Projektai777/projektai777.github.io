@@ -182,23 +182,12 @@
     // DEMO = preview:true ARBA slug 'demo'.  GYVAS = visa kita (pvz. server:true klientas).
     const isDemo = (slug, t) => slug === 'demo' || t.preview === true;
 
-    // Ne-tenant projektai (atskiros svetainės/aplikacijos, kurios NĖRA tenants.js įrašai).
-    // Pridėkite čia ranka. live:true -> rodoma „Tikri klientai" skiltyje.
-    // GRUPAVIMAS: to paties kliento/projekto variantai sujungiami į vieną kortelę
-    // AUTOMATIŠKAI pagal pavadinimo pradžią (iki „ — " ar „ ("). Tad naują tos pačios
-    // įmonės modulį pavadinkite ta pačia pradžia (pvz. „Pastatų apdaila (PST) — X").
-    // Jei pavadinimai skiriasi, bet nori sujungti — pridėkite vienodą client:'...'.
-    const EXTRA_PROJECTS = [
-      // { name:'Pavyzdys', slug:'—', live:true, url:'https://...', reward:'Aprašymas' },
-      { name:'Autoaivas — serviso modulis', slug:'autoaivas (aivas.lt)', url:'./autoaivas-demo.html',
-        reward:'Autoserviso demo: registracija, remonto būsenos + QR nuoroda, SMS priminimai, atsiliepimų rinkimas, sąmatos, detalių pajamavimas' },
-      { name:'SG Klinika — skaitmeninis modulis', slug:'sgklinika (sgklinika.lt)', url:'./sgklinika-demo.html',
-        reward:'Klinikos demo (4 filialai): registracija internetu, registratūros pultas, vizito + pakartotinio apsilankymo SMS priminimai, procedūrų kurso kortelė, dovanų kuponų patikra, Google atsiliepimai su QR kiekvienam filialui, vaizdo konsultacijos (Jitsi), automatinis pokalbių asistentas su savitarna registracija' },
-      { name:'Pastatų apdaila (PST) — darbuotojų ir subrangovų paieška', slug:'pastatuapdaila (pastatuapdaila.lt)', url:'./pastatuapdaila-demo.html',
-        reward:'Statybos įmonės demo: karjeros puslapis su anketa be CV (30 sek.), subrangovų/brigadų registracija, kandidatų bazė, AKTYVI paieška — skelbimų radaras, paruošti skelbimų tekstai Viber/Telegram/portalams, subrangovų el. laiškai, SMS iš bazės (papildoma paslauga), rekomendacijų grandinė (be Facebook), QR plakatas, kaštų palyginimas su CV portalais' },
-      { name:'Pastatų apdaila (PST) — paieškos PULTAS', slug:'pa', live:true, url:'./pa/index.html',
-        reward:'✅ GYVA nuo 2026-07-27 (2 savaičių nemokamas bandymas). Klientas pats pasirenka specializaciją, miestą, atlyginimą ir kontaktinį telefoną → „Pradėti paiešką“. Radaras 2×/d. renka skelbiu.lt „Ieško darbo“ statybos skelbimus į pultą, vieša anketa /pa/anketa.html (be CV, 30 sek.) suveda kandidatus, vakare — skambinimas vienu paspaudimu. BE SMS (mokamas šliuzas — tik klientui apsisprendus), be Facebook. Cloudflare Worker + D1 (pa-recruit); slaptažodis pas Igną.' },
-    ];
+    // Ne-tenant projektai (atskiros svetainės/aplikacijos, kurios NĖRA tenants.js įrašai)
+    // NEBEGYVENA šiame faile — nuo 2026-07-27 sąrašas laikomas Worker'yje ir grąžinamas
+    // TIK teisingai suvedus slaptažodį (/projects-auth atsakymo laukas `extra`). Anksčiau
+    // bet kas galėjo pamatyti klientų pavadinimus ir gyvas nuorodas per „view source“.
+    // NAUJĄ projektą pridėkite worker/src/worker.js -> EXTRA_PROJECTS ir `wrangler deploy`.
+    let EXTRA_PROJECTS = [];
 
     const toast = (msg) => {
       const el = document.getElementById('toast');
@@ -386,7 +375,7 @@
         const r = await fetch(base + '/projects-auth', {
           method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ pass })
         });
-        if (r.ok) return { ok:true };
+        if (r.ok) { const j = await r.json().catch(()=>({})); return { ok:true, extra: j.extra || [] }; }
         if (r.status === 429) return { ok:false, msg:'Per daug bandymų. Palaukite ~10 min.' };
         if (r.status === 503) return { ok:false, msg:'Slaptažodis serveryje nesukonfigūruotas.' };
         return { ok:false, msg:'Neteisingas slaptažodis.' };
@@ -396,9 +385,15 @@
     const gate = document.getElementById('gate');
     function openDash(){ gate.classList.add('hide'); renderAll(); }
 
-    if (sessionStorage.getItem('projects_ok') === '1'){
+    // The project list arrives with the successful auth response and is cached for the
+    // browser session only — a page refresh must not have to ask for the password again,
+    // but a new session must.
+    const cached = sessionStorage.getItem('projects_extra');
+    if (sessionStorage.getItem('projects_ok') === '1' && cached){
+      try { EXTRA_PROJECTS = JSON.parse(cached); } catch { EXTRA_PROJECTS = []; }
       openDash();
     } else {
+      sessionStorage.removeItem('projects_ok');
       const inp = document.getElementById('gatePass');
       const btn = document.getElementById('gateBtn');
       const err = document.getElementById('gateErr');
@@ -406,7 +401,12 @@
         err.textContent = ''; btn.disabled = true; btn.textContent = 'Tikrinama…';
         const res = await tryUnlock(inp.value);
         btn.disabled = false; btn.textContent = 'Atrakinti';
-        if (res.ok){ sessionStorage.setItem('projects_ok','1'); openDash(); }
+        if (res.ok){
+          EXTRA_PROJECTS = res.extra || [];
+          sessionStorage.setItem('projects_ok','1');
+          sessionStorage.setItem('projects_extra', JSON.stringify(EXTRA_PROJECTS));
+          openDash();
+        }
         else { err.textContent = res.msg; inp.select(); }
       };
       btn.addEventListener('click', submit);
