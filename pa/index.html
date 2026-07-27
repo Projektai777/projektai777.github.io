@@ -120,6 +120,17 @@
       <h3>Aktyvios paieškos</h3>
       <div id="needs-list" class="hint" style="margin:0">—</div>
     </div>
+
+    <div class="card" id="pass-card">
+      <h3>🔐 Slaptažodis</h3>
+      <p class="hint" id="pass-hint"></p>
+      <div class="row">
+        <div><label>Naujas slaptažodis (bent 8 simboliai)</label><input id="np" type="password" autocomplete="new-password"></div>
+        <div><label>Pakartokite</label><input id="np2" type="password" autocomplete="new-password"></div>
+      </div>
+      <button class="btn ghost" id="np-btn">Pakeisti slaptažodį</button>
+      <div class="err" id="np-err"></div>
+    </div>
   </div>
 
   <!-- ── 2. Kandidatai (dienos ataskaita) ── -->
@@ -163,6 +174,7 @@ const ready = API ? Promise.resolve() :
   fetch('./endpoint.json').then(r=>r.json()).then(c=>{ if(c.enabled && c.base) API = c.base; }).catch(()=>{});
 
 let PASS = sessionStorage.getItem('pa_pass') || '';
+let OWN_PASS = false;   // true once the client has set his own password (we can't read his data then)
 const hdrs = () => ({'content-type':'application/json','x-pa-auth':PASS});
 const api = async (path, body) => {
   await ready;
@@ -194,8 +206,25 @@ async function unlock(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('tabs').style.display='flex';
+  document.getElementById('pass-hint').textContent = OWN_PASS
+    ? 'Slaptažodis yra Jūsų — mes jo nežinome. Galite jį pasikeisti bet kada.'
+    : 'Rekomenduojame iškart pasikeisti slaptažodį į savo. Nuo to momento pradinis '
+      + 'slaptažodis nustoja veikti ir kandidatų duomenų nemato niekas kitas, įskaitant mus.';
   loadOverview();
 }
+document.getElementById('np-btn').onclick = async () => {
+  const a = document.getElementById('np').value, b = document.getElementById('np2').value;
+  showErr('np-err','');
+  if (a.length < 8) return showErr('np-err','Slaptažodis per trumpas (bent 8 simboliai).');
+  if (a !== b) return showErr('np-err','Slaptažodžiai nesutampa.');
+  try {
+    await api('/setpass', {new:a});
+    PASS = a; sessionStorage.setItem('pa_pass', a); OWN_PASS = true;
+    document.getElementById('np').value = document.getElementById('np2').value = '';
+    document.getElementById('pass-hint').textContent = 'Slaptažodis yra Jūsų — mes jo nežinome. Galite jį pasikeisti bet kada.';
+    toast('🔐 Slaptažodis pakeistas');
+  } catch(e){ showErr('np-err', e.message); }
+};
 document.getElementById('pw-btn').onclick = async () => {
   const p = document.getElementById('pw').value;
   if (!p) return;

@@ -121,7 +121,20 @@ document.getElementById('f-submit').onclick = async () => {
         city:g('f-city'), note:g('f-note'), web:g('f-web'), src: qs.get('s') || 'anketa',
       }),
     });
-    if (!(await r.json()).ok) throw new Error('bad response');
+    const j = await r.json().catch(()=>({}));
+    // The pilot is time-limited: once it ends the worker refuses new anketos, so tell
+    // the person honestly instead of silently dropping their data.
+    if (r.status === 403 && j.error === 'trial-expired') {
+      btn.disabled = false; btn.textContent = 'Siųsti anketą';
+      err('Ši registracijos forma šiuo metu nepriima naujų anketų. Skambinkite +370 5 215 7211.');
+      return;
+    }
+    if (r.status === 429) {
+      btn.disabled = false; btn.textContent = 'Siųsti anketą';
+      err('Per daug bandymų iš šio tinklo. Pabandykite vėliau arba skambinkite +370 5 215 7211.');
+      return;
+    }
+    if (!j.ok) throw new Error('bad response');
     document.getElementById('form-card').style.display = 'none';
     document.getElementById('ok-card').style.display = 'block';
   } catch (e) {
