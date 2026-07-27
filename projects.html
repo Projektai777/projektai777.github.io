@@ -3,7 +3,9 @@
      INTERNAL INDEX of every demo + live project in the workspace.
      AUTO-GENERATED from public/tenants.js — a new tenant there shows up here
      automatically (demos = preview:true or slug 'demo'; live = everything else).
-     For a project that is NOT a tenants.js entry, add it to EXTRA_PROJECTS below. -->
+     For a project that is NOT a tenants.js entry, add it to EXTRA_PROJECTS in
+     worker/src/worker.js (server-side, so the client list never ships in this page)
+     and run `npx wrangler deploy` in worker/. -->
 <html lang="lt">
 <head>
   <meta charset="utf-8">
