@@ -125,6 +125,22 @@
       <div id="n-result"></div>
     </div>
     <div class="card">
+      <h3>📤 Kur skelbiate</h3>
+      <p class="hint">Susidėkite savo kanalus vieną kartą — paskui prie kiekvienos paieškos
+        matysite, kur jau paskelbta, o kur dar ne. Slaptažodžių iš Jūsų neprašome ir
+        neturime: mygtukas tiesiog atidaro portalą, kuriame esate prisijungęs, o skelbimo
+        tekstas jau būna nukopijuotas.</p>
+      <div id="chan-list"></div>
+      <div id="chan-suggest" class="hint" style="margin:10px 0 4px"></div>
+      <div class="row" style="margin-top:8px">
+        <div><label>Pavadinimas</label><input id="ch-name" placeholder="pvz. skelbiu.lt"></div>
+        <div><label>Nuoroda į skelbimo įdėjimą</label><input id="ch-url" placeholder="https://..."></div>
+      </div>
+      <button class="btn ghost sm" id="ch-add">+ Pridėti kanalą</button>
+      <div class="err" id="ch-err"></div>
+    </div>
+
+    <div class="card">
       <h3>Aktyvios paieškos</h3>
       <div id="needs-list" class="hint" style="margin:0">—</div>
     </div>
@@ -162,7 +178,7 @@
     </div>
     <div class="card">
       <h3>📡 Radaro radiniai — meistrai ir brigados iš „Ieško darbo“</h3>
-      <p class="hint">Sistema pati kasdien surenka skelbimus iš skelbiu.lt „Ieško darbo“ skilties pagal statybos specializacijas. Atsidarykite skelbimą ir paskambinkite žmogui, kuris pats siūlosi dirbti.</p>
+      <p class="hint">Sistema pati 2×/d. surenka skelbimus iš skelbiu.lt ir alio.lt „Ieško darbo“ skilčių pagal statybos specializacijas. Atsidarykite skelbimą ir paskambinkite žmogui, kuris pats siūlosi dirbti.</p>
       <div class="tbl-wrap"><table>
         <thead><tr><th>Skelbimas</th><th>Šaltinis</th><th>Rasta</th><th>Būsena</th></tr></thead>
         <tbody id="r-rows"></tbody>
@@ -270,6 +286,62 @@ document.getElementById('pw-btn').onclick = async () => {
 document.getElementById('pw').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('pw-btn').click(); });
 if (PASS) unlock();
 
+// ── Skelbimo kanalai (klientas susideda pats; jokių portalų slaptažodžių) ──
+// Verified 2026-07-27: these are the portals' real "įdėti skelbimą" entry points.
+const SUGGESTED = [
+  {name:'Užimtumo tarnyba', url:'https://uzt.lt/'},
+  {name:'skelbiu.lt',       url:'https://www.skelbiu.lt/naujas-skelbimas/'},
+  {name:'alio.lt',          url:'https://www.alio.lt/pasirinkite_kategorija.html'},
+  {name:'CVbankas',         url:'https://www.cvbankas.lt/'},
+];
+let CHANNELS = [], POSTS = [];
+const postedIn = (needId, chId) => POSTS.some(p => p.need_id===needId && p.channel_id===chId);
+
+function renderChannels(){
+  document.getElementById('chan-list').innerHTML = CHANNELS.length
+    ? CHANNELS.map(c=>`<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)">
+        <div style="flex:1"><b>${esc(c.name)}</b>${c.url?`<br><span class="muted-s">${esc(c.url)}</span>`:''}</div>
+        <button class="btn ghost sm" onclick="delChannel(${c.id})">✕</button></div>`).join('')
+    : '<div class="hint" style="margin:0">Kanalų dar nėra — pridėkite iš siūlomų arba įrašykite savo.</div>';
+  const missing = SUGGESTED.filter(s => !CHANNELS.some(c => c.name.toLowerCase()===s.name.toLowerCase()));
+  document.getElementById('chan-suggest').innerHTML = missing.length
+    ? 'Greitas pridėjimas: ' + missing.map((s,i)=>`<button class="btn ghost sm" style="margin:2px" onclick="addSuggested(${SUGGESTED.indexOf(s)})">+ ${esc(s.name)}</button>`).join(' ')
+    : '';
+}
+window.addSuggested = async i => { const s = SUGGESTED[i]; await saveChannel(s.name, s.url); };
+async function saveChannel(name, url){
+  try { await api('/channel', {name, url}); await loadOverview(); toast('Kanalas pridėtas'); }
+  catch(e){ showErr('ch-err', e.message); }
+}
+window.delChannel = async id => { try { await api('/channel-del', {id}); await loadOverview(); } catch(e){ toast(esc(e.message)); } };
+document.getElementById('ch-add').onclick = () => {
+  const n = document.getElementById('ch-name').value.trim(), u = document.getElementById('ch-url').value.trim();
+  showErr('ch-err','');
+  if (!n) return showErr('ch-err','Įrašykite pavadinimą.');
+  document.getElementById('ch-name').value = document.getElementById('ch-url').value = '';
+  saveChannel(n, u);
+};
+// Checklist under a search: copy the text, open the portal, tick it off.
+function postChecklist(needId){
+  if (!CHANNELS.length) return '<div class="hint" style="margin:6px 0 0">Pridėkite kanalų viršuje — tada čia matysite, kur jau paskelbta.</div>';
+  return '<div style="margin-top:8px">' + CHANNELS.map(c=>{
+    const done = postedIn(needId, c.id);
+    return `<div style="display:flex;gap:6px;align-items:center;padding:4px 0;flex-wrap:wrap">
+      <button class="btn ghost sm" onclick="togglePost(${needId},${c.id},${!done})">${done?'✅':'⬜'}</button>
+      <div style="flex:1;min-width:110px">${esc(c.name)}</div>
+      ${c.url?`<a class="btn ghost sm" href="${esc(c.url)}" target="_blank" rel="noopener" onclick="copyNeedText(${needId})">Atidaryti</a>`:''}
+    </div>`;
+  }).join('') + '</div>';
+}
+window.togglePost = async (need_id, channel_id, done) => {
+  try { await api('/need-post', {need_id, channel_id, done}); await loadOverview(); } catch(e){ toast(esc(e.message)); }
+};
+// Copy the ad text as the portal opens, so it is already in the clipboard to paste.
+window.copyNeedText = needId => {
+  const n = (window.__needs||[]).find(x=>x.id===needId);
+  if (n && n.__text) navigator.clipboard?.writeText(n.__text).then(()=>toast('📋 Skelbimo tekstas nukopijuotas')).catch(()=>{});
+};
+
 // ── Tabs ──
 document.getElementById('tabs').addEventListener('click', e => {
   const b = e.target.closest('.tab'); if(!b) return;
@@ -302,7 +374,11 @@ document.getElementById('n-btn').onclick = async () => {
         <button class="btn ghost sm" onclick="copyTxt('t-tg')">📋 Kopijuoti</button></div>
       <div class="copy-block"><label>Skelbimo tekstas — Užimtumo tarnyba (uzt.lt) / portalai</label>
         <textarea id="t-uzt" readonly>${esc(j.texts.uzt)}</textarea>
-        <button class="btn ghost sm" onclick="copyTxt('t-uzt')">📋 Kopijuoti</button></div>`;
+        <button class="btn ghost sm" onclick="copyTxt('t-uzt')">📋 Kopijuoti</button></div>
+      <div class="card" style="margin-top:10px"><b>Kur paskelbti</b>
+        <div class="hint" style="margin:4px 0 0">Paspaudus „Atidaryti“, tekstas nukopijuojamas
+          ir portalas atsidaro naujame lange — belieka įklijuoti. Pažymėkite, kur jau padaryta.</div>
+        ${postChecklist(j.id)}</div>`;
     loadNeeds();
     toast('🚀 Paieška įjungta');
   } catch(e){ showErr('n-err', e.message); }
@@ -320,12 +396,18 @@ async function loadNeeds(){
   } catch(e){}
 }
 function renderNeeds(needs){
+  window.__needs = needs || [];
   document.getElementById('needs-list').innerHTML = (needs||[]).length
-    ? needs.map(n=>`<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)">
-        <div style="flex:1"><b>${esc(n.trade)}</b> · ${esc(n.city||'')} ${n.pay?'· '+esc(n.pay):''}
-          <span class="muted-s">· ${esc((n.created_at||'').slice(0,10))}</span>
-          ${n.tg_posted?' <span class="src">TG ✓</span>':''}</div>
-        <button class="btn ghost sm" onclick="closeNeed(${n.id})">Užbaigti</button></div>`).join('')
+    ? needs.map(n=>{
+        const done = CHANNELS.filter(c=>postedIn(n.id,c.id)).length;
+        return `<div style="padding:8px 0;border-bottom:1px solid var(--line)">
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="flex:1"><b>${esc(n.trade)}</b> · ${esc(n.city||'')} ${n.pay?'· '+esc(n.pay):''}
+            <span class="muted-s">· ${esc((n.created_at||'').slice(0,10))}</span>
+            ${CHANNELS.length?` <span class="src">paskelbta ${done}/${CHANNELS.length}</span>`:''}</div>
+          <button class="btn ghost sm" onclick="closeNeed(${n.id})">Užbaigti</button>
+        </div>${postChecklist(n.id)}</div>`;
+      }).join('')
     : 'Aktyvių paieškų nėra — pasirinkite specializaciją viršuje ir spauskite mygtuką.';
 }
 window.closeNeed = async id => { try { await api('/need-close',{id}); loadNeeds(); toast('Paieška užbaigta'); } catch(e){ toast(e.message); } };
@@ -338,6 +420,8 @@ const SRC_LABEL = { anketa:'anketa', tg:'Telegram', vb:'Viber', uzt:'UZT', ad:'p
 async function loadOverview(){
   try {
     const j = await api('/overview');
+    CHANNELS = j.channels || []; POSTS = j.posts || [];
+    renderChannels();
     const s = j.stats || {};
     document.getElementById('d-stats').innerHTML = `
       <div class="stat"><b>${s.c_today||0}</b><span>šiandien užsiregistravo</span></div>
@@ -357,7 +441,7 @@ async function loadOverview(){
       <td><span class="src">${esc(r.src||'')}</span></td>
       <td><span class="muted-s">${esc((r.found_at||'').slice(0,16).replace('T',' '))}</span></td>
       <td><button class="pill ${ST[r.status]?.[1]||'p-new'}" onclick="setSt('radar',${r.id},'${ST_NEXT[r.status]||'called'}')">${ST[r.status]?.[0]||r.status}</button></td></tr>`).join('')
-      || '<tr><td colspan="4" class="muted-s">Radiniai atsiras po pirmo radaro paleidimo (skelbiu.lt „Ieško darbo“ skiltis, pagal statybos specializacijas).</td></tr>';
+      || '<tr><td colspan="4" class="muted-s">Radiniai atsiras po pirmo radaro paleidimo (skelbiu.lt ir alio.lt „Ieško darbo“ skiltys, pagal statybos specializacijas).</td></tr>';
     renderNeeds(j.needs);
   } catch(e){
     if (String(e.message).includes('slaptažodis')) location.reload();
