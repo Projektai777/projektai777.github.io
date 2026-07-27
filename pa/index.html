@@ -144,6 +144,9 @@ const TRADES = ['Gipso kartono montavimas','Glaistymas ir dažymas','Plytelių k
 document.getElementById('n-trade').innerHTML = TRADES.map(t=>`<option>${t}</option>`).join('');
 try { document.getElementById('n-phone').value = localStorage.getItem('pa_phone') || ''; } catch(e){}
 const esc = s => String(s??'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// skelbiu's listing text is "Pavadinimas + aprašymo pradžia" glued together — show a
+// readable first line here, full text stays in the link tooltip and in the ad itself.
+const shortTitle = t => { t = String(t||''); return t.length > 95 ? t.slice(0,95).replace(/[\s,.:;-]+\S*$/,'') + '…' : t; };
 const toast = m => { const t=document.getElementById('toast'); t.innerHTML=m; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),3400); };
 const qs = new URLSearchParams(location.search);
 
@@ -271,7 +274,7 @@ async function loadOverview(){
       <td><button class="pill ${ST[c.status]?.[1]||'p-new'}" onclick="setSt('candidate',${c.id},'${ST_NEXT[c.status]||'called'}')">${ST[c.status]?.[0]||c.status}</button></td></tr>`).join('')
       || '<tr><td colspan="8" class="muted-s">Kol kas anketų nėra.</td></tr>';
     document.getElementById('r-rows').innerHTML = (j.radar||[]).map(r=>`
-      <tr><td><a href="${esc(r.url)}" target="_blank" rel="noopener"><b>${esc(r.title||r.url)}</b></a>${r.city?`<br><span class="muted-s">📍 ${esc(r.city)}</span>`:''}</td>
+      <tr><td><a href="${esc(r.url)}" target="_blank" rel="noopener" title="${esc(r.title||'')}"><b>${esc(shortTitle(r.title||r.url))}</b></a>${r.trade_guess?`<br><span class="src">${esc(r.trade_guess)}</span>`:''}${r.city?` <span class="muted-s">📍 ${esc(r.city)}</span>`:''}</td>
       <td><span class="src">${esc(r.src||'')}</span></td>
       <td><span class="muted-s">${esc((r.found_at||'').slice(0,16).replace('T',' '))}</span></td>
       <td><button class="pill ${ST[r.status]?.[1]||'p-new'}" onclick="setSt('radar',${r.id},'${ST_NEXT[r.status]||'called'}')">${ST[r.status]?.[0]||r.status}</button></td></tr>`).join('')
