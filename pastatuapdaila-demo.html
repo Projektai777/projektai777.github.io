@@ -137,6 +137,7 @@
       <button class="tab" data-v="subs">🤝 Subrangovams</button>
       <button class="tab" data-v="adm">🖥️ Kandidatų bazė</button>
       <button class="tab" data-v="ads">📡 Aktyvi paieška</button>
+      <button class="tab" data-v="pult">🚀 Veikiantis pultas</button>
       <button class="tab" data-v="msgs">✉️ Žinutės</button>
       <button class="tab" data-v="cost">💶 Kodėl tai pigiau</button>
     </div>
@@ -144,6 +145,32 @@
 </div>
 
 <div class="wrap">
+
+  <!-- ══════════ 0. VEIKIANTIS PULTAS ══════════
+       Not a mock: this opens the REAL console (public/pa/index.html) in ?demo=1
+       mode, i.e. the same page the client uses, with an in-browser fake backend.
+       Keeping it as a link instead of a copy is the whole point — a second mock
+       would drift from live and we would end up demoing something that no longer
+       exists. -->
+  <div class="view" id="v-pult">
+    <div class="card">
+      <h2>🚀 Veikiantis pultas — tas pats, kurį naudoja klientas</h2>
+      <p class="muted">Žemiau esančios nuorodos atidaro <b>tikrą sistemą</b>, o ne piešinį:
+        tuos pačius mygtukus, tuos pačius langus, tą pačią tvarką. Skirtumas vienintelis —
+        kandidatai ir skelbimai išgalvoti, o viskas, ką paspausite, lieka tik Jūsų
+        naršyklėje. Taip matote tiksliai tai, ką matys klientas.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+        <a class="btn" href="./pa/index.html?demo=1" target="_blank" rel="noopener">🖥️ Atidaryti pultą (demo)</a>
+        <a class="btn ghost" href="./pa/anketa.html?s=demo" target="_blank" rel="noopener">✍️ Atidaryti anketą</a>
+      </div>
+      <p class="muted" style="margin-top:14px">Prisijungimui tinka <b>bet koks</b> slaptažodis.
+        Pulte galite: pasirinkti specializaciją, miestą, atlyginimą ir kontaktinį telefoną bei
+        paleisti paiešką; susidėti portalus skiltyje „Kur skelbiate“ ir pažymėti, kur jau
+        paskelbta; skiltyje „Kandidatai“ peržiūrėti atsiliepusius bei radaro radinius ir keisti
+        jų būsenas; pasikeisti slaptažodį. Norint pradėti nuo pradžių — pulte spauskite
+        „↺ Pradėti iš naujo“.</p>
+    </div>
+  </div>
 
   <!-- ══════════ 1. DARBO SKELBIMAI (kandidato pusė) ══════════ -->
   <div class="view on" id="v-jobs">

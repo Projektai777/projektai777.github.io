@@ -73,12 +73,13 @@
     <button class="tab" data-v="dash">📋 Kandidatai</button>
     <button class="tab" data-v="pass">🔐 Slaptažodis</button>
   </div>
+  <div id="demo-badge" style="display:none;margin-left:auto;background:#ffb020;color:#3a2a00;font-weight:700;font-size:12px;padding:4px 10px;border-radius:99px">DEMO — duomenys išgalvoti</div>
 </div></div>
 
 <!-- ── Prisijungimas ── -->
 <div id="login" class="card">
   <h2>🔐 Prisijungimas</h2>
-  <p class="hint">Įveskite pulto slaptažodį.</p>
+  <p class="hint" id="login-hint">Įveskite pulto slaptažodį.</p>
   <input id="pw" type="password" placeholder="Slaptažodis" autocomplete="current-password">
   <button class="btn big" id="pw-btn">Prisijungti</button>
   <div class="err" id="pw-err"></div>
@@ -96,6 +97,14 @@
 
   <!-- ── 1. Ko reikia šiandien? ── -->
   <div class="view on" id="v-need">
+    <div class="card" id="demo-note" style="display:none;border-left:4px solid #ffb020">
+      <h3 style="margin-top:0">🎬 Čia demonstracinė versija</h3>
+      <p class="hint">Tai tas pats pultas kaip ir tikrasis — tie patys mygtukai ir tie
+        patys veiksmai — tik kandidatai bei skelbimai išgalvoti, o viskas, ką čia
+        paspausite, lieka tik Jūsų naršyklėje. Išbandykite drąsiai: pradėkite paiešką,
+        pažymėkite, kur paskelbta, pakeiskite kandidatų būsenas.</p>
+      <button class="btn ghost sm" onclick="demoReset()">↺ Pradėti iš naujo</button>
+    </div>
     <div class="card" id="pass-nudge" style="display:none;border-left:4px solid #ffb020">
       <h3 style="margin-top:0">🔐 Pirmiausia — pasikeiskite slaptažodį</h3>
       <p class="hint">Dabar galioja mūsų Jums duotas slaptažodis. Pasikeitę jį į savo,
@@ -326,6 +335,10 @@ async function unlock(){
   document.getElementById('login').style.display='none';
   document.getElementById('app').style.display='block';
   document.getElementById('tabs').style.display='flex';
+  if (DEMO) {
+    document.getElementById('demo-badge').style.display='block';
+    document.getElementById('demo-note').style.display='block';
+  }
   paintPassState();
   loadOverview();
 }
@@ -373,7 +386,11 @@ document.getElementById('pw-btn').onclick = async () => {
   } catch(e){ showErr('pw-err','Nepavyko pasiekti serverio.'); }
 };
 document.getElementById('pw').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('pw-btn').click(); });
-if (PASS) unlock();
+if (DEMO) {
+  document.title = 'DEMO — ' + document.title;
+  document.getElementById('login-hint').innerHTML =
+    'Demonstracinė versija — įveskite bet kokį slaptažodį (pvz. <b>demo</b>) ir spauskite „Prisijungti“.';
+} else if (PASS) unlock();
 
 // ── Skelbimo kanalai (klientas susideda pats; jokių portalų slaptažodžių) ──
 // Verified 2026-07-27: these are the portals' real "įdėti skelbimą" entry points.
