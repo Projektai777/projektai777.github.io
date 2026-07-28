@@ -54,17 +54,25 @@
   menu.addEventListener('click', function (e) { if (e.target.tagName === 'A') closeMenu(); });
 
   // ---- reveal on scroll ----------------------------------------------
-  var els = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
-      });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: .12 });
-    els.forEach(function (el, i) { el.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(el); });
-  } else {
-    els.forEach(function (el) { el.classList.add('in'); });
+  // Deliberately NOT IntersectionObserver: the clip-path reveal variant sets a
+  // clip on the element itself, which makes Chrome report a zero intersection
+  // rect — the section would then never appear. getBoundingClientRect ignores
+  // clipping, so every variant behaves the same.
+  var els = [].slice.call(document.querySelectorAll('.reveal'));
+  els.forEach(function (el, i) { el.style.transitionDelay = (i % 4) * 70 + 'ms'; });
+  function reveal() {
+    var h = innerHeight, pending = 0;
+    els.forEach(function (el) {
+      if (el.classList.contains('in')) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < h * .88 && r.bottom > 0) el.classList.add('in'); else pending++;
+    });
+    if (!pending) removeEventListener('scroll', reveal);
   }
+  addEventListener('scroll', reveal, { passive: true });
+  addEventListener('resize', reveal);
+  addEventListener('load', reveal);
+  reveal();
 
   // ---- carousels ------------------------------------------------------
   document.querySelectorAll('.arrows').forEach(function (box) {

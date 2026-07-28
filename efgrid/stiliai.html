@@ -20,7 +20,8 @@
   .cat{width:min(100% - 32px,1180px);margin:34px auto}
   .cat > h2{font-size:19px;margin-bottom:4px}
   .cat > p{font-size:13px;color:var(--muted);margin-bottom:16px}
-  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  @media(min-width:820px){.tiles{grid-template-columns:repeat(5,1fr)}}
   .tile{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px 12px;
         min-height:132px;display:flex;align-items:center;justify-content:center;cursor:pointer;
         transition:border-color .25s,box-shadow .25s,transform .25s}
@@ -39,6 +40,7 @@
   .tile .nav-links{position:static;transform:none;background:none;padding:0;flex-direction:row;gap:10px;margin-left:auto}
   .tile .nav-links a{font-size:11px;padding:2px 0;border:0;width:auto;font-family:Inter,sans-serif}
   .tile .brand{font-size:12px}.tile .brand svg{width:20px;height:15px}
+  .tile .brand span{display:none}
   .tile .burger{display:none}
   .tile .navbg{background:#33383d;border-radius:8px;width:100%}
   .tile .ticks{margin:0;width:100%}
@@ -79,15 +81,15 @@
 <script>
 (function(){
   var CATS=[
-    {k:'btn',   t:'1. Mygtukai',            d:'„Send inquiry" ir visi kiti mygtukai'},
-    {k:'card',  t:'2. Paslaugų kortelės',   d:'kas vyksta užvedus pelę ant kortelės'},
+    {k:'btn',   t:'1. Mygtukai',            d:'„Send inquiry" ir visi kiti mygtukai (užveskite pelę)'},
+    {k:'card',  t:'2. Paslaugų kortelės',   d:'užveskite pelę ant kortelės — pamatysite efektą'},
     {k:'reveal',t:'3. Sekcijų pasirodymas', d:'kaip turinys atsiranda slenkant žemyn (spustelėkite — pakartos)'},
-    {k:'link',  t:'4. Meniu nuorodos',      d:'viršutinio meniu nuorodų efektas'},
+    {k:'link',  t:'4. Meniu nuorodos',      d:'užveskite pelę ant nuorodos — pamatysite efektą'},
     {k:'head',  t:'5. Skyrių žymos',        d:'mažos etiketės: SERVICES, SECTORS, PROJECTS'},
     {k:'tick',  t:'6. Sąrašo ženkliukai',   d:'„Why choose EF grid" sąrašo ženklai'},
-    {k:'img',   t:'7. Nuotraukų efektas',   d:'projektų ir sektorių nuotraukos'},
+    {k:'img',   t:'7. Nuotraukų efektas',   d:'užveskite pelę ant nuotraukos — pamatysite efektą'},
     {k:'nav',   t:'8. Viršutinė juosta',    d:'kaip atrodo meniu juosta paslinkus puslapį'},
-    {k:'arrow', t:'9. Karuselės rodyklės',  d:'‹ › mygtukai prie slankiojančių blokų'},
+    {k:'arrow', t:'9. Karuselės rodyklės',  d:'‹ › mygtukai prie slankiojančių blokų (užveskite pelę)'},
     {k:'accent',t:'10. Akcento spalva',     d:'varnelės, žymos, aktyvūs elementai'}
   ];
   var IMG='https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?w=420&q=55&auto=format&fit=crop';
@@ -142,6 +144,14 @@
     CATS.forEach(function(c){sel[c.k]=1;}); paint();
   });
   paint();
+
+  // the 10 „pasirodymo" variantai skiriasi tik judesiu — paleidžiame juos ciklu
+  setInterval(function(){
+    document.querySelectorAll('.tile .reveal').forEach(function(r,i){
+      r.classList.remove('in');
+      setTimeout(function(){ r.classList.add('in'); }, 60 + i*45);
+    });
+  }, 3600);
 })();
 </script>
 </body>
