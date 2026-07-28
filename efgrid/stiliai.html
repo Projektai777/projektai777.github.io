@@ -51,22 +51,18 @@
              display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font:600 12px Inter,sans-serif}
   .tile .rev i{width:52px;height:3px;border-radius:2px;background:rgba(255,255,255,.45)}
   .tile .rev u{width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.28)}
-  /* the demo runs slower than the real site so the character of each motion reads */
-  .tile .reveal{transition-duration:1.15s}
+  /* The demo runs slower than the real site so the character of each motion reads —
+     and stays animated even when the OS has „animation effects" switched off, which
+     otherwise flattens all 10 variants into the same instant jump. */
+  .tile .reveal{transition-duration:1.15s!important}
   .tile[data-reveal]:not([data-reveal="5"]) .reveal:not(.in){opacity:0}
   /* preview-only exaggeration — on the site these four are deliberately subtler */
   .tile[data-reveal="4"] .reveal:not(.in){transform:scale(.78)}
   .tile[data-reveal="7"] .reveal:not(.in){transform:rotate(-6deg) translateY(26px)}
   .tile[data-reveal="9"] .reveal:not(.in){transform:skewY(8deg) translateY(24px)}
   .tile[data-reveal="10"] .reveal:not(.in){transform:scale(1.22)}
-  /* Windows/macOS „animation effects off" flattens every variant to the same thing.
-     We respect that by default and let the client switch the demo on with one tap. */
-  body.motion .tile *{transition-duration:1.15s!important;animation-duration:1.15s!important}
   .cap{position:absolute;left:5px;right:5px;bottom:7px;text-align:center;font:500 10.5px/1.25 Inter,sans-serif;color:var(--muted)}
   .tile.on .cap{color:var(--ink)}
-  .rmnote{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
-          border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:var(--muted)}
-  .rmnote button{border:0;border-radius:999px;background:var(--ink);color:#fff;padding:8px 15px;font:600 12px Inter,sans-serif;cursor:pointer}
   .tile .sw{width:46px;height:46px;border-radius:50%;background:var(--accent)}
   .swwrap{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
   .bar{position:sticky;bottom:0;z-index:30;background:rgba(16,19,22,.96);color:#fff;padding:12px 0}
@@ -138,32 +134,19 @@
     return '<section class="cat"><h2>'+c.t+'</h2><p>'+c.d+'</p><div class="tiles">'+tiles+'</div></section>';
   }).join('');
 
-  // If the OS has animations turned off, every motion variant collapses into the
-  // same instant jump — which makes this whole category look broken. Say so, and
-  // offer a single button that animates the demo tiles anyway.
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches){
-    var sec=host.querySelector('#cats section:nth-of-type(3)')||host.children[2];
-    var note=document.createElement('div'); note.className='rmnote';
-    note.innerHTML='<span>Jūsų įrenginyje išjungtos animacijos, todėl visi 10 variantų atrodo vienodai.</span>'+
-                   '<button type="button">Rodyti judesį</button>';
-    note.querySelector('button').addEventListener('click',function(){
-      document.body.classList.toggle('motion');
-      this.textContent=document.body.classList.contains('motion')?'Išjungti judesį':'Rodyti judesį';
-    });
-    sec.insertBefore(note, sec.querySelector('.tiles'));
-  }
-
   function paint(){
+    // Each tile carries the FULL current style: its own category shows the variant
+    // it offers, the other nine follow what is already selected — so picking an
+    // accent colour or a label shape updates every other preview too.
+    // The attributes go on the TILES, never on <html>: all variant rules have equal
+    // specificity, so a root attribute would beat each tile's own and repaint the
+    // whole page (and this page's own buttons) with one variant.
     document.querySelectorAll('.tile').forEach(function(t){
       t.classList.toggle('on', sel[t.dataset.k]===Number(t.dataset.v));
+      CATS.forEach(function(c){
+        t.setAttribute('data-'+c.k, c.k===t.dataset.k ? t.dataset.v : sel[c.k]);
+      });
     });
-    // NEVER put the choice on <html> here. Every tile already carries its own
-    // data-<kategorija>, and all variant rules have equal specificity — a root
-    // attribute would win over the tiles' and repaint the whole page (and this
-    // page's own buttons) with one variant. The only exception is the accent
-    // colour: it is a custom property, so the tile's own value still wins by
-    // inheritance, and the other categories get to show the chosen colour.
-    document.documentElement.setAttribute('data-accent', sel.accent);
     var code=CATS.map(function(c){return sel[c.k];}).join('-');
     document.getElementById('code').textContent=code;
     document.getElementById('open').href='./index.html?style='+code;
@@ -194,7 +177,8 @@
   setInterval(function(){
     document.querySelectorAll('.tile .reveal').forEach(function(r,i){ replay(r, 60 + i*120); });
   }, 3200);
-  host.querySelectorAll('.tile[data-reveal]').forEach(function(t){
+  // select by data-k, not [data-reveal]: every tile now carries all ten attributes
+  host.querySelectorAll('.tile[data-k="reveal"]').forEach(function(t){
     t.addEventListener('mouseenter', function(){ replay(t.querySelector('.reveal')); });
   });
 })();
