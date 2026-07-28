@@ -122,7 +122,13 @@
     document.querySelectorAll('.tile').forEach(function(t){
       t.classList.toggle('on', sel[t.dataset.k]===Number(t.dataset.v));
     });
-    window.EFGRID.apply(sel);
+    // NEVER put the choice on <html> here. Every tile already carries its own
+    // data-<kategorija>, and all variant rules have equal specificity — a root
+    // attribute would win over the tiles' and repaint the whole page (and this
+    // page's own buttons) with one variant. The only exception is the accent
+    // colour: it is a custom property, so the tile's own value still wins by
+    // inheritance, and the other categories get to show the chosen colour.
+    document.documentElement.setAttribute('data-accent', sel.accent);
     var code=CATS.map(function(c){return sel[c.k];}).join('-');
     document.getElementById('code').textContent=code;
     document.getElementById('open').href='./index.html?style='+code;
