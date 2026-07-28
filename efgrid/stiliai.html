@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>EF grid — stiliaus pasirinkimai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./variants.css">
+<style>
+  body{background:#f6f5f2}
+  .top{position:sticky;top:0;z-index:30;background:rgba(246,245,242,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .top-in{width:min(100% - 32px,1180px);margin-inline:auto;padding:14px 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .top h1{font-size:19px}
+  .top .btn{padding:11px 18px;font-size:13px}
+  .top .spacer{margin-left:auto}
+  .intro{width:min(100% - 32px,1180px);margin:26px auto 0;font-size:14.5px;color:var(--muted);max-width:72ch}
+  .cat{width:min(100% - 32px,1180px);margin:34px auto}
+  .cat > h2{font-size:19px;margin-bottom:4px}
+  .cat > p{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px}
+  .tile{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px 12px;
+        min-height:132px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+        transition:border-color .25s,box-shadow .25s,transform .25s}
+  .tile:hover{transform:translateY(-2px);box-shadow:0 14px 26px -20px rgba(0,0,0,.6)}
+  .tile.on{border-color:var(--ink);box-shadow:0 0 0 3px rgba(16,19,22,.08)}
+  .tile .n{position:absolute;left:9px;top:8px;font:600 11px Inter,sans-serif;color:var(--muted)}
+  .tile.on .n{color:var(--ink)}
+  .tile.on::after{content:"✓";position:absolute;right:9px;top:6px;font-size:13px;color:var(--ink)}
+  .tile .card{min-height:0;width:100%;box-shadow:0 0 0 1px var(--line)}
+  .tile .card-img{aspect-ratio:16/8}
+  .tile .card-txt{padding:9px 11px 12px}
+  .tile .card-txt h3{font-size:13px}
+  .tile .card-txt p{font-size:11px;margin-top:2px}
+  .tile .nav{position:relative;width:100%;border-radius:8px;overflow:hidden}
+  .tile .nav-in{width:100%;padding:12px 12px!important;margin:0;gap:10px}
+  .tile .nav-links{position:static;transform:none;background:none;padding:0;flex-direction:row;gap:10px;margin-left:auto}
+  .tile .nav-links a{font-size:11px;padding:2px 0;border:0;width:auto;font-family:Inter,sans-serif}
+  .tile .brand{font-size:12px}.tile .brand svg{width:20px;height:15px}
+  .tile .burger{display:none}
+  .tile .navbg{background:#33383d;border-radius:8px;width:100%}
+  .tile .ticks{margin:0;width:100%}
+  .tile .ticks li{font-size:12px;padding:9px 0 9px 30px}
+  .tile .proj{flex:0 0 100%;width:100%}
+  .tile .proj img{aspect-ratio:16/10}
+  .tile .rev{width:100%;height:56px;border-radius:8px;background:linear-gradient(120deg,#1b2026,#3a424c);color:#fff;
+             display:flex;align-items:center;justify-content:center;font:600 12px Inter,sans-serif}
+  .tile .sw{width:46px;height:46px;border-radius:50%;background:var(--accent)}
+  .swwrap{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+  .bar{position:sticky;bottom:0;z-index:30;background:rgba(16,19,22,.96);color:#fff;padding:12px 0}
+  .bar-in{width:min(100% - 32px,1180px);margin-inline:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}
+  .bar code{background:rgba(255,255,255,.12);padding:5px 9px;border-radius:6px;font-size:12px}
+  .bar .btn{background:#fff;color:var(--ink);padding:11px 18px;font-size:13px}
+  .ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.4)}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="top-in">
+  <h1>EF grid — stiliaus pasirinkimai</h1>
+  <span class="spacer"></span>
+  <a class="btn" id="open" href="./index.html" target="_blank">Žiūrėti svetainę su pasirinkimais ↗</a>
+</div></div>
+
+<p class="intro">Kiekvienai smulkiai detalei paruošta <b>10 variantų</b>. Spustelėkite tą, kuris patinka — pasirinkimas iškart pritaikomas visai svetainei. Apačioje rasite kodą: atsiųskite jį mums ir mes užfiksuosime pasirinktą stilių.</p>
+
+<div id="cats"></div>
+
+<div class="bar"><div class="bar-in">
+  <span>Jūsų kodas:</span> <code id="code">1-1-1-1-1-1-1-1-1-1</code>
+  <span class="spacer" style="margin-left:auto"></span>
+  <button class="btn" id="copy">Kopijuoti kodą</button>
+  <button class="btn ghost" id="reset">Atstatyti</button>
+</div></div>
+
+<script src="./app.js"></script>
+<script>
+(function(){
+  var CATS=[
+    {k:'btn',   t:'1. Mygtukai',            d:'„Send inquiry" ir visi kiti mygtukai'},
+    {k:'card',  t:'2. Paslaugų kortelės',   d:'kas vyksta užvedus pelę ant kortelės'},
+    {k:'reveal',t:'3. Sekcijų pasirodymas', d:'kaip turinys atsiranda slenkant žemyn (spustelėkite — pakartos)'},
+    {k:'link',  t:'4. Meniu nuorodos',      d:'viršutinio meniu nuorodų efektas'},
+    {k:'head',  t:'5. Skyrių žymos',        d:'mažos etiketės: SERVICES, SECTORS, PROJECTS'},
+    {k:'tick',  t:'6. Sąrašo ženkliukai',   d:'„Why choose EF grid" sąrašo ženklai'},
+    {k:'img',   t:'7. Nuotraukų efektas',   d:'projektų ir sektorių nuotraukos'},
+    {k:'nav',   t:'8. Viršutinė juosta',    d:'kaip atrodo meniu juosta paslinkus puslapį'},
+    {k:'arrow', t:'9. Karuselės rodyklės',  d:'‹ › mygtukai prie slankiojančių blokų'},
+    {k:'accent',t:'10. Akcento spalva',     d:'varnelės, žymos, aktyvūs elementai'}
+  ];
+  var IMG='https://images.unsplash.com/photo-1590959651373-a3db0f38a961?w=420&q=55&auto=format&fit=crop';
+  var PRE={
+    btn:'<a class="btn">Send inquiry</a>',
+    card:'<article class="card"><div class="card-img"><img src="'+IMG+'" alt=""></div><div class="card-txt"><h3>Substations</h3><p>Up to 400 kV</p></div></article>',
+    reveal:'<div class="reveal rev in">EF grid</div>',
+    link:'<div class="navbg"><div class="nav"><div class="nav-in"><a class="brand"><svg viewBox="0 0 34 24"><path d="M2 2h13M2 12h10M2 22h13"/><path d="M22 2 16 22"/><path d="M26 2h6M24 12h8M20 22h8"/></svg><span>EF <b>grid</b></span></a><div class="nav-links"><a href="#">About</a><a href="#">Projects</a></div></div></div></div>',
+    head:'<span class="label" style="margin:0">Sectors</span>',
+    tick:'<ul class="ticks"><li>Licensed up to 400 kV</li></ul>',
+    img:'<figure class="proj"><img src="'+IMG+'" alt=""><figcaption><b>110/35 kV</b><span>Kaunas · 2024</span></figcaption></figure>',
+    nav:'<div class="navbg"><div class="nav stuck"><div class="nav-in"><a class="brand"><svg viewBox="0 0 34 24"><path d="M2 2h13M2 12h10M2 22h13"/><path d="M22 2 16 22"/><path d="M26 2h6M24 12h8M20 22h8"/></svg><span>EF <b>grid</b></span></a><div class="nav-links"><a href="#">About</a><a href="#">Contact</a></div></div></div></div>',
+    arrow:'<div class="arrows"><button class="arr">‹</button><button class="arr">›</button></div>',
+    accent:'<div class="swwrap"><div class="sw"></div><span class="label" style="margin:0">Sectors</span></div>'
+  };
+  var KEY=window.EFGRID.KEY, sel={};
+  try{ sel=JSON.parse(localStorage.getItem(KEY)||'null')||{}; }catch(e){ sel={}; }
+  CATS.forEach(function(c){ sel[c.k]=sel[c.k]||1; });
+
+  var host=document.getElementById('cats');
+  host.innerHTML=CATS.map(function(c){
+    var tiles='';
+    for(var i=1;i<=10;i++){
+      tiles+='<div class="tile" data-'+c.k+'="'+i+'" data-k="'+c.k+'" data-v="'+i+'"><span class="n">'+i+'</span>'+PRE[c.k]+'</div>';
+    }
+    return '<section class="cat"><h2>'+c.t+'</h2><p>'+c.d+'</p><div class="tiles">'+tiles+'</div></section>';
+  }).join('');
+
+  function paint(){
+    document.querySelectorAll('.tile').forEach(function(t){
+      t.classList.toggle('on', sel[t.dataset.k]===Number(t.dataset.v));
+    });
+    window.EFGRID.apply(sel);
+    var code=CATS.map(function(c){return sel[c.k];}).join('-');
+    document.getElementById('code').textContent=code;
+    document.getElementById('open').href='./index.html?style='+code;
+    localStorage.setItem(KEY, JSON.stringify(sel));
+  }
+  host.addEventListener('click',function(e){
+    var t=e.target.closest('.tile'); if(!t) return;
+    sel[t.dataset.k]=Number(t.dataset.v); paint();
+    if(t.dataset.k==='reveal'){ // replay the animation
+      var r=t.querySelector('.reveal'); r.classList.remove('in'); void r.offsetWidth; setTimeout(function(){r.classList.add('in');},40);
+    }
+  });
+  document.getElementById('copy').addEventListener('click',function(){
+    var txt='EF grid stilius: '+document.getElementById('code').textContent;
+    navigator.clipboard&&navigator.clipboard.writeText(txt);
+    this.textContent='Nukopijuota ✓'; var b=this; setTimeout(function(){b.textContent='Kopijuoti kodą';},1600);
+  });
+  document.getElementById('reset').addEventListener('click',function(){
+    CATS.forEach(function(c){sel[c.k]=1;}); paint();
+  });
+  paint();
+})();
+</script>
+</body>
+</html>

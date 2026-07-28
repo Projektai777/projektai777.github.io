@@ -26,8 +26,12 @@
   applyStyle(readStyle());
   window.EFGRID = { CATS: CATS, KEY: KEY, apply: applyStyle };
 
-  // ---- sticky header --------------------------------------------------
+  // The style picker (stiliai.html) loads this file too, only for EFGRID above.
   var nav = document.getElementById('nav');
+  var burger = document.getElementById('burger'), menu = document.getElementById('menu');
+  if (!nav || !burger || !menu) return;
+
+  // ---- sticky header --------------------------------------------------
   var last = 0;
   addEventListener('scroll', function () {
     var y = pageYOffset;
@@ -37,7 +41,6 @@
   }, { passive: true });
 
   // ---- mobile menu ----------------------------------------------------
-  var burger = document.getElementById('burger'), menu = document.getElementById('menu');
   function closeMenu() {
     menu.classList.remove('open'); nav.classList.remove('menu-open');
     burger.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';
