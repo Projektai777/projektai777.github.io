@@ -169,7 +169,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 
 /* ============================== INTRO (dark) — y 800…1517 ============================== */
-.intro{background:var(--ink);color:var(--cream);height:717px;padding-top:140px}
+.intro{background:var(--ink);color:var(--cream);min-height:717px;padding-top:140px}
 .intro-grid{position:relative;height:100%}
 .intro-head{font-size:46px;line-height:48px;font-weight:400;max-width:872px}
 .intro-note{
@@ -282,7 +282,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* ============================== WHY CHOOSE — y 4339…5011 ============================== */
 .why{
   position:relative;background:var(--beige);
-  height:672px;
+  min-height:672px;
   display:grid;grid-template-columns:720px 1fr;
 }
 /* Figma STRETCH crop [[.65721,0,.17140],[0,.91998,0]] — source x 17.1…82.9%, y 0…92% */
@@ -349,7 +349,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .map-pin{position:absolute;left:698px;top:165px;width:44px;height:53px}
 
 /* ============================== FOOTER — y 6380…6812 ============================== */
-.foot{position:relative;height:432px;background:var(--ink);color:var(--white);padding-top:80px}
+.foot{position:relative;min-height:432px;background:var(--ink);color:var(--white);padding-top:80px}
 .foot .wrap{position:relative;height:100%}
 .foot-grid{display:grid;grid-template-columns:549px 1fr;align-items:start}
 .foot h2{font-size:56px;line-height:67px;font-weight:400}

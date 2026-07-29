@@ -144,6 +144,9 @@
             def: isImg
               ? { en: node.getAttribute('src') || '', lt: node.getAttribute('src') || '' }
               : { en: (node.textContent || '').trim(), lt: node.getAttribute('data-lt') || '' },
+            // data-lt-same = deliberately identical in both languages (email,
+            // phone, address) — not a missing translation.
+            same: node.hasAttribute('data-lt-same'),
           });
         });
         fields = out;
@@ -159,7 +162,9 @@
     });
 
     // A Lithuanian field with no built-in wording would silently publish English.
-    var noLt = fields.filter(function (f) { return f.type === 'text' && !f.def.lt && !(content.text.lt || {})[f.key]; });
+    var noLt = fields.filter(function (f) {
+      return f.type === 'text' && !f.same && !f.def.lt && !(content.text.lt || {})[f.key];
+    });
     var html = editLang === 'lt' && noLt.length
       ? '<div class="missing"><b>' + noLt.length + '</b> lauk' + (noLt.length === 1 ? 'as neturi' : 'ai (-ų) neturi') +
         ' lietuviško teksto — kol jo nėra, svetainėje lietuviškai rodomas angliškas variantas.</div>'
@@ -188,7 +193,8 @@
           var long = shown.length > 70;
           html +=
             '<label data-key="' + f.key + '">' +
-              '<span class="lab">' + f.label + ' <span class="key">' + f.key + '</span></span>' +
+              '<span class="lab">' + f.label + ' <span class="key">' + f.key +
+                (f.same ? ' · bendra abiem kalboms' : '') + '</span></span>' +
               (long
                 ? '<textarea data-text="' + f.key + '">' + escapeHtml(shown) + '</textarea>'
                 : '<input type="text" data-text="' + f.key + '" value="' + escapeHtml(shown) + '">') +
