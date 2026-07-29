@@ -18,10 +18,16 @@
   .langtab{font:inherit;font-size:13px;font-weight:600;color:rgba(255,255,255,.7);
            background:none;border:0;padding:6px 12px;border-radius:6px;cursor:pointer}
   .langtab.is-on{background:#efeae4;color:#262626}
-  .uilang{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,.55)}
-  .uilang button{font:inherit;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);
-                 background:none;border:0;padding:2px;cursor:pointer}
-  .uilang button.is-on{color:#fff;text-decoration:underline}
+  /* The interface switch must not be mistaken for the content-language tabs.
+     Those are big filled pills; this is a bordered outline group with a globe —
+     a different KIND of control, not a quieter version of the same one. */
+  .uilang{display:flex;align-items:center;gap:6px;font-size:12px;
+          color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.3);
+          border-radius:8px;padding:5px 10px}
+  .uilang button{font:inherit;font-size:12px;font-weight:600;color:rgba(255,255,255,.55);
+                 background:none;border:0;padding:1px 3px;border-radius:4px;cursor:pointer}
+  .uilang button:hover{color:#fff}
+  .uilang button.is-on{color:#262626;background:#efeae4}
   .missing{background:#fff8e6;border:1px solid #e0c98a;border-radius:12px;
            padding:12px 16px;font-size:14px;color:#6b5312;margin:0 0 18px}
   .wrap{max-width:900px;margin:0 auto;padding:28px 24px 120px}
@@ -124,7 +130,7 @@
   var UI = {
     lt: {
       docTitle: 'EF grid — turinio redaktorius',
-      uiLangLabel: 'Sąsaja:',
+      uiLangLabel: '🌐 Sąsaja:',
       gateTitle: 'Svetainės redaktorius',
       gateSub: 'EF grid — įveskite slaptažodį.',
       passPlaceholder: 'Slaptažodis',
@@ -144,7 +150,7 @@
         'grįžta pradinis tekstas. Nuotraukos: iki 6 MB, JPG arba PNG — jos bendros abiem kalboms.' +
         '<br><b>Dvi kalbos.</b> Viršuje pasirinkite, kurią kalbą redaguojate. Pakeitę tekstą lietuviškai, ' +
         'nepamirškite to paties ir angliškai — kitaip lankytojas pamatys seną variantą. ' +
-        'Numatytoji svetainės kalba — <b>lietuvių</b>.',
+        'Numatytoji svetainės kalba — <b>lietuvių</b>.<br><b>Nesupainiokite.</b> „Redaguojamas turinys“ = kurios kalbos svetainės tekstą keičiate. „🌐 Sąsaja“ (dešinėje viršuje) = kokia kalba kalba pats redaktorius.',
       noChanges: 'Pakeitimų nėra',
       revert: 'Atstatyti ankstesnę versiją',
       save: 'Išsaugoti',
@@ -179,7 +185,7 @@
     },
     en: {
       docTitle: 'EF grid — content editor',
-      uiLangLabel: 'Interface:',
+      uiLangLabel: '🌐 Interface:',
       gateTitle: 'Website editor',
       gateSub: 'EF grid — enter the password.',
       passPlaceholder: 'Password',
@@ -199,7 +205,7 @@
         'the original wording comes back. Photos: up to 6 MB, JPG or PNG — they are shared by both languages.' +
         '<br><b>Two languages.</b> Choose above which language you are editing. After changing a text in ' +
         'Lithuanian, remember to change it in English too — otherwise visitors see the old wording. ' +
-        'The site’s default language is <b>Lithuanian</b>.',
+        'The site’s default language is <b>Lithuanian</b>.<br><b>Don’t mix these up.</b> “Editing content in” = which language of the website’s text you are changing. “🌐 Interface” (top right) = the language this editor speaks to you.',
       noChanges: 'No changes',
       revert: 'Restore previous version',
       save: 'Save',
