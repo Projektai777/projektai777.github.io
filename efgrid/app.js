@@ -19,19 +19,21 @@
     },
   };
 
-  var state = { lang: 'en', text: {}, img: {} };
+  var state = { lang: 'lt', text: {}, img: {} };
   var defaults = [];   // [{el, en, lt}] captured before anything is rewritten
   var ariaDefaults = []; // [{el, en, lt}]
 
   // ---- capture the built-in wording -------------------------------------
-  // The element's own text IS the English copy; data-lt carries the Lithuanian.
-  // Captured once at boot, because applying a language overwrites textContent.
+  // The element's own text IS the Lithuanian copy — Lithuanian is the default
+  // language, so it renders with no flash and crawls correctly without JS.
+  // data-en carries the English. Captured once at boot, because applying a
+  // language overwrites textContent.
   function capture() {
     document.querySelectorAll('[data-cms]').forEach(function (el) {
-      defaults.push({ el: el, key: el.getAttribute('data-cms'), en: el.textContent, lt: el.getAttribute('data-lt') || null });
+      defaults.push({ el: el, key: el.getAttribute('data-cms'), lt: el.textContent, en: el.getAttribute('data-en') || null });
     });
-    document.querySelectorAll('[data-lt-aria]').forEach(function (el) {
-      ariaDefaults.push({ el: el, en: el.getAttribute('aria-label') || '', lt: el.getAttribute('data-lt-aria') });
+    document.querySelectorAll('[data-en-aria]').forEach(function (el) {
+      ariaDefaults.push({ el: el, lt: el.getAttribute('aria-label') || '', en: el.getAttribute('data-en-aria') });
     });
   }
 
@@ -42,9 +44,7 @@
       var saved = localStorage.getItem(STORE);
       if (saved && LANGS.indexOf(saved) > -1) return saved;
     } catch (e) { /* private mode */ }
-    // A Lithuanian visitor lands on Lithuanian; everyone else gets the English
-    // the design was written in.
-    return (navigator.language || '').toLowerCase().indexOf('lt') === 0 ? 'lt' : 'en';
+    return 'lt';   // Lithuanian by default; visitors switch with the LT/EN pill
   }
 
   // ---- apply ------------------------------------------------------------
@@ -55,7 +55,8 @@
     defaults.forEach(function (d) {
       var value = over[d.key];
       if (typeof value !== 'string' || !value.trim()) {
-        value = lang === 'lt' && d.lt ? d.lt : d.en;
+        // fall back to Lithuanian when a string has no English wording
+        value = lang === 'en' && d.en ? d.en : d.lt;
       }
       d.el.textContent = value;
       // keep mailto:/tel: in step with the visible contact details
@@ -65,7 +66,7 @@
     });
 
     ariaDefaults.forEach(function (a) {
-      a.el.setAttribute('aria-label', lang === 'lt' ? a.lt : a.en);
+      a.el.setAttribute('aria-label', lang === 'en' && a.en ? a.en : a.lt);
     });
 
     Object.keys(state.img).forEach(function (key) {

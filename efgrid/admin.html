@@ -71,11 +71,11 @@
   <div class="bar">
     <b>EF grid — turinio redaktorius</b>
     <span class="langtabs" role="group" aria-label="Redaguojama kalba">
-      <button class="langtab is-on" data-edit="en">🇬🇧 Angliškai</button>
-      <button class="langtab" data-edit="lt">🇱🇹 Lietuviškai</button>
+      <button class="langtab is-on" data-edit="lt">🇱🇹 Lietuviškai</button>
+      <button class="langtab" data-edit="en">🇬🇧 Angliškai</button>
     </span>
     <span class="sp"></span>
-    <a class="btn ghost sm" id="preview" href="./index.html?lang=en" target="_blank" rel="noopener">Peržiūrėti svetainę ↗</a>
+    <a class="btn ghost sm" id="preview" href="./index.html?lang=lt" target="_blank" rel="noopener">Peržiūrėti svetainę ↗</a>
     <button class="btn ghost sm" id="pwbtn">Keisti slaptažodį</button>
   </div>
 
@@ -86,7 +86,8 @@
       Palikus lauką tuščią, grįžta pradinis tekstas.
       Nuotraukos: iki 6 MB, JPG arba PNG — jos bendros abiem kalboms.
       <br><b>Dvi kalbos.</b> Viršuje pasirinkite, kurią kalbą redaguojate. Pakeitę tekstą
-      angliškai, nepamirškite to paties ir lietuviškai — kitaip lankytojas pamatys seną variantą.
+      lietuviškai, nepamirškite to paties ir angliškai — kitaip lankytojas pamatys seną variantą.
+      Numatytoji svetainės kalba — <b>lietuvių</b>.
     </div>
     <div id="form"></div>
   </div>
@@ -104,7 +105,7 @@
 (function () {
   'use strict';
   var BASE = null, PASS = null, fields = [];
-  var editLang = 'en';                                  // which language the form is editing
+  var editLang = 'lt';                                  // which language the form is editing
   var content = { text: { en: {}, lt: {} }, img: {} };  // overrides, per language
 
   function el(id) { return document.getElementById(id); }
@@ -139,13 +140,14 @@
             type: isImg ? 'img' : 'text',
             group: node.getAttribute('data-cms-group') || 'Kita',
             label: node.getAttribute('data-cms-label') || key,
-            // The element's own text is the English wording; data-lt is Lithuanian.
-            // Photos are shared across languages, so they have a single default.
+            // The element's own text is the LITHUANIAN wording (the default
+            // language); data-en carries the English. Photos are shared across
+            // languages, so they have a single default.
             def: isImg
               ? { en: node.getAttribute('src') || '', lt: node.getAttribute('src') || '' }
-              : { en: (node.textContent || '').trim(), lt: node.getAttribute('data-lt') || '' },
+              : { lt: (node.textContent || '').trim(), en: node.getAttribute('data-en') || '' },
             // data-lt-same = deliberately identical in both languages (email,
-            // phone, address) — not a missing translation.
+            // phone, address) — not a missing translation, so no warning.
             same: node.hasAttribute('data-lt-same'),
           });
         });
@@ -162,12 +164,12 @@
     });
 
     // A Lithuanian field with no built-in wording would silently publish English.
-    var noLt = fields.filter(function (f) {
-      return f.type === 'text' && !f.same && !f.def.lt && !(content.text.lt || {})[f.key];
+    var gaps = fields.filter(function (f) {
+      return f.type === 'text' && !f.same && !f.def[editLang] && !(content.text[editLang] || {})[f.key];
     });
-    var html = editLang === 'lt' && noLt.length
-      ? '<div class="missing"><b>' + noLt.length + '</b> lauk' + (noLt.length === 1 ? 'as neturi' : 'ai (-ų) neturi') +
-        ' lietuviško teksto — kol jo nėra, svetainėje lietuviškai rodomas angliškas variantas.</div>'
+    var html = gaps.length
+      ? '<div class="missing"><b>' + gaps.length + '</b> lauk' + (gaps.length === 1 ? 'as neturi' : 'ai (-ų) neturi') +
+        (editLang === 'en' ? ' angliško' : ' lietuviško') + ' teksto — kol jo nėra, rodomas lietuviškas variantas.</div>'
       : '';
 
     groups.forEach(function (g) {
