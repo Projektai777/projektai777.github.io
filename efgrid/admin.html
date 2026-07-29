@@ -155,6 +155,13 @@
       });
   }
 
+  // The wording to show when there is no override. Lithuanian is the default
+  // language, so it is the last resort — a field with no English of its own
+  // (the shared contact details) must never render as an empty box.
+  function defaultFor(f, lang) {
+    return f.def[lang] || f.def.lt || f.def.en || '';
+  }
+
   function render() {
     var groups = [];
     fields.forEach(function (f) {
@@ -176,7 +183,7 @@
       html += '<h2>' + g.name + '</h2>';
       g.items.forEach(function (f) {
         var cur = f.type === 'img' ? (content.img[f.key] || '') : ((content.text[editLang] || {})[f.key] || '');
-        var shown = cur || f.def[editLang] || f.def.en;
+        var shown = cur || defaultFor(f, editLang);
         if (f.type === 'img') {
           html +=
             '<div class="imgrow" data-key="' + f.key + '">' +
@@ -217,14 +224,20 @@
     document.querySelectorAll('[data-text]').forEach(function (input) {
       input.addEventListener('input', function () {
         var key = input.getAttribute('data-text');
-        var def = fields.filter(function (f) { return f.key === key; })[0].def;
-        var bag = content.text[editLang] || (content.text[editLang] = {});
+        var f = fields.filter(function (x) { return x.key === key; })[0];
         var v = input.value;
-        // Matching the built-in wording is not an edit — drop the override so the
-        // design's own text (and any later correction to it) keeps applying.
-        if (!v.trim() || v === (def[editLang] || def.en)) delete bag[key];
-        else bag[key] = v;
-        input.closest('label').classList.toggle('changed', key in bag);
+        // A data-lt-same field (email, phone, address) is ONE value shown in both
+        // languages — writing it to only the tab being edited would leave the
+        // other language showing the old phone number.
+        var langs = f.same ? ['lt', 'en'] : [editLang];
+        langs.forEach(function (lang) {
+          var bag = content.text[lang] || (content.text[lang] = {});
+          // Matching the built-in wording is not an edit — drop the override so the
+          // design's own text (and any later correction to it) keeps applying.
+          if (!v.trim() || v === defaultFor(f, lang)) delete bag[key];
+          else bag[key] = v;
+        });
+        input.closest('label').classList.toggle('changed', key in (content.text[editLang] || {}));
         countChanges();
       });
     });
@@ -275,8 +288,13 @@
   }
 
   function countChanges() {
-    var en = Object.keys(content.text.en || {}).length;
-    var lt = Object.keys(content.text.lt || {}).length;
+    var enBag = content.text.en || {}, ltBag = content.text.lt || {};
+    // A shared field lives in both bags but is one edit — don't count it twice.
+    var shared = fields.filter(function (f) {
+      return f.same && (f.key in enBag) && (f.key in ltBag);
+    }).length;
+    var en = Object.keys(enBag).length - shared;
+    var lt = Object.keys(ltBag).length;
     var n = en + lt + Object.keys(content.img).length;
     var detail = en && lt ? ' (EN ' + en + ', LT ' + lt + ')' : '';
     el('count').textContent = n ? plural(n) + detail : 'Pakeitimų nėra';
