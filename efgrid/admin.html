@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>EF grid — svetainės turinio redaktorius</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#efeae4;color:#262626;line-height:1.5}
+  .bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+       padding:14px 24px;background:#262626;color:#fff}
+  .bar b{font-size:16px;font-weight:600}
+  .bar .sp{margin-left:auto}
+  .wrap{max-width:900px;margin:0 auto;padding:28px 24px 120px}
+  h2{font-size:18px;margin:34px 0 12px;padding-bottom:8px;border-bottom:1px solid #d0c6bf}
+  label{display:block;margin:0 0 18px}
+  label .lab{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+  label .key{font-weight:400;color:#8a7f77;font-size:12px}
+  input[type=text],textarea{width:100%;padding:10px 12px;font:inherit;font-size:15px;
+       border:1px solid #d0c6bf;border-radius:8px;background:#fff;color:#262626}
+  textarea{min-height:88px;resize:vertical}
+  input:focus,textarea:focus{outline:2px solid #262626;outline-offset:1px}
+  .changed input,.changed textarea{border-color:#1a7f37;background:#f2fbf4}
+  .imgrow{display:flex;gap:14px;align-items:center;margin-bottom:18px;padding:12px;
+       background:#fff;border:1px solid #d0c6bf;border-radius:12px}
+  .imgrow img{width:104px;height:74px;object-fit:cover;border-radius:8px;background:#efeae4;flex:0 0 auto}
+  .imgrow .meta{flex:1;min-width:0}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:0;border-radius:8px;
+       font:inherit;font-weight:600;font-size:14px;cursor:pointer;background:#262626;color:#fff}
+  .btn.alt{background:#d0c6bf;color:#262626}
+  .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)}
+  .btn:disabled{opacity:.45;cursor:default}
+  .btn.sm{padding:7px 13px;font-size:13px}
+  .gate{max-width:380px;margin:14vh auto;padding:28px;background:#fff;border-radius:16px;
+       border:1px solid #d0c6bf}
+  .gate h1{font-size:20px;margin:0 0 6px}
+  .gate p{margin:0 0 18px;color:#6b625c;font-size:14px}
+  .msg{padding:10px 14px;border-radius:8px;font-size:14px;margin-top:14px}
+  .msg.err{background:#fdecea;color:#93231a}
+  .msg.ok{background:#eaf7ee;color:#1a7f37}
+  .hint{background:#fff;border:1px solid #d0c6bf;border-radius:12px;padding:16px 18px;font-size:14px;color:#4a423d}
+  .hint b{color:#262626}
+  .foot{position:fixed;left:0;right:0;bottom:0;display:flex;gap:12px;align-items:center;
+       padding:14px 24px;background:#fff;border-top:1px solid #d0c6bf}
+  .foot .sp{margin-left:auto}
+  .count{font-size:13px;color:#6b625c}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- ===== login ===== -->
+<div id="gate" class="gate">
+  <h1>Svetainės redaktorius</h1>
+  <p>EF grid — įveskite slaptažodį.</p>
+  <input type="password" id="pass" placeholder="Slaptažodis" style="width:100%;padding:10px 12px;font:inherit;border:1px solid #d0c6bf;border-radius:8px">
+  <div style="margin-top:14px"><button class="btn" id="login">Prisijungti</button></div>
+  <div id="gate-msg"></div>
+</div>
+
+<!-- ===== editor ===== -->
+<div id="app" hidden>
+  <div class="bar">
+    <b>EF grid — turinio redaktorius</b>
+    <span class="sp"></span>
+    <a class="btn ghost sm" href="./index.html" target="_blank" rel="noopener">Peržiūrėti svetainę ↗</a>
+    <button class="btn ghost sm" id="pwbtn">Keisti slaptažodį</button>
+  </div>
+
+  <div class="wrap">
+    <div class="hint">
+      <b>Kaip tai veikia.</b> Keičiate tekstą ar nuotrauką → spaudžiate <b>Išsaugoti</b> → pakeitimai
+      svetainėje matomi iškart (naršyklė gali rodyti seną versiją iki 1 min.).
+      Palikus lauką tuščią, grįžta pradinis tekstas iš dizaino.
+      Nuotraukos: iki 6 MB, JPG arba PNG.
+    </div>
+    <div id="form"></div>
+  </div>
+
+  <div class="foot">
+    <span class="count" id="count">Pakeitimų nėra</span>
+    <span class="sp"></span>
+    <button class="btn alt" id="revert">Atstatyti ankstesnę versiją</button>
+    <button class="btn" id="save" disabled>Išsaugoti</button>
+  </div>
+  <div id="msg" style="position:fixed;right:24px;bottom:78px"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var BASE = null, PASS = null, content = { text: {}, img: {} }, fields = [];
+
+  function el(id) { return document.getElementById(id); }
+  function note(target, kind, text) {
+    target.innerHTML = '<div class="msg ' + kind + '">' + text + '</div>';
+    if (kind === 'ok') setTimeout(function () { target.innerHTML = ''; }, 3500);
+  }
+
+  function api(path, body) {
+    return fetch(BASE + path, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(Object.assign({ pass: PASS }, body || {})),
+    }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); });
+  }
+
+  // ---- discover the editable fields straight from the live page ----------
+  // No schema is duplicated here: whatever carries data-cms in index.html is
+  // what the client can edit. Adding an attribute there adds a field here.
+  function loadFields() {
+    return fetch('./index.html', { cache: 'no-cache' })
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var out = [];
+        doc.querySelectorAll('[data-cms],[data-cms-img],[data-cms-bg]').forEach(function (node) {
+          var isImg = node.hasAttribute('data-cms-img') || node.hasAttribute('data-cms-bg');
+          var key = node.getAttribute('data-cms') || node.getAttribute('data-cms-img') || node.getAttribute('data-cms-bg');
+          if (!key || out.some(function (f) { return f.key === key; })) return;
+          out.push({
+            key: key,
+            type: isImg ? 'img' : 'text',
+            group: node.getAttribute('data-cms-group') || 'Kita',
+            label: node.getAttribute('data-cms-label') || key,
+            def: isImg ? (node.getAttribute('src') || '') : (node.textContent || '').trim(),
+          });
+        });
+        fields = out;
+      });
+  }
+
+  function render() {
+    var groups = [];
+    fields.forEach(function (f) {
+      var g = groups.filter(function (x) { return x.name === f.group; })[0];
+      if (!g) { g = { name: f.group, items: [] }; groups.push(g); }
+      g.items.push(f);
+    });
+
+    var html = '';
+    groups.forEach(function (g) {
+      html += '<h2>' + g.name + '</h2>';
+      g.items.forEach(function (f) {
+        var cur = f.type === 'img' ? (content.img[f.key] || '') : (content.text[f.key] || '');
+        var shown = cur || f.def;
+        if (f.type === 'img') {
+          html +=
+            '<div class="imgrow" data-key="' + f.key + '">' +
+              '<img src="' + (cur || f.def) + '" alt="">' +
+              '<div class="meta">' +
+                '<div class="lab" style="font-size:13px;font-weight:600">' + f.label + '</div>' +
+                '<div class="key">' + (cur ? 'pakeista' : 'pradinė iš dizaino') + '</div>' +
+                '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
+                  '<button class="btn alt sm" data-up="' + f.key + '">Įkelti naują</button>' +
+                  (cur ? '<button class="btn alt sm" data-clear="' + f.key + '">Grąžinti pradinę</button>' : '') +
+                '</div>' +
+                '<input type="file" accept="image/*" hidden data-file="' + f.key + '">' +
+              '</div>' +
+            '</div>';
+        } else {
+          var long = shown.length > 70;
+          html +=
+            '<label data-key="' + f.key + '">' +
+              '<span class="lab">' + f.label + ' <span class="key">' + f.key + '</span></span>' +
+              (long
+                ? '<textarea data-text="' + f.key + '">' + escapeHtml(shown) + '</textarea>'
+                : '<input type="text" data-text="' + f.key + '" value="' + escapeHtml(shown) + '">') +
+            '</label>';
+        }
+      });
+    });
+    el('form').innerHTML = html;
+    wire();
+    countChanges();
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function wire() {
+    document.querySelectorAll('[data-text]').forEach(function (input) {
+      input.addEventListener('input', function () {
+        var key = input.getAttribute('data-text');
+        var def = fields.filter(function (f) { return f.key === key; })[0].def;
+        var v = input.value;
+        if (!v.trim() || v === def) delete content.text[key];
+        else content.text[key] = v;
+        input.closest('label').classList.toggle('changed', key in content.text);
+        countChanges();
+      });
+    });
+
+    document.querySelectorAll('[data-up]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        btn.closest('.meta').querySelector('[data-file]').click();
+      });
+    });
+
+    document.querySelectorAll('[data-file]').forEach(function (input) {
+      input.addEventListener('change', function () {
+        var file = input.files && input.files[0];
+        if (!file) return;
+        var key = input.getAttribute('data-file');
+        var fd = new FormData();
+        fd.append('pass', PASS); fd.append('key', key.replace(/\./g, '-')); fd.append('file', file);
+        note(el('msg'), 'ok', 'Keliama…');
+        fetch(BASE + '/upload', { method: 'POST', body: fd })
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            if (!j.ok) throw new Error(j.error || 'klaida');
+            content.img[key] = j.url;
+            render();
+            note(el('msg'), 'ok', 'Nuotrauka įkelta — nepamirškite išsaugoti.');
+          })
+          .catch(function (e) {
+            note(el('msg'), 'err', 'Nepavyko įkelti: ' + (e.message === 'too-big' ? 'per didelis failas (max 6 MB)' : e.message));
+          });
+      });
+    });
+
+    document.querySelectorAll('[data-clear]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        delete content.img[btn.getAttribute('data-clear')];
+        render();
+      });
+    });
+  }
+
+  function countChanges() {
+    var n = Object.keys(content.text).length + Object.keys(content.img).length;
+    el('count').textContent = n ? (n + ' pakeitimai laukia išsaugojimo arba jau išsaugoti') : 'Pakeitimų nėra';
+    el('save').disabled = false;
+  }
+
+  // ---- login ------------------------------------------------------------
+  function start(pass) {
+    PASS = pass;
+    return api('/auth').then(function (res) {
+      if (!res.ok) throw new Error(res.j.error || 'bad-pass');
+      content = res.j.content || { text: {}, img: {} };
+      content.text = content.text || {}; content.img = content.img || {};
+      sessionStorage.setItem('efgrid_cms', pass);
+      el('gate').hidden = true; el('app').hidden = false;
+      return loadFields().then(render);
+    });
+  }
+
+  el('login').addEventListener('click', function () {
+    var v = el('pass').value;
+    if (!v) return;
+    el('login').disabled = true;
+    start(v).catch(function (e) {
+      note(el('gate-msg'), 'err',
+        e.message === 'too-many-tries' ? 'Per daug bandymų. Palaukite 10 min.' : 'Neteisingas slaptažodis.');
+    }).finally(function () { el('login').disabled = false; });
+  });
+  el('pass').addEventListener('keydown', function (e) { if (e.key === 'Enter') el('login').click(); });
+
+  // ---- save / revert / password ----------------------------------------
+  el('save').addEventListener('click', function () {
+    el('save').disabled = true;
+    api('/save', { content: content }).then(function (res) {
+      if (!res.ok) throw new Error(res.j.error || 'klaida');
+      note(el('msg'), 'ok', 'Išsaugota. Svetainė atnaujinta.');
+    }).catch(function (e) {
+      note(el('msg'), 'err', 'Nepavyko išsaugoti: ' + e.message);
+    }).finally(function () { el('save').disabled = false; });
+  });
+
+  el('revert').addEventListener('click', function () {
+    if (!confirm('Atstatyti turinį į ankstesnę išsaugotą versiją?')) return;
+    api('/revert').then(function (res) {
+      if (!res.ok) throw new Error(res.j.error || 'klaida');
+      content = res.j.content; content.text = content.text || {}; content.img = content.img || {};
+      render();
+      note(el('msg'), 'ok', 'Atstatyta ankstesnė versija.');
+    }).catch(function (e) {
+      note(el('msg'), 'err', e.message === 'no-backup' ? 'Ankstesnės versijos dar nėra.' : 'Nepavyko: ' + e.message);
+    });
+  });
+
+  el('pwbtn').addEventListener('click', function () {
+    var next = prompt('Naujas slaptažodis (bent 8 simboliai).\nNuo šiol veiks tik jis — senasis nustos veikti.');
+    if (!next) return;
+    api('/setpass', { next: next }).then(function (res) {
+      if (!res.ok) throw new Error(res.j.error || 'klaida');
+      PASS = next; sessionStorage.setItem('efgrid_cms', next);
+      note(el('msg'), 'ok', 'Slaptažodis pakeistas.');
+    }).catch(function (e) {
+      note(el('msg'), 'err', e.message === 'too-short' ? 'Per trumpas (bent 8 simboliai).' : 'Nepavyko: ' + e.message);
+    });
+  });
+
+  // ---- boot -------------------------------------------------------------
+  fetch('./cms-endpoint.json', { cache: 'no-cache' })
+    .then(function (r) { return r.json(); })
+    .then(function (cfg) {
+      BASE = (cfg.base || '').replace(/\/$/, '');
+      var remembered = sessionStorage.getItem('efgrid_cms');
+      if (remembered) start(remembered).catch(function () { sessionStorage.removeItem('efgrid_cms'); });
+    })
+    .catch(function () {
+      note(el('gate-msg'), 'err', 'Nepavyko pasiekti serverio.');
+    });
+})();
+</script>
+</body>
+</html>

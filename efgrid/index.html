@@ -11,58 +11,68 @@
 <link rel="stylesheet" href="./style.css">
 <link rel="icon" href="./img/ef-grid-logo-black-145.svg">
 </head>
+<!--
+  data-cms / data-cms-img / data-cms-bg mark the parts the client may edit from
+  /efgrid/admin.html. The admin page DISCOVERS these attributes by parsing this
+  file, so there is no separate schema to keep in sync — marking a new element
+  here is all it takes to make it editable. data-cms-group / -label are only for
+  how the field is presented in that admin UI.
+-->
 <body>
 
 <a class="skip" href="#about">Skip to content</a>
 
 <!-- ============================== HERO ============================== -->
 <header class="hero" id="top">
-  <img class="hero-bg" src="./img/img-2928-3-75a3fd.webp" alt="High voltage transmission tower against the sky" fetchpriority="high">
+  <img class="hero-bg" src="./img/img-2928-3-75a3fd.webp" alt="High voltage transmission tower against the sky" fetchpriority="high"
+       data-cms-img="hero.bg" data-cms-group="Pirmas ekranas" data-cms-label="Fono nuotrauka">
   <div class="hero-shade" aria-hidden="true"></div>
   <img class="hero-line" src="./img/vector-1107.svg" alt="" aria-hidden="true">
 
   <nav class="nav" aria-label="Main">
     <a class="nav-logo" href="#top" aria-label="EF grid — home">
-      <img src="./img/ef-grid-logo-black-145.svg" alt="EF grid" width="174" height="32">
+      <img src="./img/ef-grid-logo-black-145.svg" alt="EF grid" width="174" height="32"
+           data-cms-img="nav.logo" data-cms-group="Meniu" data-cms-label="Logotipas">
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
     <div class="nav-menu" id="nav-menu">
       <ul class="nav-links">
-        <li><a href="#about" class="is-active">About</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#why">Why choose us</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contacts">Contacts</a></li>
+        <li><a href="#about" class="is-active" data-cms="nav.about" data-cms-group="Meniu" data-cms-label="Meniu: apie">About</a></li>
+        <li><a href="#services" data-cms="nav.services" data-cms-group="Meniu" data-cms-label="Meniu: paslaugos">Services</a></li>
+        <li><a href="#why" data-cms="nav.why" data-cms-group="Meniu" data-cms-label="Meniu: kodėl mes">Why choose us</a></li>
+        <li><a href="#projects" data-cms="nav.projects" data-cms-group="Meniu" data-cms-label="Meniu: projektai">Projects</a></li>
+        <li><a href="#contacts" data-cms="nav.contacts" data-cms-group="Meniu" data-cms-label="Meniu: kontaktai">Contacts</a></li>
       </ul>
       <div class="nav-cta">
-        <a class="btn btn-ghost" href="#contacts">Career
+        <a class="btn btn-ghost" href="#contacts"><span data-cms="nav.career" data-cms-group="Meniu" data-cms-label="Mygtukas: karjera">Career</span>
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.2 8.8 8.8 1.2M3 1.2h5.8V7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a class="btn btn-solid" href="#contacts">Send Inquiry</a>
+        <a class="btn btn-solid" href="#contacts" data-cms="nav.inquiry" data-cms-group="Meniu" data-cms-label="Mygtukas: užklausa">Send Inquiry</a>
       </div>
     </div>
   </nav>
 
   <div class="hero-copy">
-    <h1>Building critical grid infrastructure</h1>
-    <p class="hero-sub">Medium &amp; High Voltage Grid Infrastructure</p>
+    <h1 data-cms="hero.h1" data-cms-group="Pirmas ekranas" data-cms-label="Pagrindinė antraštė">Building critical grid infrastructure</h1>
+    <p class="hero-sub" data-cms="hero.sub" data-cms-group="Pirmas ekranas" data-cms-label="Paantraštė">Medium &amp; High Voltage Grid Infrastructure</p>
   </div>
-  <p class="hero-note">EF Grid specializes in medium and high voltage construction, delivering the infrastructure that connects energy projects to the national grid.</p>
+  <p class="hero-note" data-cms="hero.note" data-cms-group="Pirmas ekranas" data-cms-label="Tekstas dešinėje">EF Grid specializes in medium and high voltage construction, delivering the infrastructure that connects energy projects to the national grid.</p>
 </header>
 
 <!-- ============================== INTRO (dark) ============================== -->
 <section class="intro" id="about">
   <div class="wrap intro-grid">
-    <h2 class="intro-head">Infrastructure built for decades. Every grid connection becomes part of critical national infrastructure.</h2>
-    <p class="intro-note">That’s why we focus on precise execution, engineering quality and long-term reliability. From civil works to energization, we build infrastructure designed to perform safely for decades.</p>
+    <h2 class="intro-head" data-cms="intro.head" data-cms-group="Įžanga" data-cms-label="Antraštė">Infrastructure built for decades. Every grid connection becomes part of critical national infrastructure.</h2>
+    <p class="intro-note" data-cms="intro.note" data-cms-group="Įžanga" data-cms-label="Tekstas dešinėje">That’s why we focus on precise execution, engineering quality and long-term reliability. From civil works to energization, we build infrastructure designed to perform safely for decades.</p>
   </div>
 </section>
 
 <!-- ============================== FIELD BAND ============================== -->
 <section class="band">
-  <img src="./img/dji-0754-7ca9d5.webp" alt="EF grid technician commissioning substation switchgear">
+  <img src="./img/dji-0754-7ca9d5.webp" alt="EF grid technician commissioning substation switchgear"
+       data-cms-img="band.img" data-cms-group="Įžanga" data-cms-label="Plati nuotrauka per visą plotį">
 </section>
 
 <!-- ============================== CAPABILITIES ============================== -->
@@ -71,34 +81,37 @@
   <div class="wrap caps-grid">
 
     <article class="cap cap-lead">
-      <span class="tag">SERVICES</span>
-      <h2>Core capabilities</h2>
+      <span class="tag" data-cms="caps.tag" data-cms-group="Paslaugos" data-cms-label="Žymė">SERVICES</span>
+      <h2 data-cms="caps.title" data-cms-group="Paslaugos" data-cms-label="Antraštė">Core capabilities</h2>
     </article>
 
     <article class="cap cap-inset">
-      <h3>Engineering</h3>
-      <p>MV/HV design</p>
-      <img src="./img/image-199-bcddb9.webp" alt="Engineering drawing of a substation bay">
+      <h3 data-cms="cap1.title" data-cms-group="Paslaugos" data-cms-label="1 kortelė — pavadinimas">Engineering</h3>
+      <p data-cms="cap1.sub" data-cms-group="Paslaugos" data-cms-label="1 kortelė — paaiškinimas">MV/HV design</p>
+      <img src="./img/image-199-bcddb9.webp" alt="Engineering drawing of a substation bay"
+           data-cms-img="cap1.img" data-cms-group="Paslaugos" data-cms-label="1 kortelė — nuotrauka">
     </article>
 
-    <article class="cap cap-fill is-substations" style="--bg:url('./img/rectangle-563-4116a5.webp')">
-      <h3>Substations</h3>
-      <p>Up to 400 kV</p>
+    <article class="cap cap-fill is-substations" style="--bg:url('./img/rectangle-563-4116a5.webp')"
+             data-cms-bg="cap2.img" data-cms-group="Paslaugos" data-cms-label="2 kortelė — nuotrauka">
+      <h3 data-cms="cap2.title" data-cms-group="Paslaugos" data-cms-label="2 kortelė — pavadinimas">Substations</h3>
+      <p data-cms="cap2.sub" data-cms-group="Paslaugos" data-cms-label="2 kortelė — paaiškinimas">Up to 400 kV</p>
     </article>
 
-    <article class="cap cap-fill is-lines" style="--bg:url('./img/rectangle-561-cc2417.webp')">
-      <h3>Overhead &amp; Underground Lines</h3>
-      <p>Transmission</p>
+    <article class="cap cap-fill is-lines" style="--bg:url('./img/rectangle-561-cc2417.webp')"
+             data-cms-bg="cap3.img" data-cms-group="Paslaugos" data-cms-label="3 kortelė — nuotrauka">
+      <h3 data-cms="cap3.title" data-cms-group="Paslaugos" data-cms-label="3 kortelė — pavadinimas">Overhead &amp; Underground Lines</h3>
+      <p data-cms="cap3.sub" data-cms-group="Paslaugos" data-cms-label="3 kortelė — paaiškinimas">Transmission</p>
     </article>
 
     <article class="cap">
-      <h3>Relay Protection &amp; Automation</h3>
-      <p>Testing &amp; commissioning</p>
+      <h3 data-cms="cap4.title" data-cms-group="Paslaugos" data-cms-label="4 kortelė — pavadinimas">Relay Protection &amp; Automation</h3>
+      <p data-cms="cap4.sub" data-cms-group="Paslaugos" data-cms-label="4 kortelė — paaiškinimas">Testing &amp; commissioning</p>
     </article>
 
     <article class="cap">
-      <h3>Operation &amp; Maintenance</h3>
-      <p>Inspections &amp; technical support</p>
+      <h3 data-cms="cap5.title" data-cms-group="Paslaugos" data-cms-label="5 kortelė — pavadinimas">Operation &amp; Maintenance</h3>
+      <p data-cms="cap5.sub" data-cms-group="Paslaugos" data-cms-label="5 kortelė — paaiškinimas">Inspections &amp; technical support</p>
     </article>
 
   </div>
@@ -108,7 +121,7 @@
 <section class="sectors" id="sectors">
   <div class="wrap">
     <div class="sectors-head">
-      <h2>We deliver tailored solutions for diverse clients across the energy transition</h2>
+      <h2 data-cms="sectors.head" data-cms-group="Sektoriai" data-cms-label="Antraštė">We deliver tailored solutions for diverse clients across the energy transition</h2>
       <div class="arrows">
         <button class="arrow" data-track="sectors-track" data-dir="-1" aria-label="Previous"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M8 1 1.5 9 8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <button class="arrow" data-track="sectors-track" data-dir="1" aria-label="Next"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M1 1 7.5 9 1 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -120,11 +133,12 @@
       <div class="sectors-track" id="sectors-track">
         <article class="sector">
           <div class="sector-copy">
-            <span class="tag">SECTORS</span>
-            <h3>Utility-Scale Renewable Energy Projects</h3>
-            <p>Full grid integration of solar, wind, and hybrid parks.</p>
+            <span class="tag" data-cms="sector1.tag" data-cms-group="Sektoriai" data-cms-label="Žymė">SECTORS</span>
+            <h3 data-cms="sector1.title" data-cms-group="Sektoriai" data-cms-label="Pavadinimas">Utility-Scale Renewable Energy Projects</h3>
+            <p data-cms="sector1.text" data-cms-group="Sektoriai" data-cms-label="Aprašymas">Full grid integration of solar, wind, and hybrid parks.</p>
           </div>
-          <div class="sector-photo"><img src="./img/img-9870-2c1853.webp" alt="High voltage substation equipment"></div>
+          <div class="sector-photo"><img src="./img/img-9870-2c1853.webp" alt="High voltage substation equipment"
+               data-cms-img="sector1.img" data-cms-group="Sektoriai" data-cms-label="Nuotrauka"></div>
         </article>
       </div>
     </div>
@@ -133,15 +147,16 @@
 
 <!-- ============================== WHY CHOOSE ============================== -->
 <section class="why" id="why">
-  <div class="why-photo"><img src="./img/img-2231-11706e.webp" alt="Crane lifting a power transformer into position"></div>
+  <div class="why-photo"><img src="./img/img-2231-11706e.webp" alt="Crane lifting a power transformer into position"
+       data-cms-img="why.img" data-cms-group="Kodėl mes" data-cms-label="Nuotrauka"></div>
   <div class="why-copy">
-    <span class="tag">STRENGTHS</span>
-    <h2>Why choose EF grid</h2>
+    <span class="tag" data-cms="why.tag" data-cms-group="Kodėl mes" data-cms-label="Žymė">STRENGTHS</span>
+    <h2 data-cms="why.title" data-cms-group="Kodėl mes" data-cms-label="Antraštė">Why choose EF grid</h2>
     <ul class="ticks">
-      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span>Proven delivery in grid-critical projects</span></li>
-      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span>Licensed up to 400 kV</span></li>
-      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span>Strong national footprint</span></li>
-      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span>Trusted by leading developers and state partners</span></li>
+      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item1" data-cms-group="Kodėl mes" data-cms-label="1 punktas">Proven delivery in grid-critical projects</span></li>
+      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item2" data-cms-group="Kodėl mes" data-cms-label="2 punktas">Licensed up to 400 kV</span></li>
+      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item3" data-cms-group="Kodėl mes" data-cms-label="3 punktas">Strong national footprint</span></li>
+      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item4" data-cms-group="Kodėl mes" data-cms-label="4 punktas">Trusted by leading developers and state partners</span></li>
     </ul>
   </div>
 </section>
@@ -151,14 +166,14 @@
   <div class="wrap">
     <div class="cert-card">
       <div class="cert-copy">
-        <span class="tag">COMPLIANCE</span>
-        <h2>Certificates</h2>
+        <span class="tag" data-cms="certs.tag" data-cms-group="Sertifikatai" data-cms-label="Žymė">COMPLIANCE</span>
+        <h2 data-cms="certs.title" data-cms-group="Sertifikatai" data-cms-label="Antraštė">Certificates</h2>
       </div>
       <div class="cert-row">
-        <img src="./img/sertifikatas-1-1-1146.svg" alt="Certificate" width="124" height="124">
-        <img src="./img/sertifikatas-2-1-1192.svg" alt="Certificate" width="124" height="124">
-        <img src="./img/sertifikatas-3-1-1227.svg" alt="Certificate" width="124" height="124">
-        <img src="./img/sertifikatas-4-1-1277.svg" alt="Certificate" width="124" height="124">
+        <img src="./img/sertifikatas-1-1-1146.svg" alt="Certificate" width="124" height="124" data-cms-img="certs.img1" data-cms-group="Sertifikatai" data-cms-label="1 ženklas">
+        <img src="./img/sertifikatas-2-1-1192.svg" alt="Certificate" width="124" height="124" data-cms-img="certs.img2" data-cms-group="Sertifikatai" data-cms-label="2 ženklas">
+        <img src="./img/sertifikatas-3-1-1227.svg" alt="Certificate" width="124" height="124" data-cms-img="certs.img3" data-cms-group="Sertifikatai" data-cms-label="3 ženklas">
+        <img src="./img/sertifikatas-4-1-1277.svg" alt="Certificate" width="124" height="124" data-cms-img="certs.img4" data-cms-group="Sertifikatai" data-cms-label="4 ženklas">
       </div>
     </div>
   </div>
@@ -167,9 +182,9 @@
 <!-- ============================== PROJECTS ============================== -->
 <section class="projects" id="projects">
   <div class="wrap">
-    <span class="tag">PROJECTS</span>
+    <span class="tag" data-cms="projects.tag" data-cms-group="Projektai" data-cms-label="Žymė">PROJECTS</span>
     <div class="projects-head">
-      <h2>From ground to grid</h2>
+      <h2 data-cms="projects.title" data-cms-group="Projektai" data-cms-label="Antraštė">From ground to grid</h2>
       <div class="arrows">
         <button class="arrow" data-track="projects-track" data-dir="-1" aria-label="Previous"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M8 1 1.5 9 8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <button class="arrow" data-track="projects-track" data-dir="1" aria-label="Next"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M1 1 7.5 9 1 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -178,10 +193,10 @@
   </div>
   <div class="projects-rail">
     <div class="projects-track" id="projects-track">
-      <img src="./img/dji-0241-16-3efb9e.webp" alt="Substation seen from the air">
-      <img src="./img/dji-0938-18-b2fa9e.webp" alt="Grid connection control building">
-      <img src="./img/dji-0085-15-bb6317.webp" alt="Solar park grid connection">
-      <img src="./img/dji-0241-16-3efb9e.webp" alt="Substation seen from the air">
+      <img src="./img/dji-0241-16-3efb9e.webp" alt="Substation seen from the air" data-cms-img="projects.img1" data-cms-group="Projektai" data-cms-label="1 nuotrauka">
+      <img src="./img/dji-0938-18-b2fa9e.webp" alt="Grid connection control building" data-cms-img="projects.img2" data-cms-group="Projektai" data-cms-label="2 nuotrauka">
+      <img src="./img/dji-0085-15-bb6317.webp" alt="Solar park grid connection" data-cms-img="projects.img3" data-cms-group="Projektai" data-cms-label="3 nuotrauka">
+      <img src="./img/dji-0241-16-3efb9e.webp" alt="Substation seen from the air" data-cms-img="projects.img4" data-cms-group="Projektai" data-cms-label="4 nuotrauka">
     </div>
   </div>
 </section>
@@ -196,11 +211,11 @@
 <footer class="foot" id="contacts">
   <div class="wrap">
     <div class="foot-grid">
-      <h2>Get in touch</h2>
+      <h2 data-cms="foot.title" data-cms-group="Kontaktai" data-cms-label="Antraštė">Get in touch</h2>
       <ul class="foot-contact">
-        <li><a href="mailto:info@efgrid.com">info@efgrid.com</a></li>
-        <li><a href="tel:+370600000000">+370 600 000000</a></li>
-        <li><a href="https://maps.google.com/?q=Biruli%C5%A1ki%C5%B3+g.+8,+Kaunas" target="_blank" rel="noopener">Biruliškių g. 8, Kaunas</a></li>
+        <li><a href="mailto:info@efgrid.com" data-cms="foot.email" data-cms-group="Kontaktai" data-cms-label="El. paštas">info@efgrid.com</a></li>
+        <li><a href="tel:+370600000000" data-cms="foot.phone" data-cms-group="Kontaktai" data-cms-label="Telefonas">+370 600 000000</a></li>
+        <li><a href="https://maps.google.com/?q=Biruli%C5%A1ki%C5%B3+g.+8,+Kaunas" target="_blank" rel="noopener" data-cms="foot.address" data-cms-group="Kontaktai" data-cms-label="Adresas">Biruliškių g. 8, Kaunas</a></li>
       </ul>
     </div>
     <div class="foot-mark">
@@ -208,9 +223,9 @@
       <img class="foot-logo" src="./img/ef-grid-logo-black-145.svg" alt="EF grid" width="174" height="32">
     </div>
     <div class="foot-legal">
-      <span>© 2025 EF grid visos teisės saugomos</span>
-      <a href="#">Privatumo politika</a>
-      <a href="#">Privatumo politika</a>
+      <span data-cms="foot.legal" data-cms-group="Kontaktai" data-cms-label="Autorinės teisės">© 2025 EF grid visos teisės saugomos</span>
+      <a href="#" data-cms="foot.link1" data-cms-group="Kontaktai" data-cms-label="1 nuoroda">Privatumo politika</a>
+      <a href="#" data-cms="foot.link2" data-cms-group="Kontaktai" data-cms-label="2 nuoroda">Privatumo politika</a>
     </div>
   </div>
 </footer>

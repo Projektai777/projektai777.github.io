@@ -1,8 +1,52 @@
 /* EF grid — page behaviour. No libraries, no build step.
    The Figma design contains arrow controls on the Sectors and Projects blocks;
-   this wires them up and handles the mobile nav. Nothing else is scripted. */
+   this wires them up and handles the mobile nav. Plus CMS hydration. */
 (function () {
   'use strict';
+
+  // ---- CMS hydration ----------------------------------------------------
+  // The page already contains the real content; this only layers the client's
+  // edits on top. If the Worker is down, slow or blocked, the page is unchanged
+  // and fully readable — the CMS is never load-bearing.
+  (function hydrate() {
+    fetch('./cms-endpoint.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (cfg) {
+        if (!cfg || !cfg.enabled || !cfg.base) return null;
+        return fetch(cfg.base.replace(/\/$/, '') + '/content').then(function (r) {
+          return r.ok ? r.json() : null;
+        });
+      })
+      .then(function (content) {
+        if (!content) return;
+        var text = content.text || {};
+        var img = content.img || {};
+
+        Object.keys(text).forEach(function (key) {
+          var value = text[key];
+          if (typeof value !== 'string' || !value.trim()) return;
+          document.querySelectorAll('[data-cms="' + CSS.escape(key) + '"]').forEach(function (el) {
+            el.textContent = value;
+            // keep mailto:/tel: in step with the visible contact details
+            if (el.tagName === 'A' && /^foot\.(email|phone)$/.test(key)) {
+              el.href = (key === 'foot.email' ? 'mailto:' : 'tel:') + value.replace(/\s+/g, '');
+            }
+          });
+        });
+
+        Object.keys(img).forEach(function (key) {
+          var url = img[key];
+          if (typeof url !== 'string' || !url) return;
+          document.querySelectorAll('[data-cms-img="' + CSS.escape(key) + '"]').forEach(function (el) {
+            el.src = url;
+          });
+          document.querySelectorAll('[data-cms-bg="' + CSS.escape(key) + '"]').forEach(function (el) {
+            el.style.setProperty('--bg', 'url("' + url + '")');
+          });
+        });
+      })
+      .catch(function () { /* offline or blocked — defaults stand */ });
+  })();
 
   // ---- mobile nav -------------------------------------------------------
   var toggle = document.querySelector('.nav-toggle');

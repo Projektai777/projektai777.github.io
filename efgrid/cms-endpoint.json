@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "base": "https://efgrid-cms.projektai777.workers.dev",
+  "note": "Client CMS. The site works fully without this — it only layers the client's edits over the defaults baked into index.html."
+}
