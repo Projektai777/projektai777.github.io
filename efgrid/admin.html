@@ -230,9 +230,18 @@
     });
   }
 
+  // Lithuanian plurals: 1/21/31 -> pakeitimas, 2-9/22-29 -> pakeitimai,
+  // 0 and 11-19 (and every ...0) -> pakeitimų.
+  function plural(n) {
+    var last = n % 10, teen = n % 100;
+    if (last === 1 && teen !== 11) return n + ' pakeitimas';
+    if (last >= 2 && last <= 9 && !(teen >= 11 && teen <= 19)) return n + ' pakeitimai';
+    return n + ' pakeitimų';
+  }
+
   function countChanges() {
     var n = Object.keys(content.text).length + Object.keys(content.img).length;
-    el('count').textContent = n ? (n + ' pakeitimai laukia išsaugojimo arba jau išsaugoti') : 'Pakeitimų nėra';
+    el('count').textContent = n ? plural(n) : 'Pakeitimų nėra';
     el('save').disabled = false;
   }
 
