@@ -96,7 +96,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   position:relative;z-index:3;
   width:100%;max-width:calc(var(--wrap) + var(--pad)*2);
   margin:0 auto;padding:16px var(--pad);
-  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:24px;
 }
 .nav-logo img{width:174px;height:32px}
 .nav-menu{display:flex;align-items:center;gap:16px;margin-left:auto}
@@ -215,7 +215,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ============================== SECTORS — y 3419…4209 ============================== */
 .sectors{padding:112px 0 130px;background:var(--white)}
-.sectors-head{display:flex;align-items:flex-start;justify-content:space-between;gap:40px}
+.sectors-head{display:flex;align-items:flex-end;justify-content:space-between;gap:40px}
 .sectors-head h2{font-size:48px;line-height:57px;max-width:716px}
 .sectors-stage{position:relative;margin-top:75px}
 /* beige plate peeking above the card: Figma (104,3646) 1232x524 vs card (80,3665) */
@@ -231,11 +231,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background:var(--white);border:1px solid var(--tan);border-radius:20px;
   overflow:hidden;
 }
-.sector-copy{padding:70px 61px 64px;display:flex;flex-direction:column;align-items:flex-start}
+.sector-copy{padding:70px 61px 56px;display:flex;flex-direction:column;align-items:flex-start}
 .sector-copy h3{margin-top:auto;font-size:40px;line-height:48px;color:#000;max-width:472px}
 .sector-copy p{margin-top:31px;font-size:18px;line-height:23px;color:#000;max-width:312px}
-.sector-photo{margin:1px;border-radius:20px;overflow:hidden}
-.sector-photo img{width:100%;height:100%;object-fit:cover}
+/* absolute so the photo's natural height can't drive the card taller than 544 */
+.sector-photo{position:relative;margin:1px;border-radius:20px;overflow:hidden}
+.sector-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 /* arrow pair — Figma: two 50x50 boxes, 1px #d0c6bf, 9x18 chevron at 2px */
 .arrows{display:flex;flex:0 0 auto}
@@ -266,8 +267,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   object-fit:fill;
 }
 .why-copy{padding:120px 80px 0 74px}
-.why-copy h2{margin-top:22px;font-size:48px;line-height:57px}
-.ticks{position:relative;margin-top:72px;display:flex;flex-direction:column;gap:32px}
+.why-copy h2{margin-top:13px;font-size:48px;line-height:57px}
+.ticks{position:relative;margin-top:72px;max-width:543px;display:flex;flex-direction:column;gap:32px}
 /* the hairline threading the ticks together: Figma line at x 813, y 4662…4861 */
 .ticks::before{
   content:'';position:absolute;left:20px;top:36px;
@@ -292,7 +293,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   position:relative;
   min-height:258px;
   background:url('./img/union-1134.svg') center/100% 100% no-repeat;
-  padding:32px 31px 30px;
+  padding:32px 79px 30px 31px;
   display:flex;align-items:flex-end;justify-content:space-between;gap:40px;
 }
 .cert-copy{display:flex;flex-direction:column;align-items:flex-start;gap:109px}
@@ -303,8 +304,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* ============================== PROJECTS — y 5493…5924 ============================== */
 .projects{padding:0 0 112px}
 .projects-head{display:flex;align-items:flex-start;justify-content:space-between;gap:40px;margin-top:15px}
+.projects-head .arrows{margin-top:3px}
 .projects-head h2{font-size:48px;line-height:57px}
-.projects-rail{margin-top:11px;overflow:hidden}
+.projects-rail{margin-top:69px;overflow:hidden}
 .projects-track{
   display:flex;gap:24px;
   padding-left:max(var(--pad),calc(50vw - var(--wrap)/2));
@@ -331,11 +333,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   text-decoration:underline;text-underline-offset:3px;
 }
 .foot-contact a:hover{color:var(--white)}
-.foot-mark{position:absolute;left:0;right:0;top:178px;height:71px}
+.foot-mark{position:absolute;left:var(--pad);right:var(--pad);top:178px;height:71px}
 .foot-line{position:absolute;left:0;top:0;width:100%;height:71px}
-.foot-logo{position:absolute;right:0;top:41px;width:174px;height:32px}
+.foot-logo{position:absolute;right:29px;top:41px;width:174px;height:32px}
 .foot-legal{
-  position:absolute;left:0;bottom:0;display:flex;gap:46px;
+  position:absolute;left:var(--pad);bottom:22px;display:flex;gap:46px;
   font-size:14px;line-height:18px;font-weight:500;color:var(--beige);
 }
 .foot-legal a{text-decoration:underline;text-underline-offset:3px}
