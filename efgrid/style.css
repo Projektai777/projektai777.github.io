@@ -114,6 +114,26 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 }
 .nav-links a:hover{opacity:.7}
 .nav-links a.is-active{font-weight:600}
+/* Language switch — NOT in the Figma, added on request. Sized and coloured to
+   match the nav links so it reads as part of the menu, not a third CTA. */
+.lang{display:flex;align-items:center;gap:6px;padding:10px 4px;color:rgba(255,255,255,.55)}
+.lang button{
+  font-family:var(--font-body);font-size:14px;line-height:18px;font-weight:400;
+  color:rgba(255,255,255,.6);padding:0;transition:color .2s;
+}
+.lang button:hover{color:#fff}
+.lang button.is-on{color:#fff;font-weight:600}
+/* Editor shortcut — also not in the Figma. Kept quiet so it reads as a utility
+   link rather than a third call to action. */
+.nav-cms{
+  display:inline-flex;align-items:center;
+  padding:7px 12px;margin-left:2px;
+  border:1px solid rgba(255,255,255,.35);border-radius:4px;
+  font-size:12px;line-height:16px;font-weight:600;letter-spacing:.5px;
+  color:rgba(255,255,255,.75);text-decoration:none;
+  transition:color .2s,border-color .2s,background .2s;
+}
+.nav-cms:hover{color:#fff;border-color:#fff;background:rgba(255,255,255,.12)}
 .nav-cta{display:flex;align-items:center;gap:16px}
 .btn{
   display:inline-flex;align-items:center;gap:10px;
@@ -396,6 +416,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .nav-links a{padding:12px 0;font-size:17px}
   .nav-cta{gap:12px;padding-top:8px}
   .nav-cta .btn{flex:1;justify-content:center}
+  .lang{padding:12px 0;gap:10px;border-top:1px solid rgba(255,255,255,.18)}
+  .lang button{font-size:17px}
   .caps-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:none}
   .cap{min-height:440px}
   .cap-lead{min-height:340px;background-size:100% 100%}

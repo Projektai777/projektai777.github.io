@@ -13,6 +13,12 @@
        padding:14px 24px;background:#262626;color:#fff}
   .bar b{font-size:16px;font-weight:600}
   .bar .sp{margin-left:auto}
+  .langtabs{display:flex;gap:2px;background:rgba(255,255,255,.14);padding:3px;border-radius:8px}
+  .langtab{font:inherit;font-size:13px;font-weight:600;color:rgba(255,255,255,.7);
+           background:none;border:0;padding:6px 12px;border-radius:6px;cursor:pointer}
+  .langtab.is-on{background:#efeae4;color:#262626}
+  .missing{background:#fff8e6;border:1px solid #e0c98a;border-radius:12px;
+           padding:12px 16px;font-size:14px;color:#6b5312;margin:0 0 18px}
   .wrap{max-width:900px;margin:0 auto;padding:28px 24px 120px}
   h2{font-size:18px;margin:34px 0 12px;padding-bottom:8px;border-bottom:1px solid #d0c6bf}
   label{display:block;margin:0 0 18px}
@@ -64,8 +70,12 @@
 <div id="app" hidden>
   <div class="bar">
     <b>EF grid — turinio redaktorius</b>
+    <span class="langtabs" role="group" aria-label="Redaguojama kalba">
+      <button class="langtab is-on" data-edit="en">🇬🇧 Angliškai</button>
+      <button class="langtab" data-edit="lt">🇱🇹 Lietuviškai</button>
+    </span>
     <span class="sp"></span>
-    <a class="btn ghost sm" href="./index.html" target="_blank" rel="noopener">Peržiūrėti svetainę ↗</a>
+    <a class="btn ghost sm" id="preview" href="./index.html?lang=en" target="_blank" rel="noopener">Peržiūrėti svetainę ↗</a>
     <button class="btn ghost sm" id="pwbtn">Keisti slaptažodį</button>
   </div>
 
@@ -73,8 +83,10 @@
     <div class="hint">
       <b>Kaip tai veikia.</b> Keičiate tekstą ar nuotrauką → spaudžiate <b>Išsaugoti</b> → pakeitimai
       svetainėje matomi iškart (naršyklė gali rodyti seną versiją iki 1 min.).
-      Palikus lauką tuščią, grįžta pradinis tekstas iš dizaino.
-      Nuotraukos: iki 6 MB, JPG arba PNG.
+      Palikus lauką tuščią, grįžta pradinis tekstas.
+      Nuotraukos: iki 6 MB, JPG arba PNG — jos bendros abiem kalboms.
+      <br><b>Dvi kalbos.</b> Viršuje pasirinkite, kurią kalbą redaguojate. Pakeitę tekstą
+      angliškai, nepamirškite to paties ir lietuviškai — kitaip lankytojas pamatys seną variantą.
     </div>
     <div id="form"></div>
   </div>
@@ -91,7 +103,9 @@
 <script>
 (function () {
   'use strict';
-  var BASE = null, PASS = null, content = { text: {}, img: {} }, fields = [];
+  var BASE = null, PASS = null, fields = [];
+  var editLang = 'en';                                  // which language the form is editing
+  var content = { text: { en: {}, lt: {} }, img: {} };  // overrides, per language
 
   function el(id) { return document.getElementById(id); }
   function note(target, kind, text) {
@@ -125,7 +139,11 @@
             type: isImg ? 'img' : 'text',
             group: node.getAttribute('data-cms-group') || 'Kita',
             label: node.getAttribute('data-cms-label') || key,
-            def: isImg ? (node.getAttribute('src') || '') : (node.textContent || '').trim(),
+            // The element's own text is the English wording; data-lt is Lithuanian.
+            // Photos are shared across languages, so they have a single default.
+            def: isImg
+              ? { en: node.getAttribute('src') || '', lt: node.getAttribute('src') || '' }
+              : { en: (node.textContent || '').trim(), lt: node.getAttribute('data-lt') || '' },
           });
         });
         fields = out;
@@ -140,19 +158,25 @@
       g.items.push(f);
     });
 
-    var html = '';
+    // A Lithuanian field with no built-in wording would silently publish English.
+    var noLt = fields.filter(function (f) { return f.type === 'text' && !f.def.lt && !(content.text.lt || {})[f.key]; });
+    var html = editLang === 'lt' && noLt.length
+      ? '<div class="missing"><b>' + noLt.length + '</b> lauk' + (noLt.length === 1 ? 'as neturi' : 'ai (-ų) neturi') +
+        ' lietuviško teksto — kol jo nėra, svetainėje lietuviškai rodomas angliškas variantas.</div>'
+      : '';
+
     groups.forEach(function (g) {
       html += '<h2>' + g.name + '</h2>';
       g.items.forEach(function (f) {
-        var cur = f.type === 'img' ? (content.img[f.key] || '') : (content.text[f.key] || '');
-        var shown = cur || f.def;
+        var cur = f.type === 'img' ? (content.img[f.key] || '') : ((content.text[editLang] || {})[f.key] || '');
+        var shown = cur || f.def[editLang] || f.def.en;
         if (f.type === 'img') {
           html +=
             '<div class="imgrow" data-key="' + f.key + '">' +
-              '<img src="' + (cur || f.def) + '" alt="">' +
+              '<img src="' + (cur || f.def.en) + '" alt="">' +
               '<div class="meta">' +
                 '<div class="lab" style="font-size:13px;font-weight:600">' + f.label + '</div>' +
-                '<div class="key">' + (cur ? 'pakeista' : 'pradinė iš dizaino') + '</div>' +
+                '<div class="key">' + (cur ? 'pakeista' : 'pradinė iš dizaino') + ' · bendra abiem kalboms</div>' +
                 '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
                   '<button class="btn alt sm" data-up="' + f.key + '">Įkelti naują</button>' +
                   (cur ? '<button class="btn alt sm" data-clear="' + f.key + '">Grąžinti pradinę</button>' : '') +
@@ -186,10 +210,13 @@
       input.addEventListener('input', function () {
         var key = input.getAttribute('data-text');
         var def = fields.filter(function (f) { return f.key === key; })[0].def;
+        var bag = content.text[editLang] || (content.text[editLang] = {});
         var v = input.value;
-        if (!v.trim() || v === def) delete content.text[key];
-        else content.text[key] = v;
-        input.closest('label').classList.toggle('changed', key in content.text);
+        // Matching the built-in wording is not an edit — drop the override so the
+        // design's own text (and any later correction to it) keeps applying.
+        if (!v.trim() || v === (def[editLang] || def.en)) delete bag[key];
+        else bag[key] = v;
+        input.closest('label').classList.toggle('changed', key in bag);
         countChanges();
       });
     });
@@ -240,9 +267,33 @@
   }
 
   function countChanges() {
-    var n = Object.keys(content.text).length + Object.keys(content.img).length;
-    el('count').textContent = n ? plural(n) : 'Pakeitimų nėra';
+    var en = Object.keys(content.text.en || {}).length;
+    var lt = Object.keys(content.text.lt || {}).length;
+    var n = en + lt + Object.keys(content.img).length;
+    var detail = en && lt ? ' (EN ' + en + ', LT ' + lt + ')' : '';
+    el('count').textContent = n ? plural(n) + detail : 'Pakeitimų nėra';
     el('save').disabled = false;
+  }
+
+  function setEditLang(lang) {
+    editLang = lang;
+    document.querySelectorAll('.langtab').forEach(function (b) {
+      b.classList.toggle('is-on', b.getAttribute('data-edit') === lang);
+    });
+    el('preview').href = './index.html?lang=' + lang;
+    render();
+  }
+  document.querySelectorAll('.langtab').forEach(function (b) {
+    b.addEventListener('click', function () { setEditLang(b.getAttribute('data-edit')); });
+  });
+
+  // Accepts the stored blob in either shape: the current {text:{en,lt}} or the
+  // pre-i18n flat {text:{key:value}}, which was English.
+  function normalize(raw) {
+    var c = raw || {};
+    var text = c.text || {};
+    if (!text.en && !text.lt && Object.keys(text).length) text = { en: text };
+    return { text: { en: text.en || {}, lt: text.lt || {} }, img: c.img || {} };
   }
 
   // ---- login ------------------------------------------------------------
@@ -250,8 +301,7 @@
     PASS = pass;
     return api('/auth').then(function (res) {
       if (!res.ok) throw new Error(res.j.error || 'bad-pass');
-      content = res.j.content || { text: {}, img: {} };
-      content.text = content.text || {}; content.img = content.img || {};
+      content = normalize(res.j.content);
       sessionStorage.setItem('efgrid_cms', pass);
       el('gate').hidden = true; el('app').hidden = false;
       return loadFields().then(render);
@@ -284,7 +334,7 @@
     if (!confirm('Atstatyti turinį į ankstesnę išsaugotą versiją?')) return;
     api('/revert').then(function (res) {
       if (!res.ok) throw new Error(res.j.error || 'klaida');
-      content = res.j.content; content.text = content.text || {}; content.img = content.img || {};
+      content = normalize(res.j.content);
       render();
       note(el('msg'), 'ok', 'Atstatyta ankstesnė versija.');
     }).catch(function (e) {
