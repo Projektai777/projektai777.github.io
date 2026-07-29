@@ -79,7 +79,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hero-bg{
   position:absolute;
   left:-4.236%;top:-34%;
-  width:111.667%;height:134%;
+  width:111.667%;height:134%;max-width:none;
   object-fit:cover;object-position:center;
   z-index:-2;
 }
@@ -183,7 +183,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .band{position:relative;height:621px;overflow:hidden}
 .band img{
   position:absolute;left:0;top:-37.722%;
-  width:102.500%;height:158.474%;
+  width:102.500%;height:158.474%;max-width:none;
   object-fit:fill;
 }
 
@@ -289,7 +289,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .why-photo{position:relative;overflow:hidden}
 .why-photo img{
   position:absolute;left:-26.078%;top:0;
-  width:152.159%;height:108.699%;
+  width:152.159%;height:108.699%;max-width:none;
   object-fit:fill;
 }
 .why-copy{padding:120px 80px 0 74px}
@@ -350,7 +350,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ============================== FOOTER — y 6380…6812 ============================== */
 .foot{position:relative;min-height:432px;background:var(--ink);color:var(--white);padding-top:80px}
-.foot .wrap{position:relative;height:100%}
+/* A definite min-height, not height:100% — a percentage height needs a DEFINITE
+   parent, and once .foot became min-height the wrap collapsed and dragged the
+   absolutely-placed legal line up with it. 352 = the design's 432 minus the
+   80px padding-top; it still grows if a translation or CMS edit needs more. */
+.foot .wrap{position:relative;min-height:352px}
 .foot-grid{display:grid;grid-template-columns:549px 1fr;align-items:start}
 .foot h2{font-size:56px;line-height:67px;font-weight:400}
 .foot-contact{display:flex;flex-direction:column;gap:12px;padding-top:13px}
