@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="lt">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>EF grid — Medium &amp; High Voltage Grid Infrastructure</title>
-<meta name="description" content="EF grid specializes in medium and high voltage construction, delivering the infrastructure that connects energy projects to the national grid. Biruliškių g. 8, Kaunas.">
+<title>EF grid — vidutinės ir aukštos įtampos elektros tinklų infrastruktūra</title>
+<meta name="description" content="„EF grid“ specializuojasi vidutinės ir aukštos įtampos statyboje — statome infrastruktūrą, jungiančią energetikos projektus prie nacionalinio elektros tinklo. Biruliškių g. 8, Kaunas.">
 <meta name="theme-color" content="#262626">
 <link rel="alternate" hreflang="en" href="https://projektai777.github.io/efgrid/?lang=en">
 <link rel="alternate" hreflang="lt" href="https://projektai777.github.io/efgrid/?lang=lt">
@@ -22,10 +22,11 @@
   TWO SYSTEMS SHARE ONE SET OF ATTRIBUTES — keep them together on the element:
 
   data-cms="key"      the client may edit this text in /efgrid/admin.html
-  data-lt="…"         its Lithuanian wording; the element's own text is English
+  data-en="…"         its English wording; the element's own text is LITHUANIAN
+                      (the default language, so it renders with no flash and crawls correctly)
   data-cms-img="key"  the client may replace this photo (swaps src)
   data-cms-bg="key"   …as a CSS background (swaps the --bg var)
-  data-lt-aria="…"    Lithuanian for a screen-reader label
+     Lithuanian for a screen-reader label
   data-cms-group / -label   how the field is presented in the editor
 
   admin.html PARSES THIS FILE to build its form, so a new editable+translatable
@@ -34,7 +35,7 @@
 -->
 <body>
 
-<a class="skip" href="#about" data-cms="ui.skip" data-lt="Pereiti prie turinio" data-cms-group="Sąsaja" data-cms-label="Nuoroda „pereiti prie turinio“">Skip to content</a>
+<a class="skip" href="#about" data-cms="ui.skip" data-en="Skip to content" data-cms-group="Sąsaja" data-cms-label="Nuoroda „pereiti prie turinio“">Pereiti prie turinio</a>
 
 <!-- ============================== HERO ============================== -->
 <header class="hero" id="top">
@@ -48,24 +49,24 @@
       <img src="./img/ef-grid-logo-black-145.svg" alt="EF grid" width="174" height="32"
            data-cms-img="nav.logo" data-cms-group="Meniu" data-cms-label="Logotipas">
     </a>
-    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Menu" data-lt-aria="Meniu">
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Meniu" data-en-aria="Menu">
       <span></span><span></span><span></span>
     </button>
     <div class="nav-menu" id="nav-menu">
       <ul class="nav-links">
-        <li><a href="#about" class="is-active" data-cms="nav.about" data-lt="Apie mus" data-cms-group="Meniu" data-cms-label="Meniu: apie">About</a></li>
-        <li><a href="#services" data-cms="nav.services" data-lt="Paslaugos" data-cms-group="Meniu" data-cms-label="Meniu: paslaugos">Services</a></li>
-        <li><a href="#why" data-cms="nav.why" data-lt="Kodėl mes" data-cms-group="Meniu" data-cms-label="Meniu: kodėl mes">Why choose us</a></li>
-        <li><a href="#projects" data-cms="nav.projects" data-lt="Projektai" data-cms-group="Meniu" data-cms-label="Meniu: projektai">Projects</a></li>
-        <li><a href="#contacts" data-cms="nav.contacts" data-lt="Kontaktai" data-cms-group="Meniu" data-cms-label="Meniu: kontaktai">Contacts</a></li>
+        <li><a href="#about" class="is-active" data-cms="nav.about" data-en="About" data-cms-group="Meniu" data-cms-label="Meniu: apie">Apie mus</a></li>
+        <li><a href="#services" data-cms="nav.services" data-en="Services" data-cms-group="Meniu" data-cms-label="Meniu: paslaugos">Paslaugos</a></li>
+        <li><a href="#why" data-cms="nav.why" data-en="Why choose us" data-cms-group="Meniu" data-cms-label="Meniu: kodėl mes">Kodėl mes</a></li>
+        <li><a href="#projects" data-cms="nav.projects" data-en="Projects" data-cms-group="Meniu" data-cms-label="Meniu: projektai">Projektai</a></li>
+        <li><a href="#contacts" data-cms="nav.contacts" data-en="Contacts" data-cms-group="Meniu" data-cms-label="Meniu: kontaktai">Kontaktai</a></li>
       </ul>
 
       <!-- Language switch. NOT part of the Figma design — added on request.
            Deliberately understated so it doesn't compete with the two CTAs. -->
-      <div class="lang" role="group" aria-label="Language" data-lt-aria="Kalba">
-        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <div class="lang" role="group" aria-label="Kalba" data-en-aria="Language">
+        <button type="button" data-lang="lt" aria-pressed="true">LT</button>
         <span aria-hidden="true">/</span>
-        <button type="button" data-lang="lt" aria-pressed="false">LT</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
       </div>
 
       <!-- Editor shortcut. Publicly visible by request — the password still
@@ -74,26 +75,26 @@
          title="Turinio redaktorius / Content editor">CMS</a>
 
       <div class="nav-cta">
-        <a class="btn btn-ghost" href="#contacts"><span data-cms="nav.career" data-lt="Karjera" data-cms-group="Meniu" data-cms-label="Mygtukas: karjera">Career</span>
+        <a class="btn btn-ghost" href="#contacts"><span data-cms="nav.career" data-en="Career" data-cms-group="Meniu" data-cms-label="Mygtukas: karjera">Karjera</span>
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.2 8.8 8.8 1.2M3 1.2h5.8V7" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a class="btn btn-solid" href="#contacts" data-cms="nav.inquiry" data-lt="Pateikti užklausą" data-cms-group="Meniu" data-cms-label="Mygtukas: užklausa">Send Inquiry</a>
+        <a class="btn btn-solid" href="#contacts" data-cms="nav.inquiry" data-en="Send Inquiry" data-cms-group="Meniu" data-cms-label="Mygtukas: užklausa">Pateikti užklausą</a>
       </div>
     </div>
   </nav>
 
   <div class="hero-copy">
-    <h1 data-cms="hero.h1" data-lt="Statome kritinę tinklų infrastruktūrą" data-cms-group="Pirmas ekranas" data-cms-label="Pagrindinė antraštė">Building critical grid infrastructure</h1>
-    <p class="hero-sub" data-cms="hero.sub" data-lt="Vidutinės ir aukštos įtampos elektros tinklų infrastruktūra" data-cms-group="Pirmas ekranas" data-cms-label="Paantraštė">Medium &amp; High Voltage Grid Infrastructure</p>
+    <h1 data-cms="hero.h1" data-en="Building critical grid infrastructure" data-cms-group="Pirmas ekranas" data-cms-label="Pagrindinė antraštė">Statome kritinę tinklų infrastruktūrą</h1>
+    <p class="hero-sub" data-cms="hero.sub" data-en="Medium &amp; High Voltage Grid Infrastructure" data-cms-group="Pirmas ekranas" data-cms-label="Paantraštė">Vidutinės ir aukštos įtampos elektros tinklų infrastruktūra</p>
   </div>
-  <p class="hero-note" data-cms="hero.note" data-lt="„EF grid“ specializuojasi vidutinės ir aukštos įtampos statyboje — kuriame infrastruktūrą, jungiančią energetikos projektus prie nacionalinio elektros tinklo." data-cms-group="Pirmas ekranas" data-cms-label="Tekstas dešinėje">EF Grid specializes in medium and high voltage construction, delivering the infrastructure that connects energy projects to the national grid.</p>
+  <p class="hero-note" data-cms="hero.note" data-en="EF Grid specializes in medium and high voltage construction, delivering the infrastructure that connects energy projects to the national grid." data-cms-group="Pirmas ekranas" data-cms-label="Tekstas dešinėje">„EF grid“ specializuojasi vidutinės ir aukštos įtampos statyboje — kuriame infrastruktūrą, jungiančią energetikos projektus prie nacionalinio elektros tinklo.</p>
 </header>
 
 <!-- ============================== INTRO (dark) ============================== -->
 <section class="intro" id="about">
   <div class="wrap intro-grid">
-    <h2 class="intro-head" data-cms="intro.head" data-lt="Infrastruktūra, statoma dešimtmečiams. Kiekviena tinklo jungtis tampa kritinės nacionalinės infrastruktūros dalimi." data-cms-group="Įžanga" data-cms-label="Antraštė">Infrastructure built for decades. Every grid connection becomes part of critical national infrastructure.</h2>
-    <p class="intro-note" data-cms="intro.note" data-lt="Todėl telkiamės į tikslų darbų atlikimą, inžinerinę kokybę ir ilgalaikį patikimumą. Nuo statybos darbų iki įtampos padavimo statome infrastruktūrą, sukurtą saugiai veikti dešimtmečius." data-cms-group="Įžanga" data-cms-label="Tekstas dešinėje">That’s why we focus on precise execution, engineering quality and long-term reliability. From civil works to energization, we build infrastructure designed to perform safely for decades.</p>
+    <h2 class="intro-head" data-cms="intro.head" data-en="Infrastructure built for decades. Every grid connection becomes part of critical national infrastructure." data-cms-group="Įžanga" data-cms-label="Antraštė">Infrastruktūra, statoma dešimtmečiams. Kiekviena tinklo jungtis tampa kritinės nacionalinės infrastruktūros dalimi.</h2>
+    <p class="intro-note" data-cms="intro.note" data-en="That’s why we focus on precise execution, engineering quality and long-term reliability. From civil works to energization, we build infrastructure designed to perform safely for decades." data-cms-group="Įžanga" data-cms-label="Tekstas dešinėje">Todėl telkiamės į tikslų darbų atlikimą, inžinerinę kokybę ir ilgalaikį patikimumą. Nuo statybos darbų iki įtampos padavimo statome infrastruktūrą, sukurtą saugiai veikti dešimtmečius.</p>
   </div>
 </section>
 
@@ -109,37 +110,37 @@
   <div class="wrap caps-grid">
 
     <article class="cap cap-lead">
-      <span class="tag" data-cms="caps.tag" data-lt="PASLAUGOS" data-cms-group="Paslaugos" data-cms-label="Žymė">SERVICES</span>
-      <h2 data-cms="caps.title" data-lt="Pagrindinės kompetencijos" data-cms-group="Paslaugos" data-cms-label="Antraštė">Core capabilities</h2>
+      <span class="tag" data-cms="caps.tag" data-en="SERVICES" data-cms-group="Paslaugos" data-cms-label="Žymė">PASLAUGOS</span>
+      <h2 data-cms="caps.title" data-en="Core capabilities" data-cms-group="Paslaugos" data-cms-label="Antraštė">Pagrindinės kompetencijos</h2>
     </article>
 
     <article class="cap cap-inset">
-      <h3 data-cms="cap1.title" data-lt="Inžinerija" data-cms-group="Paslaugos" data-cms-label="1 kortelė — pavadinimas">Engineering</h3>
-      <p data-cms="cap1.sub" data-lt="Vidutinės ir aukštos įtampos projektavimas" data-cms-group="Paslaugos" data-cms-label="1 kortelė — paaiškinimas">MV/HV design</p>
+      <h3 data-cms="cap1.title" data-en="Engineering" data-cms-group="Paslaugos" data-cms-label="1 kortelė — pavadinimas">Inžinerija</h3>
+      <p data-cms="cap1.sub" data-en="MV/HV design" data-cms-group="Paslaugos" data-cms-label="1 kortelė — paaiškinimas">Vidutinės ir aukštos įtampos projektavimas</p>
       <img src="./img/image-199-bcddb9.webp" alt="Engineering drawing of a substation bay"
            data-cms-img="cap1.img" data-cms-group="Paslaugos" data-cms-label="1 kortelė — nuotrauka">
     </article>
 
     <article class="cap cap-fill is-substations" style="--bg:url('./img/rectangle-563-4116a5.webp')"
              data-cms-bg="cap2.img" data-cms-group="Paslaugos" data-cms-label="2 kortelė — nuotrauka">
-      <h3 data-cms="cap2.title" data-lt="Transformatorinės pastotės" data-cms-group="Paslaugos" data-cms-label="2 kortelė — pavadinimas">Substations</h3>
-      <p data-cms="cap2.sub" data-lt="Iki 400 kV" data-cms-group="Paslaugos" data-cms-label="2 kortelė — paaiškinimas">Up to 400 kV</p>
+      <h3 data-cms="cap2.title" data-en="Substations" data-cms-group="Paslaugos" data-cms-label="2 kortelė — pavadinimas">Transformatorinės pastotės</h3>
+      <p data-cms="cap2.sub" data-en="Up to 400 kV" data-cms-group="Paslaugos" data-cms-label="2 kortelė — paaiškinimas">Iki 400 kV</p>
     </article>
 
     <article class="cap cap-fill is-lines" style="--bg:url('./img/rectangle-561-cc2417.webp')"
              data-cms-bg="cap3.img" data-cms-group="Paslaugos" data-cms-label="3 kortelė — nuotrauka">
-      <h3 data-cms="cap3.title" data-lt="Oro ir kabelinės linijos" data-cms-group="Paslaugos" data-cms-label="3 kortelė — pavadinimas">Overhead &amp; Underground Lines</h3>
-      <p data-cms="cap3.sub" data-lt="Perdavimas" data-cms-group="Paslaugos" data-cms-label="3 kortelė — paaiškinimas">Transmission</p>
+      <h3 data-cms="cap3.title" data-en="Overhead &amp; Underground Lines" data-cms-group="Paslaugos" data-cms-label="3 kortelė — pavadinimas">Oro ir kabelinės linijos</h3>
+      <p data-cms="cap3.sub" data-en="Transmission" data-cms-group="Paslaugos" data-cms-label="3 kortelė — paaiškinimas">Perdavimas</p>
     </article>
 
     <article class="cap">
-      <h3 data-cms="cap4.title" data-lt="Relinė apsauga ir automatika" data-cms-group="Paslaugos" data-cms-label="4 kortelė — pavadinimas">Relay Protection &amp; Automation</h3>
-      <p data-cms="cap4.sub" data-lt="Bandymai ir paleidimas" data-cms-group="Paslaugos" data-cms-label="4 kortelė — paaiškinimas">Testing &amp; commissioning</p>
+      <h3 data-cms="cap4.title" data-en="Relay Protection &amp; Automation" data-cms-group="Paslaugos" data-cms-label="4 kortelė — pavadinimas">Relinė apsauga ir automatika</h3>
+      <p data-cms="cap4.sub" data-en="Testing &amp; commissioning" data-cms-group="Paslaugos" data-cms-label="4 kortelė — paaiškinimas">Bandymai ir paleidimas</p>
     </article>
 
     <article class="cap">
-      <h3 data-cms="cap5.title" data-lt="Eksploatacija ir priežiūra" data-cms-group="Paslaugos" data-cms-label="5 kortelė — pavadinimas">Operation &amp; Maintenance</h3>
-      <p data-cms="cap5.sub" data-lt="Patikros ir techninė pagalba" data-cms-group="Paslaugos" data-cms-label="5 kortelė — paaiškinimas">Inspections &amp; technical support</p>
+      <h3 data-cms="cap5.title" data-en="Operation &amp; Maintenance" data-cms-group="Paslaugos" data-cms-label="5 kortelė — pavadinimas">Eksploatacija ir priežiūra</h3>
+      <p data-cms="cap5.sub" data-en="Inspections &amp; technical support" data-cms-group="Paslaugos" data-cms-label="5 kortelė — paaiškinimas">Patikros ir techninė pagalba</p>
     </article>
 
   </div>
@@ -149,10 +150,10 @@
 <section class="sectors" id="sectors">
   <div class="wrap">
     <div class="sectors-head">
-      <h2 data-cms="sectors.head" data-lt="Kuriame pritaikytus sprendimus įvairiems energetikos pertvarkos klientams" data-cms-group="Sektoriai" data-cms-label="Antraštė">We deliver tailored solutions for diverse clients across the energy transition</h2>
+      <h2 data-cms="sectors.head" data-en="We deliver tailored solutions for diverse clients across the energy transition" data-cms-group="Sektoriai" data-cms-label="Antraštė">Kuriame pritaikytus sprendimus įvairiems energetikos pertvarkos klientams</h2>
       <div class="arrows">
-        <button class="arrow" data-track="sectors-track" data-dir="-1" aria-label="Previous" data-lt-aria="Ankstesnis"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M8 1 1.5 9 8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <button class="arrow" data-track="sectors-track" data-dir="1" aria-label="Next" data-lt-aria="Kitas"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M1 1 7.5 9 1 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="arrow" data-track="sectors-track" data-dir="-1" aria-label="Ankstesnis" data-en-aria="Previous"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M8 1 1.5 9 8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="arrow" data-track="sectors-track" data-dir="1" aria-label="Kitas" data-en-aria="Next"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M1 1 7.5 9 1 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
     </div>
 
@@ -161,9 +162,9 @@
       <div class="sectors-track" id="sectors-track">
         <article class="sector">
           <div class="sector-copy">
-            <span class="tag" data-cms="sector1.tag" data-lt="SEKTORIAI" data-cms-group="Sektoriai" data-cms-label="Žymė">SECTORS</span>
-            <h3 data-cms="sector1.title" data-lt="Pramoninio masto atsinaujinančios energetikos projektai" data-cms-group="Sektoriai" data-cms-label="Pavadinimas">Utility-Scale Renewable Energy Projects</h3>
-            <p data-cms="sector1.text" data-lt="Visapusiška saulės, vėjo ir hibridinių parkų integracija į elektros tinklą." data-cms-group="Sektoriai" data-cms-label="Aprašymas">Full grid integration of solar, wind, and hybrid parks.</p>
+            <span class="tag" data-cms="sector1.tag" data-en="SECTORS" data-cms-group="Sektoriai" data-cms-label="Žymė">SEKTORIAI</span>
+            <h3 data-cms="sector1.title" data-en="Utility-Scale Renewable Energy Projects" data-cms-group="Sektoriai" data-cms-label="Pavadinimas">Pramoninio masto atsinaujinančios energetikos projektai</h3>
+            <p data-cms="sector1.text" data-en="Full grid integration of solar, wind, and hybrid parks." data-cms-group="Sektoriai" data-cms-label="Aprašymas">Visapusiška saulės, vėjo ir hibridinių parkų integracija į elektros tinklą.</p>
           </div>
           <div class="sector-photo"><img src="./img/img-9870-2c1853.webp" alt="High voltage substation equipment"
                data-cms-img="sector1.img" data-cms-group="Sektoriai" data-cms-label="Nuotrauka"></div>
@@ -178,13 +179,13 @@
   <div class="why-photo"><img src="./img/img-2231-11706e.webp" alt="Crane lifting a power transformer into position"
        data-cms-img="why.img" data-cms-group="Kodėl mes" data-cms-label="Nuotrauka"></div>
   <div class="why-copy">
-    <span class="tag" data-cms="why.tag" data-lt="PRIVALUMAI" data-cms-group="Kodėl mes" data-cms-label="Žymė">STRENGTHS</span>
-    <h2 data-cms="why.title" data-lt="Kodėl rinktis „EF grid“" data-cms-group="Kodėl mes" data-cms-label="Antraštė">Why choose EF grid</h2>
+    <span class="tag" data-cms="why.tag" data-en="STRENGTHS" data-cms-group="Kodėl mes" data-cms-label="Žymė">PRIVALUMAI</span>
+    <h2 data-cms="why.title" data-en="Why choose EF grid" data-cms-group="Kodėl mes" data-cms-label="Antraštė">Kodėl rinktis „EF grid“</h2>
     <ul class="ticks">
-      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item1" data-lt="Patirtis kritinės svarbos elektros tinklo projektuose" data-cms-group="Kodėl mes" data-cms-label="1 punktas">Proven delivery in grid-critical projects</span></li>
-      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item2" data-lt="Atestuoti darbams iki 400 kV" data-cms-group="Kodėl mes" data-cms-label="2 punktas">Licensed up to 400 kV</span></li>
-      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item3" data-lt="Stipri veikla visoje Lietuvoje" data-cms-group="Kodėl mes" data-cms-label="3 punktas">Strong national footprint</span></li>
-      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item4" data-lt="Mumis pasitiki pirmaujantys vystytojai ir valstybės partneriai" data-cms-group="Kodėl mes" data-cms-label="4 punktas">Trusted by leading developers and state partners</span></li>
+      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item1" data-en="Proven delivery in grid-critical projects" data-cms-group="Kodėl mes" data-cms-label="1 punktas">Patirtis kritinės svarbos elektros tinklo projektuose</span></li>
+      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item2" data-en="Licensed up to 400 kV" data-cms-group="Kodėl mes" data-cms-label="2 punktas">Atestuoti darbams iki 400 kV</span></li>
+      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item3" data-en="Strong national footprint" data-cms-group="Kodėl mes" data-cms-label="3 punktas">Stipri veikla visoje Lietuvoje</span></li>
+      <li><span class="tick"><img src="./img/layer-1-1336.svg" alt="" aria-hidden="true"></span><span data-cms="why.item4" data-en="Trusted by leading developers and state partners" data-cms-group="Kodėl mes" data-cms-label="4 punktas">Mumis pasitiki pirmaujantys vystytojai ir valstybės partneriai</span></li>
     </ul>
   </div>
 </section>
@@ -194,8 +195,8 @@
   <div class="wrap">
     <div class="cert-card">
       <div class="cert-copy">
-        <span class="tag" data-cms="certs.tag" data-lt="ATITIKTIS" data-cms-group="Sertifikatai" data-cms-label="Žymė">COMPLIANCE</span>
-        <h2 data-cms="certs.title" data-lt="Sertifikatai" data-cms-group="Sertifikatai" data-cms-label="Antraštė">Certificates</h2>
+        <span class="tag" data-cms="certs.tag" data-en="COMPLIANCE" data-cms-group="Sertifikatai" data-cms-label="Žymė">ATITIKTIS</span>
+        <h2 data-cms="certs.title" data-en="Certificates" data-cms-group="Sertifikatai" data-cms-label="Antraštė">Sertifikatai</h2>
       </div>
       <div class="cert-row">
         <img src="./img/sertifikatas-1-1-1146.svg" alt="Certificate" width="124" height="124" data-cms-img="certs.img1" data-cms-group="Sertifikatai" data-cms-label="1 ženklas">
@@ -210,12 +211,12 @@
 <!-- ============================== PROJECTS ============================== -->
 <section class="projects" id="projects">
   <div class="wrap">
-    <span class="tag" data-cms="projects.tag" data-lt="PROJEKTAI" data-cms-group="Projektai" data-cms-label="Žymė">PROJECTS</span>
+    <span class="tag" data-cms="projects.tag" data-en="PROJECTS" data-cms-group="Projektai" data-cms-label="Žymė">PROJEKTAI</span>
     <div class="projects-head">
-      <h2 data-cms="projects.title" data-lt="Nuo pamatų iki tinklo" data-cms-group="Projektai" data-cms-label="Antraštė">From ground to grid</h2>
+      <h2 data-cms="projects.title" data-en="From ground to grid" data-cms-group="Projektai" data-cms-label="Antraštė">Nuo pamatų iki tinklo</h2>
       <div class="arrows">
-        <button class="arrow" data-track="projects-track" data-dir="-1" aria-label="Previous" data-lt-aria="Ankstesnis"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M8 1 1.5 9 8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <button class="arrow" data-track="projects-track" data-dir="1" aria-label="Next" data-lt-aria="Kitas"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M1 1 7.5 9 1 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="arrow" data-track="projects-track" data-dir="-1" aria-label="Ankstesnis" data-en-aria="Previous"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M8 1 1.5 9 8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="arrow" data-track="projects-track" data-dir="1" aria-label="Kitas" data-en-aria="Next"><svg width="9" height="18" viewBox="0 0 9 18" fill="none" aria-hidden="true"><path d="M1 1 7.5 9 1 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
     </div>
   </div>
@@ -230,7 +231,7 @@
 </section>
 
 <!-- ============================== MAP ============================== -->
-<section class="map" aria-label="EF grid location" data-lt-aria="EF grid vieta">
+<section class="map" aria-label="EF grid vieta" data-en-aria="EF grid location">
   <img class="map-img" src="./img/image-30-003b80.webp" alt="Map showing Biruliškių g. 8, Kaunas">
   <img class="map-pin" src="./img/vector-191.svg" alt="" aria-hidden="true">
 </section>
@@ -239,7 +240,7 @@
 <footer class="foot" id="contacts">
   <div class="wrap">
     <div class="foot-grid">
-      <h2 data-cms="foot.title" data-lt="Susisiekime" data-cms-group="Kontaktai" data-cms-label="Antraštė">Get in touch</h2>
+      <h2 data-cms="foot.title" data-en="Get in touch" data-cms-group="Kontaktai" data-cms-label="Antraštė">Susisiekime</h2>
       <ul class="foot-contact">
         <li><a href="mailto:info@efgrid.com" data-cms="foot.email" data-lt-same data-cms-group="Kontaktai" data-cms-label="El. paštas">info@efgrid.com</a></li>
         <li><a href="tel:+370600000000" data-cms="foot.phone" data-lt-same data-cms-group="Kontaktai" data-cms-label="Telefonas">+370 600 000000</a></li>
@@ -251,9 +252,9 @@
       <img class="foot-logo" src="./img/ef-grid-logo-black-145.svg" alt="EF grid" width="174" height="32">
     </div>
     <div class="foot-legal">
-      <span data-cms="foot.legal" data-lt="© 2025 EF grid visos teisės saugomos" data-cms-group="Kontaktai" data-cms-label="Autorinės teisės">© 2025 EF grid. All rights reserved.</span>
-      <a href="#" data-cms="foot.link1" data-lt="Privatumo politika" data-cms-group="Kontaktai" data-cms-label="1 nuoroda">Privacy policy</a>
-      <a href="#" data-cms="foot.link2" data-lt="Privatumo politika" data-cms-group="Kontaktai" data-cms-label="2 nuoroda">Privacy policy</a>
+      <span data-cms="foot.legal" data-en="© 2025 EF grid. All rights reserved." data-cms-group="Kontaktai" data-cms-label="Autorinės teisės">© 2025 EF grid visos teisės saugomos</span>
+      <a href="#" data-cms="foot.link1" data-en="Privacy policy" data-cms-group="Kontaktai" data-cms-label="1 nuoroda">Privatumo politika</a>
+      <a href="#" data-cms="foot.link2" data-en="Privacy policy" data-cms-group="Kontaktai" data-cms-label="2 nuoroda">Privatumo politika</a>
     </div>
   </div>
 </footer>
