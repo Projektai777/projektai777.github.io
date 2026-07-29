@@ -13,10 +13,16 @@
    ========================================================================== */
 
 :root{
-  --font-display:'Schibsted Grotesk','Plus Jakarta Sans',system-ui,sans-serif; /* stands in for Roobert */
+  /* Real design fonts FIRST, free stand-in behind them. Nothing here needs to
+     change when the web licence is bought — drop the .woff2 files into ./fonts/
+     and uncomment the fonts.css link in index.html and the real face takes over
+     everywhere. The -TRIAL name is listed so a machine with the designer's trial
+     installed (ours, theirs) previews the true design; visitors fall through to
+     the stand-in until the licensed files actually ship. */
+  --font-display:'Roobert Arabic VF','Roobert','Roobert Arabic VF-TRIAL','Schibsted Grotesk','Plus Jakarta Sans',system-ui,sans-serif;
   --font-body:'Plus Jakarta Sans',system-ui,sans-serif;
   --font-ui:'Inter','Plus Jakarta Sans',system-ui,sans-serif;
-  --font-label:'Plus Jakarta Sans',system-ui,sans-serif;                       /* stands in for Nekst   */
+  --font-label:'Nekst','Nekst-Medium','Plus Jakarta Sans',system-ui,sans-serif;
 
   --ink:#262626;
   --ink-2:#363636;

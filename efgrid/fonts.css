@@ -1,0 +1,39 @@
+/* ==========================================================================
+   EF grid — licensed design fonts.
+
+   NOT LINKED YET. index.html has the <link> commented out, so until the files
+   below actually exist the browser never requests them (no 404s) and the site
+   renders with the free stand-ins declared in style.css.
+
+   TO GO LIVE WITH THE REAL FONTS — two steps, no code changes:
+     1. drop the .woff2 files into public/efgrid/fonts/ with these exact names
+     2. uncomment the fonts.css <link> in index.html
+
+   The font stack in style.css already prefers these families, so nothing else
+   has to be touched.
+
+   IMPORTANT: a DESKTOP licence does not cover a website. These need a WEB /
+   webfont (self-hosting) licence, normally priced by monthly pageviews. Check
+   the licence actually covers embedding on efgrid.com before shipping.
+   Roobert is from Displaay Type Foundry; the file currently in the Figma is a
+   TRIAL build and must not be shipped.
+   ========================================================================== */
+
+/* Headings — Figma uses weights 400 and 500. A variable file covers both. */
+@font-face{
+  font-family:'Roobert Arabic VF';
+  src:url('./fonts/RoobertArabicVF.woff2') format('woff2-variations'),
+      url('./fonts/RoobertArabicVF.woff2') format('woff2');
+  font-weight:400 500;
+  font-style:normal;
+  font-display:swap;
+}
+
+/* Small caps labels — Figma uses Nekst-Medium (weight 500) only. */
+@font-face{
+  font-family:'Nekst';
+  src:url('./fonts/Nekst-Medium.woff2') format('woff2');
+  font-weight:500;
+  font-style:normal;
+  font-display:swap;
+}
