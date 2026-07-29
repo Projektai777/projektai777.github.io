@@ -1,0 +1,430 @@
+<!doctype html>
+<!-- © 2026 Lojalumas. DEMO svetainė UAB „Miesto Spauda" (miestospauda.lt, Klaipėda).
+     Klientas paprašė „kažko panašaus" į mreklama.lt — spaudos e-parduotuvė su
+     kainų skaičiuokle, krepšeliu, maketo įkėlimu ir užsakymo sekimu.
+     Pilnai statinė (index.html + style.css + app.js), be backend, 0 EUR hostingas.
+     Nuotraukos ir logotipas — kliento paties svetainės (img/), kainos PAVYZDINĖS. -->
+<html lang="lt" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#111318">
+<title>Miesto Spauda — spauda ir reklama Klaipėdoje (DEMO)</title>
+<meta name="description" content="Skaitmeninė ir plačiaformatė spauda, iškabos, automobilių apklijavimas, lazerio darbai. Klaipėda, Danės g. 6. Kaina — per 30 sekundžių.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Pereiti prie turinio</a>
+
+<!-- ── DEMO juosta (tikroje svetainėje jos nebūtų) ───────────────────────── -->
+<div class="demobar">
+  <b>DEMO</b> pavyzdinė svetainė „Miesto Spaudai" · kainos, atsiliepimai ir statistika — pavyzdiniai
+  <a href="#kontaktai">parengė Ignas →</a>
+</div>
+
+<header class="nav" id="nav">
+  <div class="nav-in wrap">
+    <a class="brand" href="#top" aria-label="Miesto Spauda">
+      <img src="./img/logo.png" alt="Miesto Spauda" width="150" height="53">
+    </a>
+
+    <nav class="nav-links" id="menu">
+      <a href="#produktai">Produktai</a>
+      <a href="#skaiciuokle">Kainos skaičiuoklė</a>
+      <a href="#darbai">Mūsų darbai</a>
+      <a href="#kaip">Kaip užsakyti</a>
+      <a href="#duk">DUK</a>
+      <a href="#kontaktai">Kontaktai</a>
+      <a class="nav-tel" href="tel:+37061426299">+370 614 26299</a>
+    </nav>
+
+    <div class="nav-act">
+      <button class="iconbtn" id="trackBtn" aria-label="Sekti užsakymą" title="Sekti užsakymą">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      </button>
+      <button class="iconbtn cart" id="cartBtn" aria-label="Krepšelis">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.4a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>
+        <span class="badge" id="cartCount" hidden>0</span>
+      </button>
+      <button class="burger" id="burger" aria-label="Meniu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ── HERO ───────────────────────────────────────────────────────────── -->
+  <section class="hero" id="top">
+    <div class="wrap hero-in">
+      <div class="hero-txt">
+        <span class="eyebrow"><i class="dot c"></i><i class="dot m"></i><i class="dot y"></i><i class="dot k"></i> Spaudos namai Klaipėdoje nuo 2008 m.</span>
+        <h1>Spauda ir reklama —<br>nuo vizitinės kortelės<br>iki apklijuoto automobilio</h1>
+        <p>Skaitmeninė ir plačiaformatė spauda, iškabos, šviesdėžės, lazerio darbai. Maketą patikriname nemokamai, standartinis terminas — 1–3 darbo dienos.</p>
+        <div class="hero-cta">
+          <a class="btn btn-lg" href="#skaiciuokle">Sužinoti kainą per 30 sek.</a>
+          <a class="btn btn-lg btn-ghost" href="#kontaktai">Klausti pasiūlymo</a>
+        </div>
+        <ul class="trust">
+          <li>✓ Kaina iškart, be laukimo</li>
+          <li>✓ Nemokama maketo patikra</li>
+          <li>✓ Atsiimkite Danės g. 6 arba pristatome</li>
+        </ul>
+      </div>
+      <div class="hero-art">
+        <figure class="ha ha1"><img src="./img/skaitm.jpg" alt="Skaitmeninė spauda" loading="eager"></figure>
+        <figure class="ha ha2"><img src="./img/auto.jpg" alt="Apklijuotas automobilis" loading="eager"></figure>
+        <figure class="ha ha3"><img src="./img/p1.jpg" alt="Vidaus iškaba iš plastiko raidžių" loading="lazy"></figure>
+        <div class="ha-badge"><b>1–3</b><span>darbo dienos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KATEGORIJOS ────────────────────────────────────────────────────── -->
+  <section class="cats" id="produktai">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Paslaugos</span>
+        <h2>Ką spausdiname</h2>
+        <p class="sec-sub">Penkios kryptys — visos vienoje vietoje, vienas vadybininkas, viena sąskaita.</p>
+      </div>
+
+      <div class="cat-grid">
+        <article class="cat" data-go="viz">
+          <div class="cat-ico" style="--a:var(--c)">🖨️</div>
+          <h3>Skaitmeninė spauda</h3>
+          <p>Vizitinės kortelės, skrajutės, lankstinukai, diplomai, kalendoriai, kvietimai, folijavimas.</p>
+          <span class="cat-from">nuo <b>0,04 €</b> / vnt.</span>
+        </article>
+        <article class="cat" data-go="plak">
+          <div class="cat-ico" style="--a:var(--m)">📐</div>
+          <h3>Plačiaformatė spauda</h3>
+          <p>Plakatai, lipdukai, tentai, spauda ant drobės, iki 1,6 m pločio, atsparu lauko sąlygoms.</p>
+          <span class="cat-from">nuo <b>9 €</b> / m²</span>
+        </article>
+        <article class="cat" data-go="auto">
+          <div class="cat-ico" style="--a:var(--y)">🚗</div>
+          <h3>Išorinė ir vidinė reklama</h3>
+          <p>Automobilių ir vitrinų apklijavimas, reklaminių stendų bei šviesdėžių gamyba ir montavimas.</p>
+          <span class="cat-from">skaičiuojame pagal projektą</span>
+        </article>
+        <article class="cat" data-go="kviet">
+          <div class="cat-ico" style="--a:var(--c)">💌</div>
+          <h3>Šventinė atributika</h3>
+          <p>Vestuviniai kvietimai, atvirukai, stalo kortelės, diplomai — su folija, reljefu, kaspinu.</p>
+          <span class="cat-from">nuo <b>0,85 €</b> / vnt.</span>
+        </article>
+        <article class="cat" data-go="puod">
+          <div class="cat-ico" style="--a:var(--m)">🎁</div>
+          <h3>Verslo dovanos ir lazeris</h3>
+          <p>Pjovimas ir graviravimas lazeriu, puodeliai, rašikliai, USB raktai su Jūsų logotipu.</p>
+          <span class="cat-from">nuo <b>3,90 €</b> / vnt.</span>
+        </article>
+        <article class="cat cat-help">
+          <div class="cat-ico" style="--a:var(--k)">💬</div>
+          <h3>Nerandate savo produkto?</h3>
+          <p>Parašykite, ko reikia — atsakysime su kaina tą pačią darbo dieną.</p>
+          <a class="btn btn-sm" href="#kontaktai">Klausti</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SKAIČIUOKLĖ ────────────────────────────────────────────────────── -->
+  <section class="calc" id="skaiciuokle">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Kaina realiu laiku</span>
+        <h2>Kainos skaičiuoklė</h2>
+        <p class="sec-sub">Pasirinkite produktą ir parametrus — kaina persiskaičiuoja iškart, be skambučio ir be laukimo.</p>
+      </div>
+
+      <div class="calc-box">
+        <div class="calc-form">
+          <label class="fld">
+            <span>Produktas</span>
+            <select id="cProd"></select>
+          </label>
+
+          <div class="fld">
+            <span>Kiekis</span>
+            <div class="chips" id="cQty"></div>
+            <input class="qty-in" type="number" id="cQtyIn" min="1" step="1" inputmode="numeric" aria-label="Kiekis">
+          </div>
+
+          <label class="fld" id="fSize">
+            <span>Dydis / formatas</span>
+            <select id="cSize"></select>
+          </label>
+
+          <label class="fld" id="fMat">
+            <span>Medžiaga</span>
+            <select id="cMat"></select>
+          </label>
+
+          <div class="fld" id="fSides">
+            <span>Spauda</span>
+            <div class="chips two">
+              <button class="chip" data-sides="1">Vienpusė</button>
+              <button class="chip on" data-sides="2">Dvipusė</button>
+            </div>
+          </div>
+
+          <div class="fld" id="fFin">
+            <span>Apdaila</span>
+            <div class="chips" id="cFin"></div>
+          </div>
+
+          <div class="fld">
+            <span>Terminas</span>
+            <div class="chips two">
+              <button class="chip on" data-rush="0">Standartinis</button>
+              <button class="chip" data-rush="1">Skubus (+40 %)</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="calc-out">
+          <div class="price-card">
+            <span class="po-label">Kaina su PVM</span>
+            <div class="price" id="cTotal">—</div>
+            <div class="po-row"><span>Vieneto kaina</span><b id="cUnit">—</b></div>
+            <div class="po-row"><span>Be PVM</span><b id="cNet">—</b></div>
+            <div class="po-row"><span>Pagaminsime iki</span><b id="cDate">—</b></div>
+            <div class="save" id="cSave" hidden></div>
+            <button class="btn btn-lg btn-block" id="cAdd">Į krepšelį</button>
+            <button class="btn btn-block btn-ghost" id="cAsk">Noriu tikslaus pasiūlymo</button>
+            <p class="po-note">Kainos pavyzdinės (demonstracinės). Realioje svetainėje čia veiktų Jūsų tikri įkainiai — atsiųskite kainoraštį ir suvesime.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TOP PREKĖS ─────────────────────────────────────────────────────── -->
+  <section class="tops">
+    <div class="wrap">
+      <div class="sec-head row-head">
+        <div>
+          <span class="label">Populiariausia</span>
+          <h2>Dažniausiai užsakoma</h2>
+        </div>
+        <div class="arrows" data-rail="topRail">
+          <button class="arr" data-dir="-1" aria-label="Atgal">‹</button>
+          <button class="arr" data-dir="1" aria-label="Pirmyn">›</button>
+        </div>
+      </div>
+    </div>
+    <div class="rail" id="topRail"></div>
+  </section>
+
+  <!-- ── KAIP UŽSAKYTI ──────────────────────────────────────────────────── -->
+  <section class="steps" id="kaip">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Procesas</span>
+        <h2>Kaip užsakyti</h2>
+        <p class="sec-sub">Keturi žingsniai. Maketo netekome? Paruošime — dizaino paslauga įskaičiuota į pasiūlymą.</p>
+      </div>
+      <ol class="stepgrid">
+        <li><b>1</b><h3>Pasirenkate produktą</h3><p>Skaičiuoklėje arba iš sąrašo — kainą matote iškart.</p></li>
+        <li><b>2</b><h3>Įkeliate maketą</h3><p>PDF, AI, CDR, JPG iki 100 MB. Patikriname nemokamai ir pranešame, jei kas netinka.</p></li>
+        <li><b>3</b><h3>Patvirtiname</h3><p>Atsiunčiame skaitmeninį pavyzdį (PDF) ir gamybos terminą. Spausdiname tik po Jūsų „gerai".</p></li>
+        <li><b>4</b><h3>Atsiimate arba pristatome</h3><p>Danės g. 6, Klaipėda — arba kurjeriu visoje Lietuvoje.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ── DARBAI ─────────────────────────────────────────────────────────── -->
+  <section class="works" id="darbai">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Portfolio</span>
+        <h2>Mūsų darbai</h2>
+        <p class="sec-sub">Tikros nuotraukos iš „Miesto Spaudos" svetainės — galutinėje versijoje čia bus Jūsų naujausi darbai.</p>
+      </div>
+      <div class="filters" id="wFilters">
+        <button class="chip on" data-f="all">Visi</button>
+        <button class="chip" data-f="spauda">Spauda</button>
+        <button class="chip" data-f="reklama">Reklama ir iškabos</button>
+        <button class="chip" data-f="lazer">Lazeris ir dovanos</button>
+        <button class="chip" data-f="sventes">Šventėms</button>
+      </div>
+      <div class="wgrid" id="wGrid"></div>
+    </div>
+  </section>
+
+  <!-- ── SKAIČIAI ───────────────────────────────────────────────────────── -->
+  <section class="numbers">
+    <div class="wrap ngrid">
+      <div><b data-num="17">0</b><span>metai spaudos rinkoje</span></div>
+      <div><b data-num="1600">0</b><span>m² spaudos per mėnesį</span></div>
+      <div><b data-num="1" data-suf="–3">0</b><span>darbo dienos gamybai</span></div>
+      <div><b data-num="98" data-suf=" %">0</b><span>užsakymų laiku</span></div>
+    </div>
+  </section>
+
+  <!-- ── ATSILIEPIMAI ───────────────────────────────────────────────────── -->
+  <section class="revs">
+    <div class="wrap">
+      <div class="sec-head"><span class="label">Klientai</span><h2>Ką sako klientai</h2>
+        <p class="sec-sub">Pavyzdiniai tekstai — realioje svetainėje čia įkeltume Jūsų tikrus Google atsiliepimus.</p>
+      </div>
+      <div class="revgrid">
+        <blockquote><p>Reikėjo vitrinos apklijavimo per savaitę — padarė per tris dienas ir dar pataisė mūsų maketą.</p><cite>Renata · prekybos salonas, Klaipėda</cite></blockquote>
+        <blockquote><p>Užsakome vizitines ir lankstinukus kas ketvirtį. Kaina aiški iš anksto, kokybė stabili.</p><cite>Tomas · statybų įmonė</cite></blockquote>
+        <blockquote><p>Vestuviniai kvietimai su folija atrodė geriau nei tikėjomės. Ačiū už kantrybę derinant.</p><cite>Ieva ir Mantas</cite></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DUK ────────────────────────────────────────────────────────────── -->
+  <section class="faq" id="duk">
+    <div class="wrap">
+      <div class="sec-head"><span class="label">DUK</span><h2>Dažniausi klausimai</h2></div>
+      <div class="acc" id="acc">
+        <details><summary>Kaip užsisakyti?</summary><p>Pasirinkite produktą skaičiuoklėje, įdėkite į krepšelį ir palikite kontaktus su maketu. Per kelias darbo valandas atsiunčiame patvirtinimą ir tikslų terminą. Jei patogiau — skambinkite <a href="tel:+37061426299">+370 614 26299</a>.</p></details>
+        <details><summary>Kiek trunka gamyba?</summary><p>Standartinis terminas — 1–3 darbo dienos nuo maketo patvirtinimo. Skubiems darbams taikome +40 % ir pagaminame kitą darbo dieną, o mažesnius darbus dažnai — tą pačią.</p></details>
+        <details><summary>Kokio formato maketą siųsti?</summary><p>Geriausia PDF su 3 mm apipjovimo laukais ir 300 dpi raiška, CMYK. Priimame ir AI, CDR, PSD, TIFF, JPG. Maketą patikriname nemokamai ir pranešame, jei reikia pataisymų.</p></details>
+        <details><summary>O jei maketo neturiu?</summary><p>Paruošime. Dizaino darbai skaičiuojami atskirai ir visada suderinami iš anksto — pasiūlyme matysite atskira eilute.</p></details>
+        <details><summary>Ar spausdinate mažus kiekius?</summary><p>Taip. Skaitmeninė spauda apsimoka jau nuo 50–100 vnt., o pavieniams darbams (drobė, plakatas, diplomas) minimalaus kiekio nėra.</p></details>
+        <details><summary>Ar pristatote už Klaipėdos ribų?</summary><p>Taip, siunčiame kurjeriu visoje Lietuvoje. Klaipėdoje užsakymą galite atsiimti Danės g. 6, 102 kab.</p></details>
+        <details><summary>Ar galiu matyti, kaip vyksta mano užsakymas?</summary><p>Taip — po užsakymo gaunate kodą (pvz. <code>MS-2481</code>). Įvedę jį viršuje esančiame paieškos mygtuke matysite būseną: priimta → maketas patikrintas → spausdinama → paruošta atsiėmimui.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KONTAKTAI ──────────────────────────────────────────────────────── -->
+  <section class="contact" id="kontaktai">
+    <div class="wrap">
+      <div class="sec-head"><span class="label">Kontaktai</span><h2>Susisiekime</h2></div>
+      <div class="cgrid">
+        <div class="cinfo">
+          <ul>
+            <li><span>Adresas</span><a href="https://maps.google.com/?q=Danės+g.+6,+Klaipėda" target="_blank" rel="noopener">Danės g. 6, 102 kab.<br>„Danės verslo centras", 92109 Klaipėda</a></li>
+            <li><span>Telefonas</span><a href="tel:+37061426299">+370 614 26299</a></li>
+            <li><span>El. paštas</span><a href="mailto:vadyba.miestospauda@gmail.com">vadyba.miestospauda@gmail.com</a></li>
+            <li><span>Darbo laikas</span>I–V 8:00–17:00</li>
+          </ul>
+          <div class="map">
+            <iframe title="Žemėlapis" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=21.1200%2C55.7040%2C21.1500%2C55.7180&amp;layer=mapnik&amp;marker=55.7108%2C21.1345"></iframe>
+          </div>
+        </div>
+
+        <form class="cform" id="cform">
+          <h3>Užklausa</h3>
+          <div class="row">
+            <label class="fld"><span>Vardas *</span><input name="name" required></label>
+            <label class="fld"><span>Telefonas *</span><input name="tel" type="tel" required></label>
+          </div>
+          <label class="fld"><span>El. paštas *</span><input name="email" type="email" required></label>
+          <label class="fld"><span>Ko reikia? *</span><textarea name="msg" rows="4" required placeholder="Pvz.: 500 vnt. vizitinių kortelių, dvipusė spauda, matinis laminavimas"></textarea></label>
+          <label class="file">
+            <input type="file" id="cFile" multiple>
+            <span class="file-face">📎 Prisegti maketą <i>(PDF, AI, CDR, JPG — iki 100 MB)</i></span>
+            <em id="cFileList"></em>
+          </label>
+          <button class="btn btn-lg btn-block" type="submit">Siųsti užklausą</button>
+          <p class="po-note">Demonstracinė forma — laiškas niekur neišsiunčiamas.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <div>
+        <img class="foot-logo" src="./img/logo.png" alt="Miesto Spauda" width="130" height="46">
+        <p>UAB „Miesto Spauda" · Danės g. 6, Klaipėda<br>Skaitmeninė ir plačiaformatė spauda, reklamos gamyba.</p>
+      </div>
+      <nav class="foot-nav">
+        <a href="#produktai">Produktai</a>
+        <a href="#skaiciuokle">Skaičiuoklė</a>
+        <a href="#darbai">Darbai</a>
+        <a href="#duk">DUK</a>
+        <a href="#kontaktai">Kontaktai</a>
+      </nav>
+      <small>© <span id="yr">2026</span> Miesto Spauda. Demonstracinė versija — parengė Ignas, projektai777.koduojam@gmail.com</small>
+    </div>
+  </footer>
+
+</main>
+
+<!-- ── KREPŠELIS ────────────────────────────────────────────────────────── -->
+<div class="scrim" id="scrim" hidden></div>
+
+<aside class="drawer" id="drawer" hidden aria-label="Krepšelis">
+  <header><h3>Krepšelis</h3><button class="x" id="drawerX" aria-label="Uždaryti">×</button></header>
+  <div class="drawer-body" id="cartList"></div>
+  <footer class="drawer-foot">
+    <div class="sum"><span>Iš viso su PVM</span><b id="cartTotal">0,00 €</b></div>
+    <button class="btn btn-lg btn-block" id="toOrder">Pateikti užsakymą</button>
+  </footer>
+</aside>
+
+<!-- ── MODALAI ──────────────────────────────────────────────────────────── -->
+<div class="modal" id="orderModal" hidden>
+  <div class="modal-in">
+    <button class="x" data-close aria-label="Uždaryti">×</button>
+    <h3>Užsakymo duomenys</h3>
+    <form id="orderForm">
+      <div class="row">
+        <label class="fld"><span>Vardas, pavardė *</span><input name="name" required></label>
+        <label class="fld"><span>Įmonė</span><input name="company"></label>
+      </div>
+      <div class="row">
+        <label class="fld"><span>El. paštas *</span><input name="email" type="email" required></label>
+        <label class="fld"><span>Telefonas *</span><input name="tel" type="tel" required></label>
+      </div>
+      <label class="fld"><span>Pastabos</span><textarea name="note" rows="2" placeholder="Pvz.: reikia iki penktadienio 12 val."></textarea></label>
+      <label class="file">
+        <input type="file" id="oFile" multiple>
+        <span class="file-face">📎 Įkelti maketą</span>
+        <em id="oFileList"></em>
+      </label>
+      <div class="pick">
+        <button type="button" class="chip on" data-deliv="pickup">Atsiimsiu Danės g. 6</button>
+        <button type="button" class="chip" data-deliv="courier">Kurjeriu (+4,90 €)</button>
+      </div>
+      <button class="btn btn-lg btn-block" type="submit">Patvirtinti užsakymą</button>
+      <p class="po-note">Demonstracija — jokie duomenys neišsiunčiami ir neįrašomi į serverį.</p>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="doneModal" hidden>
+  <div class="modal-in center">
+    <button class="x" data-close aria-label="Uždaryti">×</button>
+    <div class="tick">✓</div>
+    <h3>Užsakymas priimtas</h3>
+    <p>Jūsų užsakymo numeris</p>
+    <div class="code" id="doneCode">MS-0000</div>
+    <p class="po-note">Realioje sistemoje šiuo numeriu klientas seka gamybos būseną, o Jūs gaunate laišką su maketu. Išsaugokite numerį — jį galite iškart išbandyti paieškos mygtuke viršuje.</p>
+    <button class="btn btn-block" data-close>Gerai</button>
+  </div>
+</div>
+
+<div class="modal" id="trackModal" hidden>
+  <div class="modal-in">
+    <button class="x" data-close aria-label="Uždaryti">×</button>
+    <h3>Užsakymo sekimas</h3>
+    <label class="fld"><span>Užsakymo numeris</span><input id="trackIn" placeholder="MS-2481" autocomplete="off"></label>
+    <button class="btn btn-block" id="trackGo">Ieškoti</button>
+    <div id="trackOut"></div>
+  </div>
+</div>
+
+<div class="lightbox" id="lb" hidden>
+  <button class="x" id="lbX" aria-label="Uždaryti">×</button>
+  <img id="lbImg" alt="">
+  <span id="lbCap"></span>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="./app.js"></script>
+</body>
+</html>
