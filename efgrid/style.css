@@ -123,12 +123,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .nav-toggle span{display:block;height:2px;background:var(--white);border-radius:2px}
 
 /* --- hero copy: h1 at (80,388) 68/80, sub at (80,558) --- */
-.hero-copy{position:absolute;left:0;right:0;top:388px;z-index:2}
-.hero-copy>*{width:100%;max-width:calc(var(--wrap) + var(--pad)*2);margin:0 auto;padding:0 var(--pad)}
+.hero-copy{
+  position:absolute;left:0;right:0;top:388px;z-index:2;
+  width:100%;max-width:calc(var(--wrap) + var(--pad)*2);
+  margin:0 auto;padding:0 var(--pad);
+}
 .hero h1{
   font-size:68px;line-height:80px;font-weight:400;
   text-transform:uppercase;
-  max-width:calc(812px + var(--pad)*2);
+  max-width:812px;
 }
 .hero-sub{margin-top:10px;font-size:24px;line-height:32px;font-weight:400}
 /* right-hand note at (972,614), 345 wide -> 892px in from the 1280 content box */
@@ -144,13 +147,19 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .intro-grid{position:relative;height:100%}
 .intro-head{font-size:46px;line-height:48px;font-weight:400;max-width:872px}
 .intro-note{
-  position:absolute;left:879px;top:305px;width:372px;
+  position:absolute;left:959px;top:305px;width:372px;
   font-size:19px;line-height:26px;
 }
 
 /* ============================== FIELD BAND — y 1517…2138 ============================== */
-.band{height:621px;overflow:hidden}
-.band img{width:100%;height:100%;object-fit:cover}
+/* Figma scaleMode STRETCH with imageTransform [[.97561,0,0],[0,.63102,.23803]] —
+   i.e. show source x 0…97.6%, y 23.8…86.9%. Reproduced exactly below. */
+.band{position:relative;height:621px;overflow:hidden}
+.band img{
+  position:absolute;left:0;top:-37.722%;
+  width:102.500%;height:158.474%;
+  object-fit:fill;
+}
 
 /* ============================== CAPABILITIES — cards y 2191…3195 ============================== */
 .caps{position:relative;padding:53px 0 112px;background:var(--white)}
@@ -183,7 +192,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background:url('./img/union-179.svg') center/100% 100% no-repeat;
   border-radius:0;
   padding:34px 31px 40px;
-  display:flex;flex-direction:column;
+  display:flex;flex-direction:column;align-items:flex-start;
 }
 .cap-lead h2{
   margin-top:auto;
@@ -196,8 +205,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   width:calc(100% + 48px);margin-left:-24px;margin-top:35px;
   height:364px;object-fit:cover;border-radius:16px;
 }
-/* cards whose photo fills the whole card */
-.cap-fill{background:var(--bg) center/cover no-repeat,var(--white)}
+/* Cards whose photo fills the whole card. Figma stretches these with a crop
+   transform rather than a plain cover, so size/position are derived from it:
+   Rectangle 563 (Substations) x 23.0…83.3%, y 2.2…76.9%
+   Rectangle 561 (Lines)       x 47.0…94.8%, y -5.4…80.4%                    */
+.cap-fill{background:var(--bg) no-repeat,var(--white)}
+.cap-fill.is-substations{background-size:165.895% 133.788%;background-position:58.00% 8.58%}
+.cap-fill.is-lines{background-size:209.022% 116.549%;background-position:90.10% -38.23%}
 
 /* ============================== SECTORS — y 3419…4209 ============================== */
 .sectors{padding:112px 0 130px;background:var(--white)}
@@ -217,7 +231,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background:var(--white);border:1px solid var(--tan);border-radius:20px;
   overflow:hidden;
 }
-.sector-copy{padding:70px 61px 64px;display:flex;flex-direction:column}
+.sector-copy{padding:70px 61px 64px;display:flex;flex-direction:column;align-items:flex-start}
 .sector-copy h3{margin-top:auto;font-size:40px;line-height:48px;color:#000;max-width:472px}
 .sector-copy p{margin-top:31px;font-size:18px;line-height:23px;color:#000;max-width:312px}
 .sector-photo{margin:1px;border-radius:20px;overflow:hidden}
@@ -244,8 +258,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   height:672px;
   display:grid;grid-template-columns:720px 1fr;
 }
-.why-photo{overflow:hidden}
-.why-photo img{width:100%;height:100%;object-fit:cover}
+/* Figma STRETCH crop [[.65721,0,.17140],[0,.91998,0]] — source x 17.1…82.9%, y 0…92% */
+.why-photo{position:relative;overflow:hidden}
+.why-photo img{
+  position:absolute;left:-26.078%;top:0;
+  width:152.159%;height:108.699%;
+  object-fit:fill;
+}
 .why-copy{padding:120px 80px 0 74px}
 .why-copy h2{margin-top:22px;font-size:48px;line-height:57px}
 .ticks{position:relative;margin-top:72px;display:flex;flex-direction:column;gap:32px}
