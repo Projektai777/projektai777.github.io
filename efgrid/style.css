@@ -393,6 +393,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .caps-grid{grid-template-columns:repeat(2,1fr);grid-template-rows:none}
   .cap{min-height:440px}
   .cap-lead{min-height:340px;background-size:100% 100%}
+  /* the Figma crop is tuned to a 410x491 card; at phone widths the photo's own
+     white margin scales away, so guarantee the title still reads */
+  .cap-fill::before{
+    content:'';position:absolute;left:0;right:0;top:0;height:130px;
+    background:linear-gradient(180deg,#fff 45%,rgba(255,255,255,0) 100%);
+  }
+  .cap-fill h3,.cap-fill p{position:relative}
+  /* the notched outline stretches into a stray hairline once the card goes tall */
+  .cert-card{background:var(--white);border:1px solid var(--tan);border-radius:20px}
   .sectors-head,.projects-head{flex-direction:column;gap:24px}
   .sectors-head h2,.projects-head h2{font-size:clamp(28px,4.4vw,48px);line-height:1.18;max-width:none}
   .sector{grid-template-columns:1fr}
