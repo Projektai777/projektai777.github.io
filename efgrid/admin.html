@@ -4,19 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>EF grid — svetainės turinio redaktorius</title>
+<title>EF grid — turinio redaktorius</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box}
   body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#efeae4;color:#262626;line-height:1.5}
-  .bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  .bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
        padding:14px 24px;background:#262626;color:#fff}
   .bar b{font-size:16px;font-weight:600}
   .bar .sp{margin-left:auto}
+  .cap{font-size:12px;color:rgba(255,255,255,.55);margin-right:-6px}
   .langtabs{display:flex;gap:2px;background:rgba(255,255,255,.14);padding:3px;border-radius:8px}
   .langtab{font:inherit;font-size:13px;font-weight:600;color:rgba(255,255,255,.7);
            background:none;border:0;padding:6px 12px;border-radius:6px;cursor:pointer}
   .langtab.is-on{background:#efeae4;color:#262626}
+  .uilang{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,.55)}
+  .uilang button{font:inherit;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);
+                 background:none;border:0;padding:2px;cursor:pointer}
+  .uilang button.is-on{color:#fff;text-decoration:underline}
   .missing{background:#fff8e6;border:1px solid #e0c98a;border-radius:12px;
            padding:12px 16px;font-size:14px;color:#6b5312;margin:0 0 18px}
   .wrap{max-width:900px;margin:0 auto;padding:28px 24px 120px}
@@ -24,7 +29,7 @@
   label{display:block;margin:0 0 18px}
   label .lab{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
   label .key{font-weight:400;color:#8a7f77;font-size:12px}
-  input[type=text],textarea{width:100%;padding:10px 12px;font:inherit;font-size:15px;
+  input[type=text],input[type=password],textarea{width:100%;padding:10px 12px;font:inherit;font-size:15px;
        border:1px solid #d0c6bf;border-radius:8px;background:#fff;color:#262626}
   textarea{min-height:88px;resize:vertical}
   input:focus,textarea:focus{outline:2px solid #262626;outline-offset:1px}
@@ -39,10 +44,13 @@
   .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)}
   .btn:disabled{opacity:.45;cursor:default}
   .btn.sm{padding:7px 13px;font-size:13px}
-  .gate{max-width:380px;margin:14vh auto;padding:28px;background:#fff;border-radius:16px;
+  .gate{max-width:400px;margin:12vh auto;padding:28px;background:#fff;border-radius:16px;
        border:1px solid #d0c6bf}
   .gate h1{font-size:20px;margin:0 0 6px}
   .gate p{margin:0 0 18px;color:#6b625c;font-size:14px}
+  .gate .uilang{justify-content:flex-end;color:#8a7f77;margin-bottom:10px}
+  .gate .uilang button{color:#6b625c}
+  .gate .uilang button.is-on{color:#262626}
   .msg{padding:10px 14px;border-radius:8px;font-size:14px;margin-top:14px}
   .msg.err{background:#fdecea;color:#93231a}
   .msg.ok{background:#eaf7ee;color:#1a7f37}
@@ -59,44 +67,45 @@
 
 <!-- ===== login ===== -->
 <div id="gate" class="gate">
-  <h1>Svetainės redaktorius</h1>
-  <p>EF grid — įveskite slaptažodį.</p>
-  <input type="password" id="pass" placeholder="Slaptažodis" style="width:100%;padding:10px 12px;font:inherit;border:1px solid #d0c6bf;border-radius:8px">
-  <div style="margin-top:14px"><button class="btn" id="login">Prisijungti</button></div>
+  <div class="uilang" role="group">
+    <span data-ui="uiLangLabel"></span>
+    <button data-ui-lang="lt">LT</button><span>/</span><button data-ui-lang="en">EN</button>
+  </div>
+  <h1 data-ui="gateTitle"></h1>
+  <p data-ui="gateSub"></p>
+  <input type="password" id="pass">
+  <div style="margin-top:14px"><button class="btn" id="login" data-ui="signIn"></button></div>
   <div id="gate-msg"></div>
 </div>
 
 <!-- ===== editor ===== -->
 <div id="app" hidden>
   <div class="bar">
-    <b>EF grid — turinio redaktorius</b>
-    <span class="langtabs" role="group" aria-label="Redaguojama kalba">
-      <button class="langtab is-on" data-edit="lt">🇱🇹 Lietuviškai</button>
-      <button class="langtab" data-edit="en">🇬🇧 Angliškai</button>
+    <b data-ui="barTitle"></b>
+    <span class="cap" data-ui="editingContent"></span>
+    <span class="langtabs" role="group">
+      <button class="langtab is-on" data-edit="lt"><span data-ui="lithuanian"></span></button>
+      <button class="langtab" data-edit="en"><span data-ui="english"></span></button>
     </span>
     <span class="sp"></span>
-    <a class="btn ghost sm" id="preview" href="./index.html?lang=lt" target="_blank" rel="noopener">Peržiūrėti svetainę ↗</a>
-    <button class="btn ghost sm" id="pwbtn">Keisti slaptažodį</button>
+    <a class="btn ghost sm" id="preview" href="./index.html?lang=lt" target="_blank" rel="noopener" data-ui="preview"></a>
+    <button class="btn ghost sm" id="pwbtn" data-ui="changePass"></button>
+    <span class="uilang" role="group">
+      <span data-ui="uiLangLabel"></span>
+      <button data-ui-lang="lt">LT</button><span>/</span><button data-ui-lang="en">EN</button>
+    </span>
   </div>
 
   <div class="wrap">
-    <div class="hint">
-      <b>Kaip tai veikia.</b> Keičiate tekstą ar nuotrauką → spaudžiate <b>Išsaugoti</b> → pakeitimai
-      svetainėje matomi iškart (naršyklė gali rodyti seną versiją iki 1 min.).
-      Palikus lauką tuščią, grįžta pradinis tekstas.
-      Nuotraukos: iki 6 MB, JPG arba PNG — jos bendros abiem kalboms.
-      <br><b>Dvi kalbos.</b> Viršuje pasirinkite, kurią kalbą redaguojate. Pakeitę tekstą
-      lietuviškai, nepamirškite to paties ir angliškai — kitaip lankytojas pamatys seną variantą.
-      Numatytoji svetainės kalba — <b>lietuvių</b>.
-    </div>
+    <div class="hint" data-ui-html="hint"></div>
     <div id="form"></div>
   </div>
 
   <div class="foot">
-    <span class="count" id="count">Pakeitimų nėra</span>
+    <span class="count" id="count"></span>
     <span class="sp"></span>
-    <button class="btn alt" id="revert">Atstatyti ankstesnę versiją</button>
-    <button class="btn" id="save" disabled>Išsaugoti</button>
+    <button class="btn alt" id="revert" data-ui="revert"></button>
+    <button class="btn" id="save" data-ui="save" disabled></button>
   </div>
   <div id="msg" style="position:fixed;right:24px;bottom:78px"></div>
 </div>
@@ -104,14 +113,153 @@
 <script>
 (function () {
   'use strict';
+
+  // ==========================================================================
+  // Interface language. SEPARATE from the content language: `ui` is what the
+  // editor speaks to the person using it, `editLang` is which language of the
+  // website's text they are editing. An English-speaking editor must be guided
+  // in English even while editing the Lithuanian copy.
+  // Every visible string lives here — never hardcode one in the markup.
+  // ==========================================================================
+  var UI = {
+    lt: {
+      docTitle: 'EF grid — turinio redaktorius',
+      uiLangLabel: 'Sąsaja:',
+      gateTitle: 'Svetainės redaktorius',
+      gateSub: 'EF grid — įveskite slaptažodį.',
+      passPlaceholder: 'Slaptažodis',
+      signIn: 'Prisijungti',
+      badPass: 'Neteisingas slaptažodis.',
+      tooMany: 'Per daug bandymų. Palaukite 10 min.',
+      noServer: 'Nepavyko pasiekti serverio.',
+      barTitle: 'EF grid — turinio redaktorius',
+      editingContent: 'Redaguojamas turinys:',
+      lithuanian: '🇱🇹 Lietuviškai',
+      english: '🇬🇧 Angliškai',
+      preview: 'Peržiūrėti svetainę ↗',
+      changePass: 'Keisti slaptažodį',
+      hint:
+        '<b>Kaip tai veikia.</b> Keičiate tekstą ar nuotrauką → spaudžiate <b>Išsaugoti</b> → pakeitimai ' +
+        'svetainėje matomi iškart (naršyklė gali rodyti seną versiją iki 1 min.). Palikus lauką tuščią, ' +
+        'grįžta pradinis tekstas. Nuotraukos: iki 6 MB, JPG arba PNG — jos bendros abiem kalboms.' +
+        '<br><b>Dvi kalbos.</b> Viršuje pasirinkite, kurią kalbą redaguojate. Pakeitę tekstą lietuviškai, ' +
+        'nepamirškite to paties ir angliškai — kitaip lankytojas pamatys seną variantą. ' +
+        'Numatytoji svetainės kalba — <b>lietuvių</b>.',
+      noChanges: 'Pakeitimų nėra',
+      revert: 'Atstatyti ankstesnę versiją',
+      save: 'Išsaugoti',
+      saved: 'Išsaugota. Svetainė atnaujinta.',
+      saveFailed: 'Nepavyko išsaugoti: ',
+      uploading: 'Keliama…',
+      uploaded: 'Nuotrauka įkelta — nepamirškite išsaugoti.',
+      uploadFailed: 'Nepavyko įkelti: ',
+      tooBig: 'per didelis failas (max 6 MB)',
+      uploadNew: 'Įkelti naują',
+      restoreOriginal: 'Grąžinti pradinę',
+      changedTag: 'pakeista',
+      originalTag: 'pradinė iš dizaino',
+      sharedTag: 'bendra abiem kalboms',
+      revertConfirm: 'Atstatyti turinį į ankstesnę išsaugotą versiją?',
+      reverted: 'Atstatyta ankstesnė versija.',
+      noBackup: 'Ankstesnės versijos dar nėra.',
+      failed: 'Nepavyko: ',
+      passPrompt: 'Naujas slaptažodis (bent 8 simboliai).\nNuo šiol veiks tik jis — senasis nustos veikti.',
+      passTooShort: 'Per trumpas (bent 8 simboliai).',
+      passChanged: 'Slaptažodis pakeistas.',
+      missing: function (n, lang) {
+        return '<b>' + n + '</b> lauk' + (n === 1 ? 'as neturi' : 'ai (-ų) neturi') +
+          (lang === 'en' ? ' angliško' : ' lietuviško') + ' teksto — kol jo nėra, rodomas lietuviškas variantas.';
+      },
+      plural: function (n) {
+        var last = n % 10, teen = n % 100;
+        if (last === 1 && teen !== 11) return n + ' pakeitimas';
+        if (last >= 2 && last <= 9 && !(teen >= 11 && teen <= 19)) return n + ' pakeitimai';
+        return n + ' pakeitimų';
+      },
+    },
+    en: {
+      docTitle: 'EF grid — content editor',
+      uiLangLabel: 'Interface:',
+      gateTitle: 'Website editor',
+      gateSub: 'EF grid — enter the password.',
+      passPlaceholder: 'Password',
+      signIn: 'Sign in',
+      badPass: 'Wrong password.',
+      tooMany: 'Too many attempts. Please wait 10 minutes.',
+      noServer: 'Could not reach the server.',
+      barTitle: 'EF grid — content editor',
+      editingContent: 'Editing content in:',
+      lithuanian: '🇱🇹 Lithuanian',
+      english: '🇬🇧 English',
+      preview: 'Preview site ↗',
+      changePass: 'Change password',
+      hint:
+        '<b>How this works.</b> Change a text or a photo → press <b>Save</b> → the change is live ' +
+        'immediately (a browser may show the old version for up to a minute). Leave a field empty and ' +
+        'the original wording comes back. Photos: up to 6 MB, JPG or PNG — they are shared by both languages.' +
+        '<br><b>Two languages.</b> Choose above which language you are editing. After changing a text in ' +
+        'Lithuanian, remember to change it in English too — otherwise visitors see the old wording. ' +
+        'The site’s default language is <b>Lithuanian</b>.',
+      noChanges: 'No changes',
+      revert: 'Restore previous version',
+      save: 'Save',
+      saved: 'Saved. The site is updated.',
+      saveFailed: 'Could not save: ',
+      uploading: 'Uploading…',
+      uploaded: 'Photo uploaded — remember to save.',
+      uploadFailed: 'Upload failed: ',
+      tooBig: 'file too large (max 6 MB)',
+      uploadNew: 'Upload new',
+      restoreOriginal: 'Restore original',
+      changedTag: 'changed',
+      originalTag: 'original from the design',
+      sharedTag: 'shared by both languages',
+      revertConfirm: 'Restore the content to the previously saved version?',
+      reverted: 'Previous version restored.',
+      noBackup: 'There is no previous version yet.',
+      failed: 'Failed: ',
+      passPrompt: 'New password (at least 8 characters).\nFrom now on only this one works — the old one stops.',
+      passTooShort: 'Too short (at least 8 characters).',
+      passChanged: 'Password changed.',
+      missing: function (n, lang) {
+        return '<b>' + n + '</b> field' + (n === 1 ? ' has' : 's have') + ' no ' +
+          (lang === 'en' ? 'English' : 'Lithuanian') + ' wording — until then the Lithuanian is shown.';
+      },
+      plural: function (n) { return n + (n === 1 ? ' change' : ' changes'); },
+    },
+  };
+
   var BASE = null, PASS = null, fields = [];
-  var editLang = 'lt';                                  // which language the form is editing
+  var ui = 'lt';                                        // interface language
+  var editLang = 'lt';                                  // which language of the site's text is being edited
   var content = { text: { en: {}, lt: {} }, img: {} };  // overrides, per language
 
+  function T() { return UI[ui]; }
   function el(id) { return document.getElementById(id); }
   function note(target, kind, text) {
     target.innerHTML = '<div class="msg ' + kind + '">' + text + '</div>';
     if (kind === 'ok') setTimeout(function () { target.innerHTML = ''; }, 3500);
+  }
+
+  // ---- paint every interface string -------------------------------------
+  function paintUI() {
+    var t = T();
+    document.documentElement.lang = ui;
+    document.title = t.docTitle;
+    document.querySelectorAll('[data-ui]').forEach(function (n) { n.textContent = t[n.getAttribute('data-ui')]; });
+    document.querySelectorAll('[data-ui-html]').forEach(function (n) { n.innerHTML = t[n.getAttribute('data-ui-html')]; });
+    el('pass').placeholder = t.passPlaceholder;
+    document.querySelectorAll('[data-ui-lang]').forEach(function (b) {
+      b.classList.toggle('is-on', b.getAttribute('data-ui-lang') === ui);
+    });
+    if (fields.length) render();
+  }
+
+  function setUI(lang) {
+    if (lang === ui) return;
+    ui = lang;
+    try { localStorage.setItem('efgrid_cms_ui', lang); } catch (e) { /* private mode */ }
+    paintUI();
   }
 
   function api(path, body) {
@@ -138,11 +286,12 @@
           out.push({
             key: key,
             type: isImg ? 'img' : 'text',
-            group: node.getAttribute('data-cms-group') || 'Kita',
-            label: node.getAttribute('data-cms-label') || key,
-            // The element's own text is the LITHUANIAN wording (the default
-            // language); data-en carries the English. Photos are shared across
-            // languages, so they have a single default.
+            // group/label are the EDITOR's own wording, so they follow the
+            // interface language, not the content language.
+            group: { lt: node.getAttribute('data-cms-group') || 'Kita', en: node.getAttribute('data-cms-group-en') || node.getAttribute('data-cms-group') || 'Other' },
+            label: { lt: node.getAttribute('data-cms-label') || key, en: node.getAttribute('data-cms-label-en') || node.getAttribute('data-cms-label') || key },
+            // The element's own text is the LITHUANIAN wording (the site's
+            // default language); data-en carries the English. Photos are shared.
             def: isImg
               ? { en: node.getAttribute('src') || '', lt: node.getAttribute('src') || '' }
               : { lt: (node.textContent || '').trim(), en: node.getAttribute('data-en') || '' },
@@ -155,45 +304,49 @@
       });
   }
 
-  // The wording to show when there is no override. Lithuanian is the default
-  // language, so it is the last resort — a field with no English of its own
-  // (the shared contact details) must never render as an empty box.
+  // The wording to show when there is no override. Lithuanian is the site's
+  // default language, so it is the last resort — a field with no English of its
+  // own (the shared contact details) must never render as an empty box.
   function defaultFor(f, lang) {
     return f.def[lang] || f.def.lt || f.def.en || '';
   }
 
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
   function render() {
+    var t = T();
     var groups = [];
     fields.forEach(function (f) {
-      var g = groups.filter(function (x) { return x.name === f.group; })[0];
-      if (!g) { g = { name: f.group, items: [] }; groups.push(g); }
+      var name = f.group[ui];
+      var g = groups.filter(function (x) { return x.name === name; })[0];
+      if (!g) { g = { name: name, items: [] }; groups.push(g); }
       g.items.push(f);
     });
 
-    // A Lithuanian field with no built-in wording would silently publish English.
+    // A field with no wording in the language being edited would silently
+    // publish the other language.
     var gaps = fields.filter(function (f) {
       return f.type === 'text' && !f.same && !f.def[editLang] && !(content.text[editLang] || {})[f.key];
     });
-    var html = gaps.length
-      ? '<div class="missing"><b>' + gaps.length + '</b> lauk' + (gaps.length === 1 ? 'as neturi' : 'ai (-ų) neturi') +
-        (editLang === 'en' ? ' angliško' : ' lietuviško') + ' teksto — kol jo nėra, rodomas lietuviškas variantas.</div>'
-      : '';
+    var html = gaps.length ? '<div class="missing">' + t.missing(gaps.length, editLang) + '</div>' : '';
 
     groups.forEach(function (g) {
-      html += '<h2>' + g.name + '</h2>';
+      html += '<h2>' + escapeHtml(g.name) + '</h2>';
       g.items.forEach(function (f) {
         var cur = f.type === 'img' ? (content.img[f.key] || '') : ((content.text[editLang] || {})[f.key] || '');
         var shown = cur || defaultFor(f, editLang);
         if (f.type === 'img') {
           html +=
             '<div class="imgrow" data-key="' + f.key + '">' +
-              '<img src="' + (cur || f.def.en) + '" alt="">' +
+              '<img src="' + (cur || f.def.lt) + '" alt="">' +
               '<div class="meta">' +
-                '<div class="lab" style="font-size:13px;font-weight:600">' + f.label + '</div>' +
-                '<div class="key">' + (cur ? 'pakeista' : 'pradinė iš dizaino') + ' · bendra abiem kalboms</div>' +
+                '<div style="font-size:13px;font-weight:600">' + escapeHtml(f.label[ui]) + '</div>' +
+                '<div class="key">' + (cur ? t.changedTag : t.originalTag) + ' · ' + t.sharedTag + '</div>' +
                 '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
-                  '<button class="btn alt sm" data-up="' + f.key + '">Įkelti naują</button>' +
-                  (cur ? '<button class="btn alt sm" data-clear="' + f.key + '">Grąžinti pradinę</button>' : '') +
+                  '<button class="btn alt sm" data-up="' + f.key + '">' + t.uploadNew + '</button>' +
+                  (cur ? '<button class="btn alt sm" data-clear="' + f.key + '">' + t.restoreOriginal + '</button>' : '') +
                 '</div>' +
                 '<input type="file" accept="image/*" hidden data-file="' + f.key + '">' +
               '</div>' +
@@ -202,8 +355,8 @@
           var long = shown.length > 70;
           html +=
             '<label data-key="' + f.key + '">' +
-              '<span class="lab">' + f.label + ' <span class="key">' + f.key +
-                (f.same ? ' · bendra abiem kalboms' : '') + '</span></span>' +
+              '<span class="lab">' + escapeHtml(f.label[ui]) + ' <span class="key">' + f.key +
+                (f.same ? ' · ' + t.sharedTag : '') + '</span></span>' +
               (long
                 ? '<textarea data-text="' + f.key + '">' + escapeHtml(shown) + '</textarea>'
                 : '<input type="text" data-text="' + f.key + '" value="' + escapeHtml(shown) + '">') +
@@ -216,11 +369,9 @@
     countChanges();
   }
 
-  function escapeHtml(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
   function wire() {
+    var t = T();
+
     document.querySelectorAll('[data-text]').forEach(function (input) {
       input.addEventListener('input', function () {
         var key = input.getAttribute('data-text');
@@ -243,9 +394,7 @@
     });
 
     document.querySelectorAll('[data-up]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        btn.closest('.meta').querySelector('[data-file]').click();
-      });
+      btn.addEventListener('click', function () { btn.closest('.meta').querySelector('[data-file]').click(); });
     });
 
     document.querySelectorAll('[data-file]').forEach(function (input) {
@@ -255,17 +404,17 @@
         var key = input.getAttribute('data-file');
         var fd = new FormData();
         fd.append('pass', PASS); fd.append('key', key.replace(/\./g, '-')); fd.append('file', file);
-        note(el('msg'), 'ok', 'Keliama…');
+        note(el('msg'), 'ok', t.uploading);
         fetch(BASE + '/upload', { method: 'POST', body: fd })
           .then(function (r) { return r.json(); })
           .then(function (j) {
-            if (!j.ok) throw new Error(j.error || 'klaida');
+            if (!j.ok) throw new Error(j.error || 'error');
             content.img[key] = j.url;
             render();
-            note(el('msg'), 'ok', 'Nuotrauka įkelta — nepamirškite išsaugoti.');
+            note(el('msg'), 'ok', T().uploaded);
           })
           .catch(function (e) {
-            note(el('msg'), 'err', 'Nepavyko įkelti: ' + (e.message === 'too-big' ? 'per didelis failas (max 6 MB)' : e.message));
+            note(el('msg'), 'err', T().uploadFailed + (e.message === 'too-big' ? T().tooBig : e.message));
           });
       });
     });
@@ -278,15 +427,6 @@
     });
   }
 
-  // Lithuanian plurals: 1/21/31 -> pakeitimas, 2-9/22-29 -> pakeitimai,
-  // 0 and 11-19 (and every ...0) -> pakeitimų.
-  function plural(n) {
-    var last = n % 10, teen = n % 100;
-    if (last === 1 && teen !== 11) return n + ' pakeitimas';
-    if (last >= 2 && last <= 9 && !(teen >= 11 && teen <= 19)) return n + ' pakeitimai';
-    return n + ' pakeitimų';
-  }
-
   function countChanges() {
     var enBag = content.text.en || {}, ltBag = content.text.lt || {};
     // A shared field lives in both bags but is one edit — don't count it twice.
@@ -297,7 +437,7 @@
     var lt = Object.keys(ltBag).length;
     var n = en + lt + Object.keys(content.img).length;
     var detail = en && lt ? ' (EN ' + en + ', LT ' + lt + ')' : '';
-    el('count').textContent = n ? plural(n) + detail : 'Pakeitimų nėra';
+    el('count').textContent = n ? T().plural(n) + detail : T().noChanges;
     el('save').disabled = false;
   }
 
@@ -309,9 +449,6 @@
     el('preview').href = './index.html?lang=' + lang;
     render();
   }
-  document.querySelectorAll('.langtab').forEach(function (b) {
-    b.addEventListener('click', function () { setEditLang(b.getAttribute('data-edit')); });
-  });
 
   // Accepts the stored blob in either shape: the current {text:{en,lt}} or the
   // pre-i18n flat {text:{key:value}}, which was English.
@@ -330,6 +467,7 @@
       content = normalize(res.j.content);
       sessionStorage.setItem('efgrid_cms', pass);
       el('gate').hidden = true; el('app').hidden = false;
+      paintUI();
       return loadFields().then(render);
     });
   }
@@ -339,8 +477,7 @@
     if (!v) return;
     el('login').disabled = true;
     start(v).catch(function (e) {
-      note(el('gate-msg'), 'err',
-        e.message === 'too-many-tries' ? 'Per daug bandymų. Palaukite 10 min.' : 'Neteisingas slaptažodis.');
+      note(el('gate-msg'), 'err', e.message === 'too-many-tries' ? T().tooMany : T().badPass);
     }).finally(function () { el('login').disabled = false; });
   });
   el('pass').addEventListener('keydown', function (e) { if (e.key === 'Enter') el('login').click(); });
@@ -349,38 +486,52 @@
   el('save').addEventListener('click', function () {
     el('save').disabled = true;
     api('/save', { content: content }).then(function (res) {
-      if (!res.ok) throw new Error(res.j.error || 'klaida');
-      note(el('msg'), 'ok', 'Išsaugota. Svetainė atnaujinta.');
+      if (!res.ok) throw new Error(res.j.error || 'error');
+      note(el('msg'), 'ok', T().saved);
     }).catch(function (e) {
-      note(el('msg'), 'err', 'Nepavyko išsaugoti: ' + e.message);
+      note(el('msg'), 'err', T().saveFailed + e.message);
     }).finally(function () { el('save').disabled = false; });
   });
 
   el('revert').addEventListener('click', function () {
-    if (!confirm('Atstatyti turinį į ankstesnę išsaugotą versiją?')) return;
+    if (!confirm(T().revertConfirm)) return;
     api('/revert').then(function (res) {
-      if (!res.ok) throw new Error(res.j.error || 'klaida');
+      if (!res.ok) throw new Error(res.j.error || 'error');
       content = normalize(res.j.content);
       render();
-      note(el('msg'), 'ok', 'Atstatyta ankstesnė versija.');
+      note(el('msg'), 'ok', T().reverted);
     }).catch(function (e) {
-      note(el('msg'), 'err', e.message === 'no-backup' ? 'Ankstesnės versijos dar nėra.' : 'Nepavyko: ' + e.message);
+      note(el('msg'), 'err', e.message === 'no-backup' ? T().noBackup : T().failed + e.message);
     });
   });
 
   el('pwbtn').addEventListener('click', function () {
-    var next = prompt('Naujas slaptažodis (bent 8 simboliai).\nNuo šiol veiks tik jis — senasis nustos veikti.');
+    var next = prompt(T().passPrompt);
     if (!next) return;
     api('/setpass', { next: next }).then(function (res) {
-      if (!res.ok) throw new Error(res.j.error || 'klaida');
+      if (!res.ok) throw new Error(res.j.error || 'error');
       PASS = next; sessionStorage.setItem('efgrid_cms', next);
-      note(el('msg'), 'ok', 'Slaptažodis pakeistas.');
+      note(el('msg'), 'ok', T().passChanged);
     }).catch(function (e) {
-      note(el('msg'), 'err', e.message === 'too-short' ? 'Per trumpas (bent 8 simboliai).' : 'Nepavyko: ' + e.message);
+      note(el('msg'), 'err', e.message === 'too-short' ? T().passTooShort : T().failed + e.message);
     });
   });
 
+  document.querySelectorAll('.langtab').forEach(function (b) {
+    b.addEventListener('click', function () { setEditLang(b.getAttribute('data-edit')); });
+  });
+  document.querySelectorAll('[data-ui-lang]').forEach(function (b) {
+    b.addEventListener('click', function () { setUI(b.getAttribute('data-ui-lang')); });
+  });
+
   // ---- boot -------------------------------------------------------------
+  try {
+    var savedUI = localStorage.getItem('efgrid_cms_ui');
+    if (savedUI === 'lt' || savedUI === 'en') ui = savedUI;
+    else if ((navigator.language || '').toLowerCase().indexOf('lt') !== 0) ui = 'en';
+  } catch (e) { /* private mode */ }
+  paintUI();
+
   fetch('./cms-endpoint.json', { cache: 'no-cache' })
     .then(function (r) { return r.json(); })
     .then(function (cfg) {
@@ -388,9 +539,7 @@
       var remembered = sessionStorage.getItem('efgrid_cms');
       if (remembered) start(remembered).catch(function () { sessionStorage.removeItem('efgrid_cms'); });
     })
-    .catch(function () {
-      note(el('gate-msg'), 'err', 'Nepavyko pasiekti serverio.');
-    });
+    .catch(function () { note(el('gate-msg'), 'err', T().noServer); });
 })();
 </script>
 </body>
