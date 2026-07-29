@@ -206,11 +206,20 @@
   var elProd = $('#cProd'), elQty = $('#cQty'), elQtyIn = $('#cQtyIn'),
       elSize = $('#cSize'), elMat = $('#cMat'), elFin = $('#cFin');
 
-  PRODUCTS.forEach(function (p) {
-    var o = document.createElement('option');
-    o.value = p.id; o.textContent = p.name + ' — ' + p.cat;
-    elProd.appendChild(o);
-  });
+  // Grupuojame pagal kategoriją — trumpesnis tekstas telpa ir telefone.
+  (function () {
+    var groups = {};
+    PRODUCTS.forEach(function (p) {
+      if (!groups[p.cat]) {
+        groups[p.cat] = document.createElement('optgroup');
+        groups[p.cat].label = p.cat;
+        elProd.appendChild(groups[p.cat]);
+      }
+      var o = document.createElement('option');
+      o.value = p.id; o.textContent = p.name;
+      groups[p.cat].appendChild(o);
+    });
+  })();
 
   function fillSelect(el, arr) {
     el.innerHTML = '';
