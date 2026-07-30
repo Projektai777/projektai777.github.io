@@ -1,0 +1,640 @@
+<!doctype html>
+<!-- © 2026 Lojalumas. DEMO svetainė „V1P Diamond Clean" (v1p.lt, Vilnius).
+     Klientas parašė „prašau pateikite pavyzdžių" — tai pavyzdys, kaip jų valymo
+     paslaugos gali būti užsakomos internetu: kainos skaičiuoklė, laiko pasirinkimas,
+     užsakymas ir jo sekimas — be skambučio.
+     Pilnai statinė (index.html + style.css + app.js), be backend, 0 EUR hostingas.
+     Logotipas ir visos nuotraukos — paties kliento svetainės (img/).
+     ĮKAINIAI paimti iš kliento kainoraščio v1p.lt (be PVM); koeficientai — pavyzdiniai. -->
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b1226">
+<title>V1P Diamond Clean — valymo paslaugos Vilniuje ir visoje Lietuvoje (DEMO)</title>
+<meta name="description" content="Generalinis, periodinis ir postatybinis valymas, minkšti baldai, kilimai, langai. Kaina ir laikas — per 60 sekundžių, be skambučio. Dirbame 24/7.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1226'/%3E%3Cpath d='M16 5l9 7-9 15-9-15z' fill='%23a780e6'/%3E%3Cpath d='M16 5l9 7-9 5-9-5z' fill='%23f2dc8f'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Pereiti prie turinio</a>
+
+<!-- ── DEMO juosta (tikroje svetainėje jos nebūtų) ───────────────────────── -->
+<div class="demobar">
+  <b>DEMO</b> pavyzdinė svetainė „V1P Diamond Clean" · įkainiai iš Jūsų kainoraščio, atsiliepimai ir statistika — pavyzdiniai
+  <a href="#kontaktai">parengė Ignas →</a>
+</div>
+
+<header class="nav" id="nav">
+  <div class="nav-in wrap">
+    <a class="brand" href="#top" aria-label="V1P Diamond Clean — į viršų">
+      <img src="./img/logo.webp" alt="V1P Diamond Clean" width="200" height="24">
+    </a>
+
+    <nav class="nav-links" id="menu">
+      <a href="#paslaugos">Paslaugos</a>
+      <a href="#skaiciuokle">Kainos skaičiuoklė</a>
+      <a href="#darbai">Darbai</a>
+      <a href="#verslui">Verslui</a>
+      <a href="#duk">DUK</a>
+      <a href="#kontaktai">Kontaktai</a>
+      <a class="nav-tel" href="tel:+37063888555">📞 +370 638 88555</a>
+    </nav>
+
+    <div class="nav-act">
+      <button class="iconbtn" id="trackBtn" aria-label="Sekti užsakymą" title="Sekti užsakymą">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      </button>
+      <button class="burger" id="burger" aria-label="Meniu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ── HERO ───────────────────────────────────────────────────────────── -->
+  <section class="hero" id="top">
+    <img class="hero-bg" src="./img/hero.webp" alt="" aria-hidden="true">
+    <div class="wrap hero-in">
+      <div class="hero-txt">
+        <span class="eyebrow"><i class="pulse"></i> Dirbame 24 val. 7 dienas per savaitę</span>
+        <h1>Švara užsakoma<br>per 60 sekundžių —<br><em>be skambučio</em></h1>
+        <p>Generalinis, periodinis ir postatybinis valymas, minkšti baldai, kilimai, langai.
+           Pasirinkite paslaugą, pamatykite <b>tikslią kainą ir laisvą laiką iš karto</b> ir užsakykite.
+           Vilnius, Kaunas, Klaipėda, Šiauliai, Panevėžys, Alytus.</p>
+        <div class="hero-cta">
+          <a class="btn btn-lg" href="#skaiciuokle">Sužinoti kainą →</a>
+          <a class="btn btn-lg btn-ghost" href="tel:+37063888555">Skambinti 24/7</a>
+        </div>
+        <ul class="trust">
+          <li>✓ Kaina iškart, be laukimo</li>
+          <li>✓ Tik patikrinti darbuotojai</li>
+          <li>✓ Išvykstame bet kurią savaitės dieną</li>
+        </ul>
+      </div>
+
+      <aside class="hero-card">
+        <div class="hc-top"><span class="hc-lbl">Pavyzdys</span><span class="hc-rate">★ 5,0 Google</span></div>
+        <div class="hc-row"><span>Butas 62 m², generalinis valymas</span></div>
+        <div class="hc-price"><b id="hcPrice">165</b><span>€ su PVM</span></div>
+        <div class="hc-meta">≈ 2 val. 20 min · 2 specialistai · artimiausias laikas <b id="hcSlot">šiandien 16:00</b></div>
+        <a class="btn btn-block" href="#skaiciuokle">Skaičiuoti savo kainą</a>
+        <p class="hc-note">Klientas mato kainą pats — Jums nebereikia atsakinėti „kiek kainuos?" telefonu.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── JUOSTA ─────────────────────────────────────────────────────────── -->
+  <div class="strip">
+    <div class="wrap strip-in">
+      <div><b>24/7</b><span>išvykstame bet kada</span></div>
+      <div><b>6 miestai</b><span>Vilnius · Kaunas · Klaipėda · Šiauliai · Panevėžys · Alytus</span></div>
+      <div><b>★ 5,0</b><span>Google įvertinimas</span></div>
+      <div><b>Nuo 1,00 €/m²</b><span>periodinis valymas</span></div>
+    </div>
+  </div>
+
+  <!-- ── PASLAUGOS ──────────────────────────────────────────────────────── -->
+  <section class="svc" id="paslaugos">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Paslaugos</span>
+        <h2>Ką valome</h2>
+        <p class="sec-sub">Visos paslaugos iš Jūsų kainoraščio — su kaina, kurią klientas mato iš karto.</p>
+      </div>
+
+      <div class="svc-grid">
+        <article class="sv" data-tab="patalpos" data-svc="period">
+          <div class="sv-ico">🧽</div>
+          <h3>Periodinis valymas</h3>
+          <p>Reguliari butų, namų ir biurų priežiūra: grindys, virtuvė, sanitariniai mazgai, veidrodžiai, laiptai.</p>
+          <span class="sv-from">nuo <b>1,00 €</b>/m²</span>
+        </article>
+        <article class="sv" data-tab="patalpos" data-svc="gen">
+          <div class="sv-ico">✨</div>
+          <h3>Generalinis valymas</h3>
+          <p>Nuodugnus valymas nuo viršaus iki apačios — kai reikia, kad blizgėtų viskas, o ne tik paviršius.</p>
+          <span class="sv-from">nuo <b>2,20 €</b>/m²</span>
+        </article>
+        <article class="sv" data-tab="patalpos" data-svc="spec">
+          <div class="sv-ico">🧴</div>
+          <h3>Specialūs valymo darbai</h3>
+          <p>Giluminis WC, vonios ir dušo valymas, palangės, šviestuvai, spintelių fasadai, laiptinės.</p>
+          <span class="sv-from">nuo <b>3,50 €</b>/m²</span>
+        </article>
+        <article class="sv" data-tab="patalpos" data-svc="post">
+          <div class="sv-ico">🏗️</div>
+          <h3>Postatybinis valymas</h3>
+          <p>Po statybų ir remonto: statybinės dulkės, įmontuoti baldai, grindjuostės, durys, sienos pagal poreikį.</p>
+          <span class="sv-from">nuo <b>4,50 €</b>/m²</span>
+        </article>
+        <article class="sv" data-tab="baldai">
+          <div class="sv-ico">🛋️</div>
+          <h3>Minkštų baldų valymas</h3>
+          <p>Sofos, foteliai, kėdės, čiužiniai, lovų galvūgaliai — švelnios priemonės audiniui ir odai.</p>
+          <span class="sv-from">nuo <b>7,00 €</b>/vnt.</span>
+        </article>
+        <article class="sv" data-tab="baldai">
+          <div class="sv-ico">🧶</div>
+          <h3>Kilimų ir kilimėlių valymas</h3>
+          <p>Cheminis valymas su ekstrakcija, sunkiai išvalomos dėmės, kilimai atgauna spalvą ir minkštumą.</p>
+          <span class="sv-from">nuo <b>8,00 €</b>/m²</span>
+        </article>
+        <article class="sv" data-tab="langai">
+          <div class="sv-ico">🪟</div>
+          <h3>Langų valymas</h3>
+          <p>Stiklai, rėmai ir palangės. Kasdienis valymas nuo dulkių arba postatybinis su statybiniais likučiais.</p>
+          <span class="sv-from">nuo <b>8,00 €</b>/vnt.</span>
+        </article>
+        <article class="sv" data-tab="technika">
+          <div class="sv-ico">🍳</div>
+          <h3>Buitinės technikos valymas</h3>
+          <p>Orkaitė, šaldytuvas, gartraukis, indaplovė — išardomos dalys, nuriebalinama, dezinfekuojama.</p>
+          <span class="sv-from">nuo <b>50,00 €</b>/komplektas</span>
+        </article>
+      </div>
+      <p class="svc-note">Kainos be PVM, kaip Jūsų kainoraštyje. Paspaudę bet kurią kortelę pateksite į skaičiuoklę su ta paslauga.</p>
+    </div>
+  </section>
+
+  <!-- ── SKAIČIUOKLĖ ────────────────────────────────────────────────────── -->
+  <section class="calc" id="skaiciuokle">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Kaina realiu laiku</span>
+        <h2>Suskaičiuokite savo kainą</h2>
+        <p class="sec-sub">Pasirinkite paslaugas — suma, trukmė ir artimiausias laisvas laikas persiskaičiuoja iš karto.</p>
+      </div>
+
+      <div class="calc-grid">
+        <div class="calc-main">
+
+          <div class="tabs" role="tablist" aria-label="Paslaugų grupės">
+            <button class="tab is-on" role="tab" aria-selected="true" data-tab="patalpos">Patalpos</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="baldai">Baldai ir kilimai</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="langai">Langai</button>
+            <button class="tab" role="tab" aria-selected="false" data-tab="technika">Buitinė technika</button>
+          </div>
+
+          <!-- PATALPOS -->
+          <div class="pane" id="pane-patalpos" role="tabpanel">
+            <div class="fldset">
+              <span class="fl">Ką valome</span>
+              <div class="opts" id="svcOpts">
+                <label class="opt"><input type="radio" name="svc" value="period" checked><span class="opt-b"><b>Periodinis valymas</b><i>1,00 €/m²</i></span></label>
+                <label class="opt"><input type="radio" name="svc" value="gen"><span class="opt-b"><b>Generalinis valymas</b><i>2,20 €/m²</i></span></label>
+                <label class="opt"><input type="radio" name="svc" value="spec"><span class="opt-b"><b>Specialūs darbai</b><i>3,50 €/m²</i></span></label>
+                <label class="opt"><input type="radio" name="svc" value="post"><span class="opt-b"><b>Postatybinis valymas</b><i>4,50 €/m²</i></span></label>
+                <label class="opt"><input type="radio" name="svc" value="vask"><span class="opt-b"><b>Grindų vaškavimas</b><i>1,20 €/m²</i></span></label>
+              </div>
+            </div>
+
+            <div class="fldset">
+              <span class="fl">Objektas</span>
+              <div class="seg" id="objSeg">
+                <button class="sg is-on" data-obj="butas">Butas</button>
+                <button class="sg" data-obj="namas">Namas</button>
+                <button class="sg" data-obj="biuras">Biuras</button>
+                <button class="sg" data-obj="komerc">Komercinės patalpos</button>
+              </div>
+            </div>
+
+            <div class="fldset">
+              <span class="fl">Plotas <b id="areaOut">62 m²</b></span>
+              <div class="rangerow">
+                <input type="range" id="area" min="15" max="600" step="1" value="62">
+                <input type="number" id="areaNum" min="15" max="3000" step="1" value="62" aria-label="Plotas kvadratiniais metrais">
+                <span class="unit">m²</span>
+              </div>
+              <div class="chips" id="areaChips">
+                <button data-a="35">1 kamb. ~35 m²</button>
+                <button data-a="55">2 kamb. ~55 m²</button>
+                <button data-a="75">3 kamb. ~75 m²</button>
+                <button data-a="140">Namas ~140 m²</button>
+                <button data-a="300">Biuras ~300 m²</button>
+              </div>
+            </div>
+
+            <div class="fldset" id="freqSet">
+              <span class="fl">Kaip dažnai</span>
+              <div class="seg wrapseg" id="freqSeg">
+                <button class="sg is-on" data-f="1">Vienkartinis</button>
+                <button class="sg" data-f="0.95">Kas mėnesį <i>−5 %</i></button>
+                <button class="sg" data-f="0.9">Kas 2 sav. <i>−10 %</i></button>
+                <button class="sg" data-f="0.85">Kas savaitę <i>−15 %</i></button>
+                <button class="sg" data-f="0.8">2× per savaitę <i>−20 %</i></button>
+              </div>
+              <p class="hint">Reguliariems klientams — nuolaida ir tas pats specialistas. Sutartis nebūtina.</p>
+            </div>
+
+            <div class="fldset">
+              <span class="fl">Papildomai</span>
+              <label class="chk"><input type="checkbox" id="addUrgent"><span>Skubu — atvykti per 24 val. <i>+25 %</i></span></label>
+              <label class="chk"><input type="checkbox" id="addNight"><span>Naktį, savaitgalį ar per šventes <i>+20 %</i></span></label>
+              <label class="chk"><input type="checkbox" id="addEco"><span>Tik ekologiškos priemonės (vaikams ir gyvūnams saugu) <i>+8 %</i></span></label>
+            </div>
+
+            <button class="btn btn-add" id="addPatalpos">Pridėti į užsakymą</button>
+          </div>
+
+          <!-- BALDAI -->
+          <div class="pane" id="pane-baldai" role="tabpanel" hidden>
+            <p class="pane-lead">Pasirinkite kiekius — kaina skaičiuojama pagal Jūsų kainoraštį (be PVM).</p>
+            <div class="items" id="itemsBaldai"></div>
+          </div>
+
+          <!-- LANGAI -->
+          <div class="pane" id="pane-langai" role="tabpanel" hidden>
+            <div class="fldset">
+              <span class="fl">Valymo tipas</span>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="win" value="dust" checked><span class="opt-b"><b>Langų valymas nuo dulkių</b><i>9,00 €/vnt.</i></span></label>
+                <label class="opt"><input type="radio" name="win" value="post"><span class="opt-b"><b>Postatybinis langų valymas</b><i>20,00 €/vnt.</i></span></label>
+              </div>
+            </div>
+            <div class="fldset">
+              <span class="fl">Kiek langų</span>
+              <div class="qtyrow">
+                <button class="qb" data-win="-1" aria-label="Mažiau">−</button>
+                <input type="number" id="winQty" value="6" min="1" max="200" aria-label="Langų skaičius">
+                <button class="qb" data-win="1" aria-label="Daugiau">+</button>
+                <span class="unit">vnt.</span>
+              </div>
+              <p class="hint">Į kainą įskaičiuoti rėmai ir palangės. Kaina sutartinė — galutinę patvirtiname vietoje.</p>
+            </div>
+            <div class="fldset">
+              <span class="fl">Aukštas</span>
+              <div class="seg" id="winFloor">
+                <button class="sg is-on" data-k="1">1–2 aukštas</button>
+                <button class="sg" data-k="1.15">3–5 aukštas <i>+15 %</i></button>
+                <button class="sg" data-k="1.35">Aukščiau <i>+35 %</i></button>
+              </div>
+            </div>
+            <button class="btn btn-add" id="addLangai">Pridėti į užsakymą</button>
+          </div>
+
+          <!-- TECHNIKA -->
+          <div class="pane" id="pane-technika" role="tabpanel" hidden>
+            <p class="pane-lead">Išardome, nuriebaliname ir dezinfekuojame. Visas komplektas — <b>50 €</b> vietoj 80 €.</p>
+            <div class="items items-4" id="itemsTechnika"></div>
+            <div class="tech-sum" id="techSum" hidden></div>
+            <button class="btn btn-add" id="addTechnika">Pridėti į užsakymą</button>
+          </div>
+
+          <p class="calc-note">
+            Įkainiai paimti iš Jūsų kainoraščio <b>v1p.lt</b> (be PVM). Dažnumo, skubos ir aukšto koeficientai —
+            <b>pavyzdiniai</b>: tikroje svetainėje įrašomi Jūsų sutarti skaičiai, o skaičiuoklės logika lieka ta pati.
+          </p>
+        </div>
+
+        <!-- SUVESTINĖ -->
+        <aside class="sum" id="sumPanel">
+          <div class="sum-in">
+            <h3>Mano užsakymas</h3>
+            <div class="sum-list" id="sumList"><p class="sum-empty">Kol kas tuščia — pasirinkite paslaugą kairėje.</p></div>
+            <div class="sum-tot">
+              <div class="st"><span>Suma be PVM</span><b id="sumNet">0,00 €</b></div>
+              <div class="st"><span>PVM 21 %</span><b id="sumVat">0,00 €</b></div>
+              <div class="st st-big"><span>Iš viso</span><b id="sumTot">0,00 €</b></div>
+            </div>
+            <div class="sum-meta" id="sumMeta" hidden></div>
+            <button class="btn btn-block" id="toOrder" disabled>Pasirinkti laiką →</button>
+            <p class="sum-note">Minimalus užsakymas — 45 € be PVM. Apmokėjimas po darbų: grynais, kortele arba sąskaita faktūra.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DARBAI ─────────────────────────────────────────────────────────── -->
+  <section class="works" id="darbai">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Mūsų darbai</span>
+        <h2>Rezultatas, kurį matote</h2>
+        <p class="sec-sub">Nuotraukos iš Jūsų svetainės. Tikroje svetainėje kiekvienas objektas turėtų „prieš / po" porą.</p>
+      </div>
+
+      <!-- prieš / po -->
+      <div class="ba" id="ba">
+        <div class="ba-img">
+          <img src="./img/g2.webp" alt="Svetainė po valymo" width="1140" height="1080">
+          <div class="ba-before" id="baBefore"><img src="./img/g2.webp" alt="Ta pati svetainė prieš valymą" aria-hidden="true"></div>
+          <span class="ba-tag ba-tag-l">PRIEŠ</span>
+          <span class="ba-tag ba-tag-r">PO</span>
+          <div class="ba-handle" id="baHandle" role="slider" tabindex="0" aria-label="Palyginimo slankiklis" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><i></i></div>
+        </div>
+        <p class="ba-note">Slinkite pele arba pirštu. <b>Iliustracija:</b> kairė pusė — ta pati nuotrauka su „nešvarumo" filtru; tikroje svetainėje čia būtų realios Jūsų „prieš" nuotraukos.</p>
+      </div>
+
+      <div class="wfilter" id="wfilter">
+        <button class="is-on" data-f="all">Viskas</button>
+        <button data-f="patalpos">Patalpos</button>
+        <button data-f="baldai">Baldai ir kilimai</button>
+        <button data-f="langai">Langai</button>
+      </div>
+
+      <div class="gal" id="gal">
+        <figure data-f="patalpos"><img src="./img/g2.webp" alt="Svetainė po generalinio valymo" loading="lazy" width="1140" height="1080"><figcaption>Generalinis valymas · svetainė</figcaption></figure>
+        <figure data-f="baldai"><img src="./img/g3.webp" alt="Klasikinė sofa po minkštų baldų valymo" loading="lazy" width="1140" height="1080"><figcaption>Minkštų baldų valymas</figcaption></figure>
+        <figure data-f="langai"><img src="./img/langai.webp" alt="Namo langai po valymo" loading="lazy" width="1140" height="1080"><figcaption>Langų valymas · privatus namas</figcaption></figure>
+        <figure data-f="patalpos"><img src="./img/val.webp" alt="Vonios kambarys po specialių valymo darbų" loading="lazy" width="1080" height="675"><figcaption>Sanitarinių mazgų giluminis valymas</figcaption></figure>
+        <figure data-f="baldai"><img src="./img/baldai.webp" alt="Kampinė sofa prieš ir po valymo" loading="lazy" width="540" height="255"><figcaption>Kampinė sofa · prieš ir po</figcaption></figure>
+        <figure data-f="patalpos"><img src="./img/g1.webp" alt="Biuro kilimas po valymo" loading="lazy" width="1080" height="713"><figcaption>Biuro kilimų priežiūra</figcaption></figure>
+        <figure data-f="baldai"><img src="./img/g4.webp" alt="Sofa ir marmurinės grindys po valymo" loading="lazy" width="1140" height="1080"><figcaption>Baldai ir grindys · po valymo</figcaption></figure>
+        <figure data-f="langai"><img src="./img/g5.webp" alt="Stiklo konstrukcijos po postatybinio valymo" loading="lazy" width="1080" height="543"><figcaption>Postatybinis stiklo valymas</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KAIP VYKSTA ────────────────────────────────────────────────────── -->
+  <section class="how" id="kaip">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Kaip vyksta</span>
+        <h2>Nuo užsakymo iki švaros — 4 žingsniai</h2>
+      </div>
+      <ol class="steps">
+        <li><span class="n">1</span><h3>Suskaičiuojate kainą</h3><p>Pasirenkate paslaugą ir plotą — sumą matote iš karto, be laukimo ir be skambučio.</p></li>
+        <li><span class="n">2</span><h3>Pasirenkate laiką</h3><p>Kalendoriuje matote laisvus langus. Reikia šiandien? Dirbame 24/7.</p></li>
+        <li><span class="n">3</span><h3>Atvyksta brigada</h3><p>Tik patikrinti darbuotojai su savo įranga ir priemonėmis. Gaunate SMS, kai išvyksta.</p></li>
+        <li><span class="n">4</span><h3>Priimate darbą</h3><p>Apžiūrite kartu. Mokate po darbų — grynais, kortele arba sąskaita faktūra.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ── VERSLUI ────────────────────────────────────────────────────────── -->
+  <section class="b2b" id="verslui">
+    <div class="wrap b2b-in">
+      <div class="b2b-txt">
+        <span class="label">Verslui</span>
+        <h2>Objektų priežiūra pagal sutartį</h2>
+        <p>Biurai, verslo centrai, viešbučiai ir maitinimo įstaigos, gamybinės patalpos, kultūros ir ugdymo objektai,
+           sveikatingumo centrai, autoservisai. Fiksuotas mėnesio mokestis, priskirta komanda, viena sąskaita faktūra.</p>
+        <ul class="ticks">
+          <li>Grafikas pagal Jus — nuo 1 iki 7 kartų per savaitę, taip pat naktimis</li>
+          <li>Tie patys patikrinti darbuotojai, o ne kas kartą nauji</li>
+          <li>Priemonės ir įranga — mūsų; higienos reikmenų papildymas pagal poreikį</li>
+          <li>Atsakingas vadybininkas ir mėnesio ataskaita</li>
+        </ul>
+        <div class="b2b-cta">
+          <a class="btn" href="#kontaktai">Gauti komercinį pasiūlymą</a>
+          <a class="btn btn-ghost" href="#skaiciuokle">Preliminari kaina per 60 sek.</a>
+        </div>
+      </div>
+      <div class="b2b-art">
+        <img src="./img/g1.webp" alt="Išvalytas biuro plotas" loading="lazy" width="1080" height="713">
+        <div class="b2b-badge"><b>nuo 1,00 €</b><span>už m² be PVM</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KODĖL MUS ──────────────────────────────────────────────────────── -->
+  <section class="why">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Mūsų privalumai</span>
+        <h2>Kodėl renkasi mus</h2>
+      </div>
+      <div class="why-grid">
+        <article><div class="w-ico">🛡️</div><h3>Tik patikrinti darbuotojai</h3><p>Komanda iš patyrusių ir kruopščių specialistų. Kiekvienas darbuotojas apmokytas ir patikrintas — įleidžiate į namus žmogų, už kurį atsakome.</p></article>
+        <article><div class="w-ico">⚡</div><h3>Greitas atsakymas</h3><p>Užklausas priimame visą parą ir visada užtikriname specialisto prieinamumą. Sprendimą pritaikome pagal Jūsų poreikį, o ne pagal šabloną.</p></article>
+        <article><div class="w-ico">🕒</div><h3>Išvykimas bet kurią dieną</h3><p>Dirbame 24 valandas 7 dienas per savaitę — įskaitant naktis, savaitgalius ir šventes. Jums nereikia derintis prie mūsų darbo laiko.</p></article>
+        <article><div class="w-ico">💎</div><h3>Profesionali įranga</h3><p>Ekstrakcinis valymas, aukščiausios kokybės priemonės ir šiuolaikiška technika — rezultatas, kurio buitinėmis priemonėmis nepasieksite.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ATSILIEPIMAI ───────────────────────────────────────────────────── -->
+  <section class="revs" id="atsiliepimai">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Atsiliepimai</span>
+        <h2>Ką sako klientai</h2>
+        <p class="sec-sub">Google įvertinimas — <b>5,0 ★</b>. Žemiau esantys tekstai <b>pavyzdiniai</b>; tikroje svetainėje čia įsikeltų realūs Jūsų Google atsiliepimai.</p>
+      </div>
+      <div class="rev-grid">
+        <blockquote><div class="stars">★★★★★</div><p>Po remonto atrodė, kad dulkės niekada nesibaigs. Brigada atvažiavo šeštadienį, per pusdienį butas buvo tuščias nuo statybinių likučių. Langai — kaip nauji.</p><cite>Rūta · Vilnius · postatybinis valymas</cite></blockquote>
+        <blockquote><div class="stars">★★★★★</div><p>Kampinė sofa po dvejų metų su vaikais atrodė beviltiškai. Grįžo spalva, dingo kvapas. Kaina buvo tiksliai tokia, kokią pasakė iš anksto.</p><cite>Mindaugas · Kaunas · minkštų baldų valymas</cite></blockquote>
+        <blockquote><div class="stars">★★★★★</div><p>Biurą valo kas savaitę jau pusmetį. Ateina tie patys žmonės, nereikia nieko aiškinti iš naujo. Sąskaita viena, klausimų nekyla.</p><cite>Ilona · biuro administratorė · periodinė priežiūra</cite></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KARJERA ────────────────────────────────────────────────────────── -->
+  <section class="job" id="karjera">
+    <div class="wrap job-in">
+      <div class="job-txt">
+        <span class="label">Karjera</span>
+        <h2>Ieškome geriausių valymo amato meistrų</h2>
+        <p>Kasdieniai valymo darbai apgyvendinimo ir maitinimo įstaigose, autoservisuose, gamybinėse bendrovėse,
+           kultūros objektuose, sveikatingumo centruose, ugdymo įstaigose ir verslo centruose.</p>
+        <ul class="ticks">
+          <li>Visada laiku mokamas darbo užmokestis</li>
+          <li>Galimybė užsidirbti papildomai</li>
+          <li>Patogi darbo vieta šalia namų</li>
+          <li>Patirtis — privalumas, bet motyvuotus apmokome</li>
+        </ul>
+        <p class="hint">Šiandien kandidatai turi rašyti el. paštu ir siųsti CV. Anketa užpildoma per 30 sekundžių telefone — tiek kandidatų atsakote daugiau.</p>
+      </div>
+      <form class="job-form" id="jobForm" novalidate>
+        <h3>Pildyti anketą</h3>
+        <label class="fld"><span>Vardas</span><input name="jname" required autocomplete="name"></label>
+        <label class="fld"><span>Telefonas</span><input name="jphone" required inputmode="tel" placeholder="+370 6.." autocomplete="tel"></label>
+        <label class="fld"><span>Miestas</span>
+          <select name="jcity"><option>Vilnius</option><option>Kaunas</option><option>Klaipėda</option><option>Šiauliai</option><option>Panevėžys</option><option>Alytus</option></select>
+        </label>
+        <label class="fld"><span>Valymo patirtis</span>
+          <select name="jexp"><option>Neturiu, bet noriu išmokti</option><option>Iki 1 metų</option><option>1–3 metai</option><option>Daugiau nei 3 metai</option></select>
+        </label>
+        <button class="btn btn-block" type="submit">Siųsti anketą</button>
+        <p class="mini">Demonstracinė forma — duomenys niekur nesiunčiami.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ── DUK ────────────────────────────────────────────────────────────── -->
+  <section class="faq" id="duk">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">DUK</span>
+        <h2>Dažniausi klausimai</h2>
+      </div>
+      <div class="faq-grid">
+        <div>
+          <details open><summary>Ar kaina skaičiuoklėje galutinė?</summary><p>Taip, jei plotas ir paslauga nurodyti teisingai. Jei atvykę matome, kad darbų apimtis kitokia (pvz. daug sunkiai išvalomų dėmių), apie pasikeitimą pranešame <b>prieš pradėdami</b> — niekada po darbų.</p></details>
+          <details><summary>Ar reikia būti namuose?</summary><p>Ne. Dauguma klientų palieka raktus arba įleidžia kaimyną. Pabaigę atrakinta nepaliekame, o darbo pabaigą patvirtiname nuotraukomis.</p></details>
+          <details><summary>Ar priemonės saugios vaikams ir gyvūnams?</summary><p>Naudojame profesionalias sertifikuotas priemones. Skaičiuoklėje galite pasirinkti <b>tik ekologiškas priemones</b> — tada valome be aštrių kvapų ir chloro.</p></details>
+          <details><summary>Kiek užtrunka valymas?</summary><p>Preliminarią trukmę matote skaičiuoklėje. Butas 60 m²: periodinis ~1,5 val., generalinis ~3 val., postatybinis ~5 val. Dirbame po du, tad realus laikas trumpesnis.</p></details>
+        </div>
+        <div>
+          <details><summary>Ar dirbate savaitgaliais ir naktimis?</summary><p>Taip — 24 valandas 7 dienas per savaitę. Biurus dažniausiai valome po darbo valandų, kad netrukdytume.</p></details>
+          <details><summary>Kaip atsiskaityti?</summary><p>Po darbų: grynais, kortele arba sąskaita faktūra įmonei (mokėjimo terminas iki 14 d.). Avanso neprašome.</p></details>
+          <details><summary>Ar galiu matyti, kaip vyksta mano užsakymas?</summary><p>Taip. Po užsakymo gaunate kodą (pvz. <code>V1P-2481</code>). Įvedę jį viršuje esančiame paieškos mygtuke matysite būseną: priimta → priskirta brigada → pakeliui → valome → atlikta.</p></details>
+          <details><summary>Kokiuose miestuose dirbate?</summary><p>Vilniuje, Kaune, Klaipėdoje, Šiauliuose, Panevėžyje ir Alytuje. Dėl kitų vietovių susitarkime individualiai — išvažiuojame į visą Lietuvą.</p></details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KONTAKTAI ──────────────────────────────────────────────────────── -->
+  <section class="cts" id="kontaktai">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Kontaktai</span>
+        <h2>Švara ir komfortas — mūsų kredo</h2>
+        <p class="sec-sub">Užpildykite formą arba skambinkite bet kuriuo paros metu.</p>
+      </div>
+
+      <div class="cts-grid">
+        <div class="cts-info">
+          <a class="ci" href="tel:+37063888555"><span class="ci-i">📞</span><b>+370 638 88555</b><i>Visą parą, 7 dienas per savaitę</i></a>
+          <a class="ci" href="mailto:info@v1p.lt"><span class="ci-i">✉️</span><b>info@v1p.lt</b><i>Atsakome tą pačią dieną</i></a>
+          <div class="ci"><span class="ci-i">📍</span><b>Musninkų g. 22, Vilnius</b><i>07182 Vilniaus m. sav.</i></div>
+          <div class="ci"><span class="ci-i">🕒</span><b>I–VII: 00:00–24:00</b><i>Dirbame be poilsio dienų</i></div>
+          <div class="map">
+            <iframe title="V1P Diamond Clean žemėlapyje" loading="lazy"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=25.2232%2C55.7098%2C25.2532%2C55.7218&amp;layer=mapnik&amp;marker=55.7158%2C25.2382"></iframe>
+          </div>
+          <p class="rekv">V1P Diamond Clean · I.V. 1243637 · PVM mokėtojo kodas LT100015908613</p>
+        </div>
+
+        <form class="cts-form" id="askForm" novalidate>
+          <h3>Užklausa</h3>
+          <div class="two">
+            <label class="fld"><span>Vardas</span><input name="name" required autocomplete="name"></label>
+            <label class="fld"><span>Telefonas</span><input name="phone" required inputmode="tel" placeholder="+370 6.." autocomplete="tel"></label>
+          </div>
+          <label class="fld"><span>El. paštas <i>(nebūtina)</i></span><input name="email" type="email" autocomplete="email"></label>
+          <label class="fld"><span>Kokios paslaugos reikia</span>
+            <select name="svc">
+              <option>Periodinis valymas</option><option>Generalinis valymas</option><option>Specialūs valymo darbai</option>
+              <option>Postatybinis valymas</option><option>Minkštų baldų valymas</option><option>Kilimų valymas</option>
+              <option>Langų valymas</option><option>Buitinės technikos valymas</option><option>Objektų priežiūra (verslui)</option>
+            </select>
+          </label>
+          <label class="fld"><span>Trumpai apie objektą</span><textarea name="msg" rows="3" placeholder="Pvz.: 3 kambarių butas 75 m², Žirmūnuose, reikia po remonto"></textarea></label>
+          <button class="btn btn-block" type="submit">Siųsti užklausą</button>
+          <p class="mini">Demonstracinė forma — duomenys niekur nesiunčiami. Tikroje svetainėje užklausa keliauja į info@v1p.lt ir į Jūsų CRM.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div class="foot-brand">
+      <img src="./img/logo.webp" alt="V1P Diamond Clean" width="200" height="24" loading="lazy">
+      <p>Profesionalios valymo paslaugos Vilniuje ir visoje Lietuvoje. Dirbame 24/7.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Paslaugos</h4>
+      <a href="#skaiciuokle">Periodinis valymas</a><a href="#skaiciuokle">Generalinis valymas</a>
+      <a href="#skaiciuokle">Postatybinis valymas</a><a href="#skaiciuokle">Minkšti baldai ir kilimai</a>
+      <a href="#skaiciuokle">Langų valymas</a><a href="#verslui">Objektų priežiūra</a>
+    </div>
+    <div class="foot-col">
+      <h4>Miestai</h4>
+      <span>Vilnius</span><span>Kaunas</span><span>Klaipėda</span><span>Šiauliai</span><span>Panevėžys</span><span>Alytus</span>
+    </div>
+    <div class="foot-col">
+      <h4>Kontaktai</h4>
+      <a href="tel:+37063888555">+370 638 88555</a>
+      <a href="mailto:info@v1p.lt">info@v1p.lt</a>
+      <span>Musninkų g. 22, Vilnius</span>
+      <a href="#karjera">Karjera — ieškome meistrų</a>
+    </div>
+  </div>
+  <div class="wrap foot-btm">
+    <span>© 2026 V1P Diamond Clean. Visos teisės saugomos.</span>
+    <span class="foot-demo">Pavyzdinę svetainę parengė <b>Ignas</b> · <a href="mailto:projektai777.koduojam@gmail.com">projektai777.koduojam@gmail.com</a></span>
+  </div>
+</footer>
+
+<!-- ── mobili juosta su suma ─────────────────────────────────────────────── -->
+<div class="mbar" id="mbar" hidden>
+  <div><b id="mbarTot">0,00 €</b><span id="mbarCnt">0 paslaugos</span></div>
+  <button class="btn" id="mbarBtn">Peržiūrėti</button>
+</div>
+
+<!-- ── modalai ───────────────────────────────────────────────────────────── -->
+<div class="scrim" id="scrim" hidden></div>
+
+<!-- suvestinė telefone -->
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-in">
+    <div class="sheet-top"><h3>Mano užsakymas</h3><button class="x" id="sheetX" aria-label="Uždaryti">×</button></div>
+    <div id="sheetBody"></div>
+  </div>
+</div>
+
+<!-- laikas + užsakymas -->
+<div class="modal" id="orderModal" hidden>
+  <div class="modal-in">
+    <div class="modal-top"><h3>Laikas ir kontaktai</h3><button class="x" id="orderX" aria-label="Uždaryti">×</button></div>
+    <form id="orderForm" novalidate>
+      <div class="mo-sum" id="moSum"></div>
+
+      <span class="fl">Pasirinkite dieną</span>
+      <div class="days" id="days"></div>
+
+      <span class="fl">Laikas</span>
+      <div class="slots" id="slots"></div>
+
+      <div class="two">
+        <label class="fld"><span>Vardas</span><input name="name" required autocomplete="name"></label>
+        <label class="fld"><span>Telefonas</span><input name="phone" required inputmode="tel" placeholder="+370 6.." autocomplete="tel"></label>
+      </div>
+      <div class="two">
+        <label class="fld"><span>Miestas</span>
+          <select name="city"><option>Vilnius</option><option>Kaunas</option><option>Klaipėda</option><option>Šiauliai</option><option>Panevėžys</option><option>Alytus</option></select>
+        </label>
+        <label class="fld"><span>Adresas</span><input name="addr" required placeholder="Gatvė, namas, butas"></label>
+      </div>
+      <label class="fld"><span>Pastabos <i>(nebūtina)</i></span><textarea name="note" rows="2" placeholder="Pvz.: yra katė, kodas prie durų 1234"></textarea></label>
+      <label class="chk"><input type="checkbox" name="gdpr" required><span>Sutinku, kad duomenys būtų naudojami užsakymui įvykdyti</span></label>
+      <button class="btn btn-block" type="submit">Patvirtinti užsakymą</button>
+      <p class="mini">Demonstracija — jokie duomenys nesiunčiami, viskas lieka Jūsų naršyklėje.</p>
+    </form>
+  </div>
+</div>
+
+<!-- patvirtinimas -->
+<div class="modal" id="doneModal" hidden>
+  <div class="modal-in modal-sm">
+    <div class="modal-top"><h3>Užsakymas priimtas</h3><button class="x" id="doneX" aria-label="Uždaryti">×</button></div>
+    <div class="done">
+      <div class="done-ico">💎</div>
+      <p>Ačiū! Jūsų užsakymo numeris:</p>
+      <div class="code" id="doneCode">V1P-0000</div>
+      <p class="done-when" id="doneWhen"></p>
+      <p class="mini">Tikroje svetainėje šiuo momentu išsiunčiamas patvirtinimas SMS ir el. paštu, o užsakymas atsiranda Jūsų grafike. Numerį galite įvesti viršuje esančiame paieškos mygtuke ir stebėti būseną.</p>
+      <button class="btn btn-block" id="doneOk">Supratau</button>
+    </div>
+  </div>
+</div>
+
+<!-- sekimas -->
+<div class="modal" id="trackModal" hidden>
+  <div class="modal-in modal-sm">
+    <div class="modal-top"><h3>Sekti užsakymą</h3><button class="x" id="trackX" aria-label="Uždaryti">×</button></div>
+    <div class="track-in">
+      <label class="fld"><span>Užsakymo numeris</span><input id="trackIn" placeholder="V1P-2481" autocomplete="off"></label>
+      <button class="btn btn-block" id="trackGo">Ieškoti</button>
+      <div id="trackOut"></div>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lb" hidden><button class="x" id="lbX" aria-label="Uždaryti">×</button><img id="lbImg" alt=""></div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="./app.js"></script>
+</body>
+</html>
