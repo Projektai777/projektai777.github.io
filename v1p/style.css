@@ -41,7 +41,9 @@ input,select,textarea{font:inherit; color:inherit}
 .demobar a{color:#fff; font-weight:600; white-space:nowrap}
 
 /* ── navigacija ──────────────────────────────────────────────────────── */
-.nav{position:sticky; top:0; z-index:40; background:rgba(11,18,38,.92); backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,.08)}
+/* nepermatomas fonas be backdrop-filter: permatoma juosta su blur'u pirmame kadre
+   kartais nespėja būti nupiešta ir viršuje blyksteli balta juosta (matyta patikroje) */
+.nav{position:sticky; top:0; z-index:40; background:var(--ink); border-bottom:1px solid rgba(255,255,255,.08)}
 .nav-in{display:flex; align-items:center; gap:20px; height:72px}
 .brand img{height:22px; width:auto}
 .nav-links{margin-left:auto; display:flex; align-items:center; gap:22px}
