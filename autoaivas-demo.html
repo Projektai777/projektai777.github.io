@@ -225,7 +225,7 @@
 
     <div class="card">
       <h3>⚙️ Nustatymai — viską valdote Jūs</h3>
-      <p class="hint">Šie laukai demo versijoje veikia gyvai: pakeiskite ir pamatysite, kaip pasikeičia žinutė bei kaina.</p>
+      <p class="hint">Demo versijoje gyvai veikia žinutės tekstas, kanalas ir kaina — pakeiskite ir iškart pamatysite skirtumą. Dažnumo riba ir siuntimo laikas čia tik parodyti: jie realiai suveikia veikiančioje sistemoje, kur žinutės ir siunčiamos.</p>
       <div class="row">
         <div><label>Google atsiliepimo nuoroda</label><input id="rv-google" placeholder="https://g.page/r/…/review"></div>
         <div><label>Facebook atsiliepimo nuoroda</label><input id="rv-fb" placeholder="https://www.facebook.com/…/reviews"></div>
@@ -247,7 +247,9 @@
           <option value="12">kartą per metus</option>
         </select></div>
         <div><label>Siuntimo laikas</label><select id="rv-quiet">
-          <option>9:00–20:00 (naktį nesiunčiama)</option><option>8:00–18:00</option><option>10:00–19:00</option>
+          <option value="9:00–20:00">9:00–20:00 (naktį nesiunčiama)</option>
+          <option value="8:00–18:00">8:00–18:00</option>
+          <option value="10:00–19:00">10:00–19:00</option>
         </select></div>
       </div>
       <label style="margin-top:12px">Žinutės tekstas <span class="flag">— laukai {vardas}, {automobilis}, {nuoroda} užpildomi automatiškai</span></label>
@@ -282,8 +284,8 @@
       <h3>⚠️ Ko sistema NEdaro — sąžiningai</h3>
       <p class="hint">Kad nebūtų nesusipratimų, kai paleisime gyvai:</p>
       <ul style="margin:0;padding-left:20px;font-size:14px;line-height:1.75">
-        <li><b>Nefiltruojame klientų.</b> Nuoroda siunčiama visiems vienodai. Siųsti tik patenkintiems (angl. „review gating“) Google ir Facebook taisyklės draudžia — už tai profiliui gresia sankcijos. Blogas atsiliepimas atsakomas viešai — tai irgi reitingą kelia.</li>
-        <li><b>Neatsilyginame už atsiliepimą.</b> Nuolaida ar dovana už atsiliepimą — taisyklių pažeidimas. Prašome tiesiog gražiai.</li>
+        <li><b>Nefiltruojame klientų.</b> Nuoroda siunčiama visiems vienodai. Google taisyklės tiesiogiai draudžia rinktis, kam siūlyti palikti atsiliepimą (angl. „review gating“), ir už tai profiliui gresia sankcijos. Į nepalankų atsiliepimą tiesiog viešai atsakoma — vidutinio įvertinimo tai nepakelia, bet naujam klientui parodo, kad problemos sprendžiamos.</li>
+        <li><b>Neatsilyginame už atsiliepimą.</b> Nuolaida ar dovana už atsiliepimą draudžiama ir Google, ir Facebook. Prašome tiesiog gražiai.</li>
         <li><b>Nerašome atsiliepimo už klientą</b> — to neleidžia jokia Google ar Facebook API. Rašo pats klientas iš savo paskyros.</li>
         <li><b>Negalime patikimai pasakyti, KURIS klientas parašė.</b> Google rodo tik profilio vardą. Todėl matuojame išsiuntimus, paspaudimus ir bendrą atsiliepimų augimą — ne „šis SMS = šis atsiliepimas“.</li>
         <li><b>Facebook duoda mažiau.</b> Klientas turi būti prisijungęs prie FB, o rekomendacijas Lietuvoje skaito kur kas mažiau žmonių nei Google. Todėl Google — pagrindinė nuoroda, FB — antra. FB atsiliepimų skaičiaus automatiškai netraukiame (tam reikia FB programėlės patvirtinimo) — jį matote savo FB puslapyje.</li>
@@ -494,7 +496,7 @@ window.setStatus = (oi, si) => {
   if (si === 5) {
     const rv = DB.reviews, when = rv.delay==='0' ? 'iš karto' : (rv.delay==='24' ? 'kitą dieną' : 'po '+rv.delay+' val.');
     o.notifs.push([`${CH_LABEL[rv.channel]} (${when})`,'Prašymas palikti atsiliepimą ⭐']);
-    rv.log.unshift({name:o.name, plate:o.plate, ch:CH_LABEL[rv.channel], when:'ką tik', clicked:false});
+    rv.log.unshift({name:o.name, plate:o.plate, ch:CH_LABEL[rv.channel], when:'išsiųs '+when, clicked:false, queued:rv.delay!=='0'});
     msg += `<br>⭐ ${when.charAt(0).toUpperCase()+when.slice(1)} bus išsiųstas atsiliepimo prašymas (Google + FB)`;
   }
   save(); renderStaff(); renderRev(); toast(msg);
@@ -532,10 +534,12 @@ const RV_FIELDS = {'rv-google':'google','rv-fb':'fb','rv-channel':'channel','rv-
 const CH_LABEL = {email:'Tik el. paštas', sms:'Tik SMS', both:'El. paštas + SMS'};
 // GSM-7 abėcėlėje nėra ą č ę ė į š ų ū ž — tokia SMS siunčiama UCS-2 ir telpa tik 70 (67) simbolių
 const GSM7 = /^[A-Za-z0-9 @£$¥èéùìòÇØøÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ!"#¤%&'()*+,\-./:;<=>?¡ÄÖÑÜ§¿äöñüà\r\n\f^{}\\[~\]|€]*$/;
+const GSM7_EXT = /[\f^{}\\[~\]|€]/g; // GSM-7 „ilgieji“ simboliai — kiekvienas užima 2 vietas
 function smsParts(txt){
   const uni = !GSM7.test(txt);
   const one = uni ? 70 : 160, multi = uni ? 67 : 153;
-  const n = txt.length <= one ? 1 : Math.ceil(txt.length / multi);
+  const units = uni ? txt.length : txt.length + (txt.match(GSM7_EXT) || []).length;
+  const n = units <= one ? 1 : Math.ceil(units / multi);
   return {uni, n, len: txt.length};
 }
 const RV_SHORT = 'aivas.lt/a/7k2p'; // trumpa nuoroda Jūsų domene: suskaičiuoja paspaudimą ir permeta į Google
@@ -546,7 +550,7 @@ function revText(){
 function renderRev(){
   const r = DB.reviews;
   for (const [id,key] of Object.entries(RV_FIELDS)) { const el = document.getElementById(id); if (el && el.value !== r[key]) el.value = r[key]; }
-  const sent = r.log.length, clicked = r.log.filter(x=>x.clicked).length;
+  const sent = r.log.filter(x=>!x.queued).length, clicked = r.log.filter(x=>x.clicked).length;
   document.getElementById('rev-stats').innerHTML = `
     <div class="stat"><b>${sent}</b><span>išsiųsta prašymų</span></div>
     <div class="stat"><b>${clicked}</b><span>paspaudė nuorodą</span></div>
@@ -562,8 +566,8 @@ function renderRev(){
   document.getElementById('rev-rows').innerHTML = r.log.map((x,i)=>`<tr>
     <td><b>${esc(x.name)}</b><br><span class="muted-s">${esc(x.plate)}</span></td>
     <td>${esc(x.ch)}</td><td>${esc(x.when)}</td>
-    <td>${x.clicked?'<span class="pill st5">Paspaudė nuorodą</span>':'<span class="pill st1">Išsiųsta</span>'}</td>
-    <td>${x.clicked?'':`<button class="stb no-print" onclick="revClick(${i})">demo: paspaudė</button>`}</td></tr>`).join('')
+    <td>${x.queued?'<span class="pill st0">Suplanuota</span>':x.clicked?'<span class="pill st5">Paspaudė nuorodą</span>':'<span class="pill st1">Išsiųsta</span>'}</td>
+    <td>${x.queued||x.clicked?'':`<button class="stb no-print" onclick="revClick(${i})">demo: paspaudė</button>`}</td></tr>`).join('')
     || '<tr><td colspan="5" class="muted-s">Prašymų dar nesiųsta</td></tr>';
   const orders = +document.getElementById('rv-orders').value || 0;
   const conv = +document.getElementById('rv-conv').value || 0;
