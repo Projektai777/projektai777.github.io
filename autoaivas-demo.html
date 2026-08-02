@@ -100,6 +100,7 @@
       <button class="tab" data-v="client">📱 Kliento nuoroda</button>
       <button class="tab" data-v="staff">🛠️ Vadybininkas</button>
       <button class="tab" data-v="rem">⏰ Priminimai</button>
+      <button class="tab" data-v="rev">⭐ Atsiliepimai</button>
       <button class="tab" data-v="est">📄 Sąmata</button>
       <button class="tab" data-v="parts">📦 Pajamavimas</button>
     </div>
@@ -199,7 +200,107 @@
     </div>
   </div>
 
-  <!-- ══════════ 5. SĄMATA ══════════ -->
+  <!-- ══════════ 5. ATSILIEPIMAI ══════════ -->
+  <div class="view" id="v-rev">
+    <div class="card">
+      <h2>Google ir Facebook atsiliepimai</h2>
+      <p class="hint">Prašymas palikti atsiliepimą išsiunčiamas <b>automatiškai</b>, kai darbas baigtas — vadybininkui nereikia nieko daryti ir nieko prisiminti. Klientui tai vienas paspaudimas: atsidaro tiesiai atsiliepimo langas, be jokios paieškos.</p>
+      <ol class="steps">
+        <li class="done"><span class="dot">1</span>
+          <div class="st-name">Vadybininkas pažymi būseną „Paruoštas atsiimti“</div>
+          <div class="st-time">Tai jis daro ir taip — jokio papildomo veiksmo (skiltis „Vadybininkas“).</div></li>
+        <li class="done"><span class="dot">2</span>
+          <div class="st-name">Sistema palaukia nustatytą laiką ir išsiunčia žinutę</div>
+          <div class="st-time">Numatyta — po 2 val., kad klientas jau būtų pasiėmęs automobilį. El. laiškas nemokamas, SMS ~0,03 €. Naktį nesiunčiama.</div></li>
+        <li class="done"><span class="dot">3</span>
+          <div class="st-name">Klientas spusteli nuorodą — iškart atsidaro atsiliepimo langas</div>
+          <div class="st-time">Google — tiesioginė „parašyti atsiliepimą“ nuoroda iš Jūsų Google Business Profile; Facebook — Jūsų puslapio rekomendacijų langas.</div></li>
+        <li class="done"><span class="dot">4</span>
+          <div class="st-name">Sistema fiksuoja: išsiųsta / paspausta</div>
+          <div class="st-time">O bendrą Google įvertinimą ir atsiliepimų skaičių traukiame iš Jūsų Google Business Profile — matote, kaip auga.</div></li>
+      </ol>
+    </div>
+
+    <div class="stats" id="rev-stats"></div>
+
+    <div class="card">
+      <h3>⚙️ Nustatymai — viską valdote Jūs</h3>
+      <p class="hint">Šie laukai demo versijoje veikia gyvai: pakeiskite ir pamatysite, kaip pasikeičia žinutė bei kaina.</p>
+      <div class="row">
+        <div><label>Google atsiliepimo nuoroda</label><input id="rv-google" placeholder="https://g.page/r/…/review"></div>
+        <div><label>Facebook atsiliepimo nuoroda</label><input id="rv-fb" placeholder="https://www.facebook.com/…/reviews"></div>
+      </div>
+      <div class="row">
+        <div><label>Kanalas</label><select id="rv-channel">
+          <option value="email">Tik el. paštas (0 €)</option>
+          <option value="sms">Tik SMS (~0,03 €)</option>
+          <option value="both">El. paštas + SMS (rekomenduojama)</option>
+        </select></div>
+        <div><label>Po kiek laiko išsiųsti</label><select id="rv-delay">
+          <option value="0">Iš karto</option><option value="2">Po 2 val.</option>
+          <option value="4">Po 4 val.</option><option value="24">Kitą dieną</option>
+        </select></div>
+      </div>
+      <div class="row">
+        <div><label>Tam pačiam klientui — ne dažniau kaip</label><select id="rv-gap">
+          <option value="3">kartą per 3 mėn.</option><option value="6">kartą per 6 mėn.</option>
+          <option value="12">kartą per metus</option>
+        </select></div>
+        <div><label>Siuntimo laikas</label><select id="rv-quiet">
+          <option>9:00–20:00 (naktį nesiunčiama)</option><option>8:00–18:00</option><option>10:00–19:00</option>
+        </select></div>
+      </div>
+      <label style="margin-top:12px">Žinutės tekstas <span class="flag">— laukai {vardas}, {automobilis}, {nuoroda} užpildomi automatiškai</span></label>
+      <textarea id="rv-tpl" style="min-height:88px"></textarea>
+      <div class="ok-box" style="background:#eef3fb;border-color:#d3e0f3">
+        <b>Taip žinutę pamatys klientas:</b>
+        <p id="rv-preview" style="margin:8px 0 0;font-size:14px"></p>
+        <p class="muted-s" id="rv-cost" style="margin:10px 0 0"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Išsiuntimų žurnalas</h3>
+      <p class="hint">Kiekvienas prašymas matomas su būsena. Demo: spauskite mygtuką ir pamatysite, kaip atrodo naujas išsiuntimas.</p>
+      <button class="btn sm" style="margin-top:0" onclick="revSend()">▶️ Imituoti naują išsiuntimą</button>
+      <div class="tbl-wrap" style="margin-top:14px"><table><thead><tr><th>Klientas</th><th>Kanalas</th><th>Išsiųsta</th><th>Būsena</th><th></th></tr></thead>
+      <tbody id="rev-rows"></tbody></table></div>
+    </div>
+
+    <div class="card">
+      <h3>📈 Kiek atsiliepimų realiai atneša</h3>
+      <p class="hint">Pavyzdinis skaičiavimas — įsirašykite savo skaičius. Tikslų procentą matysite po pirmo mėnesio, tada jį čia ir įrašysite.</p>
+      <div class="row">
+        <div><label>Baigtų užsakymų per mėnesį</label><input type="number" id="rv-orders" value="120" min="1"></div>
+        <div><label>Kiek % palieka atsiliepimą (spėjimas)</label><input type="number" id="rv-conv" value="5" min="0" max="100"></div>
+      </div>
+      <div class="stats" style="margin-top:14px" id="rev-proj"></div>
+    </div>
+
+    <div class="card">
+      <h3>⚠️ Ko sistema NEdaro — sąžiningai</h3>
+      <p class="hint">Kad nebūtų nesusipratimų, kai paleisime gyvai:</p>
+      <ul style="margin:0;padding-left:20px;font-size:14px;line-height:1.75">
+        <li><b>Nefiltruojame klientų.</b> Nuoroda siunčiama visiems vienodai. Siųsti tik patenkintiems (angl. „review gating“) Google ir Facebook taisyklės draudžia — už tai profiliui gresia sankcijos. Blogas atsiliepimas atsakomas viešai — tai irgi reitingą kelia.</li>
+        <li><b>Neatsilyginame už atsiliepimą.</b> Nuolaida ar dovana už atsiliepimą — taisyklių pažeidimas. Prašome tiesiog gražiai.</li>
+        <li><b>Nerašome atsiliepimo už klientą</b> — to neleidžia jokia Google ar Facebook API. Rašo pats klientas iš savo paskyros.</li>
+        <li><b>Negalime patikimai pasakyti, KURIS klientas parašė.</b> Google rodo tik profilio vardą. Todėl matuojame išsiuntimus, paspaudimus ir bendrą atsiliepimų augimą — ne „šis SMS = šis atsiliepimas“.</li>
+        <li><b>Facebook duoda mažiau.</b> Klientas turi būti prisijungęs prie FB, o rekomendacijas Lietuvoje skaito kur kas mažiau žmonių nei Google. Todėl Google — pagrindinė nuoroda, FB — antra. FB atsiliepimų skaičiaus automatiškai netraukiame (tam reikia FB programėlės patvirtinimo) — jį matote savo FB puslapyje.</li>
+        <li><b>SMS reikia sutikimo.</b> Registracijos formoje bus varnelė dėl žinučių, o kiekvienoje žinutėje — atsisakymo būdas („STOP“). Atsisakiusiems nebesiunčiama automatiškai.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>🔑 Ko reikės iš Jūsų (5 minutės)</h3>
+      <ul style="margin:0;padding-left:20px;font-size:14px;line-height:1.75">
+        <li>Nuoroda į Jūsų <b>Google Business Profile</b> (arba prieiga — iš jos pasiimsime tiesioginę atsiliepimo nuorodą ir bendrą įvertinimą).</li>
+        <li>Nuoroda į <b>Facebook puslapį</b>.</li>
+        <li>Patvirtinimas, koks tekstas Jums tinka — aukščiau esantį galima perrašyti bet kada patiems.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══════════ 6. SĄMATA ══════════ -->
   <div class="view" id="v-est">
     <div class="card">
       <h2>Sąmatos skaičiuoklė</h2>
@@ -227,7 +328,7 @@
     </div>
   </div>
 
-  <!-- ══════════ 6. PAJAMAVIMAS ══════════ -->
+  <!-- ══════════ 7. PAJAMAVIMAS ══════════ -->
   <div class="view" id="v-parts">
     <div class="card">
       <h2>Detalių pajamavimas iš važtaraščio</h2>
@@ -268,9 +369,23 @@ const seed = () => ({
     {plate:'KJP 512', phone:'+370 6xx 11111', type:'Techninė apžiūra (TA)', date:'2027-03-10'},
     {plate:'BDK 774', phone:'+370 6xx 33333', type:'Alyvos keitimas', date:'2027-01-20'},
   ],
+  reviews: {
+    google:'https://g.page/r/AutoaivasPlaceID/review',
+    fb:'https://www.facebook.com/autoaivas/reviews',
+    channel:'both', delay:'2', gap:'6', quiet:'9:00–20:00',
+    tpl:'Sveiki, {vardas}! Ačiū, kad patikėjote {automobilis} servisui Autoaivas. Būtume dėkingi už atsiliepimą — užtruks minutę: {nuoroda} Nebenorite žinučių? Atsakykite STOP.',
+    gtotal:47, grating:4.8,
+    log:[
+      {name:'Andrius', plate:'BDK 774', ch:'El. paštas + SMS', when:'vakar 16:40', clicked:true},
+      {name:'Rasa',    plate:'FLT 118', ch:'El. paštas + SMS', when:'vakar 11:05', clicked:true},
+      {name:'Mindaugas',plate:'JCP 430',ch:'Tik el. paštas',   when:'užvakar 18:20', clicked:false},
+    ],
+  },
 });
 let DB;
 try { DB = JSON.parse(localStorage.getItem(LS)) || seed(); } catch(e){ DB = seed(); }
+if (!DB.reviews) { DB.reviews = seed().reviews; save0(); } // senesnė demo būsena naršyklėje
+function save0(){ try { localStorage.setItem(LS, JSON.stringify(DB)); } catch(e){} }
 const save = () => localStorage.setItem(LS, JSON.stringify(DB));
 const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const toast = m => { const t = document.getElementById('toast'); t.innerHTML = m; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 3200); };
@@ -330,7 +445,7 @@ function renderClient(){
       <span style="font-size:13.5px;opacity:.85">Jūsų nuomonė mums labai svarbi — atsiliepimas užtruks vos minutę.</span><br>
       <a href="#" onclick="return false">⭐ Google atsiliepimas</a>
       <a href="#" onclick="return false">👍 Facebook atsiliepimas</a>
-      <div style="font-size:11.5px;opacity:.6;margin-top:10px">Šią žinutę klientas gauna SMS automatiškai, praėjus 2 val. po automobilio atsiėmimo.</div>
+      <div style="font-size:11.5px;opacity:.6;margin-top:10px">Šią žinutę klientas gauna automatiškai (${esc(CH_LABEL[DB.reviews.channel])}), ${DB.reviews.delay==='0'?'iš karto':(DB.reviews.delay==='24'?'kitą dieną':'praėjus '+DB.reviews.delay+' val.')} po automobilio atsiėmimo. Visi nustatymai — skiltyje „⭐ Atsiliepimai“.</div>
     </div>` : `<p class="muted-s no-print" style="margin-top:14px">💡 Skiltyje „Vadybininkas“ pakeiskite šio užsakymo (${esc(o.id)}) būseną — pamatysite, kaip atsinaujina kliento vaizdas ir kada atsiranda atsiliepimo prašymas (būsena „Paruoštas atsiimti“).</p>`}`;
 }
 
@@ -375,8 +490,13 @@ window.setStatus = (oi, si) => {
   const ch = SMS_STATUSES.includes(si) ? 'El. laiškas + SMS' : 'El. laiškas';
   o.notifs.push([ch, STATUSES[si]]);
   let msg = `📨 Klientui ${esc(o.name)} automatiškai išsiųsta: <b>${ch}</b> („${esc(STATUSES[si])}“)`;
-  if (si === 5) { o.notifs.push(['SMS (po 2 val.)','Prašymas palikti atsiliepimą ⭐']); msg += '<br>⭐ Po 2 val. bus išsiųstas atsiliepimo prašymas (Google + FB)'; }
-  save(); renderStaff(); toast(msg);
+  if (si === 5) {
+    const rv = DB.reviews, when = rv.delay==='0' ? 'iš karto' : (rv.delay==='24' ? 'kitą dieną' : 'po '+rv.delay+' val.');
+    o.notifs.push([`${CH_LABEL[rv.channel]} (${when})`,'Prašymas palikti atsiliepimą ⭐']);
+    rv.log.unshift({name:o.name, plate:o.plate, ch:CH_LABEL[rv.channel], when:'ką tik', clicked:false});
+    msg += `<br>⭐ ${when.charAt(0).toUpperCase()+when.slice(1)} bus išsiųstas atsiliepimo prašymas (Google + FB)`;
+  }
+  save(); renderStaff(); renderRev(); toast(msg);
 };
 window.setComment = (oi, v) => { DB.orders[oi].comment = v; save(); toast('💬 Komentaras matomas kliento puslapyje'); };
 window.showQr = oi => { const el = document.getElementById('qr-'+oi); el.style.display = el.style.display==='none'?'block':'none'; };
@@ -406,7 +526,67 @@ function renderRem(){
   document.getElementById('rem-cost').textContent = `Numatoma kaina: ${DB.reminders.length} SMS × ~0,03 € = ~${(DB.reminders.length*0.03).toFixed(2)} € (mokama tik už išsiųstas žinutes)`;
 }
 
-// ── 5. Sąmata ──
+// ── 5. Atsiliepimai ──
+const RV_FIELDS = {'rv-google':'google','rv-fb':'fb','rv-channel':'channel','rv-delay':'delay','rv-gap':'gap','rv-quiet':'quiet','rv-tpl':'tpl'};
+const CH_LABEL = {email:'Tik el. paštas', sms:'Tik SMS', both:'El. paštas + SMS'};
+// GSM-7 abėcėlėje nėra ą č ę ė į š ų ū ž — tokia SMS siunčiama UCS-2 ir telpa tik 70 (67) simbolių
+const GSM7 = /^[A-Za-z0-9 @£$¥èéùìòÇØøÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ!"#¤%&'()*+,\-./:;<=>?¡ÄÖÑÜ§¿äöñüà\r\n\f^{}\\[~\]|€]*$/;
+function smsParts(txt){
+  const uni = !GSM7.test(txt);
+  const one = uni ? 70 : 160, multi = uni ? 67 : 153;
+  const n = txt.length <= one ? 1 : Math.ceil(txt.length / multi);
+  return {uni, n, len: txt.length};
+}
+function revText(){
+  const r = DB.reviews;
+  return r.tpl.replace('{vardas}','Andrius').replace('{automobilis}','Škoda Octavia (BDK 774)').replace('{nuoroda}', r.google || '(nuoroda)');
+}
+function renderRev(){
+  const r = DB.reviews;
+  for (const [id,key] of Object.entries(RV_FIELDS)) { const el = document.getElementById(id); if (el && el.value !== r[key]) el.value = r[key]; }
+  const sent = r.log.length, clicked = r.log.filter(x=>x.clicked).length;
+  document.getElementById('rev-stats').innerHTML = `
+    <div class="stat"><b>${sent}</b><span>išsiųsta prašymų</span></div>
+    <div class="stat"><b>${clicked}</b><span>paspaudė nuorodą</span></div>
+    <div class="stat"><b>${sent?Math.round(clicked/sent*100):0} %</b><span>paspaudimų dalis</span></div>
+    <div class="stat"><b>${r.gtotal}</b><span>Google atsiliepimų</span></div>
+    <div class="stat"><b>${String(r.grating).replace('.',',')} ★</b><span>vidutinis įvertinimas</span></div>`;
+  const txt = revText(), p = smsParts(txt);
+  document.getElementById('rv-preview').textContent = txt;
+  const perSms = 0.03 * p.n;
+  document.getElementById('rv-cost').innerHTML = r.channel === 'email'
+    ? `${p.len} simb. · el. paštu siunčiama <b>nemokamai</b> · išsiunčiama ${r.delay==='0'?'iš karto':(r.delay==='24'?'kitą dieną':'po '+r.delay+' val.')}, ${esc(r.quiet)}`
+    : `${p.len} simb. → <b>${p.n} SMS</b> ${p.uni?'(lietuviškos raidės — 70 simb. viename SMS)':'(be lietuviškų raidžių — 160 simb. viename SMS)'} · ~${eur(perSms)} už klientą · išsiunčiama ${r.delay==='0'?'iš karto':(r.delay==='24'?'kitą dieną':'po '+r.delay+' val.')}, ${esc(r.quiet)}`;
+  document.getElementById('rev-rows').innerHTML = r.log.map((x,i)=>`<tr>
+    <td><b>${esc(x.name)}</b><br><span class="muted-s">${esc(x.plate)}</span></td>
+    <td>${esc(x.ch)}</td><td>${esc(x.when)}</td>
+    <td>${x.clicked?'<span class="pill st5">Paspaudė nuorodą</span>':'<span class="pill st1">Išsiųsta</span>'}</td>
+    <td>${x.clicked?'':`<button class="stb no-print" onclick="revClick(${i})">demo: paspaudė</button>`}</td></tr>`).join('')
+    || '<tr><td colspan="5" class="muted-s">Prašymų dar nesiųsta</td></tr>';
+  const orders = +document.getElementById('rv-orders').value || 0;
+  const conv = +document.getElementById('rv-conv').value || 0;
+  const newRev = Math.round(orders * conv / 100);
+  const cost = r.channel === 'email' ? 0 : orders * perSms;
+  document.getElementById('rev-proj').innerHTML = `
+    <div class="stat"><b>~${newRev}</b><span>naujų atsiliepimų / mėn.</span></div>
+    <div class="stat"><b>~${newRev*12}</b><span>per metus</span></div>
+    <div class="stat"><b>${cost?('~'+eur(cost)):'0 €'}</b><span>žinučių kaina / mėn.</span></div>`;
+}
+for (const id of Object.keys(RV_FIELDS)) {
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => { DB.reviews[RV_FIELDS[id]] = el.value; save(); renderRev(); });
+}
+['rv-orders','rv-conv'].forEach(id => document.getElementById(id).addEventListener('input', renderRev));
+const RV_NAMES = [['Justina','LKP 902'],['Darius','GBN 316'],['Vaida','MRT 745'],['Tomas','KJP 512'],['Egle','SDV 208']];
+window.revSend = () => {
+  const r = DB.reviews, n = RV_NAMES[r.log.length % RV_NAMES.length];
+  r.log.unshift({name:n[0], plate:n[1], ch:CH_LABEL[r.channel], when:'ką tik', clicked:false});
+  save(); renderRev();
+  toast(`📨 ${esc(n[0])} išsiųstas prašymas palikti atsiliepimą (${CH_LABEL[r.channel]})`);
+};
+window.revClick = i => { DB.reviews.log[i].clicked = true; save(); renderRev(); toast('⭐ Klientas atidarė atsiliepimo langą'); };
+
+// ── 6. Sąmata ──
 const NORMS = [
   ['Priekinių stabdžių diskų ir kaladėlių keitimas', 1.2],
   ['Sankabos keitimas', 5.8],
@@ -440,7 +620,7 @@ function renderEst(){
   document.getElementById('t-grand').textContent = eur(net+vat);
 }
 
-// ── 6. Pajamavimas ──
+// ── 7. Pajamavimas ──
 const SAMPLE = `VAŽTARAŠTIS Nr. VLN-2026-07841   Tiekėjas: UAB Detalių tiekimas
 BSG60-210-020  Stabdžių diskai priekiniai (pora)  1  86.40
 FIL-OC90       Alyvos filtras MANN OC 90          2  7.20
@@ -478,7 +658,7 @@ window.exportCSV = () => {
 };
 
 // ── Render all ──
-function render(){ renderClient(); renderStaff(); renderRem(); renderEst(); }
+function render(){ renderClient(); renderStaff(); renderRem(); renderRev(); renderEst(); }
 render();
 </script>
 </body>
