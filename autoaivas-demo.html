@@ -150,7 +150,7 @@
   <div class="view" id="v-client">
     <div class="card">
       <h2>Jūsų automobilio remonto eiga</h2>
-      <p class="hint">Tai mato klientas, atidaręs savo unikalią nuorodą ar nuskenavęs QR kodą (gautą registracijos SMS žinutėje arba priimant automobilį). Matomas tik JO automobilis — jokių prisijungimų nereikia.</p>
+      <p class="hint">Tai mato klientas, atidaręs savo unikalią nuorodą ar nuskenavęs QR kodą (gautą registracijos SMS žinutėje arba priimant automobilį). Matomas tik JO automobilis — jokių prisijungimų nereikia. Kai užsakymas baigtas, čia pat parodomas ir prašymas palikti atsiliepimą (visa jo mechanika — skiltyje „⭐ Atsiliepimai“).</p>
       <div id="client-body"></div>
     </div>
   </div>
@@ -256,6 +256,7 @@
         <b>Taip žinutę pamatys klientas:</b>
         <p id="rv-preview" style="margin:8px 0 0;font-size:14px"></p>
         <p class="muted-s" id="rv-cost" style="margin:10px 0 0"></p>
+        <p class="muted-s" style="margin:6px 0 0">Nuoroda trumpa ir Jūsų domene (<code>aivas.lt/a/…</code>) dėl dviejų priežasčių: ji permeta į Google, o kartu suskaičiuoja paspaudimą — kitaip nežinotume, ar žinutė iš viso veikia. Ilga Google nuoroda SMS kainuotų dvigubai.</p>
       </div>
     </div>
 
@@ -373,7 +374,7 @@ const seed = () => ({
     google:'https://g.page/r/AutoaivasPlaceID/review',
     fb:'https://www.facebook.com/autoaivas/reviews',
     channel:'both', delay:'2', gap:'6', quiet:'9:00–20:00',
-    tpl:'Sveiki, {vardas}! Ačiū, kad patikėjote {automobilis} servisui Autoaivas. Būtume dėkingi už atsiliepimą — užtruks minutę: {nuoroda} Nebenorite žinučių? Atsakykite STOP.',
+    tpl:'Ačiū, kad lankėtės Autoaivas, {vardas}! Atsiliepimas užtruks minutę: {nuoroda} (STOP - nebesiųsti)',
     gtotal:47, grating:4.8,
     log:[
       {name:'Andrius', plate:'BDK 774', ch:'El. paštas + SMS', when:'vakar 16:40', clicked:true},
@@ -537,9 +538,10 @@ function smsParts(txt){
   const n = txt.length <= one ? 1 : Math.ceil(txt.length / multi);
   return {uni, n, len: txt.length};
 }
+const RV_SHORT = 'aivas.lt/a/7k2p'; // trumpa nuoroda Jūsų domene: suskaičiuoja paspaudimą ir permeta į Google
 function revText(){
   const r = DB.reviews;
-  return r.tpl.replace('{vardas}','Andrius').replace('{automobilis}','Škoda Octavia (BDK 774)').replace('{nuoroda}', r.google || '(nuoroda)');
+  return r.tpl.replace('{vardas}','Andrius').replace('{automobilis}','Škoda Octavia (BDK 774)').replace('{nuoroda}', RV_SHORT);
 }
 function renderRev(){
   const r = DB.reviews;
