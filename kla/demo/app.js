@@ -271,8 +271,8 @@
 
   var DOCS = { ok: ['Gauta', 'd-ok'], wait: ['Laukiama', 'd-w'], none: ['Nėra', 'd-n'] };
 
-  /* Carrier order in three languages — InfoTrans generates LT/EN/RU contracts and
-     they work EU + CIS, so this is a requirement, not decoration. */
+  /* Carrier order in three languages. Lithuanian forwarders working EU + CIS need
+     LT/EN/RU documents as a matter of course — this is a requirement, not decoration. */
   var DOCLANG = {
     lt: { t: 'VEŽIMO UŽSAKYMAS', a: 'Užsakovas', b: 'Vežėjas', c: 'Krovinys', d: 'Pakrovimas',
           e: 'Iškrovimas', f: 'Sutarta kaina (be PVM)', g: 'Mokėjimo terminas',
