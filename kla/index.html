@@ -1,0 +1,362 @@
+<!doctype html>
+<!-- © 2026 Ignas — pasiūlymo pristatymas logistikos įmonei (KLA, Kaunas).
+     Tikslas: per 5 min. gyvai parodyti, KĄ galima automatizuoti ekspedicijos biure,
+     SU KUO tai jungiasi ir KAIP užtikrinama, kad prieiga prie sistemų būtų saugi.
+     Statinis puslapis (index.html + style.css + app.js), be backend, 0 EUR hostingas.
+     JOKIŲ kliento asmens duomenų (vardų, telefonų, adreso) — sąmoningai.
+     noindex: tai privatus pasiūlymas, ne vieša rinkodara. -->
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0c1a2b">
+<title>Skaitmeniniai sprendimai logistikos įmonei — pasiūlymas</title>
+<meta name="description" content="Kasdienio logistikos biuro darbo automatizavimas: dokumentai, užsakymai, klientų informavimas, vežėjų priežiūra. Prisijungiu prie sistemų, kurias jau naudojate.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c1a2b'/%3E%3Cpath d='M5 20h9v-7H8L5 16z' fill='%23f2a33c'/%3E%3Crect x='15' y='9' width='12' height='11' rx='1.5' fill='%23e7edf5'/%3E%3Ccircle cx='10' cy='22' r='2.4' fill='%23e7edf5'/%3E%3Ccircle cx='22' cy='22' r='2.4' fill='%23e7edf5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Pereiti prie turinio</a>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true">I</span>
+      <span class="brand-txt"><b>Ignas</b><i>programuotojas · Kaunas</i></span>
+    </a>
+    <nav class="nav-links" aria-label="Puslapio skyriai">
+      <a href="#darbai">Kur dingsta laikas</a>
+      <a href="#ka">Ką galiu padaryti</a>
+      <a href="#sistemos">Jūsų sistemos</a>
+      <a href="#saugumas">Saugumas</a>
+      <a href="#pradzia">Nuo ko pradedame</a>
+    </nav>
+    <button class="burger" id="burger" aria-label="Meniu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <div class="nav-drop" id="navDrop" hidden>
+    <a href="#darbai">Kur dingsta laikas</a>
+    <a href="#ka">Ką galiu padaryti</a>
+    <a href="#sistemos">Jūsų sistemos</a>
+    <a href="#saugumas">Saugumas</a>
+    <a href="#pradzia">Nuo ko pradedame</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ── HERO ─────────────────────────────────────────────────────────── -->
+<section class="hero" id="top">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <p class="eyebrow">Pasiūlymas · ekspedicijos ir transporto įmonei</p>
+    <h1>Nuimu nuo Jūsų žmonių rankinį darbą,<br><span class="hl">o ne primetu naują sistemą.</span></h1>
+    <p class="lede">
+      Logistikos biure daugiausiai laiko suvalgo ne pervežimas, o aplink jį besisukantys
+      dalykai: laiškų perrašinėjimas, dokumentų vaikymasis, klientų klausimai „kur mano
+      krovinys?" ir ataskaitos, kurios kas mėnesį daromos ranka.
+      <b>Prisijungiu prie programų, kurias jau naudojate,</b> ir tuos darbus perduodu kompiuteriui.
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-p" href="#ka">Ką galiu automatizuoti</a>
+      <a class="btn btn-g" href="#saugumas">Kaip užtikrinu saugumą</a>
+    </div>
+    <ul class="chips">
+      <li>Vienkartinė kaina</li>
+      <li>Jokių mėnesinių mokesčių</li>
+      <li>Pradedame nuo vieno darbo</li>
+      <li>Pirmas žingsnis — nemokamas</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ── SKAUSMAI ────────────────────────────────────────────────────── -->
+<section class="sect" id="darbai">
+  <div class="wrap">
+    <p class="label">1 · Kur dingsta laikas</p>
+    <h2>Tipiniai darbai, kuriuos ekspedicijos biure vis dar daro žmogus</h2>
+    <p class="sub">
+      Pažymėkite tuos, kurie Jums pažįstami — apačioje pamatysite, nuo ko siūlyčiau pradėti.
+      <span class="mutedi">Nieko neįrašo ir niekur nesiunčia, tai tik pokalbio pagalba.</span>
+    </p>
+
+    <div class="pain-grid" id="painGrid">
+      <button class="pain" data-k="laiskai"><span class="pi">📥</span><b>Užsakymai ateina laiškais</b><i>Kiekvieną reikia perskaityti ir ranka suvesti į sistemą ar Excel.</i></button>
+      <button class="pain" data-k="kur"><span class="pi">📞</span><b>„Kur mano krovinys?"</b><i>Klientas skambina, vadybininkas ieško vairuotojo, vairuotojas neatsiliepia.</i></button>
+      <button class="pain" data-k="dok"><span class="pi">📄</span><b>CMR ir dokumentų vaikymasis</b><i>Skenai, nuotraukos telefonuose, dalis pameta, sąskaita vėluoja.</i></button>
+      <button class="pain" data-k="kaina"><span class="pi">🧮</span><b>Kainos skaičiavimas ranka</b><i>Kiekvienas pasiūlymas skaičiuojamas iš naujo, dažnai skirtingai.</i></button>
+      <button class="pain" data-k="vezejai"><span class="pi">🚚</span><b>Vežėjų dokumentų galiojimai</b><i>Draudimai, licencijos, ADR — pastebima tada, kai jau pasibaigę.</i></button>
+      <button class="pain" data-k="ataskaitos"><span class="pi">📊</span><b>Ataskaitos iš kelių vietų</b><i>Kiek uždirbome, kuris maršrutas nuostolingas — surenkama ranka, mėnesio gale.</i></button>
+      <button class="pain" data-k="dvigubai"><span class="pi">⌨️</span><b>Tie patys duomenys — po kelis kartus</b><i>Į biržą, į apskaitą, į Excel, į laišką klientui.</i></button>
+      <button class="pain" data-k="valstybe"><span class="pi">🏛️</span><b>Valstybinės formos</b><i>i.VAZ, i.SAF, muitinės dokumentai — pildoma ranka, terminai spaudžia.</i></button>
+      <button class="pain" data-k="atmintis"><span class="pi">🧠</span><b>Viskas laikoma galvose</b><i>Žmogus atostogauja arba išeina — kartu išeina ir dalis įmonės.</i></button>
+    </div>
+
+    <div class="pain-sum" id="painSum" hidden>
+      <div class="ps-in">
+        <p class="ps-t">Pažymėjote <b id="psN">0</b> — nuo jų ir siūlyčiau pradėti</p>
+        <ul id="psList"></ul>
+        <p class="mini">Beveik visada geriau paimti <b>vieną</b> ir padaryti gerai, nei visus iš karto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── KĄ GALIU PADARYTI ───────────────────────────────────────────── -->
+<section class="sect alt" id="ka">
+  <div class="wrap">
+    <p class="label">2 · Ką galiu padaryti</p>
+    <h2>Sprendimai paprasta kalba</h2>
+    <p class="sub">Ne visi iš karto ir ne visi būtini. Tai meniu — išsirenkate tai, kas Jums aktualu.</p>
+
+    <div class="cols">
+      <article class="col">
+        <h3><span class="ci">📄</span>Dokumentai ir duomenys</h3>
+        <ul class="ticks">
+          <li><b>Laiškas → sistema.</b> Užsakymas iš el. pašto automatiškai virsta įrašu — žmogus tik patvirtina.</li>
+          <li><b>CMR ir važtaraščiai vienoje vietoje.</b> Vairuotojas nufotografuoja telefonu, dokumentas pats atsiduria prie užsakymo.</li>
+          <li><b>Trūkstamų dokumentų sąrašas.</b> Sistema pati pasako, kurio krovinio popierių dar nėra — prieš išrašant sąskaitą.</li>
+          <li><b>Duomenų suvedimas tik kartą.</b> Vieną kartą įvesta informacija pati nukeliauja ten, kur reikia.</li>
+        </ul>
+      </article>
+
+      <article class="col">
+        <h3><span class="ci">🤝</span>Klientai ir užsakymai</h3>
+        <ul class="ticks">
+          <li><b>Užsakymo forma internete.</b> Klientas užpildo pats — be laiško, be perrašymo.</li>
+          <li><b>Krovinio sekimo puslapis.</b> Klientas mato statusą pats ir nebeskambina.</li>
+          <li><b>Automatiniai pranešimai.</b> „Pakrauta", „kirto sieną", „rytoj iškrovimas" — išsiunčiama be vadybininko.</li>
+          <li><b>Kainos pasiūlymas per minutę.</b> Įvedate maršrutą ir svorį — gaunate tvarkingą pasiūlymą su Jūsų logotipu.</li>
+          <li><b>Tvarkinga svetainė.</b> Jei norite — atnaujinta, greita, su užklausų forma.</li>
+        </ul>
+      </article>
+
+      <article class="col">
+        <h3><span class="ci">🚚</span>Vežėjai ir vidiniai reikalai</h3>
+        <ul class="ticks">
+          <li><b>Vežėjų kartoteka su priminimais.</b> Draudimo ar licencijos galiojimas baigiasi — pranešu likus mėnesiui, ne po fakto.</li>
+          <li><b>Maršrutų pelningumas.</b> Aišku, kur uždirbate, o kur dirbate į nuostolį.</li>
+          <li><b>GPS duomenys viena lentele.</b> Kilometrai, prastovos, degalai — be rankinio rinkimo.</li>
+          <li><b>Vidinė ataskaitų lenta.</b> Vienas ekranas vadovui: kas vyksta šiandien, savaitę, mėnesį.</li>
+          <li><b>Priminimai žmonėms.</b> Terminai, sąskaitos, apmokėjimai — sistema primena, ne kolega.</li>
+        </ul>
+      </article>
+    </div>
+
+    <!-- laiko skaičiuoklė -->
+    <div class="calc" id="calc">
+      <div class="calc-t">
+        <h3>Kiek tai kainuoja laiku?</h3>
+        <p class="mini">Įvertinkite patys — tai Jūsų skaičiai, ne mano pažadai. Skaičiuoklė tik sudaugina.</p>
+      </div>
+      <div class="calc-grid">
+        <label class="fld">
+          <span>Kiek žmonių dirba biure</span>
+          <input type="range" id="cPeople" min="1" max="12" step="1" value="4">
+          <output id="oPeople">4</output>
+        </label>
+        <label class="fld">
+          <span>Min. per dieną rankiniam darbui (vienam žmogui)</span>
+          <input type="range" id="cMin" min="15" max="240" step="15" value="90">
+          <output id="oMin">90 min.</output>
+        </label>
+        <label class="fld">
+          <span>Kiek to darbo realu automatizuoti</span>
+          <input type="range" id="cShare" min="10" max="80" step="5" value="50">
+          <output id="oShare">50 %</output>
+        </label>
+      </div>
+      <div class="calc-out">
+        <div class="co"><b id="rMonth">—</b><i>val. per mėnesį atgal</i></div>
+        <div class="co"><b id="rYear">—</b><i>val. per metus</i></div>
+        <div class="co"><b id="rDays">—</b><i>pilnų darbo dienų</i></div>
+      </div>
+      <p class="mini calc-note">Skaičiuota konservatyviai: 21 darbo diena per mėnesį. Realų procentą pamatysime po pirmo modulio — tada kalbėsime faktais.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SISTEMOS ────────────────────────────────────────────────────── -->
+<section class="sect" id="sistemos">
+  <div class="wrap">
+    <p class="label">3 · Jūsų sistemos</p>
+    <h2>Dirbu su tuo, ką jau turite</h2>
+    <p class="sub">
+      Nereikia nieko mesti ir mokytis iš naujo. Jei programa turi sąsają (API) — prisijungiu prie jos.
+      Jei neturi — dirbu su tuo, ką ji moka: eksportais, laiškais, Excel failais.
+      Žemiau — sistemos, su kuriomis dažniausiai dirba logistikos įmonės.
+    </p>
+
+    <div class="sys">
+      <div class="sysbox">
+        <h4>Krovinių biržos ir transporto valdymas</h4>
+        <p class="tags"><span>TIMOCOM</span><span>Trans.eu</span><span>Transporeon</span><span>CargoON</span><span>Teleroute</span><span>savos sistemos</span></p>
+      </div>
+      <div class="sysbox">
+        <h4>Apskaita ir ERP</h4>
+        <p class="tags"><span>Rivilė</span><span>Finvalda</span><span>Stekas</span><span>Pragma</span><span>Directo</span><span>Dynamics&nbsp;365 / Navision</span><span>1C</span></p>
+      </div>
+      <div class="sysbox">
+        <h4>GPS ir telematika</h4>
+        <p class="tags"><span>Ruptela</span><span>Teltonika</span><span>Mapon</span><span>Webfleet</span><span>Frotcom</span><span>Wialon</span></p>
+      </div>
+      <div class="sysbox">
+        <h4>Valstybinės sistemos</h4>
+        <p class="tags"><span>i.MAS (i.VAZ, i.SAF)</span><span>e.VMI</span><span>Muitinės deklaracijos</span><span>Sodra</span></p>
+      </div>
+      <div class="sysbox">
+        <h4>Kasdienybė</h4>
+        <p class="tags"><span>Excel</span><span>Outlook / Gmail</span><span>Google Sheets</span><span>WhatsApp</span><span>PDF ir skenai</span></p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><b>O jei sistema sena ir stabdo?</b> Pasakau atvirai ir parodau, kas šiandien rinkoje geriau — su skaičiais,
+      kiek kainuotų perėjimas ir ką jis duotų. Bet sprendimas visada Jūsų, ir aš nesiūlau keisti to, kas veikia.
+      Dažniausiai geriausias variantas yra <b>palikti seną sistemą ir uždėti ant jos patogų sluoksnį</b> —
+      pigiau, greičiau ir be rizikos sustabdyti darbą.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SAUGUMAS ────────────────────────────────────────────────────── -->
+<section class="sect dark" id="saugumas">
+  <div class="wrap">
+    <p class="label light">4 · Saugumas</p>
+    <h2>Suprantu, kad įsileisti žmogų prie savo sistemų — rimtas sprendimas</h2>
+    <p class="sub light">
+      Todėl darbas sudėliotas taip, kad <b>kiekviename žingsnyje kontrolės turite Jūs, o ne aš</b>.
+      Nereikia manimi pasitikėti iš anksto — pakanka, kad galite bet kada sustabdyti.
+    </p>
+
+    <div class="safe">
+      <div class="sc"><span class="si">🔑</span><h4>Neprašau Jūsų slaptažodžių</h4><p>Jūs patys susikuriate man atskirą paskyrą su ribotomis teisėmis — tik ten, kur reikia tam konkrečiam darbui. Bet kada išjungiate ją vienu mygtuku, be manęs.</p></div>
+      <div class="sc"><span class="si">👀</span><h4>Pradedame nuo žiūrėjimo, ne valdymo</h4><p>Iš pradžių tik matau duomenis. Teisę ką nors keisti gaunu tik tada, kai jau savo akimis matote, kad sprendimas veikia.</p></div>
+      <div class="sc"><span class="si">🧪</span><h4>Testuojame ant kopijos</h4><p>Jokia automatika nepaleidžiama į gyvus duomenis, kol neveikia ant testinės kopijos. Klaida kainuoja man laiko, ne Jums pinigų.</p></div>
+      <div class="sc"><span class="si">📓</span><h4>Kiekvienas veiksmas — žurnale</h4><p>Matote, kas, kada ir ką padarė automatiškai. Žurnalas Jūsų, ne mano — atsidarote patys, be manęs.</p></div>
+      <div class="sc"><span class="si">🛑</span><h4>Stop mygtukas</h4><p>Kiekvieną automatiką galite išjungti patys, akimirksniu. Išjungus viską, įmonė dirba lygiai taip, kaip dirbo iki manęs — nieko neprarandate.</p></div>
+      <div class="sc"><span class="si">✍️</span><h4>Sutartis, NDA ir BDAR</h4><p>Pasirašome konfidencialumo susitarimą ir duomenų tvarkymo sutartį. Jūsų klientų, vežėjų ir vairuotojų duomenys lieka Jūsų sistemose — jų niekur neperkeliu ir nenaudoju.</p></div>
+      <div class="sc"><span class="si">📦</span><h4>Kodas priklauso Jums</h4><p>Perduodu visą kodą ir aprašymą, kaip viskas veikia. Nesate pririšti prie manęs: prireikus tai perims bet kuris kitas programuotojas.</p></div>
+      <div class="sc"><span class="si">🤐</span><h4>Kuo mažiau prieigos, tuo geriau</h4><p>Neprašau prieigos „prie visko iš karto". Kiekvienam moduliui — tik tai, be ko jis neveiks. Baigus darbą prieigą galima uždaryti.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── KAIP DIRBAME ────────────────────────────────────────────────── -->
+<section class="sect alt" id="kaip">
+  <div class="wrap">
+    <p class="label">5 · Kaip dirbame kasdien</p>
+    <h2>Nuotoliniu būdu, bet ne atsiribojęs</h2>
+
+    <div class="two">
+      <div class="work">
+        <div class="wr"><span class="wn">🏠</span><div><b>Dirbu iš namų, Kaune</b><p>Tai leidžia laikyti kainą žemą. Atvažiuoju, kai reikia gyvai — pradžioje, perdavimo metu ir tada, kai to prašote.</p></div></div>
+        <div class="wr"><span class="wn">💬</span><div><b>Kalbuosi tiesiai su Jūsų žmonėmis</b><p>Ne tik su vadovu. Vadybininkas ir buhalterė tiksliausiai pasako, kur skauda — jie kasdien tai daro ranka.</p></div></div>
+        <div class="wr"><span class="wn">📅</span><div><b>Kas savaitę parodau, kas padaryta</b><p>Gyvai ekrane, ne ataskaitoje. Jei kažkas ne taip — pasakote iš karto, ir aš taisau, o ne po dviejų mėnesių.</p></div></div>
+        <div class="wr"><span class="wn">🔁</span><div><b>Pataisymai pagal atsiliepimus — įskaičiuoti</b><p>Kol modulis nepriimtas, taisymai nekainuoja papildomai. Mokate už veikiantį dalyką, ne už bandymus.</p></div></div>
+        <div class="wr"><span class="wn">🎓</span><div><b>Apmokau žmones ir palieku aprašymą</b><p>Trumpai, žmonių kalba. Kad sistema veiktų ir tada, kai manęs nėra šalia.</p></div></div>
+      </div>
+
+      <div class="steps">
+        <h3>Kaip atrodo vienas modulis</h3>
+        <ol class="tl">
+          <li><b>1 savaitė · Pokalbis</b><p>Pusvalandis su tais, kas dirba kasdien. Užrašau, kaip darbas vyksta dabar — žingsnis po žingsnio.</p></li>
+          <li><b>2 savaitė · Pirmas variantas</b><p>Parodau veikiantį dalyką ant testinių duomenų. Jūs bandote ir sakote, kas ne taip.</p></li>
+          <li><b>3 savaitė · Taisymai</b><p>Pagal Jūsų pastabas. Dažniausiai čia atsiranda tai, ko iš pradžių niekas nesugalvojo.</p></li>
+          <li><b>4 savaitė · Paleidimas</b><p>Įjungiame realiai, stebime kelias dienas šalia. Apmokau žmones. Perduodu kodą.</p></li>
+          <li><b>Toliau · 1 metai palaikymo</b><p>Jei kas nors sugenda — sutvarkau. Įskaičiuota į kainą.</p></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── KO REIKIA IŠ JŪSŲ ───────────────────────────────────────────── -->
+<section class="sect" id="reikia">
+  <div class="wrap">
+    <p class="label">6 · Ko man reikėtų iš Jūsų</p>
+    <h2>Trumpas ir visai nebaisus sąrašas</h2>
+    <div class="need">
+      <div class="nc"><span>1</span><div><b>Valandos pokalbio</b><p>Su žmogumi, kuris tą darbą dirba kasdien. Man to reikia labiau nei bet kokių prieigų.</p></div></div>
+      <div class="nc"><span>2</span><div><b>Kelių pavyzdinių dokumentų</b><p>Užsakymo laiškas, CMR, sąskaita. Konkrečius duomenis galite užtušuoti — man svarbi forma, ne turinys.</p></div></div>
+      <div class="nc"><span>3</span><div><b>Atskiros paskyros su ribotomis teisėmis</b><p>Tik toje sistemoje, kurios reikia tam moduliui. Sukuriate Jūs, uždarote Jūs.</p></div></div>
+      <div class="nc"><span>4</span><div><b>Vieno žmogaus, kuris pasako „taip" arba „ne"</b><p>Kad nereikėtų laukti sprendimų ir kad darbas nestrigtų dėl susirašinėjimo.</p></div></div>
+    </div>
+    <p class="note-l"><b>Ko NEreikia:</b> keisti sistemų, diegti programų darbuotojų kompiuteriuose,
+    mokytis nieko naujo, atiduoti man savo slaptažodžius ar kažką nuspręsti šiandien.</p>
+  </div>
+</section>
+
+<!-- ── KAINA + PRADŽIA ─────────────────────────────────────────────── -->
+<section class="sect alt" id="pradzia">
+  <div class="wrap">
+    <p class="label">7 · Kaina ir pradžia</p>
+    <h2>Nuo ko siūlau pradėti</h2>
+
+    <div class="start">
+      <ol class="st">
+        <li><span>1</span><div><b>Pasikalbame ir parodote, kas labiausiai erzina</b><p>30–60 min. Be įsipareigojimų ir be sutarties.</p></div></li>
+        <li><span>2</span><div><b>Per savaitę padarau vieną mažą dalyką — nemokamai</b><p>Pamatote rezultatą, o ne pažadą. Jei nepatiks — išsiskiriame be jokių pasekmių.</p></div></li>
+        <li><span>3</span><div><b>Jei patiko — sutartis ir aiški kaina</b><p>Kiekvienas modulis įkainojamas atskirai ir <b>prieš</b> darbą, ne po jo.</p></div></li>
+      </ol>
+
+      <aside class="price">
+        <h3>Kaina paprastai</h3>
+        <ul class="ticks">
+          <li><b>Vienkartinis mokestis</b> už kiekvieną modulį — sutariamas iš anksto raštu.</li>
+          <li><b>Jokių mėnesinių abonementų</b> ir jokio mokesčio už vartotoją.</li>
+          <li><b>1 metai palaikymo</b> įskaičiuota — gedimus taisau nemokamai.</li>
+          <li><b>Pirmas žingsnis nemokamas</b> — kad rizikuotumėte tik savo laiku.</li>
+        </ul>
+        <p class="mini">Tiksli suma priklauso nuo modulio apimties. Mažas automatinis darbas ir pilna
+        užsakymų sistema kainuoja skirtingai — todėl kainą sakau įvertinęs konkretų darbą, o ne iš anksto.</p>
+        <a class="btn btn-p wide" href="#kontaktai">Aptarti pirmą žingsnį</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ── DUK ─────────────────────────────────────────────────────────── -->
+<section class="sect" id="duk">
+  <div class="wrap narrow">
+    <p class="label">Dažni klausimai</p>
+    <h2>Tai, ko dažniausiai klausia</h2>
+    <div class="faq">
+      <details><summary>O jei mūsų sistema neturi jokių sąsajų?</summary><p>Tai dažniausias atvejis ir tai nėra kliūtis. Beveik kiekviena programa moka bent eksportuoti duomenis į Excel ar išsiųsti laišką — man to pakanka. Sprendimas tada tiesiog daromas kitaip, o Jums skirtumo nesimato.</p></details>
+      <details><summary>Ar reikės keisti tai, kaip dirbame dabar?</summary><p>Ne. Automatizavimo prasmė ta, kad žmogus daro tą patį, tik mažiau — sistema atlieka nuobodžią dalį. Jei sprendimas reikalauja perdaryti visą Jūsų darbo tvarką, vadinasi, sprendimas blogas.</p></details>
+      <details><summary>Kas bus, jei Jūs dingsite ar susirgsite?</summary><p>Kodas ir aprašymas — pas Jus nuo pat pradžių. Viskas padaryta standartinėmis, plačiai naudojamomis priemonėmis, todėl bet kuris programuotojas gali perimti. Ir svarbiausia: išjungus automatiką, darbas tęsiasi taip, kaip iki šiol.</p></details>
+      <details><summary>Ar mūsų duomenys kur nors iškeliaus?</summary><p>Ne. Duomenys lieka ten, kur ir buvo — Jūsų sistemose. Aš nekuriu jokių atskirų kopijų „pas save", o tai, kas man reikalinga darbui, sutariame raštu duomenų tvarkymo sutartyje.</p></details>
+      <details><summary>Kiek laiko tai atims iš mūsų žmonių?</summary><p>Realiai — kelias valandas per visą modulį: pokalbis pradžioje, pusvalandis pabandymui ir trumpas apmokymas. Visa kita darau aš.</p></details>
+      <details><summary>Ar dirbate su didelėmis įmonėmis, ar tik su mažomis?</summary><p>Dirbu su smulkiu ir vidutiniu verslu — būtent todėl kaina žemesnė nei IT įmonių, o kalbatės tiesiai su tuo, kas rašo kodą, be tarpininkų ir be projektų vadovų sluoksnio.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ─────────────────────────────────────────────────────────── -->
+<section class="cta" id="kontaktai">
+  <div class="wrap cta-in">
+    <h2>Pradėkime nuo vieno darbo, kuris Jus labiausiai erzina</h2>
+    <p>Parodykite jį — ir per savaitę pamatysite, ar tai išsprendžiama. Nemokamai ir be įsipareigojimų.</p>
+    <div class="cta-b">
+      <a class="btn btn-w" href="mailto:projektai777.koduojam@gmail.com?subject=D%C4%97l%20skaitmenini%C5%B3%20sprendim%C5%B3">Rašyti el. paštu</a>
+      <button class="btn btn-o" id="printBtn">Atsispausdinti pasiūlymą</button>
+    </div>
+    <p class="cta-s">Ignas · programuotojas · Kaunas · projektai777.koduojam@gmail.com</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>© 2026 Ignas — skaitmeniniai sprendimai smulkiam ir vidutiniam verslui, Kaunas.</p>
+    <p class="mini">Šis puslapis parengtas kaip pasiūlymo pristatymas. Jame nėra jokių Jūsų įmonės ar darbuotojų duomenų.</p>
+  </div>
+</footer>
+
+<script src="./app.js"></script>
+</body>
+</html>
