@@ -155,6 +155,8 @@ button:disabled{cursor:not-allowed; opacity:.45}
   color:var(--muted); padding:12px 14px; border-bottom:1px solid var(--line); background:var(--soft); white-space:nowrap}
 .tbl th.r{text-align:right}
 .tbl td{padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:middle}
+/* amounts and order numbers must never break across lines — a wrapped "1 420,00 / €" reads as a bug */
+.tbl td.r,.tbl td.mono{white-space:nowrap}
 .tbl tbody tr{cursor:pointer; transition:background .12s}
 .tbl tbody tr:hover{background:var(--soft)}
 .tbl tbody tr:focus{outline:2px solid var(--acc); outline-offset:-2px}
@@ -189,6 +191,8 @@ button:disabled{cursor:not-allowed; opacity:.45}
 .f span{display:block; font-size:11.5px; color:var(--muted); margin-bottom:2px}
 .f b{font-size:14px; font-weight:600; overflow-wrap:anywhere}
 .f-l{background:repeating-linear-gradient(45deg,#fafbfd 0 8px,#f3f5f9 8px 16px)}
+/* an odd field count would leave a bare half-row; let the last one span instead */
+.fgrid .f:last-child:nth-child(odd){grid-column:1 / -1}
 .drlock{margin-top:12px; background:var(--warnb); border:1px solid #f0dcb6; color:#6d4602; border-radius:var(--r-sm);
   padding:10px 13px; font-size:13px}
 .dr-s{font-size:14px; font-weight:700; margin:22px 0 9px; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
@@ -219,7 +223,10 @@ button:disabled{cursor:not-allowed; opacity:.45}
 .tl-t{display:block; font-size:11.5px; color:var(--muted2); margin-bottom:1px}
 
 /* ── pašto robotas ──────────────────────────────────────────────────── */
-.mailgrid{display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start}
+/* stretch both cards to the same height: a ragged gap under the shorter one reads as a layout bug */
+.mailgrid{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+.mailgrid .card{display:flex; flex-direction:column; margin-bottom:0}
+.mailgrid .card > .mini{margin-top:auto; padding-top:10px}
 .inbox{display:flex; flex-direction:column; gap:7px; margin-bottom:12px}
 .inbox li{display:flex; gap:10px; align-items:flex-start; border:1px solid var(--line); border-radius:var(--r-sm); padding:10px 12px; transition:.2s}
 .mu{background:var(--card); border-left:3px solid var(--info)}
