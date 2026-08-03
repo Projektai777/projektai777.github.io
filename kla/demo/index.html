@@ -1,15 +1,16 @@
 <!doctype html>
 <!-- © 2026 Ignas — working prototype of a tailored forwarding system (TMS).
-     Purpose: prove competence to a Kaunas freight forwarder currently stuck on a
-     heavily-modded InfoTrans 5 running on an unmaintained office server.
-     It must show, not claim: domain understanding, the Outlook invoice robot they
-     asked for, the exchanges they named (Cargo.lt, Trans.eu), Rivile, and — above
-     all — VISIBLE access control, because their stated #1 concern is data safety.
+     Shown to prospective forwarding clients as proof of competence: domain
+     understanding, an invoice-from-email walkthrough, freight-exchange and
+     accounting integrations, and VISIBLE role-based access control.
 
      Static only (index.html + style.css + app.js). No backend, no network calls,
      no cookies, no storage. All data below is invented; the page says so.
-     ZERO client personal data (no names, phones, addresses) — same rule as ../
-     noindex: private proposal material, not public marketing. -->
+
+     CONFIDENTIALITY: this file is served publicly (noindex is a request to
+     crawlers, not authentication). It must therefore never name a prospect, nor
+     describe any prospect's software, servers, versions or security weaknesses.
+     Those belong in the private letter and in CLAUDE.md, not here. -->
 <html lang="lt">
 <head>
 <meta charset="utf-8">
@@ -47,7 +48,7 @@
       <button class="sn" data-view="sec"><span aria-hidden="true">🔒</span>Saugumas</button>
     </nav>
     <div class="side-foot">
-      <p>Kiekvienas Jūsų paspaudimas šiame prototipe patenka į <b>veiksmų žurnalą</b> — jį rasite skiltyje „Saugumas".</p>
+      <p>Jūsų veiksmai šiame prototipe — atidarymai, paieškos, filtrai, vaidmens keitimai — patenka į <b>veiksmų žurnalą</b>. Jį rasite skiltyje „Saugumas".</p>
     </div>
   </aside>
 
@@ -130,6 +131,7 @@
       <div class="lead">
         <h2>Sąskaitos iš Outlook — be žmogaus</h2>
         <p>Robotas pats mato naują laišką nurodytame pašto aplanke, perskaito PDF priedą, ištraukia laukus, susieja su užsakymu ir <b>patikrina, ar suma sutampa su sutarta</b>. Nesutampa — sustabdo ir perduoda žmogui. Nė vieno laiško niekas neatidaro ranka.</p>
+        <p class="lead-h"><b>Ką tiksliai matote:</b> ši skiltis yra <b>eigos demonstracija</b> — žingsniai ir sumos surašyti iš anksto, tikro PDF čia niekas neskaito. Parodyta ne tai, kad jau moku, o <b>kaip būtų sudėliota</b> ir, svarbiausia, <b>kur sistema privalo sustoti</b>. Tikrą nuskaitymą siūlau padaryti pirmame — nemokamame — žingsnyje su Jūsų pačių sąskaitomis; tada matysite tikslumą su realiais dokumentais, o ne mano pavyzdžiais.</p>
       </div>
 
       <div class="mailgrid">
@@ -151,11 +153,13 @@
         <h3>Kur robotas sustoja — ir taip turi būti</h3>
         <div class="lim">
           <div><b>Neatpažįstamas dokumentas</b><p>Ranka rašytas ar prastai nuskenuotas priedas neinterpretuojamas spėjant — laiškas keliauja žmogui su žyma „nenuskaityta".</p></div>
-          <div><b>Suma nesutampa</b><p>Bet koks skirtumas nuo sutartos kainos — sustabdoma. Sistema pati nieko nepatvirtina už Jus.</p></div>
+          <div><b>Suma nesutampa</b><p>Lyginama <b>be PVM</b>: pervežimo PVM ne visada 21 % (eksporto atveju gali būti 0 %), tad lyginti sutartą kainą su suma su PVM būtų klaida. Bet koks skirtumas — sustabdoma.</p></div>
           <div><b>Nerastas užsakymas</b><p>Jei sąskaitos nepavyksta susieti nei pagal užsakymo numerį, nei pagal vežėją, sumą ir datą — sprendžia žmogus.</p></div>
-          <div><b>Naujas tiekėjas</b><p>Pirmą kartą matomas siuntėjas visada tvirtinamas ranka. Tai paprasčiausia apsauga nuo suklastotos sąskaitos.</p></div>
+          <div><b>Naujas tiekėjas ar pasikeitęs IBAN</b><p>Pirmą kartą matomas siuntėjas arba nauja banko sąskaita pažįstamam vežėjui visada tvirtinami ranka. Tai pigiausia apsauga nuo suklastotos sąskaitos.</p></div>
+          <div><b>Dublikatas</b><p>Ta pati sąskaita, atsiųsta antrą kartą (ar iš kito adreso), atpažįstama ir neužregistruojama antrąkart.</p></div>
+          <div><b>Įtartinas failas</b><p>Priedai tikrinami antivirusine ir atidaromi izoliuotai. Per didelis, sugadintas ar kenkėjiškas failas toliau nekeliauja.</p></div>
         </div>
-        <p class="mini">Tikslas nėra „nulis žmonių". Tikslas — kad žmogus liestų tik tuos 1–2 laiškus per dieną, kuriems tikrai reikia sprendimo.</p>
+        <p class="mini">Tikslas nėra „nulis žmonių" — tikslas, kad žmogus liestų tik tas sąskaitas, kurioms reikia sprendimo. <b>Kiek jų bus, sąžiningai nežinau, kol nepamačiau Jūsų sąskaitų</b>: tikslus procentas išmatuojamas per pirmas kelias savaites ir tik tada apie jį kalbu skaičiais.</p>
       </div>
     </section>
 
@@ -170,7 +174,7 @@
         <article class="card ic">
           <div class="ic-h"><h3>Trans.eu</h3><span class="pill pill-ok">Patikrinta</span></div>
           <p>Yra vieša REST sąsaja su OAuth autorizacija. Galima: skelbti krovinius, priimti vežėjų pasiūlymus, siųsti vežimo užsakymą ir matyti krovinio eigą <b>savo</b> programoje, neatsidarant biržos.</p>
-          <p class="ic-n">Reikia: Jūsų paskyros ir raštiško leidimo jungtis.</p>
+          <p class="ic-n">Reikia: Jūsų paskyros, programos registracijos ir jų išduotų raktų. Įspėju iš anksto: Trans.eu <b>neturi testinės aplinkos</b> — derinama su tikra paskyra, todėl pirmi bandymai daromi atsargiai ir su Jūsų žinia.</p>
         </article>
 
         <article class="card ic">
@@ -182,13 +186,13 @@
         <article class="card ic">
           <div class="ic-h"><h3>Rivilė</h3><span class="pill pill-w">Derinama</span></div>
           <p>Sąskaitos ir pirkimo dokumentai keliauja į apskaitą be perrašymo. Tikslų būdą (sąsaja ar reguliarūs failų mainai) pasirenka Jūsų buhalterė — nuo jos priklauso ir formatas.</p>
-          <p class="ic-n">Reikia: 20 min. pokalbio su buhaltere ir vieno pavyzdinio eksporto failo.</p>
+          <p class="ic-n">Sąžiningai: Rivilės sąsaja reikalauja pakankamai naujos versijos, aktyvuotos paslaugos ir įdiegto tarpinio komponento. <b>Kol nežinau Jūsų versijos, negaliu pažadėti, kad ji tiks</b> — jei ne, dirbama failų mainais. Reikia 20 min. su buhaltere ir vieno pavyzdinio failo.</p>
         </article>
 
         <article class="card ic">
           <div class="ic-h"><h3>Microsoft 365 / Outlook</h3><span class="pill pill-ok">Standartinė</span></div>
-          <p>Oficiali Microsoft sąsaja. Prieiga duodama <b>Jūsų administratoriaus</b> ir apribojama iki vieno pašto aplanko, tik skaitymui. Atšaukiama vienu paspaudimu, be manęs.</p>
-          <p class="ic-n">Reikia: Jūsų sprendimo, kuris aplankas.</p>
+          <p>Oficiali Microsoft sąsaja. Prieigą duoda ir bet kada atšaukia <b>Jūsų administratorius</b>, be manęs.</p>
+          <p class="ic-n">Sąžiningai apie ribas: Microsoft teisės natūraliai duodamos visai <b>pašto dėžutei</b>, o ne vienam aplankui. Todėl švariausias sprendimas — <b>atskira pašto dėžutė vien sąskaitoms</b> (Jūsų taisyklė persiunčia į ją tik tuos laiškus). Tada robotas fiziškai nemato jokio kito susirašinėjimo. Jei norėsite likti prie esamos dėžutės, apribojimą reikės derinti su administratoriumi.</p>
         </article>
 
         <article class="card ic">
@@ -205,13 +209,13 @@
       </div>
 
       <div class="card note">
-        <h3>Dėl Airtable — atsakau atvirai</h3>
-        <p>Airtable yra gera priemonė, bet jos stiprybė kita: greitai susidėlioti lentelę, kai dar nežinai, ko nori. Jūs jau 25 metus žinote, ko norite.</p>
+        <h3>Dėl Airtable — atsakau atvirai, su savo interesu ant stalo</h3>
+        <p>Iš karto pasakau: siūlydamas savo darbą aš turiu interesą, todėl stengiuosi lyginti sąžiningai, o ne patogiai sau. Airtable yra gera priemonė — tik jos stiprybė kita: greitai susidėlioti lentelę, kai dar nežinai, ko nori.</p>
         <ul class="ticks">
-          <li><b>Kaina auga su žmonėmis ir laiku.</b> Tai mėnesinė prenumerata už kiekvieną naudotoją — amžinai. Vienkartinis darbas sumokamas vieną kartą.</li>
-          <li><b>Duomenys gulėtų JAV bendrovės serveriuose.</b> Tai išsprendžiama sutartimis, bet Jums svarbiausia buvo priešingas dalykas — kad duomenys būtų kuo arčiau Jūsų.</li>
-          <li><b>Sunkiau padaryti tai, ko prašote.</b> Automatinis sąskaitų nuskaitymas iš pašto, Cargo.lt/Trans.eu jungtys, LT/EN/RU dokumentai — vis tiek reikėtų atskiro programavimo <i>šalia</i> Airtable.</li>
-          <li><b>Kur Airtable tikrai vertas dėmesio:</b> vidiniams sąrašams, kurie keičiasi kas mėnesį ir kurių nenorite programuoti. Jei toks poreikis atsiras — pasakysiu, o ne tylėsiu vien todėl, kad tai ne mano darbas.</li>
+          <li><b>Airtable kaina auga su žmonėmis ir laiku</b> — mėnesinė prenumerata už kiekvieną redaguojantį naudotoją, be pabaigos. Bet <b>ir sava sistema nėra nemokama:</b> lieka serverio nuoma, priežiūra ir kopijos. Skirtumas ne „nemokama prieš mokamą", o „kam ir už ką mokate".</li>
+          <li><b>Duomenų vieta.</b> Pagal nutylėjimą Airtable duomenys laikomi JAV; europietiška saugojimo vieta egzistuoja, bet tik brangiausiame plane ir su išlygomis. Jums svarbiausia buvo priešingas dalykas — kad duomenys būtų kuo arčiau Jūsų ir Jūsų rankose.</li>
+          <li><b>To, ko konkrečiai prašote, ji vis tiek nepadarys viena.</b> Sąskaitų nuskaitymas iš pašto, Cargo.lt ir Trans.eu jungtys, LT/EN/RU dokumentai — reikėtų atskiro programavimo <i>šalia</i> Airtable.</li>
+          <li><b>Kur ji tikrai gali būti geresnis pasirinkimas:</b> vidiniams sąrašams ir procesams, kurie keičiasi kas mėnesį ir kurių neverta programuoti. Galutinį atsakymą duosiu <b>pamatęs, kaip dirbate</b> — jei kuriai nors daliai Airtable bus pigiau ir protingiau, taip ir pasakysiu.</li>
         </ul>
       </div>
     </section>
@@ -245,6 +249,7 @@
             <li><b>Serverio prieigą turi ir prižiūrėtojas.</b> Kas turi serverio raktus, tas techniškai gali daug. Tai sprendžiama NDA, duomenų tvarkymo sutartimi ir tuo, kad prieigą galite atimti — ne teiginiu „neįmanoma".</li>
             <li><b>Perduodu kodą ir prisijungimus Jums.</b> Su neterminuota teise naudotis ir keisti. Nesate prie manęs pririšti.</li>
             <li><b>Didžiausia rizika — ne serveris, o laiškas.</b> Suklastota vežėjo sąskaita su pakeista banko sąskaita nuima pinigus greičiau nei bet koks įsilaužimas. Todėl naujas tiekėjas ir pasikeitęs IBAN visada tvirtinami ranka.</li>
+            <li><b>Vienas žmogus — tikra rizika, ir aš jos neslepiu.</b> Verslui kritinę sistemą reikia ne tik parašyti, bet ir prižiūrėti: atnaujinimai, kopijų tikrinimas, gedimai. Todėl prieš pradedant raštu sutariame, <b>kas tai daro po pirmų metų</b> ir kiek tai kainuoja. „Kodą turite Jūs" savaime nėra tęstinumas.</li>
             <li><b>Sakau ir tai, kas nemalonu.</b> Jei kažko nemoku arba jei sprendimas Jums per brangus — pasakysiu iš karto.</li>
           </ul>
         </div>
@@ -275,7 +280,8 @@
       </div>
 
       <div class="card">
-        <h3>Kur viskas fiziškai gyvena</h3>
+        <h3>Kur viskas fiziškai gyventų</h3>
+        <p class="mini mb">Tai siūloma architektūra, o ne kažkas, kas jau veikia. Sprendimas — Jūsų.</p>
         <div class="arch">
           <div class="ab"><b>Jūsų biuras</b><i>5–10 kompiuterių<br>naršyklė, be diegimo</i></div>
           <div class="aarr" aria-hidden="true"><span>šifruotas ryšys</span>→</div>
@@ -283,7 +289,7 @@
           <div class="aarr" aria-hidden="true"><span>kas naktį</span>→</div>
           <div class="ab"><b>Atsarginės kopijos</b><i>antra vieta ES<br>šifruotos, tikrinamos</i></div>
         </div>
-        <p class="mini">Palyginimui: šiandien programa sukasi biuro serveryje, kurio, kaip supratau, iš tikrųjų neprižiūri niekas. Tokia dėžė yra saugi tol, kol nesugenda diskas, neužlieja vandens, neužrakina išpirkos virusas arba tiesiog neišjungia elektros. <b>Perkėlimas į prižiūrimą serverį dažniausiai yra saugumo padidinimas, o ne sumažinimas</b> — bet jei norėsite palikti viską biure, tai irgi įmanoma ir aš pasakysiu, ko tam reikės.</p>
+        <p class="mini">Dažnas klausimas: „ar ne saugiau laikyti viską savo serveryje biure?" Sąžiningas atsakymas — <b>priklauso nuo to, ar tą serverį kas nors prižiūri</b>. Neprižiūrima dėžė saugi tol, kol nesugenda diskas, neužrakina išpirkos virusas arba tiesiog neišjungia elektros. Todėl siūlau prižiūrimą serverį — bet jei norite palikti viską pas save, tai visiškai įmanoma, ir tada aiškiai pasakau, ko tam reikės (kopijų tikrinimo, atnaujinimų, atsakingo žmogaus).</p>
       </div>
     </section>
 
