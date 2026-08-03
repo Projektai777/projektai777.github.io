@@ -43,8 +43,6 @@ button:disabled{cursor:not-allowed; opacity:.45}
   letter-spacing:.12em; padding:3px 9px; border-radius:999px}
 .strip-t{flex:1 1 320px; min-width:0}
 .strip-t b{color:#fff}
-.strip-a{color:var(--acc2); text-decoration:none; font-weight:600; white-space:nowrap}
-.strip-a:hover{text-decoration:underline}
 
 /* ── karkasas ───────────────────────────────────────────────────────── */
 .app{display:flex; min-height:calc(100vh - 40px); align-items:stretch}
