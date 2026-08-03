@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Objektų valdymas — UAB „Santekai" | Demonstracinė versija</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0d1b2a">
+<link rel="icon" href="./img/logo.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<style>
+  .adm { padding: 34px 0 70px; }
+  .adm h1 { font-size: clamp(26px, 4vw, 36px); color: var(--orange); margin-bottom: 8px; }
+  .note {
+    background: #fff6f0; border-left: 3px solid var(--orange); padding: 16px 18px;
+    margin: 20px 0 28px; color: #52616f; font-size: 15.5px;
+  }
+  .tabs { display: flex; gap: 10px; margin-bottom: 26px; flex-wrap: wrap; }
+  .tabs button {
+    padding: 11px 20px; border: 1px solid var(--line); background: #fff; border-radius: 999px;
+    font: 700 14.5px/1 Lato, sans-serif; cursor: pointer; color: var(--ink);
+  }
+  .tabs button[aria-selected="true"] { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .panel[hidden] { display: none; }
+  .adm-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 34px; align-items: start; }
+  .list { display: flex; flex-direction: column; gap: 12px; }
+  .row {
+    display: flex; gap: 14px; align-items: center; border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 12px; background: #fff; box-shadow: var(--shadow);
+  }
+  .row .rimg { width: 72px; height: 54px; border-radius: 4px; overflow: hidden; background: var(--navy); flex: 0 0 auto; }
+  .row .rimg img, .row .rimg .cover-svg { width: 100%; height: 100%; object-fit: cover; }
+  .row .rtxt { flex: 1; min-width: 0; }
+  .row .rtxt b { display: block; font: 700 15.5px/1.3 Lato, sans-serif; color: var(--navy); }
+  .row .rtxt span { font-size: 13.5px; color: var(--muted); }
+  .row .del {
+    border: 1px solid var(--line); background: #fff; border-radius: 3px; padding: 8px 12px;
+    cursor: pointer; color: #b3261e; font: 700 13.5px/1 Lato, sans-serif;
+  }
+  .row .del:hover { border-color: #e6b0ab; background: #fdecea; }
+  .badge-new { background: #e8f5ec; border: 1px solid #b9dfc6; color: #1c6b34; font-size: 11.5px; padding: 3px 7px; border-radius: 3px; margin-left: 6px; }
+  .card-form { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; box-shadow: var(--shadow); }
+  .card-form h2 { font-size: 21px; color: var(--navy); margin-bottom: 4px; }
+  .card-form > p { color: var(--muted); font-size: 14.5px; margin: 0 0 20px; }
+  .card-form label { display: block; margin-bottom: 14px; font: 700 14px/1.4 Lato, sans-serif; color: var(--navy); }
+  .card-form input, .card-form select, .card-form textarea {
+    width: 100%; margin-top: 6px; padding: 11px 13px; border: 1px solid #d5dde5; border-radius: 3px;
+    font: 400 15.5px/1.4 Lato, sans-serif; color: var(--ink); background: #fff; min-width: 0;
+  }
+  .card-form input:focus, .card-form select:focus, .card-form textarea:focus { outline: 2px solid var(--orange); outline-offset: -1px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .two > * { min-width: 0; }
+  .hint { font-weight: 400; color: var(--muted); font-size: 13px; }
+  .ok { background: #e8f5ec; border: 1px solid #b9dfc6; color: #1c6b34; padding: 11px 14px; border-radius: 3px; font-size: 15px; margin-bottom: 14px; }
+  table.req { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  table.req th, table.req td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 15px; vertical-align: top; }
+  table.req th { background: var(--bg-soft); font: 700 13px/1 Lato, sans-serif; text-transform: uppercase; letter-spacing: .4px; color: var(--muted); }
+  table.req td b { color: var(--orange); font-family: Ubuntu, sans-serif; }
+  .scroll-x { overflow-x: auto; }
+  .none { color: var(--muted); padding: 30px 0; text-align: center; }
+  .back { display: inline-block; margin-bottom: 18px; color: var(--blue); text-decoration: none; font-weight: 700; }
+  @media (max-width: 900px) { .adm-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 620px) { .two { grid-template-columns: 1fr; gap: 0; } }
+</style>
+</head>
+<body>
+
+<div class="demobar">
+  <strong>Demonstracinė versija.</strong> Pakeitimai lieka tik šioje naršyklėje ir nieko nepaskelbia.
+</div>
+
+<div class="wrap adm">
+  <a class="back" href="./index.html">← Atgal į atliktų darbų puslapį</a>
+  <h1>Objektų valdymas</h1>
+  <p style="color:var(--muted);margin:0">UAB „Santekai" · vidinis skydelis</p>
+
+  <div class="note">
+    <b>Jums to daryti nereikia.</b> Naujus objektus sudedame mes — atsiunčiate nuotraukas ir pora sakinių
+    telefonu, žinute ar el. paštu, o puslapyje jie atsiranda sutvarkyti. Šis skydelis skirtas tam,
+    kad <b>galėtumėte</b> tai padaryti patys, jei kada norėsite — ir po metų, be jokio papildomo mokesčio.
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" data-tab="objektai" aria-selected="true">Objektai</button>
+    <button role="tab" data-tab="uzklausos" aria-selected="false">Gautos užklausos <span id="reqCount"></span></button>
+  </div>
+
+  <section class="panel" id="p-objektai">
+    <div class="adm-grid">
+      <div>
+        <h2 style="font-size:19px;color:var(--navy);margin-bottom:14px">Paskelbti objektai (<span id="cnt"></span>)</h2>
+        <div class="list" id="list"></div>
+      </div>
+
+      <form class="card-form" id="addForm">
+        <h2>Pridėti objektą</h2>
+        <p>Užpildoma per porą minučių. Privalomi tik pirmi trys laukai.</p>
+        <div class="ok" id="ok" hidden></div>
+
+        <label>Pavadinimas
+          <input name="title" required placeholder="Pvz.: Stovų keitimas laiptinėje">
+        </label>
+        <div class="two">
+          <label>Sritis
+            <select name="cat" id="cat"></select>
+          </label>
+          <label>Vieta
+            <input name="place" required placeholder="Kaunas, Dainava">
+          </label>
+        </div>
+        <div class="two">
+          <label>Objektas
+            <input name="object" placeholder="Daugiabutis, 20 butų">
+          </label>
+          <label>Trukmė
+            <input name="duration" placeholder="9 darbo dienos">
+          </label>
+        </div>
+        <label>Trumpas aprašymas
+          <textarea name="summary" rows="2" placeholder="Vienas sakinys, ką padarėte."></textarea>
+        </label>
+        <label>Kas buvo padaryta <span class="hint">— kiekvienas darbas naujoje eilutėje</span>
+          <textarea name="works" rows="4" placeholder="Pakeisti šalto vandens stovai&#10;Sumontuoti ventiliai&#10;Atstatyta apdaila"></textarea>
+        </label>
+        <label>Rezultatas
+          <input name="result" placeholder="Ką klientas gavo.">
+        </label>
+
+        <div class="drop" id="drop">
+          <input type="file" id="files" accept="image/*" multiple hidden>
+          <p><strong>📷 Nuotraukos</strong><br><span>Nutempkite arba paspauskite. Iš telefono — tiesiog nufotografuokite.</span></p>
+        </div>
+        <div class="thumbs" id="thumbs"></div>
+
+        <p class="err" id="err" hidden></p>
+        <button class="btn wide" type="submit" style="margin-top:16px">Paskelbti objektą</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="panel" id="p-uzklausos" hidden>
+    <div class="scroll-x">
+      <table class="req" id="reqTable"></table>
+    </div>
+    <p class="none" id="reqNone" hidden>Užklausų kol kas nėra. Užpildykite formą
+      <a href="./index.html#uzklausa">atliktų darbų puslapyje</a> — ji atsiras čia.</p>
+  </section>
+</div>
+
+<script src="./projects.js"></script>
+<script>
+(function () {
+  'use strict';
+  var LS_REQ = 'santekai_demo_uzklausos';
+  var LS_NEW = 'santekai_demo_objektai';
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+  var read = function (k) { try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch (_) { return []; } };
+  var write = function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} };
+
+  /* ---- kortelių sąrašas: demonstraciniai + naujai pridėti ---- */
+  function all() { return read(LS_NEW).concat(PROJECTS); }
+
+  function rowImg(p) {
+    if (p.photoData) return '<img src="' + p.photoData + '" alt="">';
+    if (p.photo) return '<img src="' + p.photo + '" alt="">';
+    return coverSvg(p.cover || 'default');
+  }
+
+  function renderList() {
+    var items = all();
+    $('cnt').textContent = items.length;
+    $('list').innerHTML = items.map(function (p) {
+      var isNew = !!p.addedAt;
+      return '<div class="row">' +
+        '<div class="rimg">' + rowImg(p) + '</div>' +
+        '<div class="rtxt"><b>' + esc(p.title) + (isNew ? '<span class="badge-new">naujas</span>' : '') + '</b>' +
+        '<span>' + esc(p.place) + (p.year ? ' · ' + p.year : '') + (p.duration ? ' · ' + esc(p.duration) : '') + '</span></div>' +
+        (isNew ? '<button class="del" data-id="' + esc(p.id) + '">Šalinti</button>' : '') +
+        '</div>';
+    }).join('');
+  }
+
+  $('list').addEventListener('click', function (e) {
+    var b = e.target.closest('.del');
+    if (!b) return;
+    write(LS_NEW, read(LS_NEW).filter(function (p) { return p.id !== b.dataset.id; }));
+    renderList();
+  });
+
+  /* ---- nuotraukos ---- */
+  var photos = [];
+  function drawThumbs() {
+    $('thumbs').innerHTML = photos.map(function (p, i) {
+      return '<div class="thumb"><img src="' + p.url + '" alt="">' +
+        '<button type="button" data-i="' + i + '" aria-label="Pašalinti">×</button></div>';
+    }).join('');
+  }
+  function addFiles(fl) {
+    Array.prototype.slice.call(fl)
+      .filter(function (f) { return /^image\//.test(f.type); })
+      .slice(0, 8 - photos.length)
+      .forEach(function (f) {
+        var r = new FileReader();
+        // Skaitome į data-URL, kad paskelbtas objektas išliktų perkrovus puslapį.
+        r.onload = function () { photos.push({ url: r.result }); drawThumbs(); };
+        r.readAsDataURL(f);
+      });
+  }
+  $('thumbs').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-i]');
+    if (!b) return;
+    photos.splice(+b.dataset.i, 1);
+    drawThumbs();
+  });
+  $('drop').addEventListener('click', function () { $('files').click(); });
+  $('files').addEventListener('change', function (e) { addFiles(e.target.files); e.target.value = ''; });
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    $('drop').addEventListener(ev, function (e) { e.preventDefault(); $('drop').classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    $('drop').addEventListener(ev, function (e) { e.preventDefault(); $('drop').classList.remove('over'); });
+  });
+  $('drop').addEventListener('drop', function (e) { if (e.dataTransfer) addFiles(e.dataTransfer.files); });
+
+  /* ---- naujas objektas ---- */
+  $('cat').innerHTML = CATS.filter(function (c) { return c.id !== 'visi'; })
+    .map(function (c) { return '<option value="' + c.id + '">' + esc(c.name) + '</option>'; }).join('');
+
+  $('addForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var f = e.target;
+    var title = f.title.value.trim();
+    var place = f.place.value.trim();
+    if (title.length < 3 || place.length < 2) {
+      $('err').textContent = 'Užpildykite pavadinimą ir vietą.';
+      $('err').hidden = false;
+      return;
+    }
+    $('err').hidden = true;
+    var works = f.works.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+    var item = {
+      id: 'nauja-' + Date.now(),
+      addedAt: new Date().toISOString(),
+      title: title,
+      cats: [f.cat.value],
+      object: f.object.value.trim() || '—',
+      place: place,
+      year: new Date().getFullYear(),
+      duration: f.duration.value.trim() || '—',
+      summary: f.summary.value.trim(),
+      works: works,
+      result: f.result.value.trim(),
+      tags: [],
+      photoData: photos.length ? photos[0].url : null,
+      cover: 'default',
+    };
+    var list = read(LS_NEW);
+    list.unshift(item);
+    // data-URL nuotraukos didelės — laikome tik kelias, kad neperpildytume localStorage.
+    write(LS_NEW, list.slice(0, 5));
+    photos = [];
+    drawThumbs();
+    f.reset();
+    $('ok').textContent = '✓ Objektas „' + title + '" paskelbtas.';
+    $('ok').hidden = false;
+    renderList();
+  });
+
+  /* ---- užklausos ---- */
+  function renderReqs() {
+    var rows = read(LS_REQ);
+    $('reqCount').textContent = rows.length ? '(' + rows.length + ')' : '';
+    $('reqNone').hidden = rows.length > 0;
+    $('reqTable').hidden = rows.length === 0;
+    if (!rows.length) { $('reqTable').innerHTML = ''; return; }
+    $('reqTable').innerHTML =
+      '<tr><th>Nr.</th><th>Gauta</th><th>Klientas</th><th>Objektas</th><th>Žinutė</th><th>Nuotr.</th></tr>' +
+      rows.map(function (r) {
+        var d = new Date(r.at);
+        var when = isNaN(d) ? '—' : d.toLocaleString('lt-LT', { dateStyle: 'short', timeStyle: 'short' });
+        return '<tr><td><b>' + esc(r.nr) + '</b></td><td>' + esc(when) + '</td>' +
+          '<td>' + esc(r.vardas) + '<br><span style="color:var(--muted);font-size:13.5px">' + esc(r.telefonas) +
+          (r.pastas ? '<br>' + esc(r.pastas) : '') + '</span></td>' +
+          '<td>' + esc(r.objektas || '—') + '</td><td>' + esc(r.zinute) + '</td>' +
+          '<td>' + (r.nuotraukos || 0) + '</td></tr>';
+      }).join('');
+  }
+
+  /* ---- kortelės ---- */
+  document.querySelector('.tabs').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-tab]');
+    if (!b) return;
+    document.querySelectorAll('.tabs button').forEach(function (x) {
+      x.setAttribute('aria-selected', String(x === b));
+    });
+    $('p-objektai').hidden = b.dataset.tab !== 'objektai';
+    $('p-uzklausos').hidden = b.dataset.tab !== 'uzklausos';
+  });
+
+  renderList();
+  renderReqs();
+})();
+</script>
+</body>
+</html>
