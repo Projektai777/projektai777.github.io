@@ -19,6 +19,8 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+/* Navigacija „lipni", tad be šito nuorodos į #darbai / #uzklausa nuslinktų po ja. */
+:target, #darbai, #uzklausa { scroll-margin-top: 100px; }
 body {
   margin: 0;
   font: 400 17px/1.65 Lato, "Segoe UI", system-ui, sans-serif;
@@ -205,6 +207,9 @@ a { color: var(--blue); }
 
 /* ---------- modalas ---------- */
 .modal { position: fixed; inset: 0; background: rgba(13, 27, 42, .72); z-index: 60; display: grid; place-items: center; padding: 4vw; overflow-y: auto; }
+/* display:grid nugalėtų naršyklės [hidden] taisyklę — be šios eilutės uždarytas
+   modalas liktų virš puslapio ir surytų visus paspaudimus. */
+.modal[hidden] { display: none; }
 .modal-in {
   background: #fff; border-radius: var(--radius); width: min(880px, 100%); max-height: 92vh; overflow-y: auto;
   position: relative; box-shadow: var(--shadow-lg);
