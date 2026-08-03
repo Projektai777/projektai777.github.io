@@ -26,10 +26,15 @@
   /* The one order an external carrier is allowed to see. */
   var CARRIER_ORDER = 'EKS-2026-0418';
 
+  /* Us, the forwarder. A forwarder's order to its subcontracted carrier is issued by
+     the FORWARDER — the end client must not appear on it at all, or the carrier can
+     go round us next time. This is the whole point of the masking demo. */
+  var FORWARDER = 'UAB „Ekspedicija" (Jūsų įmonė)';
+
   var ORDERS = [
     {
       id: 'EKS-2026-0418', client: 'UAB „Nemuno metalas"', from: 'Kaunas, LT', to: 'Warszawa, PL',
-      cargo: 'Plieno ritiniai, 21 t', mode: 'FTL', tags: ['ADR 3 kl.'],
+      cargo: 'Plieno ritiniai, 21 t', mode: 'FTL', tags: [],
       carrier: 'UAB „Vėtra Trans"', plate: 'JKL 123 / JV 456',
       load: '2026-08-04', unload: '2026-08-06', sell: 1850, buy: 1420, status: 'kelyje',
       docs: [['Vežėjo užsakymas', 'ok'], ['CMR', 'wait'], ['Sąskaita klientui', 'none']],
@@ -42,13 +47,17 @@
     },
     {
       id: 'EKS-2026-0417', client: 'UAB „Baltijos chemija"', from: 'Klaipėda, LT', to: 'Hamburg, DE',
-      cargo: 'Cheminės žaliavos, 24 t', mode: 'FTL', tags: ['ADR 8 kl.', 'Temperatūrinis'],
+      /* Real ADR entry, not a decorative label: UN 1824 = sodium hydroxide solution,
+         class 8 (corrosive), packing group II. A forwarder spots a fake one instantly. */
+      cargo: 'Natrio šarmo tirpalas, 24 t', mode: 'FTL',
+      tags: ['ADR 8 kl.', 'UN 1824', 'II pak. gr.'],
       carrier: 'UAB „Rytas Logistics"', plate: 'MNO 456 / RL 210',
       load: '2026-08-05', unload: '2026-08-08', sell: 2340, buy: 1890, status: 'naujas',
       docs: [['Vežėjo užsakymas', 'wait'], ['CMR', 'none'], ['Sąskaita klientui', 'none']],
       events: [
         ['08-02 16:20', 'Užsakymas gautas per klientų formą — perrašymo nereikėjo'],
-        ['08-03 08:05', 'ADR reikalavimai patikrinti pagal vežėjo pažymėjimą']
+        ['08-03 08:05', 'ADR: vežėjo pažymėjimas ir vairuotojo ADR pažyma galioja — patikrinta automatiškai'],
+        ['08-03 08:06', 'Į vežimo dokumentą įrašyta: UN 1824, NATRIO HIDROKSIDO TIRPALAS, 8, II']
       ]
     },
     {
@@ -266,23 +275,30 @@
      they work EU + CIS, so this is a requirement, not decoration. */
   var DOCLANG = {
     lt: { t: 'VEŽIMO UŽSAKYMAS', a: 'Užsakovas', b: 'Vežėjas', c: 'Krovinys', d: 'Pakrovimas',
-          e: 'Iškrovimas', f: 'Sutarta kaina', g: 'Mokėjimo terminas', h: '45 dienos nuo tvarkingo CMR ir sąskaitos gavimo',
-          i: 'Vežėjas patvirtina, kad turi galiojantį vežėjo atsakomybės draudimą ir licenciją.' },
+          e: 'Iškrovimas', f: 'Sutarta kaina (be PVM)', g: 'Mokėjimo terminas',
+          h: '45 dienos nuo tvarkingo CMR ir sąskaitos gavimo',
+          i: 'Vežėjas patvirtina, kad turi galiojantį vežėjo atsakomybės draudimą ir licenciją.',
+          j: 'Užsakovas — ekspeditorius. Galutinio kliento duomenys vežėjui neteikiami.' },
     en: { t: 'TRANSPORT ORDER', a: 'Ordering party', b: 'Carrier', c: 'Cargo', d: 'Loading',
-          e: 'Unloading', f: 'Agreed price', g: 'Payment term', h: '45 days from receipt of a clean CMR and invoice',
-          i: 'The carrier confirms it holds valid carrier liability insurance and a licence.' },
+          e: 'Unloading', f: 'Agreed price (excl. VAT)', g: 'Payment term',
+          h: '45 days from receipt of a clean CMR and invoice',
+          i: 'The carrier confirms it holds valid carrier liability insurance and a licence.',
+          j: 'The ordering party is the forwarder. End-client details are not disclosed to the carrier.' },
     ru: { t: 'ЗАКАЗ НА ПЕРЕВОЗКУ', a: 'Заказчик', b: 'Перевозчик', c: 'Груз', d: 'Погрузка',
-          e: 'Выгрузка', f: 'Согласованная цена', g: 'Срок оплаты', h: '45 дней с момента получения чистого CMR и счёта',
-          i: 'Перевозчик подтверждает наличие действующего страхования ответственности и лицензии.' }
+          e: 'Выгрузка', f: 'Согласованная цена (без НДС)', g: 'Срок оплаты',
+          h: '45 дней с момента получения чистого CMR и счёта',
+          i: 'Перевозчик подтверждает наличие действующего страхования ответственности и лицензии.',
+          j: 'Заказчик — экспедитор. Данные конечного клиента перевозчику не передаются.' }
   };
 
   function docHtml(o, lang) {
     var L = DOCLANG[lang];
-    var party = can('client') ? esc(o.client) : '<span class="mk">' + MASK + '</span>';
+    /* The ordering party is US, not our client — deliberately. The end client's name
+       never goes on a carrier order, in any role. */
     return '<div class="doc">' +
       '<p class="doc-t">' + L.t + ' ' + esc(o.id) + '</p>' +
       '<dl class="doc-d">' +
-        '<dt>' + L.a + '</dt><dd>' + party + '</dd>' +
+        '<dt>' + L.a + '</dt><dd>' + esc(FORWARDER) + '</dd>' +
         '<dt>' + L.b + '</dt><dd>' + esc(o.carrier) + ' · ' + esc(o.plate) + '</dd>' +
         '<dt>' + L.c + '</dt><dd>' + esc(o.cargo) + '</dd>' +
         '<dt>' + L.d + '</dt><dd>' + esc(o.from) + ' · ' + esc(o.load) + '</dd>' +
@@ -291,6 +307,7 @@
         '<dt>' + L.g + '</dt><dd>' + L.h + '</dd>' +
       '</dl>' +
       '<p class="doc-n">' + L.i + '</p>' +
+      '<p class="doc-w">' + L.j + '</p>' +
     '</div>';
   }
 
@@ -353,6 +370,7 @@
       Array.prototype.forEach.call(this.querySelectorAll('.lt'), function (x) { x.classList.remove('on'); });
       b.classList.add('on');
       $('docBox').innerHTML = docHtml(o, b.getAttribute('data-l'));
+      log('Peržiūrėjo ' + o.id + ' vežimo užsakymą (' + b.textContent + ')');
     });
 
     $('drawer').hidden = false;
@@ -385,15 +403,19 @@
     { from: 'info@degalinesx.lt', subj: 'Sąskaita už degalus', att: 'skenas_IMG_4471.jpg' }
   ];
 
+  /* Amounts are compared NET-to-NET on purpose: the agreed carrier price is a net
+     figure, and freight VAT is not always 21 % (export-related services can be 0 %),
+     so comparing an agreed net price against an invoice gross total is simply wrong. */
   var STEPS = [
     ['📨', 'Naujas laiškas aplanke „Sąskaitos": <b>Sąskaita faktūra VT Nr. 2026-1187</b>', ''],
     ['🔍', 'Priedas atpažintas kaip PDF sąskaita faktūra. Laiškas <b>neatidaromas</b> — skaitomas tik priedas.', ''],
-    ['📑', 'Nuskaityti laukai: tiekėjas, sąskaitos nr., data, mokėjimo terminas, suma be PVM, PVM, suma su PVM, užsakymo nr.', ''],
-    ['🔗', 'Susieta su užsakymu <b>EKS-2026-0418</b> pagal užsakymo numerį dokumente.', ''],
-    ['⚖️', 'Patikra: sutarta <b>1 420,00 €</b>, sąskaitoje <b>1 460,00 €</b> — <b>nesutampa (+40,00 €)</b>.', 'warn'],
+    ['🛡', 'Priedas patikrintas antivirusine ir atidarytas atskiroje, izoliuotoje aplinkoje — kad kenkėjiškas failas nepasiektų sistemos.', ''],
+    ['📑', 'Nuskaityti laukai: tiekėjas, PVM kodas, sąskaitos nr., data, mokėjimo terminas, suma be PVM, PVM, suma su PVM, gavėjo IBAN, užsakymo nr.', ''],
+    ['🔗', 'Susieta su užsakymu <b>EKS-2026-0418</b> pagal užsakymo numerį dokumente. Dublikatų patikra: tokios sąskaitos dar nebuvo.', ''],
+    ['⚖️', 'Patikra <b>be PVM</b>: sutarta <b>1 420,00 €</b>, sąskaitoje <b>1 460,00 €</b> — <b>nesutampa (+40,00 €)</b>.', 'warn'],
     ['⛔', 'Sustabdyta. Užduotis vadybininkui: „Patikrinkite vežėjo sąskaitą EKS-2026-0418". Į apskaitą neperduota.', 'warn'],
     ['📨', 'Naujas laiškas: <b>INVOICE 2026/554</b>', ''],
-    ['🔗', 'Susieta su užsakymu <b>EKS-2026-0412</b>. Patikra: sutarta 980,00 €, sąskaitoje <b>980,00 €</b> — sutampa.', ''],
+    ['🔗', 'Susieta su <b>EKS-2026-0412</b>. Be PVM: sutarta 980,00 €, sąskaitoje <b>980,00 €</b> — sutampa. IBAN toks pat kaip ankstesnėse.', ''],
     ['✅', 'Užregistruota prie užsakymo. Paruošta perkelti į <b>Rivilę</b>. Žmogus laiško neatidarė.', 'ok'],
     ['📨', 'Naujas laiškas: <b>Sąskaita už degalus</b> (priedas — nuotrauka)', ''],
     ['🖐', 'Nuskaityti nepavyko: prasta skenavimo kokybė. <b>Nespėliojama.</b> Perduota žmogui su žyma „nenuskaityta".', 'warn'],
@@ -408,29 +430,33 @@
           '<div class="xc-h"><b>SF_VT_2026-1187.pdf</b><span class="pill pill-w">Perduota žmogui</span></div>' +
           '<dl class="xd">' +
             '<dt>Tiekėjas</dt><dd>UAB „Vėtra Trans"</dd>' +
+            '<dt>PVM kodas</dt><dd>LT100001234515</dd>' +
             '<dt>Sąskaitos nr.</dt><dd>VT 2026-1187</dd>' +
             '<dt>Data</dt><dd>2026-08-04</dd>' +
             '<dt>Mokėti iki</dt><dd>2026-09-18</dd>' +
-            '<dt>Suma be PVM</dt><dd>1 206,61 €</dd>' +
-            '<dt>PVM 21 %</dt><dd>253,39 €</dd>' +
-            '<dt>Viso</dt><dd><b>1 460,00 €</b></dd>' +
+            '<dt>Suma be PVM</dt><dd><b>1 460,00 €</b></dd>' +
+            '<dt>PVM 21 %</dt><dd>306,60 €</dd>' +
+            '<dt>Viso su PVM</dt><dd>1 766,60 €</dd>' +
+            '<dt>Gavėjo IBAN</dt><dd>LT12 7300 0101 2345 6789</dd>' +
             '<dt>Užsakymas</dt><dd>EKS-2026-0418</dd>' +
           '</dl>' +
-          '<p class="xc-n"><b>Neatitikimas:</b> sutarta 1 420,00 €. Skirtumas +40,00 €. Automatiškai nepatvirtinta.</p>' +
+          '<p class="xc-n"><b>Neatitikimas:</b> sutarta 1 420,00 € be PVM, sąskaitoje 1 460,00 € be PVM. Skirtumas +40,00 €. Automatiškai nepatvirtinta.</p>' +
         '</div>' +
         '<div class="xc xc-ok">' +
           '<div class="xc-h"><b>invoice_2026_554.pdf</b><span class="pill pill-ok">Užregistruota</span></div>' +
           '<dl class="xd">' +
             '<dt>Tiekėjas</dt><dd>UAB „AP Transport"</dd>' +
+            '<dt>PVM kodas</dt><dd>LT100007654321</dd>' +
             '<dt>Sąskaitos nr.</dt><dd>2026/554</dd>' +
             '<dt>Data</dt><dd>2026-07-30</dd>' +
             '<dt>Mokėti iki</dt><dd>2026-09-13</dd>' +
-            '<dt>Suma be PVM</dt><dd>809,92 €</dd>' +
-            '<dt>PVM 21 %</dt><dd>170,08 €</dd>' +
-            '<dt>Viso</dt><dd><b>980,00 €</b></dd>' +
+            '<dt>Suma be PVM</dt><dd><b>980,00 €</b></dd>' +
+            '<dt>PVM 21 %</dt><dd>205,80 €</dd>' +
+            '<dt>Viso su PVM</dt><dd>1 185,80 €</dd>' +
+            '<dt>Gavėjo IBAN</dt><dd>LT98 7044 0600 9876 5432</dd>' +
             '<dt>Užsakymas</dt><dd>EKS-2026-0412</dd>' +
           '</dl>' +
-          '<p class="xc-n">Sutampa su sutarta kaina. Prisegta prie užsakymo, eilėje į Rivilę.</p>' +
+          '<p class="xc-n">Sutampa su sutarta kaina (be PVM). Tiekėjas pažįstamas, IBAN nepasikeitęs, dublikatų nerasta. Prisegta prie užsakymo, eilėje į Rivilę.</p>' +
         '</div>' +
       '</div>' +
       '<p class="mini">Tie patys laukai bet kokios formos sąskaitoje — robotas neieško „tos pačios vietos lape", jis ieško prasmės. Kiekvienas neaiškus atvejis keliauja žmogui, o ne spėjamas.</p>' +
@@ -458,7 +484,7 @@
     $('rlog').innerHTML = '';
     log('Paleido pašto robotą', 'ok');
 
-    var i = 0;
+    var i = 0, seen = 0;
     (function tick() {
       if (i >= STEPS.length) {
         btn.textContent = '↻ Paleisti iš naujo';
@@ -472,7 +498,8 @@
       li.className = 'rl' + (s[2] ? ' rl-' + s[2] : '');
       li.innerHTML = '<span class="rl-i" aria-hidden="true">' + s[0] + '</span><span class="rl-x">' + s[1] + '</span>';
       $('rlog').appendChild(li);
-      if (s[0] === '📨') paintInbox(Math.min(MAILS.length, i === 0 ? 0 : i === 6 ? 1 : 2));
+      /* each 📨 step opens the NEXT mail, so everything before it is already handled */
+      if (s[0] === '📨') { paintInbox(seen); seen++; }
       if (i === STEPS.length - 1) paintInbox(MAILS.length);
       i++;
       setTimeout(tick, 520);
@@ -521,7 +548,16 @@
 
   $('roleSel').addEventListener('change', function () { setRole(this.value); });
 
-  $('q').addEventListener('input', function () { query = this.value; paintTable(); });
+  /* Searches and filters are logged too — an audit trail that skips "who looked for
+     what" is not an audit trail, and the sidebar promises this. */
+  var qTimer = null;
+  $('q').addEventListener('input', function () {
+    query = this.value;
+    paintTable();
+    clearTimeout(qTimer);
+    var v = this.value.trim();
+    if (v) qTimer = setTimeout(function () { log('Ieškojo: „' + v + '"'); }, 700);
+  });
 
   $('filters').addEventListener('click', function (e) {
     var b = e.target.closest('.fchip');
@@ -530,6 +566,7 @@
     b.classList.add('on');
     filter = b.getAttribute('data-s');
     paintTable();
+    log('Filtravo pagal būseną: ' + b.textContent);
   });
 
   $('tbody').addEventListener('click', function (e) {
