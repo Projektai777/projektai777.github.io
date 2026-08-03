@@ -1,0 +1,313 @@
+<!doctype html>
+<!-- © 2026 Ignas — working prototype of a tailored forwarding system (TMS).
+     Purpose: prove competence to a Kaunas freight forwarder currently stuck on a
+     heavily-modded InfoTrans 5 running on an unmaintained office server.
+     It must show, not claim: domain understanding, the Outlook invoice robot they
+     asked for, the exchanges they named (Cargo.lt, Trans.eu), Rivile, and — above
+     all — VISIBLE access control, because their stated #1 concern is data safety.
+
+     Static only (index.html + style.css + app.js). No backend, no network calls,
+     no cookies, no storage. All data below is invented; the page says so.
+     ZERO client personal data (no names, phones, addresses) — same rule as ../
+     noindex: private proposal material, not public marketing. -->
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0c1a2b">
+<title>Ekspedicijos sistema — veikiantis prototipas</title>
+<meta name="description" content="Veikiantis prototipas: užsakymai, automatinis sąskaitų nuskaitymas iš pašto, biržų integracijos ir matoma prieigos kontrolė.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c1a2b'/%3E%3Cpath d='M5 20h9v-7H8L5 16z' fill='%23f2a33c'/%3E%3Crect x='15' y='9' width='12' height='11' rx='1.5' fill='%23e7edf5'/%3E%3Ccircle cx='10' cy='22' r='2.4' fill='%23e7edf5'/%3E%3Ccircle cx='22' cy='22' r='2.4' fill='%23e7edf5'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<!-- Honesty strip. Never remove: everything below is invented data. -->
+<div class="strip">
+  <span class="strip-b">PROTOTIPAS</span>
+  <span class="strip-t">Visi duomenys, įmonės ir sumos — sugalvoti. Rodomas <b>veikimo principas</b>, ne Jūsų duomenys.</span>
+  <a class="strip-a" href="../">← Grįžti į pasiūlymą</a>
+</div>
+
+<div class="app">
+
+  <!-- ── kairė juosta ────────────────────────────────────────────────── -->
+  <aside class="side">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">E</span>
+      <span class="brand-txt"><b>Ekspedicija</b><i>prototipas · v0.1</i></span>
+    </div>
+    <nav class="snav" aria-label="Sistemos skyriai">
+      <button class="sn on" data-view="orders"><span aria-hidden="true">📋</span>Užsakymai</button>
+      <button class="sn" data-view="mail"><span aria-hidden="true">🤖</span>Pašto robotas</button>
+      <button class="sn" data-view="integr"><span aria-hidden="true">🔌</span>Integracijos</button>
+      <button class="sn" data-view="sec"><span aria-hidden="true">🔒</span>Saugumas</button>
+    </nav>
+    <div class="side-foot">
+      <p>Kiekvienas Jūsų paspaudimas šiame prototipe patenka į <b>veiksmų žurnalą</b> — jį rasite skiltyje „Saugumas".</p>
+    </div>
+  </aside>
+
+  <!-- ── dešinė dalis ────────────────────────────────────────────────── -->
+  <div class="mainarea">
+
+    <header class="topbar">
+      <h1 id="viewTitle">Užsakymai</h1>
+      <label class="rolepick">
+        <span>Prisijungęs kaip</span>
+        <select id="roleSel" aria-label="Pasirinkite vaidmenį">
+          <option value="vad" selected>Vadybininkas (ekspeditorius)</option>
+          <option value="buh">Buhalterė</option>
+          <option value="vdv">Vadovas</option>
+          <option value="vez">Išorinis vežėjas</option>
+        </select>
+      </label>
+    </header>
+
+    <div class="rolebar" id="roleBar"></div>
+
+    <main class="views">
+
+    <!-- ══ 1 · UŽSAKYMAI ═══════════════════════════════════════════════ -->
+    <section class="view" id="v-orders">
+
+      <div class="kpis" id="kpis"></div>
+
+      <div class="toolbar">
+        <input type="search" id="q" class="search" placeholder="Ieškoti: užsakymas, klientas, miestas, vežėjas…" aria-label="Paieška">
+        <div class="filters" id="filters" role="group" aria-label="Būsenos filtras">
+          <button class="fchip on" data-s="">Visi</button>
+          <button class="fchip" data-s="naujas">Nauji</button>
+          <button class="fchip" data-s="kelyje">Kelyje</button>
+          <button class="fchip" data-s="iskrauta">Iškrauta</button>
+          <button class="fchip" data-s="apmoketa">Apmokėta</button>
+        </div>
+        <button class="btn btn-p" id="newBtn">+ Naujas užsakymas</button>
+      </div>
+
+      <!-- greita naujo užsakymo forma -->
+      <form class="newbox" id="newBox" hidden>
+        <div class="nb-grid">
+          <label><span>Klientas</span><input id="nClient" required maxlength="60" placeholder="UAB „…"></label>
+          <label><span>Iš</span><input id="nFrom" required maxlength="40" placeholder="Kaunas, LT"></label>
+          <label><span>Į</span><input id="nTo" required maxlength="40" placeholder="Warszawa, PL"></label>
+          <label><span>Krovinys</span><input id="nCargo" required maxlength="60" placeholder="Padėklai, 18 t"></label>
+          <label><span>Pardavimo kaina, €</span><input id="nSell" type="number" min="0" step="10" required placeholder="1850"></label>
+          <label><span>Vežėjo kaina, €</span><input id="nBuy" type="number" min="0" step="10" required placeholder="1420"></label>
+        </div>
+        <div class="nb-foot">
+          <p class="nb-m">Marža: <b id="nMargin">—</b> <i id="nMarginP"></i></p>
+          <div class="nb-btns">
+            <button type="button" class="btn btn-g" id="newCancel">Atšaukti</button>
+            <button type="submit" class="btn btn-p">Sukurti</button>
+          </div>
+        </div>
+        <p class="mini">Marža perskaičiuojama rašant. Tikroje sistemoje čia dar patikrinama vežėjo draudimo galiojimo data, kliento kredito limitas ir skola — todėl nuostolingas ar rizikingas užsakymas nepraeina tyliai.</p>
+      </form>
+
+      <div class="tablewrap">
+        <table class="tbl" id="tbl">
+          <thead>
+            <tr>
+              <th>Užsakymas</th><th>Klientas</th><th>Maršrutas</th><th>Pakrovimas</th>
+              <th>Vežėjas</th><th class="r">Pardavimas</th><th class="r">Vežėjui</th><th class="r">Marža</th><th>Būsena</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <p class="empty" id="empty" hidden>Pagal šią paiešką užsakymų nėra.</p>
+      </div>
+
+      <p class="mini tnote">Eilutė atsidaro paspaudus. Lentelė sugeneruota iš duomenų, ne nupiešta — paieška, filtrai ir marža skaičiuojami realiai.</p>
+    </section>
+
+    <!-- ══ 2 · PAŠTO ROBOTAS ═══════════════════════════════════════════ -->
+    <section class="view" id="v-mail" hidden>
+
+      <div class="lead">
+        <h2>Sąskaitos iš Outlook — be žmogaus</h2>
+        <p>Robotas pats mato naują laišką nurodytame pašto aplanke, perskaito PDF priedą, ištraukia laukus, susieja su užsakymu ir <b>patikrina, ar suma sutampa su sutarta</b>. Nesutampa — sustabdo ir perduoda žmogui. Nė vieno laiško niekas neatidaro ranka.</p>
+      </div>
+
+      <div class="mailgrid">
+        <div class="card">
+          <div class="card-h"><h3>Pašto dėžutė</h3><span class="pill pill-i" id="inboxCnt">3 neperskaityti</span></div>
+          <ul class="inbox" id="inbox"></ul>
+          <p class="mini">Robotas skaito <b>tik</b> nurodytą aplanką ir <b>tik</b> priedus — teisė yra „skaityti", ne „valdyti pašto dėžutę".</p>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h3>Roboto žurnalas</h3><button class="btn btn-p btn-s" id="runBtn">▶ Paleisti</button></div>
+          <ol class="rlog" id="rlog"><li class="rl-idle">Paspauskite „Paleisti" — pamatysite kiekvieną žingsnį.</li></ol>
+        </div>
+      </div>
+
+      <div id="mailOut"></div>
+
+      <div class="card limits">
+        <h3>Kur robotas sustoja — ir taip turi būti</h3>
+        <div class="lim">
+          <div><b>Neatpažįstamas dokumentas</b><p>Ranka rašytas ar prastai nuskenuotas priedas neinterpretuojamas spėjant — laiškas keliauja žmogui su žyma „nenuskaityta".</p></div>
+          <div><b>Suma nesutampa</b><p>Bet koks skirtumas nuo sutartos kainos — sustabdoma. Sistema pati nieko nepatvirtina už Jus.</p></div>
+          <div><b>Nerastas užsakymas</b><p>Jei sąskaitos nepavyksta susieti nei pagal užsakymo numerį, nei pagal vežėją, sumą ir datą — sprendžia žmogus.</p></div>
+          <div><b>Naujas tiekėjas</b><p>Pirmą kartą matomas siuntėjas visada tvirtinamas ranka. Tai paprasčiausia apsauga nuo suklastotos sąskaitos.</p></div>
+        </div>
+        <p class="mini">Tikslas nėra „nulis žmonių". Tikslas — kad žmogus liestų tik tuos 1–2 laiškus per dieną, kuriems tikrai reikia sprendimo.</p>
+      </div>
+    </section>
+
+    <!-- ══ 3 · INTEGRACIJOS ════════════════════════════════════════════ -->
+    <section class="view" id="v-integr" hidden>
+      <div class="lead">
+        <h2>Jungtys su sistemomis, kurias jau naudojate</h2>
+        <p>Žemiau — sąžininga kiekvienos jungties būsena po pasiruošimo. „Patikrinta" reiškia, kad radau viešą dokumentaciją. „Tikslinama" reiškia, kad reikia raštiško kreipimosi arba Jūsų sutikimo — ir aš to dar nepadariau.</p>
+      </div>
+
+      <div class="igrid">
+        <article class="card ic">
+          <div class="ic-h"><h3>Trans.eu</h3><span class="pill pill-ok">Patikrinta</span></div>
+          <p>Yra vieša REST sąsaja su OAuth autorizacija. Galima: skelbti krovinius, priimti vežėjų pasiūlymus, siųsti vežimo užsakymą ir matyti krovinio eigą <b>savo</b> programoje, neatsidarant biržos.</p>
+          <p class="ic-n">Reikia: Jūsų paskyros ir raštiško leidimo jungtis.</p>
+        </article>
+
+        <article class="card ic">
+          <div class="ic-h"><h3>Cargo.lt</h3><span class="pill pill-w">Tikslinama</span></div>
+          <p>Biržos sąsaja su transporto valdymo programomis egzistuoja — ją turi ir Jūsų dabartinė sistema. Tačiau viešos dokumentacijos programuotojams nėra.</p>
+          <p class="ic-n">Reikia: kreipimosi į Cargo.lt Jūsų vardu. Kol negausiu atsakymo raštu — nežadu terminų.</p>
+        </article>
+
+        <article class="card ic">
+          <div class="ic-h"><h3>Rivilė</h3><span class="pill pill-w">Derinama</span></div>
+          <p>Sąskaitos ir pirkimo dokumentai keliauja į apskaitą be perrašymo. Tikslų būdą (sąsaja ar reguliarūs failų mainai) pasirenka Jūsų buhalterė — nuo jos priklauso ir formatas.</p>
+          <p class="ic-n">Reikia: 20 min. pokalbio su buhaltere ir vieno pavyzdinio eksporto failo.</p>
+        </article>
+
+        <article class="card ic">
+          <div class="ic-h"><h3>Microsoft 365 / Outlook</h3><span class="pill pill-ok">Standartinė</span></div>
+          <p>Oficiali Microsoft sąsaja. Prieiga duodama <b>Jūsų administratoriaus</b> ir apribojama iki vieno pašto aplanko, tik skaitymui. Atšaukiama vienu paspaudimu, be manęs.</p>
+          <p class="ic-n">Reikia: Jūsų sprendimo, kuris aplankas.</p>
+        </article>
+
+        <article class="card ic">
+          <div class="ic-h"><h3>i.MAS — i.SAF / i.VAZ</h3><span class="pill pill-ok">Standartinė</span></div>
+          <p>Valstybinės mokesčių inspekcijos mainai. Duomenys teikiami iš tos pačios vietos, kur jau yra — be atskiro rankinio pildymo.</p>
+          <p class="ic-n">Apimtį tikslinu su buhaltere: ne kiekvienai įmonei reikia to paties.</p>
+        </article>
+
+        <article class="card ic">
+          <div class="ic-h"><h3>GPS / telematika</h3><span class="pill pill-n">Pagal poreikį</span></div>
+          <p>Ruptela, Teltonika, Mapon, Webfleet ir kiti turi sąsajas. Jei Jūsų vežėjai jomis dalijasi — krovinio vieta matoma prie užsakymo, be skambučio vairuotojui.</p>
+          <p class="ic-n">Priklauso nuo vežėjų sutikimo, ne nuo programavimo.</p>
+        </article>
+      </div>
+
+      <div class="card note">
+        <h3>Dėl Airtable — atsakau atvirai</h3>
+        <p>Airtable yra gera priemonė, bet jos stiprybė kita: greitai susidėlioti lentelę, kai dar nežinai, ko nori. Jūs jau 25 metus žinote, ko norite.</p>
+        <ul class="ticks">
+          <li><b>Kaina auga su žmonėmis ir laiku.</b> Tai mėnesinė prenumerata už kiekvieną naudotoją — amžinai. Vienkartinis darbas sumokamas vieną kartą.</li>
+          <li><b>Duomenys gulėtų JAV bendrovės serveriuose.</b> Tai išsprendžiama sutartimis, bet Jums svarbiausia buvo priešingas dalykas — kad duomenys būtų kuo arčiau Jūsų.</li>
+          <li><b>Sunkiau padaryti tai, ko prašote.</b> Automatinis sąskaitų nuskaitymas iš pašto, Cargo.lt/Trans.eu jungtys, LT/EN/RU dokumentai — vis tiek reikėtų atskiro programavimo <i>šalia</i> Airtable.</li>
+          <li><b>Kur Airtable tikrai vertas dėmesio:</b> vidiniams sąrašams, kurie keičiasi kas mėnesį ir kurių nenorite programuoti. Jei toks poreikis atsiras — pasakysiu, o ne tylėsiu vien todėl, kad tai ne mano darbas.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ 4 · SAUGUMAS ════════════════════════════════════════════════ -->
+    <section class="view" id="v-sec" hidden>
+      <div class="lead">
+        <h2>Saugumas, kurį galima pačiupinėti</h2>
+        <p>Pažadų šioje skiltyje nėra. Pakeiskite vaidmenį viršuje į <b>„Išorinis vežėjas"</b> ir grįžkite į „Užsakymus" — pamatysite, kaip iš ekrano dingsta kliento pavadinimas ir Jūsų pardavimo kaina. Taip veikia teisių sistema: ne slepiama akims, o neišduodama iš serverio.</p>
+      </div>
+
+      <div class="sgrid">
+        <div class="card">
+          <h3>Užtikrina technologija</h3>
+          <p class="mini mb">Tai galioja net tada, jei manimi nepasitikite.</p>
+          <ul class="ticks">
+            <li><b>Teisės tikrinamos serveryje.</b> Ko vaidmuo neturi teisės matyti, tas iš serverio net nesiunčiama. Naršyklės kodo redagavimas nieko neduoda.</li>
+            <li><b>Prisijungimas dviem žingsniais.</b> Vien pavogto slaptažodžio neužtenka.</li>
+            <li><b>Užšifruota ir kelyje, ir diske.</b> Pavogtas diskas be raktų — beprasmis.</li>
+            <li><b>Kopijos kas naktį, į antrą vietą.</b> Ir — svarbiausia — reguliariai patikrinama, ar iš jų tikrai atsistato. Nepatikrinta kopija nėra kopija.</li>
+            <li><b>Kiekvienas veiksmas žurnale.</b> Kas, kada, ką ir iš kur. Žurnalo įrašų negalima ištrinti iš programos.</li>
+            <li><b>Atskira testinė aplinka.</b> Naujovės išbandomos su testiniais duomenimis, ne su Jūsų.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Užtikrina sutartis ir tvarka</h3>
+          <p class="mini mb">Šito jokia programa neišsprendžia — todėl sakau atvirai.</p>
+          <ul class="ticks">
+            <li><b>Serverio prieigą turi ir prižiūrėtojas.</b> Kas turi serverio raktus, tas techniškai gali daug. Tai sprendžiama NDA, duomenų tvarkymo sutartimi ir tuo, kad prieigą galite atimti — ne teiginiu „neįmanoma".</li>
+            <li><b>Perduodu kodą ir prisijungimus Jums.</b> Su neterminuota teise naudotis ir keisti. Nesate prie manęs pririšti.</li>
+            <li><b>Didžiausia rizika — ne serveris, o laiškas.</b> Suklastota vežėjo sąskaita su pakeista banko sąskaita nuima pinigus greičiau nei bet koks įsilaužimas. Todėl naujas tiekėjas ir pasikeitęs IBAN visada tvirtinami ranka.</li>
+            <li><b>Sakau ir tai, kas nemalonu.</b> Jei kažko nemoku arba jei sprendimas Jums per brangus — pasakysiu iš karto.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Kas ką mato</h3>
+        <p class="mini mb">Lentelė gyva: dabartinis Jūsų vaidmuo pažymėtas.</p>
+        <div class="tablewrap">
+          <table class="tbl mtx" id="mtx">
+            <thead><tr><th>Vaidmuo</th><th>Užsakymai</th><th>Kliento pavadinimas</th><th>Pardavimo kaina</th><th>Marža</th><th>Redagavimas</th><th>Veiksmų žurnalas</th><th>Duomenų eksportas</th></tr></thead>
+            <tbody id="mtxBody"></tbody>
+          </table>
+        </div>
+        <p class="mini">Vežėjas mato tik jam priskirtą užsakymą ir tik savo kainą — Jūsų kliento ir Jūsų maržos jis nemato niekada. Tai ne gražus priedas: tai apsauga, kad subrangovas neapeitų Jūsų tiesiogiai.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h3>Veiksmų žurnalas</h3><span class="pill pill-i" id="auditCnt">0 įrašų</span></div>
+        <div id="auditWrap">
+          <p class="mini mb">Čia — Jūsų pačių veiksmai šiame prototipe. Nieko niekur nesiunčiama, įrašai gyvuoja tik atidarytame lange.</p>
+          <ol class="alog" id="alog"></ol>
+        </div>
+        <div id="auditLock" class="locked" hidden>
+          <p><span aria-hidden="true">🔒</span> Veiksmų žurnalą mato tik vadovas.</p>
+          <p class="mini">Pasirinkite vaidmenį „Vadovas" viršuje — ir jis atsivers. Būtent taip veikia teisės tikroje sistemoje.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Kur viskas fiziškai gyvena</h3>
+        <div class="arch">
+          <div class="ab"><b>Jūsų biuras</b><i>5–10 kompiuterių<br>naršyklė, be diegimo</i></div>
+          <div class="aarr" aria-hidden="true"><span>šifruotas ryšys</span>→</div>
+          <div class="ab ab-m"><b>Jūsų serveris ES</b><i>tik Jūsų, atskiras<br>šifruotas diskas, ugniasienė<br>prisijungimas dviem žingsniais</i></div>
+          <div class="aarr" aria-hidden="true"><span>kas naktį</span>→</div>
+          <div class="ab"><b>Atsarginės kopijos</b><i>antra vieta ES<br>šifruotos, tikrinamos</i></div>
+        </div>
+        <p class="mini">Palyginimui: šiandien programa sukasi biuro serveryje, kurio, kaip supratau, iš tikrųjų neprižiūri niekas. Tokia dėžė yra saugi tol, kol nesugenda diskas, neužlieja vandens, neužrakina išpirkos virusas arba tiesiog neišjungia elektros. <b>Perkėlimas į prižiūrimą serverį dažniausiai yra saugumo padidinimas, o ne sumažinimas</b> — bet jei norėsite palikti viską biure, tai irgi įmanoma ir aš pasakysiu, ko tam reikės.</p>
+      </div>
+    </section>
+
+    </main>
+
+    <footer class="foot">
+      <p>Prototipas parengtas po susitikimo — kad būtų apie ką kalbėti konkrečiai, o ne abstrakčiai. Duomenys sugalvoti, veikimo principas tikras.</p>
+      <p class="mini">Nieko nesaugo, nieko nesiunčia, slapukų nenaudoja. <a href="../">Pasiūlymas</a></p>
+    </footer>
+
+  </div>
+</div>
+
+<!-- ── užsakymo kortelė ──────────────────────────────────────────────── -->
+<div class="drawer" id="drawer" hidden>
+  <div class="dr-bg" id="drBg"></div>
+  <aside class="dr-in" role="dialog" aria-modal="true" aria-labelledby="drTitle">
+    <header class="dr-h">
+      <div><p class="dr-k" id="drKey"></p><h2 id="drTitle"></h2></div>
+      <button class="dr-x" id="drX" aria-label="Uždaryti">✕</button>
+    </header>
+    <div class="dr-b" id="drBody"></div>
+  </aside>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>
