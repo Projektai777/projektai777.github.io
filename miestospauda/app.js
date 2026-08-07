@@ -199,7 +199,10 @@
       '<div class="pr">' + eur(r.gross) + '<small>' + eur4(r.unit) + ' / ' + p.unit + ' · su PVM</small></div>' +
       '<button class="btn btn-sm">Skaičiuoti</button>' +
       // Tikra nuoroda į atskirą produkto puslapį — ją mato ir naršyklė, ir Google.
-      '<a class="prod-more" href="./p/' + id + '.html">Apie ' + p.name.toLowerCase() + ' →</a>';
+      // Tekstas be produkto pavadinimo TYČIA: lietuviškai „apie" reikalauja galininko
+      // („apie vizitines korteles", ne „apie vizitinės kortelės"), o linksniuoti
+      // pavadinimus automatiškai patikimai neįmanoma.
+      '<a class="prod-more" href="./p/' + id + '.html">Plačiau apie šį produktą →</a>';
     el.querySelector('button').onclick = function () {
       buildProduct(id);
       document.getElementById('skaiciuokle').scrollIntoView({ behavior: 'smooth' });
@@ -214,12 +217,9 @@
     });
   });
 
-  $$('.cat[data-go]').forEach(function (c) {
-    c.onclick = function () {
-      buildProduct(c.dataset.go);
-      document.getElementById('skaiciuokle').scrollIntoView({ behavior: 'smooth' });
-    };
-  });
+  // Kategorijų kortelėse dabar yra tikros nuorodos į produktų puslapius, todėl
+  // visos kortelės paspaudimas į skaičiuoklę BUVO PANAIKINTAS — jis nustelbdavo
+  // nuorodas ir klientas niekaip nepatekdavo į produkto puslapį.
 
   /* ═══════════════════════════════════════════════════════════════════════
      4) DARBŲ GALERIJA (kliento paties nuotraukos iš miestospauda.lt)

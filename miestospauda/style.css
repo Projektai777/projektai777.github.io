@@ -121,7 +121,7 @@ section{padding:72px 0}
 .cat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
 .cat{
   background:#fff; border:1px solid var(--line); border-radius:var(--r); padding:24px;
-  display:flex; flex-direction:column; gap:9px; cursor:pointer; transition:.18s; position:relative; overflow:hidden
+  display:flex; flex-direction:column; gap:9px; transition:.18s; position:relative; overflow:hidden
 }
 .cat::before{content:''; position:absolute; inset:0 auto 0 0; width:4px; background:var(--a,var(--c)); opacity:0; transition:.18s}
 .cat:hover{transform:translateY(-3px); box-shadow:var(--sh-h); border-color:transparent}
@@ -131,8 +131,21 @@ section{padding:72px 0}
   background:color-mix(in srgb, var(--a) 14%, #fff); border:1px solid color-mix(in srgb, var(--a) 30%, #fff)
 }
 .cat h3{font-size:19px}
-.cat p{margin:0; color:var(--muted); font-size:14.5px; flex:1}
-.cat-from{font-size:13.5px; color:var(--muted)}
+.cat p{margin:0; color:var(--muted); font-size:14.5px}
+/* Produktų nuorodos kortelėje — pagrindinis kelias į produkto puslapį. */
+/* align-content:start — be jo grid'as išskirsto laisvą vietą tarp eilučių,
+   ir kortelės su mažiau produktų atrodo pertrauktos. */
+.cat-links{list-style:none; margin:4px 0 0; padding:0; display:grid; gap:1px; flex:1; align-content:start}
+.cat-links a{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  text-decoration:none; color:var(--txt); font-size:15px; font-weight:500;
+  padding:9px 0; border-bottom:1px solid var(--line); transition:.14s;
+}
+.cat-links li:last-child a{border-bottom:0}
+.cat-links a::after{content:'→'; color:var(--muted); transition:.14s}
+.cat-links a:hover{color:var(--c); padding-left:5px}
+.cat-links a:hover::after{color:var(--c); transform:translateX(2px)}
+.cat-from{font-size:13.5px; color:var(--muted); margin-top:4px}
 .cat-from b{color:var(--k); font-size:16px; font-family:var(--fh)}
 .cat-help{background:linear-gradient(160deg,#fff,var(--soft2)); cursor:default}
 .cat-help:hover{transform:none}

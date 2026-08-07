@@ -92,35 +92,58 @@
         <p class="sec-sub">Penkios kryptys — visos vienoje vietoje, vienas vadybininkas, viena sąskaita.</p>
       </div>
 
+      <!-- Kiekvienoje kortelėje — TIKROS nuorodos į to produkto puslapį.
+           Klientas eina natūraliai: kategorija → produktas → kaina ir užsakymas.
+           Nuorodos statinės (ne per JavaScript), tad jas mato ir Google. -->
       <div class="cat-grid">
-        <article class="cat" data-go="viz">
+        <article class="cat">
           <div class="cat-ico" style="--a:var(--c)">🖨️</div>
           <h3>Skaitmeninė spauda</h3>
-          <p>Vizitinės kortelės, skrajutės, lankstinukai, diplomai, kalendoriai, kvietimai, folijavimas.</p>
+          <p>Nedideli ir vidutiniai tiražai ant popieriaus — greitai, nuo 100 vnt.</p>
+          <ul class="cat-links">
+            <li><a href="./p/viz.html">Vizitinės kortelės</a></li>
+            <li><a href="./p/skraj.html">Skrajutės</a></li>
+            <li><a href="./p/lankst.html">Lankstinukai</a></li>
+            <li><a href="./p/kalend.html">Kalendoriai</a></li>
+          </ul>
           <span class="cat-from">nuo <b>0,04 €</b> / vnt.</span>
         </article>
-        <article class="cat" data-go="plak">
+        <article class="cat">
           <div class="cat-ico" style="--a:var(--m)">📐</div>
           <h3>Plačiaformatė spauda</h3>
-          <p>Plakatai, lipdukai, tentai, spauda ant drobės, iki 1,6 m pločio, atsparu lauko sąlygoms.</p>
+          <p>Iki 1,6 m pločio, atsparu lauko sąlygoms.</p>
+          <ul class="cat-links">
+            <li><a href="./p/plak.html">Plakatai</a></li>
+            <li><a href="./p/lipd.html">Lipdukai ir etiketės</a></li>
+            <li><a href="./p/drobe.html">Spauda ant drobės</a></li>
+          </ul>
           <span class="cat-from">nuo <b>1,60 €</b> / plakatas</span>
         </article>
-        <article class="cat" data-go="auto">
+        <article class="cat">
           <div class="cat-ico" style="--a:var(--y)">🚗</div>
           <h3>Išorinė ir vidinė reklama</h3>
-          <p>Automobilių ir vitrinų apklijavimas, reklaminių stendų bei šviesdėžių gamyba ir montavimas.</p>
+          <p>Automobilių ir vitrinų apklijavimas, stendai, šviesdėžės, montavimas.</p>
+          <ul class="cat-links">
+            <li><a href="./p/auto.html">Automobilio apklijavimas</a></li>
+          </ul>
           <span class="cat-from">skaičiuojame pagal projektą</span>
         </article>
-        <article class="cat" data-go="kviet">
+        <article class="cat">
           <div class="cat-ico" style="--a:var(--c)">💌</div>
           <h3>Šventinė atributika</h3>
-          <p>Vestuviniai kvietimai, atvirukai, stalo kortelės, diplomai — su folija, reljefu, kaspinu.</p>
+          <p>Su folija, reljefu, kaspinu — nuo 30 vnt.</p>
+          <ul class="cat-links">
+            <li><a href="./p/kviet.html">Vestuviniai kvietimai</a></li>
+          </ul>
           <span class="cat-from">nuo <b>0,80 €</b> / vnt.</span>
         </article>
-        <article class="cat" data-go="puod">
+        <article class="cat">
           <div class="cat-ico" style="--a:var(--m)">🎁</div>
           <h3>Verslo dovanos ir lazeris</h3>
-          <p>Pjovimas ir graviravimas lazeriu, puodeliai, rašikliai, USB raktai su Jūsų logotipu.</p>
+          <p>Pjovimas ir graviravimas lazeriu, dovanos su Jūsų logotipu.</p>
+          <ul class="cat-links">
+            <li><a href="./p/puod.html">Puodeliai su spauda</a></li>
+          </ul>
           <span class="cat-from">nuo <b>5,50 €</b> / vnt.</span>
         </article>
         <article class="cat cat-help">
@@ -130,25 +153,6 @@
           <a class="btn btn-sm" href="#kontaktai">Klausti</a>
         </article>
       </div>
-
-      <!-- Kiekvienas produktas turi SAVO puslapį su atskiru pavadinimu, aprašymu
-           ir kaina — būtent to Google reikia, kad suprastų paslaugas atskirai.
-           Nuorodos statinės (ne per JavaScript), kad jas matytų ir paieškos robotas. -->
-      <nav class="plinks" aria-label="Produktų puslapiai">
-        <h3>Atskiri produktų puslapiai</h3>
-        <ul>
-          <li><a href="./p/viz.html">Vizitinės kortelės</a></li>
-          <li><a href="./p/skraj.html">Skrajutės</a></li>
-          <li><a href="./p/lankst.html">Lankstinukai</a></li>
-          <li><a href="./p/plak.html">Plakatai</a></li>
-          <li><a href="./p/lipd.html">Lipdukai ir etiketės</a></li>
-          <li><a href="./p/drobe.html">Spauda ant drobės</a></li>
-          <li><a href="./p/kviet.html">Vestuviniai kvietimai</a></li>
-          <li><a href="./p/kalend.html">Kalendoriai</a></li>
-          <li><a href="./p/puod.html">Puodeliai su spauda</a></li>
-          <li><a href="./p/auto.html">Automobilio apklijavimas</a></li>
-        </ul>
-      </nav>
     </div>
   </section>
 
