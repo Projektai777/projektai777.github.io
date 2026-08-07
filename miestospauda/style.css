@@ -136,15 +136,27 @@ section{padding:72px 0}
 /* align-content:start — be jo grid'as išskirsto laisvą vietą tarp eilučių,
    ir kortelės su mažiau produktų atrodo pertrauktos. */
 .cat-links{list-style:none; margin:4px 0 0; padding:0; display:grid; gap:1px; flex:1; align-content:start}
+/* Nuorodos privalo ATRODYTI paspaudžiamos. Pirma versija buvo tiesiog tamsus
+   tekstas su plona linija — klientas jo neatpažino kaip nuorodos ir klausė,
+   kur spausti. Dabar kiekviena eilutė yra pilkas „mygtukas" su pabraukimu ir
+   rodykle apskritime, o užvedus nusidažo firmine spalva. */
+.cat-links{gap:7px}
 .cat-links a{
   display:flex; align-items:center; justify-content:space-between; gap:10px;
-  text-decoration:none; color:var(--txt); font-size:15px; font-weight:500;
-  padding:9px 0; border-bottom:1px solid var(--line); transition:.14s;
+  text-decoration:none; color:var(--txt); font-size:15px; font-weight:600;
+  padding:11px 13px; background:var(--soft); border:1px solid var(--line);
+  border-radius:10px; transition:.14s;
 }
-.cat-links li:last-child a{border-bottom:0}
-.cat-links a::after{content:'→'; color:var(--muted); transition:.14s}
-.cat-links a:hover{color:var(--c); padding-left:5px}
-.cat-links a:hover::after{color:var(--c); transform:translateX(2px)}
+.cat-links a span{text-decoration:underline; text-decoration-color:#b9c0d0; text-underline-offset:3px}
+.cat-links a::after{
+  content:'→'; flex:0 0 auto; width:24px; height:24px; border-radius:50%;
+  background:#fff; border:1px solid var(--line); color:var(--muted);
+  display:grid; place-items:center; font-size:13px; transition:.14s;
+}
+.cat-links a:hover{background:#eaf8ff; border-color:var(--c); color:var(--c)}
+.cat-links a:hover span{text-decoration-color:var(--c)}
+.cat-links a:hover::after{background:var(--c); border-color:var(--c); color:#fff; transform:translateX(2px)}
+.cat-links a:focus-visible{outline:3px solid var(--c); outline-offset:2px}
 .cat-from{font-size:13.5px; color:var(--muted); margin-top:4px}
 .cat-from b{color:var(--k); font-size:16px; font-family:var(--fh)}
 .cat-help{background:linear-gradient(160deg,#fff,var(--soft2)); cursor:default}
