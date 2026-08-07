@@ -24,6 +24,23 @@
   var volFactor = MS.volFactor, byId = MS.byId, price = MS.price;
   var eur = MS.eur, eur4 = MS.eur4;
 
+  /* Turinys, pakeistas valdymo sistemoje. TIKRAS tekstas gyvena pačiame HTML —
+     čia tik UŽDEDAMI pakeitimai. Todėl išjungus valdymo sistemą svetainė
+     rodoma pilnai ir lieka matoma paieškos sistemoms. Ištrynus lauką
+     redaktoriuje grįžta originalus tekstas. */
+  (function applyContent() {
+    var c;
+    try { c = JSON.parse(localStorage.getItem(MS.LS.content) || '{}'); } catch (e) { return; }
+    $$('[data-cms]').forEach(function (el) {
+      var v = c[el.getAttribute('data-cms')];
+      if (typeof v === 'string' && v.trim()) el.textContent = v;
+    });
+    // telefonas ir el. paštas turi ne tik tekstą, bet ir nuorodą
+    var tel = $('[data-cms="kont.tel"]'), mail = $('[data-cms="kont.email"]');
+    if (tel && c['kont.tel']) tel.href = 'tel:' + c['kont.tel'].replace(/\s/g, '');
+    if (mail && c['kont.email']) mail.href = 'mailto:' + c['kont.email'].trim();
+  })();
+
   /* Gamybos terminas darbo dienomis. */
   function workDays(n) {
     var d = new Date(), added = 0;
