@@ -181,7 +181,13 @@
   try { ov = JSON.parse(localStorage.getItem(MS.LS.prices) || 'null'); } catch (e) { return; }
   if (!ov) return;
   MS.applyOverrides(ov);
-  var p = MS.byId(tab.dataset.prod);
+
+  // Jei savininkas šį produktą pašalino, kainų neperrašome — geriau rodyti
+  // pradinę lentelę negu svetimo produkto kainą.
+  var p = null, i;
+  for (i = 0; i < MS.PRODUCTS.length; i++) if (MS.PRODUCTS[i].id === tab.dataset.prod) p = MS.PRODUCTS[i];
+  if (!p) return;
+
   Array.prototype.forEach.call(tab.querySelectorAll('tbody tr'), function (tr) {
     var r = MS.price(p, { qty: +tr.dataset.q, size: 0, mat: 0, sides: p.sides ? 2 : 1, fin: 0, rush: 0 });
     tr.querySelector('.pg').textContent = MS.eur(r.gross);
