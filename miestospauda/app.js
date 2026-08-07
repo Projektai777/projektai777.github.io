@@ -292,33 +292,177 @@
 
   $('#toOrder').onclick = function () {
     if (!cart.length) { toast('Krepšelis tuščias — pirmiausia pasirinkite produktą'); return; }
-    closeDrawer(); openModal('#orderModal');
+    closeDrawer(); gotoStep(1); openModal('#orderModal');
   };
 
   var deliv = 'pickup';
   $$('[data-deliv]').forEach(function (b) {
-    b.onclick = function () { deliv = b.dataset.deliv; $$('[data-deliv]').forEach(function (x) { x.classList.toggle('on', x === b); }); };
+    b.onclick = function () {
+      deliv = b.dataset.deliv;
+      $$('[data-deliv]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      paintSums();
+    };
   });
 
   function orders() { try { return JSON.parse(localStorage.getItem(LS_ORD) || '{}'); } catch (e) { return {}; } }
   function saveOrders(o) { try { localStorage.setItem(LS_ORD, JSON.stringify(o)); } catch (e) {} }
 
+  /* ── UŽSAKYMO ŽINGSNIAI: kontaktai → maketas → apmokėjimas ──────────────
+     Maketas ir apmokėjimas yra savarankiški žingsniai, o ne laukeliai formos
+     apačioje — todėl klientas fiziškai negali jų praleisti nepastebėjęs. */
+  var step = 1, files = [], noArt = false;
+  var MAXMB = 100;
+  var OKEXT = ['pdf', 'ai', 'cdr', 'psd', 'tif', 'tiff', 'jpg', 'jpeg', 'png', 'eps', 'zip'];
+
+  function orderTotal() { return cartTotal() + (deliv === 'courier' ? 4.9 : 0); }
+
+  function paintSums() {
+    var t = orderTotal();
+    $('#sumStep1').textContent = eur(t);
+    $('#payAmt').textContent = eur(t);
+    var net = t / VAT;
+    $('#paySum').innerHTML =
+      '<div class="po-row"><span>Prekės ir paslaugos</span><b>' + eur(cartTotal()) + '</b></div>' +
+      (deliv === 'courier' ? '<div class="po-row"><span>Pristatymas kurjeriu</span><b>4,90 €</b></div>' : '') +
+      '<div class="po-row sm"><span>Suma be PVM</span><span>' + eur(net) + '</span></div>' +
+      '<div class="po-row sm"><span>PVM 21 %</span><span>' + eur(t - net) + '</span></div>' +
+      '<div class="po-row big"><span>Mokėti</span><b>' + eur(t) + '</b></div>';
+  }
+
+  function gotoStep(n) {
+    step = n;
+    $$('#orderModal .step').forEach(function (p) { p.hidden = +p.dataset.pane !== n; });
+    $$('#stepsBar li').forEach(function (li) {
+      var s = +li.dataset.step;
+      li.classList.toggle('on', s === n);
+      li.classList.toggle('done', s < n);
+    });
+    paintSums();
+    var pane = $('#orderModal .step[data-pane="' + n + '"]');
+    if (pane) pane.scrollIntoView({ block: 'nearest' });
+  }
+
+  // 1 → 2 leidžiame tik užpildžius privalomus kontaktus.
+  function validContacts() {
+    var f = $('#orderForm'), miss = [];
+    ['name', 'email', 'tel'].forEach(function (k) {
+      var el = f[k], ok = el.value.trim() !== '';
+      if (ok && k === 'email') ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim());
+      if (ok && k === 'tel') ok = el.value.replace(/\D/g, '').length >= 8;
+      el.closest('.fld').classList.toggle('bad', !ok);
+      if (!ok) miss.push(k);
+    });
+    if (miss.length) toast('Patikslinkite: ' + (miss.indexOf('name') > -1 ? 'vardas ' : '') +
+      (miss.indexOf('email') > -1 ? 'el. paštas ' : '') + (miss.indexOf('tel') > -1 ? 'telefonas' : ''));
+    return !miss.length;
+  }
+
+  $$('[data-next]').forEach(function (b) {
+    b.onclick = function () {
+      var to = +b.dataset.next;
+      if (to === 2 && !validContacts()) return;
+      if (to === 3 && !files.length && !noArt) {
+        toast('Įkelkite maketą arba pažymėkite, kad maketo dar neturite');
+        return;
+      }
+      gotoStep(to);
+    };
+  });
+  $$('[data-back]').forEach(function (b) { b.onclick = function () { gotoStep(+b.dataset.back); }; });
+
+  // Įmonės laukas atskleidžia PVM kodo eilutę — smulkmena, bet būtent jos
+  // klientai pasigenda pirkdami įmonės vardu.
+  $('#orderForm').company.oninput = function () { $('#fVat').hidden = !this.value.trim(); };
+
+  /* ── MAKETO ĮKĖLIMAS su tikra patikra ────────────────────────────────── */
+  function fileErr(f) {
+    var ext = (f.name.split('.').pop() || '').toLowerCase();
+    if (OKEXT.indexOf(ext) < 0) return 'netinkamas formatas (.' + ext + ')';
+    if (f.size > MAXMB * 1024 * 1024) return 'per didelis (' + (f.size / 1048576).toFixed(0) + ' MB)';
+    return null;
+  }
+  function fmtSize(b) {
+    return b < 1048576 ? Math.max(1, Math.round(b / 1024)) + ' KB' : (b / 1048576).toFixed(1).replace('.', ',') + ' MB';
+  }
+  function renderFiles() {
+    var ul = $('#oFileList');
+    ul.innerHTML = '';
+    files.forEach(function (f, i) {
+      var err = fileErr(f), li = document.createElement('li');
+      li.className = err ? 'bad' : 'ok';
+      li.innerHTML = '<span class="fi">' + (err ? '✕' : '✓') + '</span>' +
+        '<b>' + f.name.replace(/[<>&]/g, '') + '</b>' +
+        '<i>' + (err ? err : fmtSize(f.size) + ' · formatas tinkamas') + '</i>' +
+        '<button type="button" class="rmf" aria-label="Šalinti">×</button>';
+      li.querySelector('.rmf').onclick = function () { files.splice(i, 1); renderFiles(); };
+      ul.appendChild(li);
+    });
+    if (files.length && !files.some(fileErr)) {
+      var ok = document.createElement('li');
+      ok.className = 'note';
+      ok.innerHTML = 'Automatinė patikra praėjo. Realioje sistemoje čia dar tikrinama skiriamoji geba, ' +
+        'apipjovimo laukai ir CMYK — o dizaineris peržiūri prieš spaudą.';
+      ul.appendChild(ok);
+    }
+  }
+  function addFiles(list) {
+    Array.prototype.slice.call(list).forEach(function (f) { files.push(f); });
+    renderFiles();
+    if (files.length) $('#noArt').checked = noArt = false;
+  }
+  $('#oFile').onchange = function () { addFiles(this.files); this.value = ''; };
+  $('#noArt').onchange = function () {
+    noArt = this.checked;
+    if (noArt) { files = []; renderFiles(); }
+  };
+
+  var drop = $('#drop');
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); });
+  });
+  drop.addEventListener('drop', function (e) { if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files); });
+
+  $$('#pays .pay').forEach(function (p) {
+    p.onclick = function () { setTimeout(function () { $$('#pays .pay').forEach(function (x) { x.classList.toggle('on', x.querySelector('input').checked); }); }, 0); };
+  });
+
   $('#orderForm').onsubmit = function (e) {
     e.preventDefault();
+    if (step !== 3) return;
+    if (files.some(fileErr)) { gotoStep(2); toast('Pašalinkite netinkamus failus'); return; }
+    if (!$('#agree').checked) { toast('Pažymėkite, kad sutinkate su sąlygomis'); return; }
+
     var f = e.target, code = 'MS-' + (1000 + Math.floor(Math.random() * 8999));
+    var pay = (f.querySelector('input[name=pay]:checked') || {}).value || 'bank';
     var all = orders();
     all[code] = {
       ts: Date.now(),
-      name: f.name.value,
+      name: f.name.value.trim(),
+      company: f.company.value.trim(),
+      email: f.email.value.trim(),
+      tel: f.tel.value.trim(),
+      note: f.note.value.trim(),
       items: cart.map(function (i) { return { name: i.name, spec: i.spec, gross: i.gross }; }),
-      total: cartTotal() + (deliv === 'courier' ? 4.9 : 0),
-      deliv: deliv
+      total: orderTotal(),
+      deliv: deliv,
+      pay: pay,
+      paid: pay !== 'invoice',            // sąskaita įmonei apmokama vėliau
+      files: files.map(function (x) { return { name: x.name, size: x.size }; }),
+      noArt: noArt,
+      stage: 0
     };
     saveOrders(all);
     cart = []; saveCart(); renderCart();
-    f.reset(); $('#oFileList').textContent = '';
+
+    f.reset(); files = []; noArt = false; renderFiles(); $('#fVat').hidden = true;
     closeModals();
     $('#doneCode').textContent = code;
+    $('#donePay').textContent = pay === 'invoice'
+      ? 'Išankstinę sąskaitą išsiuntėme el. paštu — apmokėjus pradedame gamybą.'
+      : 'Apmokėjimas gautas — užsakymas jau gamyboje.';
     openModal('#doneModal');
   };
 
@@ -351,14 +495,21 @@
         'pateikite jį per krepšelį ir gausite numerį.</p>';
       return;
     }
-    var st = stageOf(o.ts), html = '<div class="track"><ol>';
+    // Jei vadybininkas būseną pakeitė valdymo sistemoje — rodome JO nustatytą.
+    var st = o.manual ? (o.stage || 0) : stageOf(o.ts);
+    var html = '<div class="track"><ol>';
     STAGES.forEach(function (s, i) {
       html += '<li class="' + (i < st ? 'done' : i === st ? 'now' : '') + '"><span class="d">' + (i < st ? '✓' : '') + '</span>' +
         '<b>' + s.t + '</b><span>' + s.s + '</span></li>';
     });
+    var payTxt = o.pay === 'invoice'
+      ? (o.paid ? 'sąskaita apmokėta' : 'laukiama apmokėjimo pagal sąskaitą')
+      : 'apmokėta internetu';
     html += '</ol><p class="miss">Užsakymas ' + code + ' · ' + o.items.length + ' pozicij' + (o.items.length === 1 ? 'a' : 'os') +
-      ' · ' + eur(o.total) + ' · ' + (o.deliv === 'courier' ? 'pristatymas kurjeriu' : 'atsiėmimas Danės g. 6') +
-      '.<br>Demonstracijoje būsena pajuda kas kelias minutes — realioje sistemoje ją keičia Jūsų vadybininkas.</p></div>';
+      ' · ' + eur(o.total) + ' · ' + payTxt +
+      ' · ' + (o.deliv === 'courier' ? 'pristatymas kurjeriu' : 'atsiėmimas Danės g. 6') +
+      (o.files && o.files.length ? ' · maketas gautas (' + o.files.length + ' fail' + (o.files.length === 1 ? 'as' : 'ai') + ')' : (o.noArt ? ' · maketą ruošia dizaineris' : '')) +
+      '.<br>Demonstracijoje būsena pajuda kas kelias minutes — realioje sistemoje ją keičia vadybininkas valdymo sistemoje.</p></div>';
     out.innerHTML = html;
   }
 
@@ -371,8 +522,7 @@
       $(label).textContent = n ? '✓ Pasirinkta failų: ' + n + ' (' + this.files[0].name + (n > 1 ? ' ir kt.' : '') + ')' : '';
     };
   }
-  wireFiles('#cFile', '#cFileList');
-  wireFiles('#oFile', '#oFileList');
+  wireFiles('#cFile', '#cFileList');   // #oFile turi savo logiką su patikra (žr. 6 sk.)
 
   $('#cform').onsubmit = function (e) {
     e.preventDefault();
@@ -440,5 +590,8 @@
   var demobar = document.querySelector('.demobar');
   if (demobar) document.documentElement.style.setProperty('--demoh', demobar.offsetHeight + 'px');
 
-  buildProduct('viz');
+  // Atskiri produktų puslapiai (p/*.html) atsiunčia klientą į skaičiuoklę su
+  // jau parinktu produktu: ../index.html?p=lipd#skaiciuokle
+  var wanted = (location.search.match(/[?&]p=([a-z]+)/) || [])[1];
+  buildProduct(wanted && PRODUCTS.some(function (p) { return p.id === wanted; }) ? wanted : 'viz');
 })();

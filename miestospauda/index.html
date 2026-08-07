@@ -368,30 +368,92 @@
 
 <!-- ── MODALAI ──────────────────────────────────────────────────────────── -->
 <div class="modal" id="orderModal" hidden>
-  <div class="modal-in">
+  <div class="modal-in wide">
     <button class="x" data-close aria-label="Uždaryti">×</button>
-    <h3>Užsakymo duomenys</h3>
-    <form id="orderForm">
-      <div class="row">
-        <label class="fld"><span>Vardas, pavardė *</span><input name="name" required></label>
-        <label class="fld"><span>Įmonė</span><input name="company"></label>
+
+    <!-- Trys aiškūs žingsniai: kontaktai → maketas → apmokėjimas.
+         Maketas ir apmokėjimas yra ATSKIRI žingsniai (o ne paslėpti laukai),
+         kad klientas negalėtų jų nepastebėti. -->
+    <ol class="steps-bar" id="stepsBar">
+      <li class="on" data-step="1"><b>1</b><span>Kontaktai</span></li>
+      <li data-step="2"><b>2</b><span>Maketas</span></li>
+      <li data-step="3"><b>3</b><span>Apmokėjimas</span></li>
+    </ol>
+
+    <form id="orderForm" novalidate>
+
+      <!-- ── 1. KONTAKTAI ─────────────────────────────────────────────── -->
+      <div class="step" data-pane="1">
+        <h3>Kontaktiniai duomenys</h3>
+        <div class="row">
+          <label class="fld"><span>Vardas, pavardė *</span><input name="name" required></label>
+          <label class="fld"><span>Įmonė</span><input name="company" placeholder="jei perkate įmonės vardu"></label>
+        </div>
+        <div class="row">
+          <label class="fld"><span>El. paštas *</span><input name="email" type="email" required></label>
+          <label class="fld"><span>Telefonas *</span><input name="tel" type="tel" required></label>
+        </div>
+        <label class="fld" id="fVat" hidden><span>PVM mokėtojo kodas</span><input name="vat" placeholder="LT100001234567"></label>
+        <label class="fld"><span>Pastabos</span><textarea name="note" rows="2" placeholder="Pvz.: reikia iki penktadienio 12 val."></textarea></label>
+        <div class="pick">
+          <button type="button" class="chip on" data-deliv="pickup">Atsiimsiu Danės g. 6</button>
+          <button type="button" class="chip" data-deliv="courier">Kurjeriu (+4,90 €)</button>
+        </div>
+        <div class="step-nav">
+          <span class="step-tot">Užsakymo suma <b id="sumStep1">0,00 €</b></span>
+          <button class="btn btn-lg" type="button" data-next="2">Toliau → Maketas</button>
+        </div>
       </div>
-      <div class="row">
-        <label class="fld"><span>El. paštas *</span><input name="email" type="email" required></label>
-        <label class="fld"><span>Telefonas *</span><input name="tel" type="tel" required></label>
+
+      <!-- ── 2. MAKETAS ───────────────────────────────────────────────── -->
+      <div class="step" data-pane="2" hidden>
+        <h3>Spaudos failas (maketas)</h3>
+        <p class="step-lead">Įkelkite maketą iškart su užsakymu — taip nereikia nieko siųsti el. paštu atskirai.
+          Failą patikriname automatiškai ir dar kartą peržiūri dizaineris.</p>
+
+        <div class="drop" id="drop">
+          <input type="file" id="oFile" multiple accept=".pdf,.ai,.cdr,.psd,.tif,.tiff,.jpg,.jpeg,.png,.eps,.zip">
+          <div class="drop-face">
+            <span class="drop-ic">📎</span>
+            <b>Nutempkite failą čia arba spustelėkite</b>
+            <i>PDF, AI, CDR, PSD, TIFF, JPG, PNG, EPS, ZIP — iki 100 MB</i>
+          </div>
+        </div>
+        <ul class="filelist" id="oFileList"></ul>
+
+        <label class="check"><input type="checkbox" id="noArt"><span>Maketo dar neturiu — paruoškite Jūs (dizainas skaičiuojamas atskirai ir derinamas iš anksto)</span></label>
+
+        <div class="step-nav">
+          <button class="btn btn-ghost" type="button" data-back="1">← Atgal</button>
+          <button class="btn btn-lg" type="button" data-next="3">Toliau → Apmokėjimas</button>
+        </div>
       </div>
-      <label class="fld"><span>Pastabos</span><textarea name="note" rows="2" placeholder="Pvz.: reikia iki penktadienio 12 val."></textarea></label>
-      <label class="file">
-        <input type="file" id="oFile" multiple>
-        <span class="file-face">📎 Įkelti maketą</span>
-        <em id="oFileList"></em>
-      </label>
-      <div class="pick">
-        <button type="button" class="chip on" data-deliv="pickup">Atsiimsiu Danės g. 6</button>
-        <button type="button" class="chip" data-deliv="courier">Kurjeriu (+4,90 €)</button>
+
+      <!-- ── 3. APMOKĖJIMAS ───────────────────────────────────────────── -->
+      <div class="step" data-pane="3" hidden>
+        <h3>Apmokėjimas</h3>
+
+        <div class="paysum" id="paySum"></div>
+
+        <div class="pays" id="pays">
+          <label class="pay on"><input type="radio" name="pay" value="bank" checked>
+            <b>🏦 Banko nuoroda</b><i>Swedbank, SEB, Luminor, Revolut — apmokate iš karto</i></label>
+          <label class="pay"><input type="radio" name="pay" value="card">
+            <b>💳 Mokėjimo kortele</b><i>Visa, Mastercard</i></label>
+          <label class="pay"><input type="radio" name="pay" value="invoice">
+            <b>🧾 Išankstinė sąskaita įmonei</b><i>Sąskaitą atsiunčiame el. paštu, apmokate per 5 d. d.</i></label>
+        </div>
+
+        <label class="check"><input type="checkbox" id="agree" required><span>Sutinku su <a href="#duk">užsakymo sąlygomis</a> ir patvirtinu, kad maketas yra galutinis *</span></label>
+
+        <div class="step-nav">
+          <button class="btn btn-ghost" type="button" data-back="2">← Atgal</button>
+          <button class="btn btn-lg" type="submit" id="payBtn">Apmokėti <span id="payAmt"></span></button>
+        </div>
+        <p class="po-note">Demonstracija — tikras mokėjimas neatliekamas ir jokie duomenys nesiunčiami į serverį.
+          Realioje svetainėje čia veiktų Paysera arba Montonio: klientas grįžta apmokėjęs, o užsakymas iškart tampa „Apmokėtas".</p>
       </div>
-      <button class="btn btn-lg btn-block" type="submit">Patvirtinti užsakymą</button>
-      <p class="po-note">Demonstracija — jokie duomenys neišsiunčiami ir neįrašomi į serverį.</p>
+
     </form>
   </div>
 </div>
@@ -403,7 +465,8 @@
     <h3>Užsakymas priimtas</h3>
     <p>Jūsų užsakymo numeris</p>
     <div class="code" id="doneCode">MS-0000</div>
-    <p class="po-note">Realioje sistemoje šiuo numeriu klientas seka gamybos būseną, o Jūs gaunate laišką su maketu. Išsaugokite numerį — jį galite iškart išbandyti paieškos mygtuke viršuje.</p>
+    <p class="donepay" id="donePay"></p>
+    <p class="po-note">Realioje sistemoje šiuo numeriu klientas seka gamybos būseną, o užsakymas su maketu iškart atsiranda Jūsų valdymo sistemoje. Išsaugokite numerį — jį galite iškart išbandyti paieškos mygtuke viršuje.</p>
     <button class="btn btn-block" data-close>Gerai</button>
   </div>
 </div>
