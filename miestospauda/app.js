@@ -6,187 +6,23 @@
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-  var LS_CART = 'ms_demo_cart', LS_ORD = 'ms_demo_orders';
+  var MS = window.MS;
+  var LS_CART = MS.LS.cart, LS_ORD = MS.LS.orders;
 
   /* ═══════════════════════════════════════════════════════════════════════
-     1) PRODUKTAI. Kainodara PAVYZDINĖ (demonstracinė):
-        kaina = paruošimas + bazinė × dydis × medžiaga × spauda × apdaila × kiekis × kiekio nuolaida
-        Realiam klientui čia sudedami jo tikri įkainiai — struktūra ta pati.
+     1) PRODUKTAI IR KAINODARA — imami iš bendro katalogo products.js.
+        Tą patį failą naudoja atskiri produktų puslapiai (p/*.html) ir
+        valdymo sistema (admin.html), todėl kaina trijose vietose niekada
+        negali išsiskirti. Savininko pakeistos kainos pritaikomos čia.
      ═══════════════════════════════════════════════════════════════════════ */
-  var VAT = 1.21;
-
-  var PRODUCTS = [
-    {
-      id: 'viz', name: 'Vizitinės kortelės', cat: 'Skaitmeninė spauda', unit: 'vnt.', vol: 'high',
-      setup: 5, base: 0.085, days: 2, defQty: 500, qtys: [100, 250, 500, 1000, 2500],
-      sizes: [
-        { n: '90 × 50 mm (standartinė)', k: 1 },
-        { n: '85 × 55 mm', k: 1.06 },
-        { n: '50 × 90 mm (vertikali)', k: 1.06 },
-        { n: '90 × 50 mm, suapvalinti kampai', k: 1.24 }
-      ],
-      mats: [
-        { n: 'Kreidinis 300 g', k: 1 },
-        { n: 'Kreidinis 350 g', k: 1.12 },
-        { n: 'Perdirbtas 300 g (eko)', k: 1.3 },
-        { n: 'Dizainerinis popierius 300 g', k: 1.6 }
-      ],
-      sides: true,
-      fins: [
-        { n: 'Be apdailos', k: 1 },
-        { n: 'Matinis laminavimas', k: 1.25 },
-        { n: 'Blizgus laminavimas', k: 1.2 },
-        { n: 'Soft-touch laminavimas', k: 1.5, d: 1 },
-        { n: 'Folijavimas (auksas / sidabras)', k: 1.95, d: 1 }
-      ]
-    },
-    {
-      id: 'skraj', name: 'Skrajutės', cat: 'Skaitmeninė spauda', unit: 'vnt.', vol: 'high',
-      setup: 6, base: 0.055, days: 2, defQty: 1000, qtys: [100, 250, 500, 1000, 2500, 5000],
-      sizes: [
-        { n: 'A6 (105 × 148 mm)', k: 0.62 },
-        { n: 'A5 (148 × 210 mm)', k: 1 },
-        { n: 'DL (99 × 210 mm)', k: 0.9 },
-        { n: 'A4 (210 × 297 mm)', k: 1.85 }
-      ],
-      mats: [
-        { n: 'Kreidinis 130 g', k: 1 },
-        { n: 'Kreidinis 170 g', k: 1.15 },
-        { n: 'Ofsetinis 120 g', k: 0.95 },
-        { n: 'Perdirbtas 140 g (eko)', k: 1.25 }
-      ],
-      sides: true,
-      fins: [{ n: 'Be apdailos', k: 1 }, { n: 'Matinis laminavimas', k: 1.35 }, { n: 'Lankstymas per pusę', k: 1.15 }]
-    },
-    {
-      id: 'lankst', name: 'Lankstinukai', cat: 'Skaitmeninė spauda', unit: 'vnt.', vol: 'high',
-      setup: 12, base: 0.14, days: 3, defQty: 500, qtys: [100, 250, 500, 1000, 2500],
-      sizes: [
-        { n: 'A4 → DL (2 lankstymai)', k: 1 },
-        { n: 'A4 → A5 (1 lankstymas)', k: 0.88 },
-        { n: 'A3 → A4 (1 lankstymas)', k: 1.7 }
-      ],
-      mats: [{ n: 'Kreidinis 150 g', k: 1 }, { n: 'Kreidinis 200 g', k: 1.2 }, { n: 'Kreidinis 250 g', k: 1.4 }],
-      sides: true,
-      fins: [{ n: 'Be apdailos', k: 1 }, { n: 'Matinis laminavimas', k: 1.3 }, { n: 'Dalinis UV lakas', k: 1.6, d: 1 }]
-    },
-    {
-      id: 'plak', name: 'Plakatai', cat: 'Plačiaformatė spauda', unit: 'vnt.', vol: 'low',
-      setup: 0, base: 3.4, days: 1, defQty: 10, qtys: [1, 5, 10, 25, 50, 100],
-      sizes: [
-        { n: 'A3 (297 × 420 mm)', k: 0.55 },
-        { n: 'A2 (420 × 594 mm)', k: 1 },
-        { n: 'A1 (594 × 841 mm)', k: 1.9 },
-        { n: 'B1 (700 × 1000 mm)', k: 2.6 }
-      ],
-      mats: [
-        { n: 'Plakatinis popierius 150 g', k: 1 },
-        { n: 'Blizgus fotopopierius 200 g', k: 1.45 },
-        { n: 'Sintetinis (atsparus drėgmei)', k: 1.8 }
-      ],
-      sides: false,
-      fins: [{ n: 'Be apdailos', k: 1 }, { n: 'Laminavimas', k: 1.4 }, { n: 'Su akutėmis kampuose', k: 1.25 }]
-    },
-    {
-      id: 'lipd', name: 'Lipdukai ir etiketės', cat: 'Plačiaformatė spauda', unit: 'vnt.', vol: 'high',
-      setup: 8, base: 0.22, days: 2, defQty: 250, qtys: [50, 100, 250, 500, 1000, 2500],
-      sizes: [
-        { n: 'iki 50 × 50 mm', k: 0.6 },
-        { n: 'iki 100 × 100 mm', k: 1 },
-        { n: 'iki 150 × 150 mm', k: 1.7 },
-        { n: 'A5 dydžio', k: 2.4 }
-      ],
-      mats: [
-        { n: 'Lipni plėvelė (vidaus)', k: 1 },
-        { n: 'Lipni plėvelė (lauko, 3–5 m.)', k: 1.4 },
-        { n: 'Skaidri plėvelė', k: 1.35 },
-        { n: 'Popierinė etiketė', k: 0.85 }
-      ],
-      sides: false,
-      fins: [{ n: 'Stačiakampiai', k: 1 }, { n: 'Pjauti pagal kontūrą', k: 1.45, d: 1 }, { n: 'Laminuoti (matiniai)', k: 1.3 }]
-    },
-    {
-      id: 'drobe', name: 'Spauda ant drobės', cat: 'Plačiaformatė spauda', unit: 'vnt.', vol: 'low',
-      setup: 0, base: 24, days: 3, defQty: 1, qtys: [1, 2, 3, 5, 10],
-      sizes: [
-        { n: '30 × 40 cm', k: 0.7 },
-        { n: '40 × 60 cm', k: 1 },
-        { n: '60 × 90 cm', k: 1.75 },
-        { n: '80 × 120 cm', k: 2.6 }
-      ],
-      mats: [{ n: 'Drobė ant porėmio', k: 1 }, { n: 'Drobė be porėmio', k: 0.72 }, { n: 'Drobė + apsauginis lakas', k: 1.2 }],
-      sides: false,
-      fins: [{ n: 'Be rėmo', k: 1 }, { n: 'Medinis rėmas', k: 1.45, d: 1 }]
-    },
-    {
-      id: 'kviet', name: 'Vestuviniai kvietimai', cat: 'Šventinė atributika', unit: 'vnt.', vol: 'high',
-      setup: 15, base: 0.7, days: 4, defQty: 100, qtys: [30, 50, 100, 150, 250],
-      sizes: [{ n: 'Vienlapis 100 × 200 mm', k: 1 }, { n: 'Atverčiamas 145 × 145 mm', k: 1.35 }, { n: 'Su įdėklu ir vokeliu', k: 1.75 }],
-      mats: [{ n: 'Dizainerinis popierius 300 g', k: 1 }, { n: 'Perlamutrinis 300 g', k: 1.25 }, { n: 'Faktūrinis (linen) 300 g', k: 1.3 }],
-      sides: true,
-      fins: [
-        { n: 'Be apdailos', k: 1 },
-        { n: 'Su atlasiniu kaspinu', k: 1.4, d: 1 },
-        { n: 'Folijavimas', k: 1.8, d: 2 },
-        { n: 'Reljefinė spauda', k: 1.9, d: 2 }
-      ]
-    },
-    {
-      id: 'kalend', name: 'Kalendoriai', cat: 'Skaitmeninė spauda', unit: 'vnt.', vol: 'high',
-      setup: 20, base: 2.6, days: 4, defQty: 100, qtys: [25, 50, 100, 250, 500],
-      sizes: [{ n: 'Stalo, trišonis', k: 1 }, { n: 'Sieninis A3, 12 lapų', k: 1.55 }, { n: 'Sieninis vienlapis A2', k: 0.75 }],
-      mats: [{ n: 'Kreidinis 200 g', k: 1 }, { n: 'Kreidinis 250 g', k: 1.15 }],
-      sides: false,
-      fins: [{ n: 'Su spirale', k: 1 }, { n: 'Su spirale ir pakabinimu', k: 1.1 }, { n: 'Laminuotas viršelis', k: 1.25 }]
-    },
-    {
-      id: 'puod', name: 'Puodeliai su spauda', cat: 'Verslo dovanos', unit: 'vnt.', vol: 'low',
-      setup: 0, base: 6.4, days: 3, defQty: 25, qtys: [1, 5, 10, 25, 50, 100],
-      sizes: [{ n: 'Baltas 330 ml', k: 1 }, { n: 'Spalvotas viduje 330 ml', k: 1.2 }, { n: 'Keičiantis spalvą (magic)', k: 1.75 }],
-      mats: null,
-      sides: false,
-      fins: [{ n: 'Spauda iš vienos pusės', k: 1 }, { n: 'Spauda aplink', k: 1.3 }, { n: 'Su dovanų dėžute', k: 1.35 }]
-    },
-    {
-      id: 'auto', name: 'Automobilio apklijavimas', cat: 'Išorinė reklama', unit: 'm²', vol: 'low',
-      setup: 45, base: 27, days: 4, defQty: 5, qtys: [1, 3, 5, 10, 20],
-      sizes: [{ n: 'Lygus paviršius (durys, šonas)', k: 1 }, { n: 'Su iškilimais / apvadais', k: 1.25 }, { n: 'Visas kėbulas', k: 1.4 }],
-      mats: [
-        { n: 'Lipni plėvelė (3 m. garantija)', k: 1 },
-        { n: 'Litavimo plėvelė (5–7 m.)', k: 1.35 },
-        { n: 'Perforuota plėvelė langams', k: 1.5 }
-      ],
-      sides: false,
-      fins: [{ n: 'Be laminato', k: 1 }, { n: 'Su apsauginiu laminatu', k: 1.3, d: 1 }, { n: 'Su montavimu vietoje', k: 1.45, d: 1 }]
-    }
-  ];
-
-  var VOL = {
-    high: [[100, 1], [250, .86], [500, .72], [1000, .6], [2500, .5], [Infinity, .44]],
-    low: [[1, 1], [5, .95], [10, .9], [25, .84], [50, .78], [Infinity, .72]]
-  };
-  function volFactor(p, qty) {
-    var t = VOL[p.vol], i;
-    for (i = 0; i < t.length; i++) if (qty <= t[i][0]) return t[i][1];
-    return t[t.length - 1][1];
+  function loadPrices() {
+    try { return JSON.parse(localStorage.getItem(MS.LS.prices) || 'null'); } catch (e) { return null; }
   }
+  MS.applyOverrides(loadPrices());
 
-  function eur(n) { return n.toFixed(2).replace('.', ',') + ' €'; }
-  function eur4(n) { return (n < 1 ? n.toFixed(3) : n.toFixed(2)).replace('.', ',') + ' €'; }
-  function byId(id) { for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].id === id) return PRODUCTS[i]; return PRODUCTS[0]; }
-
-  /* Kaina pagal pasirinkimą. sel = {qty,size,mat,sides,fin,rush} (indeksai). */
-  function price(p, sel) {
-    var qty = Math.max(1, sel.qty || 1);
-    var k = 1;
-    if (p.sizes) k *= p.sizes[sel.size || 0].k;
-    if (p.mats) k *= p.mats[sel.mat || 0].k;
-    if (p.sides) k *= (sel.sides === 1 ? 1 : 1.35);
-    if (p.fins) k *= p.fins[sel.fin || 0].k;
-    var net = p.setup + p.base * k * qty * volFactor(p, qty);
-    if (sel.rush) net *= 1.4;
-    return { net: net, gross: net * VAT, unit: net * VAT / qty, qty: qty };
-  }
+  var VAT = MS.VAT, PRODUCTS = MS.PRODUCTS;
+  var volFactor = MS.volFactor, byId = MS.byId, price = MS.price;
+  var eur = MS.eur, eur4 = MS.eur4;
 
   /* Gamybos terminas darbo dienomis. */
   function workDays(n) {
