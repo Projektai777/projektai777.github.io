@@ -66,8 +66,11 @@ table{width:100%; border-collapse:collapse}
 th,td{text-align:left; padding:13px 18px; border-bottom:1px solid var(--line); font-size:14px; vertical-align:top}
 th{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); background:#fafbfd}
 tr:last-child td{border-bottom:0}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:600; color:var(--m)}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:600; color:var(--m); white-space:nowrap}
+.mono .sub{white-space:nowrap}
 .sub{display:block; color:var(--muted); font-size:12.5px}
+/* būsenos stulpelis turi tilpti visą pavadinimą — kitaip „Užsakymas priim…" */
+th:last-child, td:last-child{min-width:210px}
 .tag{display:inline-block; font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:99px; background:#eef0f5; color:var(--muted); white-space:nowrap}
 .tag.paid{background:#e6f8ef; color:#0b7a44}
 .tag.due{background:#fff1f6; color:#c2185b}
@@ -106,6 +109,10 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
 .saved{color:#0b7a44; font-weight:600; font-size:14px}
 .note{background:#f0fbff; border:1px solid #b3e8fb; border-radius:var(--r-sm); padding:12px 14px; font-size:13.5px; color:#0a5870; margin:0 18px 18px}
 .toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:var(--k); color:#fff; padding:12px 20px; border-radius:99px; font-size:14px; z-index:90; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+
+/* Plačiame ekrane stulpelių antraštės rodomos tik virš pirmos eilutės —
+   kartojamos prie kiekvieno produkto jos tik triukšmauja. Telefone lieka. */
+@media (min-width:761px){ .prow:not(:first-child) label{display:none} }
 
 @media (max-width:760px){
   .prow{grid-template-columns:1fr 1fr; }
