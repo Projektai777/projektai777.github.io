@@ -226,6 +226,8 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
         <b>Kaip veikia kaina:</b> paruošimas (fiksuotas mokestis už užsakymą) + bazinis įkainis × pasirinkimai × kiekis × kiekio nuolaida.
         Visi šioje skiltyje esantys skaičiai yra Jūsų — programuotojo keisti nereikia.
         Koeficientas <b>1</b> reiškia bazinę kainą, <b>1,25</b> — 25 % brangiau, <b>0,9</b> — 10 % pigiau.
+        <br><b>Demonstracijoje</b> pakeitimai išsaugomi tik šioje naršyklėje, todėl jų nemato kiti žmonės.
+        Tikroje versijoje jie keliauja į serverį ir naują kainą iškart mato visi lankytojai.
       </p>
       <div id="prWrap" style="padding:0 18px"></div>
       <div class="bar">
@@ -496,6 +498,11 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
         '<option value="1"' + (p.sides ? ' selected' : '') + '>Taip, siūloma</option>' +
         '<option value="0"' + (p.sides ? '' : ' selected') + '>Ne</option></select></div>' +
         '</div>' +
+        '<div class="f" style="max-width:340px"><label>Kuri nuolaidų lentelė taikoma</label>' +
+        '<select data-p="' + pi + '" data-k="vol">' +
+        '<option value="high"' + (p.vol === 'high' ? ' selected' : '') + '>Dideli tiražai (šimtai / tūkstančiai)</option>' +
+        '<option value="low"' + (p.vol === 'low' ? ' selected' : '') + '>Vienetiniai gaminiai</option>' +
+        '</select></div>' +
         '<div class="opts3">' +
         optBlock(pi, 'sizes', 'Formatai / dydžiai', p.sizes) +
         (p.mats === null
@@ -546,6 +553,8 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
           if (list.length) p.qtys = list;
         } else if (k === 'sides') {
           p.sides = i.value === '1';
+        } else if (k === 'vol') {
+          p.vol = i.value === 'low' ? 'low' : 'high';
         } else if (k === 'setup' || k === 'base' || k === 'days') {
           var n = parseNum(i.value); if (n !== null) p[k] = n;
         } else {
@@ -609,9 +618,24 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
     toast('✓ Produktas pridėtas — nepamirškite išsaugoti');
   };
 
+  /* Saugome TIK tuos laukus, kuriuos valdo šis redaktorius. Jei įrašytume visą
+     produktą, vėliau patobulinti aprašymai, nuotraukos ar DUK klausimai liktų
+     amžiams užšaldyti sename įraše ir nebepasiektų svetainės. */
+  var OWNED = ['id', 'name', 'cat', 'unit', 'vol', 'setup', 'base', 'days', 'qtys', 'sides', 'sizes', 'mats', 'fins'];
+
   $('#prSave').onclick = function () {
     if (!DRAFT) return;
-    localStorage.setItem(MS.LS.prices, JSON.stringify(DRAFT));
+    var out = {
+      v: 1,
+      cfg: DRAFT.cfg,
+      vol: DRAFT.vol,
+      products: DRAFT.products.map(function (p) {
+        var o = {};
+        OWNED.forEach(function (k) { if (p[k] !== undefined) o[k] = p[k]; });
+        return o;
+      })
+    };
+    localStorage.setItem(MS.LS.prices, JSON.stringify(out));
     $('#prSaved').hidden = false;
     setTimeout(function () { $('#prSaved').hidden = true; }, 2600);
     toast('✓ Išsaugota — svetainė jau skaičiuoja naujomis kainomis');

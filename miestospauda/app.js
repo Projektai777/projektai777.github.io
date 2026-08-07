@@ -183,7 +183,11 @@
   /* ═══════════════════════════════════════════════════════════════════════
      3) TOP PREKĖS
      ═══════════════════════════════════════════════════════════════════════ */
-  var TOP = ['viz', 'skraj', 'lipd', 'plak', 'lankst', 'puod', 'kviet', 'drobe'];
+  // Sąrašas fiksuotas, bet produktą savininkas gali pašalinti valdymo sistemoje.
+  // Be šios filtracijos byId() grąžintų pirmą produktą ir juostoje atsirastų
+  // pasikartojanti kortelė — tyliai neteisinga.
+  var TOP = ['viz', 'skraj', 'lipd', 'plak', 'lankst', 'puod', 'kviet', 'drobe']
+    .filter(function (id) { return PRODUCTS.some(function (p) { return p.id === id; }); });
   var rail = $('#topRail');
   TOP.forEach(function (id) {
     var p = byId(id);

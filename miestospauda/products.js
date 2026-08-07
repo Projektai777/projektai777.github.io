@@ -329,6 +329,21 @@
         Object.keys(base).forEach(function (k) { merged[k] = base[k]; });
         Object.keys(o).forEach(function (k) { if (o[k] !== undefined && o[k] !== null) merged[k] = o[k]; });
         if (o.mats === null) merged.mats = null;          // sąmoningai be medžiagų
+
+        /* Sutvarkome, ko valdymo sistema neklausia, bet kodui reikia. Naujas
+           produktas ateina be defQty, o pakeitus siūlomus kiekius senasis
+           defQty gali nebepatekti į sąrašą — tada skaičiuoklė startuotų nuo
+           neegzistuojančio kiekio. */
+        if (!Array.isArray(merged.qtys) || !merged.qtys.length) merged.qtys = [100, 250, 500];
+        if (merged.qtys.indexOf(merged.defQty) < 0) merged.defQty = merged.qtys[Math.floor(merged.qtys.length / 2)];
+        if (merged.vol !== 'low') merged.vol = 'high';
+        if (!merged.sizes || !merged.sizes.length) merged.sizes = [{ n: 'Standartinis', k: 1 }];
+        if (!merged.fins || !merged.fins.length) merged.fins = [{ n: 'Be apdailos', k: 1 }];
+        if (!merged.img) merged.img = 'skaitm.jpg';
+        if (!merged.lead) merged.lead = merged.name || '';
+        if (!Array.isArray(merged.bullets)) merged.bullets = [];
+        if (!Array.isArray(merged.faq)) merged.faq = [];
+        if (!merged.kw) merged.kw = '';
         return merged;
       });
       PRODUCTS.length = 0;
