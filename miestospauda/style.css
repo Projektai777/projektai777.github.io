@@ -316,6 +316,18 @@ select{appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns
 .pick{display:flex; gap:8px; margin:10px 0 4px; flex-wrap:wrap}
 .pick .chip{flex:1}
 
+/* ── nuorodos į atskirus produktų puslapius (SEO) ───────────────────────── */
+.plinks{margin-top:26px; background:#fff; border:1px solid var(--line); border-radius:var(--r); padding:20px 24px}
+.plinks h3{font-size:14px; margin:0 0 12px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em}
+.plinks ul{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:9px 10px}
+.plinks a{
+  display:inline-block; text-decoration:none; font-size:14.5px; color:var(--txt);
+  border:1px solid var(--line); border-radius:99px; padding:7px 15px; transition:.14s;
+}
+.plinks a:hover{border-color:var(--c); color:var(--c)}
+.prod-more{display:block; margin-top:10px; font-size:13.5px; color:var(--muted); text-decoration:none}
+.prod-more:hover{color:var(--c)}
+
 /* ── UŽSAKYMO ŽINGSNIAI (kontaktai → maketas → apmokėjimas) ─────────────── */
 .modal-in.wide{width:min(680px,100%)}
 .steps-bar{list-style:none; display:flex; gap:6px; margin:0 0 22px; padding:0 44px 0 0}
