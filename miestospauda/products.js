@@ -13,7 +13,15 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
-  var VAT = 1.21;
+  /* Visi kainodaros skaičiai gyvena čia ir VISI redaguojami valdymo sistemoje —
+     PVM, dvipusės spaudos ir skubos koeficientai, kiekio nuolaidos. Kode nieko
+     "prikalto" nelieka, kad savininkui niekada nereikėtų programuotojo kainoms. */
+  var CFG = {
+    vat: 1.21,     // PVM daugiklis (1,21 = 21 %)
+    sides: 1.35,   // dvipusė spauda, palyginti su vienpuse
+    rush: 1.4      // skubaus užsakymo antkainis
+  };
+  var VAT = CFG.vat;   // paliktas suderinamumui su senesniu kodu
 
   var PRODUCTS = [
     {
@@ -257,35 +265,80 @@
     return PRODUCTS[0];
   }
 
-  /* Kaina pagal pasirinkimą. sel = {qty,size,mat,sides,fin,rush} (indeksai). */
+  /* Kaina pagal pasirinkimą. sel = {qty,size,mat,sides,fin,rush} (indeksai).
+     Koeficientai imami iš CFG, todėl pakeitus juos valdymo sistemoje kaina
+     iškart persiskaičiuoja visur — ir skaičiuoklėje, ir produktų puslapiuose. */
   function price(p, sel) {
     var qty = Math.max(1, sel.qty || 1);
     var k = 1;
-    if (p.sizes) k *= p.sizes[sel.size || 0].k;
-    if (p.mats) k *= p.mats[sel.mat || 0].k;
-    if (p.sides) k *= (sel.sides === 1 ? 1 : 1.35);
-    if (p.fins) k *= p.fins[sel.fin || 0].k;
+    var pick = function (arr, i) { return arr && arr[i] ? arr[i] : (arr && arr[0]) || { k: 1 }; };
+    if (p.sizes && p.sizes.length) k *= pick(p.sizes, sel.size || 0).k;
+    if (p.mats && p.mats.length) k *= pick(p.mats, sel.mat || 0).k;
+    if (p.sides) k *= (sel.sides === 1 ? 1 : CFG.sides);
+    if (p.fins && p.fins.length) k *= pick(p.fins, sel.fin || 0).k;
     var net = p.setup + p.base * k * qty * volFactor(p, qty);
-    if (sel.rush) net *= 1.4;
-    return { net: net, gross: net * VAT, unit: net * VAT / qty, qty: qty };
+    if (sel.rush) net *= CFG.rush;
+    return { net: net, gross: net * CFG.vat, unit: net * CFG.vat / qty, qty: qty };
   }
 
   function eur(n) { return n.toFixed(2).replace('.', ',') + ' €'; }
   function eur4(n) { return (n < 1 ? n.toFixed(3) : n.toFixed(2)).replace('.', ',') + ' €'; }
 
-  /* Kainų redagavimas valdymo sistemoje (admin.html) rašo tik NUKRYPIMUS:
-     {id: {setup, base, days}}. Taip demonstruojame, kad savininkas keičia kainas
-     pats, o failo struktūra lieka nepaliesta. */
+  /* ── Valdymo sistemos pakeitimai ────────────────────────────────────────
+     Savininkas valdymo sistemoje redaguoja VISKĄ: bendrus koeficientus (PVM,
+     dvipusė, skuba), kiekio nuolaidų lentelę, produktų sąrašą ir kiekvieno
+     produkto formatus, medžiagas bei apdailas su jų koeficientais.
+
+     Saugoma forma:
+       { cfg:{vat,sides,rush}, vol:{high:[[qty,k]…],low:[…]},
+         products:[ {id,name,cat,unit,vol,setup,base,days,qtys,sides,
+                     sizes:[{n,k}],mats:[{n,k}]|null,fins:[{n,k}],
+                     img,lead,bullets,kw,faq} … ] }
+
+     Pradinės reikšmės lieka ŠIAME faile, todėl išjungus ar ištrynus pakeitimus
+     svetainė veikia kaip anksčiau — pakeitimai tik UŽDEDAMI ant viršaus. */
+  var DEFAULTS = JSON.parse(JSON.stringify({ cfg: CFG, vol: VOL, products: PRODUCTS }));
+
   function applyOverrides(ov) {
     if (!ov) return;
-    PRODUCTS.forEach(function (p) {
-      var o = ov[p.id];
-      if (!o) return;
-      if (typeof o.setup === 'number') p.setup = o.setup;
-      if (typeof o.base === 'number') p.base = o.base;
-      if (typeof o.days === 'number') p.days = o.days;
-    });
+
+    if (ov.cfg) {
+      ['vat', 'sides', 'rush'].forEach(function (k) {
+        if (typeof ov.cfg[k] === 'number' && ov.cfg[k] > 0) CFG[k] = ov.cfg[k];
+      });
+      VAT = CFG.vat;
+    }
+
+    if (ov.vol) {
+      ['high', 'low'].forEach(function (t) {
+        if (Array.isArray(ov.vol[t]) && ov.vol[t].length) {
+          // Paskutinė pakopa visada turi apimti likusius kiekius.
+          var rows = ov.vol[t].map(function (r) { return [r[0] === null ? Infinity : r[0], r[1]]; });
+          rows[rows.length - 1][0] = Infinity;
+          VOL[t] = rows;
+        }
+      });
+    }
+
+    if (Array.isArray(ov.products) && ov.products.length) {
+      // Sąrašas gali būti perrikiuotas, papildytas ar sutrumpintas — todėl
+      // pakeičiame turinį, o ne kiekvieną lauką atskirai.
+      var kept = ov.products.map(function (o) {
+        var base = DEFAULTS.products.filter(function (d) { return d.id === o.id; })[0] || {};
+        var merged = {};
+        Object.keys(base).forEach(function (k) { merged[k] = base[k]; });
+        Object.keys(o).forEach(function (k) { if (o[k] !== undefined && o[k] !== null) merged[k] = o[k]; });
+        if (o.mats === null) merged.mats = null;          // sąmoningai be medžiagų
+        return merged;
+      });
+      PRODUCTS.length = 0;
+      kept.forEach(function (p) { PRODUCTS.push(p); });
+    }
   }
+
+  /* Pradinės reikšmės valdymo sistemai — kad mygtukas „Grąžinti pradines"
+     visada turėtų į ką grįžti, net jei pakeitimai jau pritaikyti. */
+  function defaults() { return JSON.parse(JSON.stringify(DEFAULTS)); }
 
   return {
     VAT: VAT, PRODUCTS: PRODUCTS, VOL: VOL,
