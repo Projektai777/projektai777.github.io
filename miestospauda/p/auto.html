@@ -106,14 +106,14 @@
     <section class="psec">
       <h2>Automobilio apklijavimas — kaina</h2>
       <p class="sub">Pavyzdinės kainos su standartiniais pasirinkimais. Tikslią kainą su Jūsų parametrais parodo skaičiuoklė.</p>
-      <table class="ptab">
+      <table class="ptab" data-prod="auto">
       <thead><tr><th>Kiekis</th><th>Kaina su PVM</th><th>Vieneto kaina</th></tr></thead>
       <tbody>
-        <tr><td>1 m²</td><td>87,12 €</td><td>87,12 €</td></tr>
-        <tr><td>3 m²</td><td>147,56 €</td><td>49,19 €</td></tr>
-        <tr><td>5 m²</td><td>209,63 €</td><td>41,93 €</td></tr>
-        <tr><td>10 m²</td><td>348,48 €</td><td>34,85 €</td></tr>
-        <tr><td>20 m²</td><td>603,31 €</td><td>30,17 €</td></tr>
+        <tr data-q="1"><td>1 m²</td><td class="pg">87,12 €</td><td class="pu">87,12 €</td></tr>
+        <tr data-q="3"><td>3 m²</td><td class="pg">147,56 €</td><td class="pu">49,19 €</td></tr>
+        <tr data-q="5"><td>5 m²</td><td class="pg">209,63 €</td><td class="pu">41,93 €</td></tr>
+        <tr data-q="10"><td>10 m²</td><td class="pg">348,48 €</td><td class="pu">34,85 €</td></tr>
+        <tr data-q="20"><td>20 m²</td><td class="pg">603,31 €</td><td class="pu">30,17 €</td></tr>
       </tbody>
     </table>
       <p class="po-note" style="color:var(--muted); margin-top:14px">Kainos pavyzdinės (demonstracinės) ir pateikiamos su PVM. Terminas — 4 d. d. nuo maketo patvirtinimo.</p>
@@ -167,6 +167,28 @@
     <small>© 2026 Miesto Spauda. Demonstracinė versija — parengė Ignas, projektai777.koduojam@gmail.com</small>
   </div>
 </footer>
+
+<!-- Kainos jau įrašytos į patį HTML (todėl jas mato Google ir jos rodomos net
+     išjungus JavaScript). Šis skriptas TIK perskaičiuoja jas, jei savininkas
+     valdymo sistemoje pakeitė įkainius — kitaip produkto puslapis rodytų
+     seną kainą, o skaičiuoklė naują. -->
+<script src="../products.js"></script>
+<script>
+(function () {
+  var tab = document.querySelector('.ptab[data-prod]');
+  if (!tab || !window.MS) return;
+  var ov;
+  try { ov = JSON.parse(localStorage.getItem(MS.LS.prices) || 'null'); } catch (e) { return; }
+  if (!ov) return;
+  MS.applyOverrides(ov);
+  var p = MS.byId(tab.dataset.prod);
+  Array.prototype.forEach.call(tab.querySelectorAll('tbody tr'), function (tr) {
+    var r = MS.price(p, { qty: +tr.dataset.q, size: 0, mat: 0, sides: p.sides ? 2 : 1, fin: 0, rush: 0 });
+    tr.querySelector('.pg').textContent = MS.eur(r.gross);
+    tr.querySelector('.pu').textContent = MS.eur4(r.unit);
+  });
+})();
+</script>
 
 </body>
 </html>

@@ -106,14 +106,14 @@
     <section class="psec">
       <h2>Kalendoriai — kaina</h2>
       <p class="sub">Pavyzdinės kainos su standartiniais pasirinkimais. Tikslią kainą su Jūsų parametrais parodo skaičiuoklė.</p>
-      <table class="ptab">
+      <table class="ptab" data-prod="kalend">
       <thead><tr><th>Kiekis</th><th>Kaina su PVM</th><th>Vieneto kaina</th></tr></thead>
       <tbody>
-        <tr><td>25 vnt.</td><td>102,85 €</td><td>4,11 €</td></tr>
-        <tr><td>50 vnt.</td><td>181,50 €</td><td>3,63 €</td></tr>
-        <tr><td>100 vnt.</td><td>338,80 €</td><td>3,39 €</td></tr>
-        <tr><td>250 vnt.</td><td>700,59 €</td><td>2,80 €</td></tr>
-        <tr><td>500 vnt.</td><td>1156,76 €</td><td>2,31 €</td></tr>
+        <tr data-q="25"><td>25 vnt.</td><td class="pg">102,85 €</td><td class="pu">4,11 €</td></tr>
+        <tr data-q="50"><td>50 vnt.</td><td class="pg">181,50 €</td><td class="pu">3,63 €</td></tr>
+        <tr data-q="100"><td>100 vnt.</td><td class="pg">338,80 €</td><td class="pu">3,39 €</td></tr>
+        <tr data-q="250"><td>250 vnt.</td><td class="pg">700,59 €</td><td class="pu">2,80 €</td></tr>
+        <tr data-q="500"><td>500 vnt.</td><td class="pg">1156,76 €</td><td class="pu">2,31 €</td></tr>
       </tbody>
     </table>
       <p class="po-note" style="color:var(--muted); margin-top:14px">Kainos pavyzdinės (demonstracinės) ir pateikiamos su PVM. Terminas — 4 d. d. nuo maketo patvirtinimo.</p>
@@ -167,6 +167,28 @@
     <small>© 2026 Miesto Spauda. Demonstracinė versija — parengė Ignas, projektai777.koduojam@gmail.com</small>
   </div>
 </footer>
+
+<!-- Kainos jau įrašytos į patį HTML (todėl jas mato Google ir jos rodomos net
+     išjungus JavaScript). Šis skriptas TIK perskaičiuoja jas, jei savininkas
+     valdymo sistemoje pakeitė įkainius — kitaip produkto puslapis rodytų
+     seną kainą, o skaičiuoklė naują. -->
+<script src="../products.js"></script>
+<script>
+(function () {
+  var tab = document.querySelector('.ptab[data-prod]');
+  if (!tab || !window.MS) return;
+  var ov;
+  try { ov = JSON.parse(localStorage.getItem(MS.LS.prices) || 'null'); } catch (e) { return; }
+  if (!ov) return;
+  MS.applyOverrides(ov);
+  var p = MS.byId(tab.dataset.prod);
+  Array.prototype.forEach.call(tab.querySelectorAll('tbody tr'), function (tr) {
+    var r = MS.price(p, { qty: +tr.dataset.q, size: 0, mat: 0, sides: p.sides ? 2 : 1, fin: 0, rush: 0 });
+    tr.querySelector('.pg').textContent = MS.eur(r.gross);
+    tr.querySelector('.pu').textContent = MS.eur4(r.unit);
+  });
+})();
+</script>
 
 </body>
 </html>
