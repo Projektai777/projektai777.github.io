@@ -1,0 +1,5 @@
+# Demonstracinė kopija — neindeksuojama, kad nekonkuruotų su miestospauda.lt
+User-agent: *
+Disallow: /miestospauda/
+
+Sitemap: https://projektai777.github.io/miestospauda/sitemap.xml

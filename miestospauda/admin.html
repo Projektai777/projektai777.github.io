@@ -1,0 +1,484 @@
+<!doctype html>
+<!-- © 2026 Lojalumas. DEMO valdymo sistema (TVS + užsakymų/klientų bazė)
+     „Miesto Spaudos" pavyzdinei svetainei.
+     Šioje demonstracijoje viskas veikia NARŠYKLĖJE (localStorage) — kad būtų
+     galima išbandyti be jokio serverio. Tikroje versijoje tie patys ekranai
+     dirba su serveriu, o duomenys pasiekiami iš bet kurio kompiuterio. -->
+<html lang="lt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Valdymo sistema — Miesto Spauda (DEMO)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --c:#00aeef; --m:#ec008c; --y:#ffd400; --k:#111318;
+  --bg:#f5f6f9; --line:#e3e6ee; --txt:#14161c; --muted:#666e80;
+  --r:14px; --r-sm:10px;
+  --ff:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --fh:'Manrope','Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+body{margin:0; background:var(--bg); color:var(--txt); font:15px/1.6 var(--ff); -webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--fh); margin:0}
+a{color:var(--c)}
+button{font:inherit}
+
+/* ── prisijungimas ── */
+.login{min-height:100vh; display:grid; place-items:center; padding:20px}
+.login-box{background:#fff; border-radius:20px; padding:34px; width:min(400px,100%); box-shadow:0 20px 60px rgba(18,22,33,.12); text-align:center}
+.login-box img{width:150px; margin:0 auto 20px; display:block}
+.login-box h1{font-size:20px; margin-bottom:6px}
+.login-box p{color:var(--muted); font-size:14px; margin:0 0 22px}
+.hint{background:#fffbe6; border:1px solid #ffe58f; border-radius:var(--r-sm); padding:10px 12px; font-size:13px; color:#7a5c00; margin-top:16px}
+
+/* ── karkasas ── */
+.top{background:var(--k); color:#fff; padding:0 20px; position:sticky; top:0; z-index:20}
+.top-in{max-width:1180px; margin:0 auto; display:flex; align-items:center; gap:18px; height:60px}
+.top b{font-family:var(--fh); font-size:16px; letter-spacing:.01em}
+.badge-demo{background:var(--y); color:#000; font-size:11px; font-weight:700; padding:3px 8px; border-radius:99px; letter-spacing:.04em}
+.top .sp{flex:1}
+.top a, .top button.link{color:#c3c9d6; text-decoration:none; font-size:14px; background:none; border:0; cursor:pointer}
+.top a:hover, .top button.link:hover{color:#fff}
+
+.tabs{background:#fff; border-bottom:1px solid var(--line); padding:0 20px; position:sticky; top:60px; z-index:19}
+.tabs-in{max-width:1180px; margin:0 auto; display:flex; gap:4px; overflow-x:auto}
+.tab{border:0; background:none; padding:15px 16px; font-size:14.5px; font-weight:600; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; white-space:nowrap}
+.tab.on{color:var(--txt); border-bottom-color:var(--c)}
+
+.wrap{max-width:1180px; margin:0 auto; padding:26px 20px 60px}
+.pagehead{margin-bottom:20px}
+.pagehead h2{font-size:22px}
+.pagehead p{margin:6px 0 0; color:var(--muted); font-size:14.5px}
+
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:24px}
+.card{background:#fff; border:1px solid var(--line); border-radius:var(--r); padding:16px 18px}
+.card span{display:block; font-size:12.5px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em}
+.card b{font-family:var(--fh); font-size:26px; display:block; margin-top:4px}
+
+.panel{background:#fff; border:1px solid var(--line); border-radius:var(--r); overflow:hidden}
+.panel-head{padding:16px 18px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+.panel-head h3{font-size:16px; flex:1}
+table{width:100%; border-collapse:collapse}
+th,td{text-align:left; padding:13px 18px; border-bottom:1px solid var(--line); font-size:14px; vertical-align:top}
+th{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); background:#fafbfd}
+tr:last-child td{border-bottom:0}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:600; color:var(--m)}
+.sub{display:block; color:var(--muted); font-size:12.5px}
+.tag{display:inline-block; font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:99px; background:#eef0f5; color:var(--muted); white-space:nowrap}
+.tag.paid{background:#e6f8ef; color:#0b7a44}
+.tag.due{background:#fff1f6; color:#c2185b}
+.empty{padding:44px 20px; text-align:center; color:var(--muted)}
+
+select,input,textarea{
+  width:100%; padding:9px 11px; border:1.5px solid var(--line); border-radius:var(--r-sm);
+  font:inherit; background:#fff; color:var(--txt);
+}
+select{cursor:pointer}
+input:focus,select:focus,textarea:focus{outline:0; border-color:var(--c)}
+textarea{resize:vertical; min-height:76px; line-height:1.5}
+.btn{
+  border:0; background:var(--k); color:#fff; padding:10px 18px; border-radius:var(--r-sm);
+  font-weight:600; cursor:pointer; font-size:14px;
+}
+.btn:hover{opacity:.9}
+.btn.ghost{background:#fff; color:var(--txt); border:1.5px solid var(--line)}
+.btn.sm{padding:7px 13px; font-size:13px}
+.btn.warn{background:#fff; color:var(--m); border:1.5px solid var(--m)}
+
+.form-grid{display:grid; gap:18px; padding:18px}
+.fgroup{border:1px solid var(--line); border-radius:var(--r); padding:16px 18px}
+.fgroup h4{margin:0 0 4px; font-family:var(--fh); font-size:15px}
+.fgroup > p{margin:0 0 14px; color:var(--muted); font-size:13px}
+.f{margin-bottom:14px}
+.f:last-child{margin-bottom:0}
+.f label{display:block; font-size:12.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px}
+.f .orig{font-size:12.5px; color:var(--muted); margin-top:5px}
+.prow{display:grid; grid-template-columns:1.6fr repeat(3,1fr); gap:10px; align-items:end; padding:12px 0; border-bottom:1px solid var(--line)}
+.prow:last-child{border-bottom:0}
+.prow .pname{font-weight:600; font-size:14.5px}
+.prow .pname span{display:block; font-weight:400; font-size:12.5px; color:var(--muted)}
+.bar{position:sticky; bottom:0; background:#fff; border-top:1px solid var(--line); padding:14px 18px; display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+.bar .sp{flex:1}
+.saved{color:#0b7a44; font-weight:600; font-size:14px}
+.note{background:#f0fbff; border:1px solid #b3e8fb; border-radius:var(--r-sm); padding:12px 14px; font-size:13.5px; color:#0a5870; margin:0 18px 18px}
+.toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:var(--k); color:#fff; padding:12px 20px; border-radius:99px; font-size:14px; z-index:90; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+
+@media (max-width:760px){
+  .prow{grid-template-columns:1fr 1fr; }
+  .prow .pname{grid-column:1/-1}
+  th:nth-child(3),td:nth-child(3){display:none}
+  .wrap{padding:20px 14px 50px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── PRISIJUNGIMAS ────────────────────────────────────────────────────── -->
+<div class="login" id="login">
+  <div class="login-box">
+    <img src="./img/logo.png" alt="Miesto Spauda">
+    <h1>Valdymo sistema</h1>
+    <p>Užsakymai, klientai, kainos ir svetainės tekstai</p>
+    <form id="loginForm">
+      <input type="password" id="pass" placeholder="Slaptažodis" autocomplete="current-password">
+      <div style="height:10px"></div>
+      <button class="btn" style="width:100%" type="submit">Prisijungti</button>
+    </form>
+    <div class="hint"><b>Demonstracija.</b> Slaptažodis — <b>demo</b>. Tikroje sistemoje slaptažodį pasirenkate Jūs, o duomenys saugomi serveryje, ne naršyklėje.</div>
+  </div>
+</div>
+
+<!-- ── SISTEMA ──────────────────────────────────────────────────────────── -->
+<div id="app" hidden>
+  <header class="top">
+    <div class="top-in">
+      <b>Miesto Spauda</b>
+      <span class="badge-demo">DEMO</span>
+      <span class="sp"></span>
+      <a href="./index.html" target="_blank">Svetainė ↗</a>
+      <button class="link" id="logout">Atsijungti</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <div class="tabs-in">
+      <button class="tab on" data-tab="ord">Užsakymai</button>
+      <button class="tab" data-tab="cli">Klientai</button>
+      <button class="tab" data-tab="pr">Produktai ir kainos</button>
+      <button class="tab" data-tab="txt">Svetainės tekstai</button>
+    </div>
+  </nav>
+
+  <!-- ── UŽSAKYMAI ──────────────────────────────────────────────────────── -->
+  <main class="wrap" data-pane="ord">
+    <div class="pagehead">
+      <h2>Užsakymai</h2>
+      <p>Visi svetainėje pateikti užsakymai kartu su maketais ir apmokėjimo būsena. Būseną keičiate Jūs — klientas ją iškart mato sekimo lange.</p>
+    </div>
+    <div class="cards" id="kpi"></div>
+    <div class="panel">
+      <div class="panel-head">
+        <h3>Užsakymų sąrašas</h3>
+        <button class="btn ghost sm" id="seed">Įkelti pavyzdinių užsakymų</button>
+        <button class="btn warn sm" id="wipe">Išvalyti</button>
+      </div>
+      <div id="ordWrap"></div>
+    </div>
+  </main>
+
+  <!-- ── KLIENTAI ───────────────────────────────────────────────────────── -->
+  <main class="wrap" data-pane="cli" hidden>
+    <div class="pagehead">
+      <h2>Klientai</h2>
+      <p>Klientų bazė susidaro savaime iš užsakymų — nieko vesti ranka nereikia. Matote, kas užsako dažniausiai ir už kokias sumas.</p>
+    </div>
+    <div class="panel"><div id="cliWrap"></div></div>
+  </main>
+
+  <!-- ── PRODUKTAI IR KAINOS ────────────────────────────────────────────── -->
+  <main class="wrap" data-pane="pr" hidden>
+    <div class="pagehead">
+      <h2>Produktai ir kainos</h2>
+      <p>Pakeiskite skaičių — ir svetainės skaičiuoklė iškart skaičiuoja nauja kaina. Programuotojo tam nereikia.</p>
+    </div>
+    <div class="panel">
+      <p class="note" style="margin-top:18px">
+        <b>Kaip veikia kaina:</b> paruošimas (fiksuotas mokestis už užsakymą) + bazinis įkainis × pasirinkimai × kiekis.
+        Kuo didesnis tiražas, tuo pigesnis vienetas — nuolaidų lentelė įskaičiuota.
+      </p>
+      <div id="prWrap" style="padding:0 18px"></div>
+      <div class="bar">
+        <button class="btn" id="prSave">Išsaugoti kainas</button>
+        <button class="btn ghost" id="prReset">Grąžinti pradines</button>
+        <span class="sp"></span>
+        <span class="saved" id="prSaved" hidden>✓ Išsaugota</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── SVETAINĖS TEKSTAI ──────────────────────────────────────────────── -->
+  <main class="wrap" data-pane="txt" hidden>
+    <div class="pagehead">
+      <h2>Svetainės tekstai</h2>
+      <p>Pakeiskite tekstą ir išsaugokite — svetainėje jis atsinaujins iškart. Palikus lauką tuščią, grįžta pradinis variantas.</p>
+    </div>
+    <div class="panel">
+      <div class="form-grid" id="txtWrap"></div>
+      <div class="bar">
+        <button class="btn" id="txtSave">Išsaugoti tekstus</button>
+        <button class="btn ghost" id="txtReset">Grąžinti pradinius</button>
+        <span class="sp"></span>
+        <span class="saved" id="txtSaved" hidden>✓ Išsaugota</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="./products.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var LS_OK = 'ms_demo_admin_ok';
+
+  /* ── prisijungimas ─────────────────────────────────────────────────────
+     DEMONSTRACIJAI slaptažodis tikrinamas naršyklėje. Tikroje sistemoje jį
+     tikrina serveris — naršyklėje jokio slaptažodžio nėra. Taip ir sakome,
+     o ne apsimetame, kad tai apsauga. */
+  function unlock() { $('#login').hidden = true; $('#app').hidden = false; renderAll(); }
+  if (sessionStorage.getItem(LS_OK) === '1') unlock();
+  $('#loginForm').onsubmit = function (e) {
+    e.preventDefault();
+    if ($('#pass').value.trim().toLowerCase() === 'demo') { sessionStorage.setItem(LS_OK, '1'); unlock(); }
+    else { $('#pass').value = ''; toast('Neteisingas slaptažodis — demonstracijoje jis „demo"'); }
+  };
+  $('#logout').onclick = function () { sessionStorage.removeItem(LS_OK); location.reload(); };
+
+  $$('.tab').forEach(function (t) {
+    t.onclick = function () {
+      $$('.tab').forEach(function (x) { x.classList.toggle('on', x === t); });
+      $$('[data-pane]').forEach(function (p) { p.hidden = p.dataset.pane !== t.dataset.tab; });
+    };
+  });
+
+  var toastT;
+  function toast(m) {
+    var el = $('#toast') || document.body.appendChild(Object.assign(document.createElement('div'), { id: 'toast', className: 'toast' }));
+    el.textContent = m; el.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(function () { el.hidden = true; }, 3200);
+  }
+  function esc(s) { return String(s == null ? '' : s).replace(/[<>&"]/g, function (c) { return ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' })[c]; }); }
+
+  /* ── užsakymai ─────────────────────────────────────────────────────── */
+  var STAGES = ['Užsakymas priimtas', 'Maketas patikrintas', 'Spausdinama', 'Paruošta atsiėmimui'];
+  function orders() { try { return JSON.parse(localStorage.getItem(MS.LS.orders) || '{}'); } catch (e) { return {}; } }
+  function saveOrders(o) { try { localStorage.setItem(MS.LS.orders, JSON.stringify(o)); } catch (e) {} }
+
+  function orderRows() {
+    var all = orders();
+    return Object.keys(all).map(function (k) { var o = all[k]; o.code = k; return o; })
+      .sort(function (a, b) { return b.ts - a.ts; });
+  }
+
+  function renderOrders() {
+    var rows = orderRows(), wrap = $('#ordWrap');
+
+    var paid = 0, due = 0, sum = 0;
+    rows.forEach(function (o) { sum += o.total || 0; if (o.paid) paid += o.total || 0; else due += o.total || 0; });
+    $('#kpi').innerHTML =
+      '<div class="card"><span>Užsakymų</span><b>' + rows.length + '</b></div>' +
+      '<div class="card"><span>Bendra suma</span><b>' + MS.eur(sum) + '</b></div>' +
+      '<div class="card"><span>Apmokėta</span><b>' + MS.eur(paid) + '</b></div>' +
+      '<div class="card"><span>Laukiama apmokėjimo</span><b>' + MS.eur(due) + '</b></div>';
+
+    if (!rows.length) {
+      wrap.innerHTML = '<p class="empty">Užsakymų dar nėra.<br>Pateikite užsakymą <a href="./index.html" target="_blank">svetainėje</a> arba spustelėkite „Įkelti pavyzdinių užsakymų".</p>';
+      return;
+    }
+
+    var h = '<table><thead><tr><th>Nr.</th><th>Klientas</th><th>Užsakymas</th><th>Maketas</th><th>Suma</th><th>Būsena</th></tr></thead><tbody>';
+    rows.forEach(function (o) {
+      var items = (o.items || []).map(function (i) { return esc(i.name) + ' <span class="sub">' + esc(i.spec) + '</span>'; }).join('');
+      var art = o.files && o.files.length
+        ? o.files.map(function (f) { return '📎 ' + esc(f.name); }).join('<br>')
+        : (o.noArt ? '<span class="tag">ruošia dizaineris</span>' : '—');
+      h += '<tr><td class="mono">' + esc(o.code) + '<span class="sub">' + new Date(o.ts).toLocaleDateString('lt-LT') + '</span></td>' +
+        '<td>' + esc(o.name || '—') + (o.company ? '<span class="sub">' + esc(o.company) + '</span>' : '') +
+        (o.email ? '<span class="sub">' + esc(o.email) + '</span>' : '') +
+        (o.tel ? '<span class="sub">' + esc(o.tel) + '</span>' : '') + '</td>' +
+        '<td>' + items + (o.note ? '<span class="sub">Pastaba: ' + esc(o.note) + '</span>' : '') + '</td>' +
+        '<td>' + art + '</td>' +
+        '<td><b>' + MS.eur(o.total || 0) + '</b><span class="sub">' + (o.deliv === 'courier' ? 'kurjeriu' : 'atsiėmimas') + '</span>' +
+        '<span class="tag ' + (o.paid ? 'paid' : 'due') + '">' + (o.paid ? 'apmokėta' : 'laukiama') + '</span></td>' +
+        '<td><select data-st="' + esc(o.code) + '">' +
+        STAGES.map(function (s, i) {
+          var cur = o.manual ? (o.stage || 0) : 0;
+          return '<option value="' + i + '"' + (i === cur ? ' selected' : '') + '>' + s + '</option>';
+        }).join('') + '</select>' +
+        (o.paid ? '' : '<div style="height:6px"></div><button class="btn ghost sm" data-paid="' + esc(o.code) + '">Pažymėti apmokėtu</button>') +
+        '</td></tr>';
+    });
+    wrap.innerHTML = h + '</tbody></table>';
+
+    $$('[data-st]').forEach(function (sel) {
+      sel.onchange = function () {
+        var all = orders(), o = all[sel.dataset.st];
+        if (!o) return;
+        o.stage = +sel.value; o.manual = true;
+        saveOrders(all);
+        toast('✓ Būsena pakeista — klientas ją mato iškart');
+      };
+    });
+    $$('[data-paid]').forEach(function (b) {
+      b.onclick = function () {
+        var all = orders(), o = all[b.dataset.paid];
+        if (!o) return;
+        o.paid = true; saveOrders(all); renderOrders(); renderClients();
+        toast('✓ Pažymėta kaip apmokėta');
+      };
+    });
+  }
+
+  /* Pavyzdiniai užsakymai — kad sistema nebūtų tuščia demonstruojant. */
+  $('#seed').onclick = function () {
+    var all = orders(), day = 86400000, now = Date.now();
+    var demo = [
+      { code: 'MS-2481', name: 'Rasa Petrauskienė', company: 'UAB „Jūros vėjas"', email: 'rasa@jurosvejas.lt', tel: '+370 612 34567',
+        items: [{ name: 'Vizitinės kortelės', spec: '500 vnt. · 90 × 50 mm · kreidinis 350 g · dvipusė · matinis laminavimas', gross: 78.4 }],
+        total: 78.4, deliv: 'pickup', pay: 'bank', paid: true, files: [{ name: 'jurosvejas-vizitines.pdf', size: 2411724 }], stage: 2, manual: true, ts: now - day * 2 },
+      { code: 'MS-3092', name: 'Tomas Kazlauskas', company: '', email: 'tomas.k@gmail.com', tel: '+370 655 11223',
+        items: [{ name: 'Plakatai', spec: '25 vnt. · A2 · blizgus fotopopierius · laminavimas', gross: 214.6 }],
+        total: 219.5, deliv: 'courier', pay: 'card', paid: true, files: [{ name: 'koncertas-A2.pdf', size: 18873856 }], stage: 3, manual: true, ts: now - day * 1 },
+      { code: 'MS-3310', name: 'Ingrida Norkienė', company: 'Kavinė „Prieplauka"', email: 'info@prieplauka.lt', tel: '+370 699 87654',
+        items: [{ name: 'Lipdukai ir etiketės', spec: '1000 vnt. · iki 100 × 100 mm · lauko plėvelė · pjauti pagal kontūrą', gross: 402.16 }],
+        total: 402.16, deliv: 'pickup', pay: 'invoice', paid: false, noArt: true, stage: 0, manual: true, ts: now - 3600000 * 5 }
+    ];
+    demo.forEach(function (d) { var c = d.code; delete d.code; all[c] = d; });
+    saveOrders(all); renderOrders(); renderClients();
+    toast('✓ Įkelti 3 pavyzdiniai užsakymai');
+  };
+  $('#wipe').onclick = function () {
+    if (!confirm('Išvalyti visus demonstracinius užsakymus?')) return;
+    saveOrders({}); renderOrders(); renderClients(); toast('Užsakymai išvalyti');
+  };
+
+  /* ── klientai ──────────────────────────────────────────────────────── */
+  function renderClients() {
+    var rows = orderRows(), by = {};
+    rows.forEach(function (o) {
+      var key = (o.email || o.name || '—').toLowerCase();
+      if (!by[key]) by[key] = { name: o.name, company: o.company, email: o.email, tel: o.tel, n: 0, sum: 0, last: 0 };
+      var c = by[key];
+      c.n++; c.sum += o.total || 0;
+      if (o.ts > c.last) { c.last = o.ts; c.name = o.name || c.name; c.company = o.company || c.company; c.tel = o.tel || c.tel; }
+    });
+    var list = Object.keys(by).map(function (k) { return by[k]; }).sort(function (a, b) { return b.sum - a.sum; });
+    var wrap = $('#cliWrap');
+    if (!list.length) { wrap.innerHTML = '<p class="empty">Klientų dar nėra — jie atsiras iš užsakymų.</p>'; return; }
+    var h = '<table><thead><tr><th>Klientas</th><th>Kontaktai</th><th>Užsakymų</th><th>Iš viso</th><th>Paskutinis</th></tr></thead><tbody>';
+    list.forEach(function (c) {
+      h += '<tr><td><b>' + esc(c.name || '—') + '</b>' + (c.company ? '<span class="sub">' + esc(c.company) + '</span>' : '') + '</td>' +
+        '<td>' + esc(c.email || '—') + '<span class="sub">' + esc(c.tel || '') + '</span></td>' +
+        '<td>' + c.n + '</td><td><b>' + MS.eur(c.sum) + '</b></td>' +
+        '<td>' + new Date(c.last).toLocaleDateString('lt-LT') + '</td></tr>';
+    });
+    wrap.innerHTML = h + '</tbody></table>';
+  }
+
+  /* ── kainos ────────────────────────────────────────────────────────── */
+  // Pradinės reikšmės nuskaitomos PRIEŠ uždedant pakeitimus, kad „Grąžinti
+  // pradines" visada turėtų į ką grįžti.
+  var BASE = {};
+  MS.PRODUCTS.forEach(function (p) { BASE[p.id] = { setup: p.setup, base: p.base, days: p.days }; });
+  function loadPrices() { try { return JSON.parse(localStorage.getItem(MS.LS.prices) || '{}') || {}; } catch (e) { return {}; } }
+
+  function renderPrices() {
+    var ov = loadPrices();
+    $('#prWrap').innerHTML = MS.PRODUCTS.map(function (p) {
+      var o = ov[p.id] || {};
+      var v = function (k) { return o[k] != null ? o[k] : BASE[p.id][k]; };
+      return '<div class="prow">' +
+        '<div class="pname">' + esc(p.name) + '<span>' + esc(p.cat) + '</span></div>' +
+        '<div class="f" style="margin:0"><label>Paruošimas, €</label><input type="number" step="0.5" min="0" data-p="' + p.id + '" data-k="setup" value="' + v('setup') + '"></div>' +
+        '<div class="f" style="margin:0"><label>Bazinis, € / ' + esc(p.unit) + '</label><input type="number" step="0.005" min="0" data-p="' + p.id + '" data-k="base" value="' + v('base') + '"></div>' +
+        '<div class="f" style="margin:0"><label>Terminas, d. d.</label><input type="number" step="1" min="1" data-p="' + p.id + '" data-k="days" value="' + v('days') + '"></div>' +
+        '</div>';
+    }).join('');
+  }
+  $('#prSave').onclick = function () {
+    var ov = {};
+    $$('#prWrap input').forEach(function (i) {
+      var val = parseFloat(i.value);
+      if (isNaN(val)) return;
+      if (val === BASE[i.dataset.p][i.dataset.k]) return;      // nesikeitė — nesaugome
+      (ov[i.dataset.p] = ov[i.dataset.p] || {})[i.dataset.k] = val;
+    });
+    localStorage.setItem(MS.LS.prices, JSON.stringify(ov));
+    $('#prSaved').hidden = false;
+    setTimeout(function () { $('#prSaved').hidden = true; }, 2600);
+    toast('✓ Kainos išsaugotos — svetainės skaičiuoklė jau skaičiuoja naujai');
+  };
+  $('#prReset').onclick = function () {
+    localStorage.removeItem(MS.LS.prices); renderPrices(); toast('Grąžintos pradinės kainos');
+  };
+
+  /* ── svetainės tekstai ─────────────────────────────────────────────────
+     Laukai NEAPRAŠOMI čia ranka — jie nuskaitomi iš pačios index.html pagal
+     data-cms žymes. Todėl pridėjus naują lauką svetainėje, jis pats atsiranda
+     ir redaktoriuje: abu failai negali išsiderinti. */
+  var FIELDS = [];
+  function loadContent() { try { return JSON.parse(localStorage.getItem(MS.LS.content) || '{}') || {}; } catch (e) { return {}; } }
+
+  function discoverFields() {
+    return fetch('./index.html').then(function (r) { return r.text(); }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      FIELDS = $$('[data-cms]', doc).map(function (el) {
+        return {
+          key: el.getAttribute('data-cms'),
+          label: el.getAttribute('data-cms-label') || el.getAttribute('data-cms'),
+          group: el.getAttribute('data-cms-group') || 'Kita',
+          orig: el.textContent.trim().replace(/\s+/g, ' '),
+          long: el.textContent.trim().length > 70
+        };
+      });
+    });
+  }
+
+  function renderText() {
+    var cur = loadContent(), groups = {};
+    FIELDS.forEach(function (f) { (groups[f.group] = groups[f.group] || []).push(f); });
+    var h = Object.keys(groups).map(function (g) {
+      return '<div class="fgroup"><h4>' + esc(g) + '</h4>' +
+        '<p>Palikus tuščią, rodomas pradinis tekstas.</p>' +
+        groups[g].map(function (f) {
+          var val = cur[f.key] || '';
+          return '<div class="f"><label>' + esc(f.label) + '</label>' +
+            (f.long
+              ? '<textarea data-t="' + esc(f.key) + '" placeholder="' + esc(f.orig) + '">' + esc(val) + '</textarea>'
+              : '<input data-t="' + esc(f.key) + '" placeholder="' + esc(f.orig) + '" value="' + esc(val) + '">') +
+            '<div class="orig">Pradinis: ' + esc(f.orig.length > 90 ? f.orig.slice(0, 90) + '…' : f.orig) + '</div></div>';
+        }).join('') + '</div>';
+    }).join('');
+    $('#txtWrap').innerHTML = h || '<p class="empty">Redaguojamų laukų nerasta.</p>';
+  }
+  $('#txtSave').onclick = function () {
+    var c = {};
+    $$('#txtWrap [data-t]').forEach(function (i) {
+      var v = i.value.trim();
+      if (v) c[i.dataset.t] = v;
+    });
+    localStorage.setItem(MS.LS.content, JSON.stringify(c));
+    $('#txtSaved').hidden = false;
+    setTimeout(function () { $('#txtSaved').hidden = true; }, 2600);
+    toast('✓ Tekstai išsaugoti — atidarykite svetainę ir pamatysite');
+  };
+  $('#txtReset').onclick = function () {
+    localStorage.removeItem(MS.LS.content); renderText(); toast('Grąžinti pradiniai tekstai');
+  };
+
+  function renderAll() {
+    renderOrders(); renderClients(); renderPrices();
+    // fetch() neveikia atidarius failą tiesiogiai (file://) — tada laukus
+    // aprašome atsargine tvarka, kad demonstracija veiktų ir be serverio.
+    discoverFields().then(renderText).catch(function () {
+      FIELDS = [
+        { key: 'hero.h1', label: 'Pagrindinė antraštė', group: 'Pradinis ekranas', orig: 'Spauda ir reklama — nuo vizitinės kortelės iki apklijuoto automobilio', long: true },
+        { key: 'hero.lead', label: 'Tekstas po antrašte', group: 'Pradinis ekranas', orig: 'Skaitmeninė ir plačiaformatė spauda, iškabos, šviesdėžės, lazerio darbai.', long: true },
+        { key: 'hero.cta', label: 'Mygtukas „Sužinoti kainą“', group: 'Pradinis ekranas', orig: 'Sužinoti kainą per 30 sek.', long: false },
+        { key: 'hero.eyebrow', label: 'Užrašas virš antraštės', group: 'Pradinis ekranas', orig: 'Spaudos namai Klaipėdoje · Danės g. 6', long: false },
+        { key: 'kont.tel', label: 'Telefonas', group: 'Kontaktai', orig: '+370 614 26299', long: false },
+        { key: 'kont.email', label: 'El. paštas', group: 'Kontaktai', orig: 'vadyba.miestospauda@gmail.com', long: false },
+        { key: 'kont.hours', label: 'Darbo laikas', group: 'Kontaktai', orig: 'I–V 8:00–17:00', long: false }
+      ];
+      renderText();
+    });
+  }
+})();
+</script>
+</body>
+</html>

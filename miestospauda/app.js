@@ -197,7 +197,9 @@
       '<p class="spec">' + (p.sizes ? p.sizes[0].n + ' · ' : '') + p.defQty + ' ' + p.unit +
         (p.sides ? ' · dvipusė spauda' : '') + '</p>' +
       '<div class="pr">' + eur(r.gross) + '<small>' + eur4(r.unit) + ' / ' + p.unit + ' · su PVM</small></div>' +
-      '<button class="btn btn-sm">Skaičiuoti</button>';
+      '<button class="btn btn-sm">Skaičiuoti</button>' +
+      // Tikra nuoroda į atskirą produkto puslapį — ją mato ir naršyklė, ir Google.
+      '<a class="prod-more" href="./p/' + id + '.html">Apie ' + p.name.toLowerCase() + ' →</a>';
     el.querySelector('button').onclick = function () {
       buildProduct(id);
       document.getElementById('skaiciuokle').scrollIntoView({ behavior: 'smooth' });
