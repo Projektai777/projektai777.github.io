@@ -341,9 +341,10 @@
   function defaults() { return JSON.parse(JSON.stringify(DEFAULTS)); }
 
   return {
-    VAT: VAT, PRODUCTS: PRODUCTS, VOL: VOL,
+    get VAT() { return CFG.vat; },
+    CFG: CFG, PRODUCTS: PRODUCTS, VOL: VOL,
     volFactor: volFactor, byId: byId, price: price,
-    eur: eur, eur4: eur4, applyOverrides: applyOverrides,
+    eur: eur, eur4: eur4, applyOverrides: applyOverrides, defaults: defaults,
     LS: { cart: 'ms_demo_cart', orders: 'ms_demo_orders', prices: 'ms_demo_prices', content: 'ms_demo_content' }
   };
 });

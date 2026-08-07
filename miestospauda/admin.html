@@ -104,6 +104,28 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
 .prow:last-child{border-bottom:0}
 .prow .pname{font-weight:600; font-size:14.5px}
 .prow .pname span{display:block; font-weight:400; font-size:12.5px; color:var(--muted)}
+
+/* ── pilnas kainodaros redaktorius ─────────────────────────────────────── */
+.prow3{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+.prow4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:14px}
+.voljoin{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px}
+.opts3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+.oblock{border:1px solid var(--line); border-radius:var(--r-sm); padding:12px 14px; background:#fafbfd}
+.oblock h5{margin:0 0 9px; font-family:var(--fh); font-size:13.5px}
+.orow{display:grid; grid-template-columns:1fr 76px 34px; gap:6px; align-items:center; margin-bottom:6px}
+.orow.head{font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:4px}
+.orow input{padding:7px 9px; font-size:13.5px}
+.orow .kf{text-align:center}
+.orow .btn{padding:6px 0; text-align:center}
+.nomat{margin:0; font-size:13px; color:var(--muted)}
+.prod-edit .pehead{display:flex; align-items:center; gap:12px; margin-bottom:14px}
+.prod-edit .pehead h4{flex:1; margin:0}
+.kf{font-variant-numeric:tabular-nums}
+@media (max-width:1000px){
+  .prow4,.opts3,.voljoin{grid-template-columns:1fr 1fr}
+  .prow3{grid-template-columns:1fr}
+}
+@media (max-width:640px){ .prow4,.opts3,.voljoin{grid-template-columns:1fr} }
 .bar{position:sticky; bottom:0; background:#fff; border-top:1px solid var(--line); padding:14px 18px; display:flex; gap:10px; align-items:center; flex-wrap:wrap}
 .bar .sp{flex:1}
 .saved{color:#0b7a44; font-weight:600; font-size:14px}
@@ -201,12 +223,14 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
     </div>
     <div class="panel">
       <p class="note" style="margin-top:18px">
-        <b>Kaip veikia kaina:</b> paruošimas (fiksuotas mokestis už užsakymą) + bazinis įkainis × pasirinkimai × kiekis.
-        Kuo didesnis tiražas, tuo pigesnis vienetas — nuolaidų lentelė įskaičiuota.
+        <b>Kaip veikia kaina:</b> paruošimas (fiksuotas mokestis už užsakymą) + bazinis įkainis × pasirinkimai × kiekis × kiekio nuolaida.
+        Visi šioje skiltyje esantys skaičiai yra Jūsų — programuotojo keisti nereikia.
+        Koeficientas <b>1</b> reiškia bazinę kainą, <b>1,25</b> — 25 % brangiau, <b>0,9</b> — 10 % pigiau.
       </p>
       <div id="prWrap" style="padding:0 18px"></div>
       <div class="bar">
         <button class="btn" id="prSave">Išsaugoti kainas</button>
+        <button class="btn ghost" id="prAdd">+ Naujas produktas</button>
         <button class="btn ghost" id="prReset">Grąžinti pradines</button>
         <span class="sp"></span>
         <span class="saved" id="prSaved" hidden>✓ Išsaugota</span>
@@ -384,41 +408,225 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
     wrap.innerHTML = h + '</tbody></table>';
   }
 
-  /* ── kainos ────────────────────────────────────────────────────────── */
-  // Pradinės reikšmės nuskaitomos PRIEŠ uždedant pakeitimus, kad „Grąžinti
-  // pradines" visada turėtų į ką grįžti.
-  var BASE = {};
-  MS.PRODUCTS.forEach(function (p) { BASE[p.id] = { setup: p.setup, base: p.base, days: p.days }; });
-  function loadPrices() { try { return JSON.parse(localStorage.getItem(MS.LS.prices) || '{}') || {}; } catch (e) { return {}; } }
+  /* ── kainos: VISKAS redaguojama ────────────────────────────────────────
+     Dirbame su viena darbine kopija (DRAFT). Ji užpildoma iš jau pritaikytų
+     MS reikšmių, redaguojama ekrane ir išsaugoma vienu mygtuku. Taip savininkas
+     valdo ne tik bazinę kainą, bet ir kiekvieną pasirinkimą bei nuolaidą. */
+  var DRAFT = null;
 
-  function renderPrices() {
-    var ov = loadPrices();
-    $('#prWrap').innerHTML = MS.PRODUCTS.map(function (p) {
-      var o = ov[p.id] || {};
-      var v = function (k) { return o[k] != null ? o[k] : BASE[p.id][k]; };
-      return '<div class="prow">' +
-        '<div class="pname">' + esc(p.name) + '<span>' + esc(p.cat) + '</span></div>' +
-        '<div class="f" style="margin:0"><label>Paruošimas, €</label><input type="number" step="0.5" min="0" data-p="' + p.id + '" data-k="setup" value="' + v('setup') + '"></div>' +
-        '<div class="f" style="margin:0"><label>Bazinis, € / ' + esc(p.unit) + '</label><input type="number" step="0.005" min="0" data-p="' + p.id + '" data-k="base" value="' + v('base') + '"></div>' +
-        '<div class="f" style="margin:0"><label>Terminas, d. d.</label><input type="number" step="1" min="1" data-p="' + p.id + '" data-k="days" value="' + v('days') + '"></div>' +
+  function loadPrices() { try { return JSON.parse(localStorage.getItem(MS.LS.prices) || 'null'); } catch (e) { return null; } }
+
+  function makeDraft() {
+    return {
+      cfg: { vat: MS.CFG.vat, sides: MS.CFG.sides, rush: MS.CFG.rush },
+      vol: {
+        high: MS.VOL.high.map(function (r) { return [r[0] === Infinity ? null : r[0], r[1]]; }),
+        low: MS.VOL.low.map(function (r) { return [r[0] === Infinity ? null : r[0], r[1]]; })
+      },
+      products: JSON.parse(JSON.stringify(MS.PRODUCTS))
+    };
+  }
+
+  // Koeficientus rodome ir priimame lietuviškai (su kableliu).
+  function num(v) { return String(v).replace('.', ','); }
+  function parseNum(s) { var n = parseFloat(String(s).replace(',', '.')); return isNaN(n) ? null : n; }
+
+  function optRows(pi, key, list) {
+    return (list || []).map(function (o, i) {
+      return '<div class="orow">' +
+        '<input data-o="' + pi + '" data-list="' + key + '" data-i="' + i + '" data-f="n" value="' + esc(o.n) + '">' +
+        '<input class="kf" data-o="' + pi + '" data-list="' + key + '" data-i="' + i + '" data-f="k" value="' + num(o.k) + '" inputmode="decimal">' +
+        '<button type="button" class="btn ghost sm" data-del="' + pi + ':' + key + ':' + i + '">✕</button>' +
         '</div>';
     }).join('');
   }
-  $('#prSave').onclick = function () {
-    var ov = {};
-    $$('#prWrap input').forEach(function (i) {
-      var val = parseFloat(i.value);
-      if (isNaN(val)) return;
-      if (val === BASE[i.dataset.p][i.dataset.k]) return;      // nesikeitė — nesaugome
-      (ov[i.dataset.p] = ov[i.dataset.p] || {})[i.dataset.k] = val;
+
+  function optBlock(pi, key, title, list) {
+    if (list === null || list === undefined) return '';
+    return '<div class="oblock"><h5>' + esc(title) + '</h5>' +
+      '<div class="orow head"><span>Pavadinimas</span><span>Koef.</span><span></span></div>' +
+      optRows(pi, key, list) +
+      '<button type="button" class="btn ghost sm" data-addopt="' + pi + ':' + key + '">+ Pridėti</button></div>';
+  }
+
+  function renderPrices() {
+    if (!DRAFT) DRAFT = makeDraft();
+    var d = DRAFT;
+
+    var vol = function (t, label) {
+      return '<div class="oblock"><h5>' + label + '</h5>' +
+        '<div class="orow head"><span>Kiekis iki</span><span>Koef.</span><span></span></div>' +
+        d.vol[t].map(function (r, i) {
+          var last = i === d.vol[t].length - 1;
+          return '<div class="orow">' +
+            '<input data-v="' + t + '" data-i="' + i + '" data-f="0" value="' + (last ? 'daugiau' : r[0]) + '"' + (last ? ' disabled' : '') + '>' +
+            '<input class="kf" data-v="' + t + '" data-i="' + i + '" data-f="1" value="' + num(r[1]) + '" inputmode="decimal">' +
+            (last ? '<span></span>' : '<button type="button" class="btn ghost sm" data-delvol="' + t + ':' + i + '">✕</button>') +
+            '</div>';
+        }).join('') +
+        '<button type="button" class="btn ghost sm" data-addvol="' + t + '">+ Pridėti pakopą</button></div>';
+    };
+
+    var html =
+      '<div class="fgroup"><h4>Bendri nustatymai</h4>' +
+      '<p>Galioja visiems produktams.</p>' +
+      '<div class="prow3">' +
+      '<div class="f"><label>PVM, %</label><input class="kf" id="cfgVat" value="' + num(Math.round((d.cfg.vat - 1) * 1000) / 10) + '" inputmode="decimal"></div>' +
+      '<div class="f"><label>Dvipusė spauda, koef.</label><input class="kf" id="cfgSides" value="' + num(d.cfg.sides) + '" inputmode="decimal"></div>' +
+      '<div class="f"><label>Skubus užsakymas, koef.</label><input class="kf" id="cfgRush" value="' + num(d.cfg.rush) + '" inputmode="decimal"></div>' +
+      '</div>' +
+      '<div class="voljoin">' + vol('high', 'Kiekio nuolaidos — dideli tiražai (vnt.)') + vol('low', 'Kiekio nuolaidos — vienetiniai gaminiai') + '</div>' +
+      '</div>';
+
+    html += d.products.map(function (p, pi) {
+      return '<div class="fgroup prod-edit">' +
+        '<div class="pehead"><h4>' + esc(p.name || 'Naujas produktas') + '</h4>' +
+        '<button type="button" class="btn warn sm" data-delp="' + pi + '">Šalinti produktą</button></div>' +
+        '<div class="prow4">' +
+        '<div class="f"><label>Pavadinimas</label><input data-p="' + pi + '" data-k="name" value="' + esc(p.name) + '"></div>' +
+        '<div class="f"><label>Kategorija</label><input data-p="' + pi + '" data-k="cat" value="' + esc(p.cat) + '"></div>' +
+        '<div class="f"><label>Matas</label><input data-p="' + pi + '" data-k="unit" value="' + esc(p.unit) + '"></div>' +
+        '<div class="f"><label>Terminas, d. d.</label><input class="kf" data-p="' + pi + '" data-k="days" value="' + num(p.days) + '" inputmode="decimal"></div>' +
+        '</div>' +
+        '<div class="prow4">' +
+        '<div class="f"><label>Paruošimas, €</label><input class="kf" data-p="' + pi + '" data-k="setup" value="' + num(p.setup) + '" inputmode="decimal"></div>' +
+        '<div class="f"><label>Bazinis, € / ' + esc(p.unit) + '</label><input class="kf" data-p="' + pi + '" data-k="base" value="' + num(p.base) + '" inputmode="decimal"></div>' +
+        '<div class="f"><label>Siūlomi kiekiai</label><input data-p="' + pi + '" data-k="qtys" value="' + esc((p.qtys || []).join(', ')) + '"></div>' +
+        '<div class="f"><label>Dvipusė spauda?</label><select data-p="' + pi + '" data-k="sides">' +
+        '<option value="1"' + (p.sides ? ' selected' : '') + '>Taip, siūloma</option>' +
+        '<option value="0"' + (p.sides ? '' : ' selected') + '>Ne</option></select></div>' +
+        '</div>' +
+        '<div class="opts3">' +
+        optBlock(pi, 'sizes', 'Formatai / dydžiai', p.sizes) +
+        (p.mats === null
+          ? '<div class="oblock"><h5>Medžiagos</h5><p class="nomat">Šis produktas medžiagų neturi. <button type="button" class="btn ghost sm" data-addmats="' + pi + '">Pridėti medžiagų</button></p></div>'
+          : optBlock(pi, 'mats', 'Medžiagos', p.mats)) +
+        optBlock(pi, 'fins', 'Apdaila', p.fins) +
+        '</div></div>';
+    }).join('');
+
+    $('#prWrap').innerHTML = html;
+    wirePrices();
+  }
+
+  function wirePrices() {
+    // Bendri nustatymai
+    $('#cfgVat').onchange = function () { var n = parseNum(this.value); if (n !== null) DRAFT.cfg.vat = 1 + n / 100; };
+    $('#cfgSides').onchange = function () { var n = parseNum(this.value); if (n !== null) DRAFT.cfg.sides = n; };
+    $('#cfgRush').onchange = function () { var n = parseNum(this.value); if (n !== null) DRAFT.cfg.rush = n; };
+
+    // Kiekio nuolaidos
+    $$('#prWrap [data-v]').forEach(function (i) {
+      i.onchange = function () {
+        var n = parseNum(i.value); if (n === null) return;
+        DRAFT.vol[i.dataset.v][+i.dataset.i][+i.dataset.f] = n;
+      };
     });
-    localStorage.setItem(MS.LS.prices, JSON.stringify(ov));
+    $$('#prWrap [data-addvol]').forEach(function (b) {
+      b.onclick = function () {
+        var t = b.dataset.addvol, rows = DRAFT.vol[t];
+        rows.splice(rows.length - 1, 0, [rows[Math.max(0, rows.length - 2)][0] * 2 || 100, rows[rows.length - 1][1]]);
+        renderPrices();
+      };
+    });
+    $$('#prWrap [data-delvol]').forEach(function (b) {
+      b.onclick = function () {
+        var a = b.dataset.delvol.split(':');
+        if (DRAFT.vol[a[0]].length <= 2) { toast('Turi likti bent dvi pakopos'); return; }
+        DRAFT.vol[a[0]].splice(+a[1], 1); renderPrices();
+      };
+    });
+
+    // Produkto laukai
+    $$('#prWrap [data-p][data-k]').forEach(function (i) {
+      i.onchange = function () {
+        var p = DRAFT.products[+i.dataset.p], k = i.dataset.k;
+        if (k === 'qtys') {
+          var list = i.value.split(',').map(function (x) { return parseInt(x.trim(), 10); }).filter(function (x) { return x > 0; });
+          if (list.length) p.qtys = list;
+        } else if (k === 'sides') {
+          p.sides = i.value === '1';
+        } else if (k === 'setup' || k === 'base' || k === 'days') {
+          var n = parseNum(i.value); if (n !== null) p[k] = n;
+        } else {
+          if (i.value.trim()) p[k] = i.value.trim();
+        }
+        if (k === 'name' || k === 'sides' || k === 'unit') renderPrices();
+      };
+    });
+
+    // Pasirinkimų eilutės
+    $$('#prWrap [data-o]').forEach(function (i) {
+      i.onchange = function () {
+        var p = DRAFT.products[+i.dataset.o], row = p[i.dataset.list][+i.dataset.i];
+        if (i.dataset.f === 'n') { if (i.value.trim()) row.n = i.value.trim(); }
+        else { var n = parseNum(i.value); if (n !== null && n > 0) row.k = n; }
+      };
+    });
+    $$('#prWrap [data-addopt]').forEach(function (b) {
+      b.onclick = function () {
+        var a = b.dataset.addopt.split(':'), p = DRAFT.products[+a[0]];
+        if (!p[a[1]]) p[a[1]] = [];
+        p[a[1]].push({ n: 'Naujas variantas', k: 1 });
+        renderPrices();
+      };
+    });
+    $$('#prWrap [data-del]').forEach(function (b) {
+      b.onclick = function () {
+        var a = b.dataset.del.split(':'), p = DRAFT.products[+a[0]];
+        if (p[a[1]].length <= 1) { toast('Turi likti bent vienas variantas'); return; }
+        p[a[1]].splice(+a[2], 1); renderPrices();
+      };
+    });
+    $$('#prWrap [data-addmats]').forEach(function (b) {
+      b.onclick = function () {
+        DRAFT.products[+b.dataset.addmats].mats = [{ n: 'Standartinė', k: 1 }];
+        renderPrices();
+      };
+    });
+    $$('#prWrap [data-delp]').forEach(function (b) {
+      b.onclick = function () {
+        var p = DRAFT.products[+b.dataset.delp];
+        if (DRAFT.products.length <= 1) { toast('Bent vienas produktas turi likti'); return; }
+        if (!confirm('Šalinti produktą „' + p.name + '"? Jo puslapis svetainėje nebebus rodomas.')) return;
+        DRAFT.products.splice(+b.dataset.delp, 1); renderPrices();
+      };
+    });
+  }
+
+  $('#prAdd').onclick = function () {
+    if (!DRAFT) DRAFT = makeDraft();
+    var n = 1, id;
+    do { id = 'nauja' + n++; } while (DRAFT.products.some(function (p) { return p.id === id; }));
+    DRAFT.products.push({
+      id: id, name: 'Naujas produktas', cat: 'Skaitmeninė spauda', unit: 'vnt.', vol: 'high',
+      setup: 5, base: 0.1, days: 2, qtys: [100, 250, 500, 1000], sides: true,
+      sizes: [{ n: 'Standartinis', k: 1 }], mats: [{ n: 'Standartinė', k: 1 }], fins: [{ n: 'Be apdailos', k: 1 }],
+      img: 'skaitm.jpg', lead: 'Aprašymą įrašykite skiltyje „Svetainės tekstai".',
+      bullets: ['Naujas produktas'], kw: '', faq: []
+    });
+    renderPrices();
+    toast('✓ Produktas pridėtas — nepamirškite išsaugoti');
+  };
+
+  $('#prSave').onclick = function () {
+    if (!DRAFT) return;
+    localStorage.setItem(MS.LS.prices, JSON.stringify(DRAFT));
     $('#prSaved').hidden = false;
     setTimeout(function () { $('#prSaved').hidden = true; }, 2600);
-    toast('✓ Kainos išsaugotos — svetainės skaičiuoklė jau skaičiuoja naujai');
+    toast('✓ Išsaugota — svetainė jau skaičiuoja naujomis kainomis');
   };
   $('#prReset').onclick = function () {
-    localStorage.removeItem(MS.LS.prices); renderPrices(); toast('Grąžintos pradinės kainos');
+    if (!confirm('Grąžinti visas pradines kainas ir produktus?')) return;
+    localStorage.removeItem(MS.LS.prices);
+    var d = MS.defaults();
+    MS.CFG.vat = d.cfg.vat; MS.CFG.sides = d.cfg.sides; MS.CFG.rush = d.cfg.rush;
+    MS.VOL.high = d.vol.high.map(function (r) { return [r[0] === null ? Infinity : r[0], r[1]]; });
+    MS.VOL.low = d.vol.low.map(function (r) { return [r[0] === null ? Infinity : r[0], r[1]]; });
+    MS.PRODUCTS.length = 0;
+    d.products.forEach(function (p) { MS.PRODUCTS.push(p); });
+    DRAFT = null; renderPrices();
+    toast('Grąžinta pradinė kainodara');
   };
 
   /* ── svetainės tekstai ─────────────────────────────────────────────────
@@ -476,6 +684,9 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
   };
 
   function renderAll() {
+    // Svetainė ir valdymo sistema turi rodyti TĄ PATĮ — todėl pirmiausia
+    // uždedame jau išsaugotus pakeitimus, o tik tada braižome formas.
+    MS.applyOverrides(loadPrices());
     renderOrders(); renderClients(); renderPrices();
     // fetch() neveikia atidarius failą tiesiogiai (file://) — tada laukus
     // aprašome atsargine tvarka, kad demonstracija veiktų ir be serverio.

@@ -20,7 +20,7 @@
   }
   MS.applyOverrides(loadPrices());
 
-  var VAT = MS.VAT, PRODUCTS = MS.PRODUCTS;
+  var PRODUCTS = MS.PRODUCTS;
   var volFactor = MS.volFactor, byId = MS.byId, price = MS.price;
   var eur = MS.eur, eur4 = MS.eur4;
 
@@ -339,12 +339,12 @@
     var t = orderTotal();
     $('#sumStep1').textContent = eur(t);
     $('#payAmt').textContent = eur(t);
-    var net = t / VAT;
+    var net = t / MS.CFG.vat;   // PVM keičiamas valdymo sistemoje
     $('#paySum').innerHTML =
       '<div class="po-row"><span>Prekės ir paslaugos</span><b>' + eur(cartTotal()) + '</b></div>' +
       (deliv === 'courier' ? '<div class="po-row"><span>Pristatymas kurjeriu</span><b>4,90 €</b></div>' : '') +
       '<div class="po-row sm"><span>Suma be PVM</span><span>' + eur(net) + '</span></div>' +
-      '<div class="po-row sm"><span>PVM 21 %</span><span>' + eur(t - net) + '</span></div>' +
+      '<div class="po-row sm"><span>PVM ' + Math.round((MS.CFG.vat - 1) * 100) + ' %</span><span>' + eur(t - net) + '</span></div>' +
       '<div class="po-row big"><span>Mokėti</span><b>' + eur(t) + '</b></div>';
   }
 
@@ -609,8 +609,16 @@
   var demobar = document.querySelector('.demobar');
   if (demobar) document.documentElement.style.setProperty('--demoh', demobar.offsetHeight + 'px');
 
+  /* Kategorijų kortelėse nuorodos surašytos statiškai (kad jas matytų Google).
+     Jei savininkas valdymo sistemoje produktą pašalino, nuorodą paslepiame —
+     kitaip klientas patektų į nebeegzistuojantį puslapį. */
+  $$('.cat-links a').forEach(function (a) {
+    var id = (a.getAttribute('href').match(/p\/([a-z0-9]+)\.html/) || [])[1];
+    if (id && !PRODUCTS.some(function (p) { return p.id === id; })) a.parentNode.hidden = true;
+  });
+
   // Atskiri produktų puslapiai (p/*.html) atsiunčia klientą į skaičiuoklę su
   // jau parinktu produktu: ../index.html?p=lipd#skaiciuokle
-  var wanted = (location.search.match(/[?&]p=([a-z]+)/) || [])[1];
+  var wanted = (location.search.match(/[?&]p=([a-z0-9]+)/) || [])[1];
   buildProduct(wanted && PRODUCTS.some(function (p) { return p.id === wanted; }) ? wanted : 'viz');
 })();
