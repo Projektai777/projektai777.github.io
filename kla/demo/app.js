@@ -398,9 +398,9 @@
   /* ── mail robot ─────────────────────────────────────────────────────── */
 
   var MAILS = [
-    { from: 'sąskaitos@vetra-trans.lt', subj: 'Sąskaita faktūra VT Nr. 2026-1187', att: 'SF_VT_2026-1187.pdf' },
-    { from: 'finance@ap-transport.lt', subj: 'INVOICE 2026/554', att: 'invoice_2026_554.pdf' },
-    { from: 'info@degalinesx.lt', subj: 'Sąskaita už degalus', att: 'skenas_IMG_4471.jpg' }
+    { from: 'sąskaitos@vetra-trans.example', subj: 'Sąskaita faktūra VT Nr. 2026-1187', att: 'SF_VT_2026-1187.pdf' },
+    { from: 'finance@ap-transport.example', subj: 'INVOICE 2026/554', att: 'invoice_2026_554.pdf' },
+    { from: 'info@degalinesx.example', subj: 'Sąskaita už degalus', att: 'skenas_IMG_4471.jpg' }
   ];
 
   /* Amounts are compared NET-to-NET on purpose: the agreed carrier price is a net

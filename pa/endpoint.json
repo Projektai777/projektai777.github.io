@@ -1,5 +1,4 @@
 {
   "enabled": true,
-  "base": "https://pa-recruit.projektai777.workers.dev",
-  "note": "PA recruit backend (pa-worker/, Cloudflare Worker). LIVE since 2026-07-27 — D1 pa-recruit (ae009b53-41b2-4732-872b-9ebecd235259, region EEUR). Console password = the PA_PASS worker secret; given to the client separately, never stored in the repo."
+  "base": "https://pa-recruit.projektai777.workers.dev"
 }

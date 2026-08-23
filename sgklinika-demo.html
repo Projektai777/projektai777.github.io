@@ -552,7 +552,7 @@ function pickSlot(i){
   const o=botState.offers[i];
   botState.pending = {svc:botState.book.svc, branch:botState.book.branch, date:o.date, time:o.time};
   addMsg('🕐 '+esc(o.label), 'user');
-  botReplyDelayed('Puiku! Kad užbaigčiau registraciją, parašykite savo <b>vardą ir telefoną</b> (pvz. „Rūta, +370 612 34567").');
+  botReplyDelayed('Puiku! Kad užbaigčiau registraciją, parašykite savo <b>vardą ir telefoną</b> (pvz. „Rūta, +370 6XX XXXXX").');
 }
 function completeBooking(text){
   const b=botState.pending; botState.pending=null;

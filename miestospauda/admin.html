@@ -368,13 +368,13 @@ textarea{resize:vertical; min-height:76px; line-height:1.5}
   $('#seed').onclick = function () {
     var all = orders(), day = 86400000, now = Date.now();
     var demo = [
-      { code: 'MS-2481', name: 'Rasa Petrauskienė', company: 'UAB „Jūros vėjas"', email: 'rasa@jurosvejas.lt', tel: '+370 612 34567',
+      { code: 'MS-2481', name: 'Demo klientas 1', company: 'UAB „Demo spauda"', email: 'klientas1@example.com', tel: '+370 6XX XXXXX',
         items: [{ name: 'Vizitinės kortelės', spec: '500 vnt. · 90 × 50 mm · kreidinis 350 g · dvipusė · matinis laminavimas', gross: 78.4 }],
         total: 78.4, deliv: 'pickup', pay: 'bank', paid: true, files: [{ name: 'jurosvejas-vizitines.pdf', size: 2411724 }], stage: 2, manual: true, ts: now - day * 2 },
-      { code: 'MS-3092', name: 'Tomas Kazlauskas', company: '', email: 'tomas.k@gmail.com', tel: '+370 655 11223',
+      { code: 'MS-3092', name: 'Demo klientas 2', company: 'MB „Pavyzdys"', email: 'klientas2@example.com', tel: '+370 6XX XXXXX',
         items: [{ name: 'Plakatai', spec: '25 vnt. · A2 · blizgus fotopopierius · laminavimas', gross: 214.6 }],
         total: 219.5, deliv: 'courier', pay: 'card', paid: true, files: [{ name: 'koncertas-A2.pdf', size: 18873856 }], stage: 3, manual: true, ts: now - day * 1 },
-      { code: 'MS-3310', name: 'Ingrida Norkienė', company: 'Kavinė „Prieplauka"', email: 'info@prieplauka.lt', tel: '+370 699 87654',
+      { code: 'MS-3310', name: 'Demo klientas 3', company: 'UAB „Pavyzdžio kavinė"', email: 'klientas3@example.com', tel: '+370 6XX XXXXX',
         items: [{ name: 'Lipdukai ir etiketės', spec: '1000 vnt. · iki 100 × 100 mm · lauko plėvelė · pjauti pagal kontūrą', gross: 402.16 }],
         total: 402.16, deliv: 'pickup', pay: 'invoice', paid: false, noArt: true, stage: 0, manual: true, ts: now - 3600000 * 5 }
     ];

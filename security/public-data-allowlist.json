@@ -1,0 +1,8 @@
+{
+  "publicEmails": ["projektai777.koduojam@gmail.com", "info@efgrid.com", "vadyba.miestospauda@gmail.com", "info@sgklinika.lt", "info@santekai.lt", "info@v1p.lt"],
+  "publicPhones": ["370600000000", "37052157211", "37060708355", "37061426299", "37063888555", "37061545644", "37069852219", "37061534806", "37068361113"],
+  "approvedPublicFiles": {
+    "docs/perdavimo-aktas.pdf": "1e73da6a4447b3b8d2d43deda53cf12f1e863f61ea45faf192af52e4929035c1",
+    "docs/sutartis-sablonas.pdf": "a0f1ca6d653837b354b1584fefc212aba4d5ed95b900a5bb956590b6d4c93085"
+  }
+}
