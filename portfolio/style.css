@@ -97,10 +97,7 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .svc:nth-child(odd) { border-right: 1px solid var(--line); }
 .svc:nth-last-child(-n+2) { border-bottom: 0; }
 .svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
-.svc .how { color: #b9c3c0; margin: 0 0 16px; font-size: 15px; }
-.svc ul { margin: 0; padding: 0; list-style: none; }
-.svc li { padding: 7px 0 7px 22px; position: relative; font-size: 15px; border-top: 1px dashed var(--line); }
-.svc li::before { content: "•"; position: absolute; left: 4px; color: var(--acc); font-family: var(--mono); } /* a dot, not a chevron: a chevron read as "click to open" (owner 2026-09-12) */
+.svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
 .process { margin-top: clamp(40px, 6vw, 72px); }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; counter-reset: st; }
 .steps li { counter-increment: st; padding-top: 14px; border-top: 1px solid var(--line-2); position: relative; }
