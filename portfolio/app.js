@@ -17,6 +17,9 @@
   var BG = '#070a0d';
   var ACC = [125, 255, 179];
   var ACC2 = [111, 211, 255];
+  var GREY = [120, 135, 140];
+  function mix(c, d, k) { return [Math.round(c[0] + (d[0] - c[0]) * k), Math.round(c[1] + (d[1] - c[1]) * k), Math.round(c[2] + (d[2] - c[2]) * k)]; }
+  var ACC_SOFT = mix(ACC, GREY, 0.5), ACC2_SOFT = mix(ACC2, GREY, 0.5); // muted tints for the ripple dots
 
   // ---------- shared state ----------
   var S = {
@@ -33,8 +36,10 @@
   function impulse(x, y, power) { S.impulses.push({ x: x, y: y, t0: S.t, power: power || 1 }); if (S.impulses.length > 10) S.impulses.shift(); }
 
   // ---------- RESONANCE ----------
-  // Strength is HALF of the original (owner 2026-09-12: "reduce the strength of the effect 2x"): ripple amplitudes
-  // 0.3..1.1 for movement and 1.6 for a tap (were 0.6..2.2 and 3.2), scroll hum halved.
+  // Strength is a QUARTER of the original (owner 2026-09-12, twice: "reduce the strength of the effect 2x", then
+  // "make the reaction to touch vfx 2x weaker and less colorful"): ripple amplitudes 0.15..0.55 for movement and
+  // 0.8 for a tap (originally 0.6..2.2 and 3.2), scroll hum quartered. LESS COLOURFUL: a dot only tints when the wave
+  // is clearly up or down (|dz| > 0.4, was 0.25) and the tint is the accent mixed half-and-half with the resting grey.
   var MAX_RIPPLES = 24;
   var resonance = {
     ripples: [], lastEmit: 0, hum: 0, sp: 34, cols: 0, rows: 0,
@@ -53,10 +58,10 @@
     frame: function () {
       var rs = this.ripples, i, r;
       var speed = Math.hypot(S.pvx, S.pvy);
-      if (S.pActive && speed > 0.4 && S.t - this.lastEmit > 6) { this.push(S.px, S.py, clamp(speed * 0.175, 0.3, 1.1), 110); this.lastEmit = S.t; }
-      while (S.impulses.length) { var im = S.impulses.shift(); this.push(im.x, im.y, 1.6, 170); }
+      if (S.pActive && speed > 0.4 && S.t - this.lastEmit > 6) { this.push(S.px, S.py, clamp(speed * 0.0875, 0.15, 0.55), 110); this.lastEmit = S.t; }
+      while (S.impulses.length) { var im = S.impulses.shift(); this.push(im.x, im.y, 0.8, 170); }
       for (i = rs.length - 1; i >= 0; i--) if (S.t - rs[i].t0 > rs[i].life) rs.splice(i, 1);
-      this.hum += (Math.abs(S.wind) * 0.03 - this.hum) * 0.08;
+      this.hum += (Math.abs(S.wind) * 0.015 - this.hum) * 0.08;
       ctx.fillStyle = BG; ctx.fillRect(0, 0, S.w, S.h);
       var sp = this.sp, hum = this.hum, T = S.t * 0.025;
       for (var cy = 0; cy < this.rows; cy++) for (var cx = 0; cx < this.cols; cx++) {
@@ -71,7 +76,7 @@
           ox += dx / d * w * 6; oy += dy / d * w * 6; dz += w;
         }
         var a = clamp(0.26 + Math.abs(dz) * 0.5, 0.26, 1), rad = 1.3 + Math.abs(dz) * 1.6;
-        ctx.fillStyle = dz > 0.25 ? rgba(ACC, a) : dz < -0.25 ? rgba(ACC2, a) : rgba([120, 135, 140], a);
+        ctx.fillStyle = dz > 0.4 ? rgba(ACC_SOFT, a) : dz < -0.4 ? rgba(ACC2_SOFT, a) : rgba(GREY, a);
         ctx.beginPath(); ctx.arc(x + ox, y + oy, rad, 0, 6.283); ctx.fill();
       }
     }
