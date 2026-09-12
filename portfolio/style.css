@@ -83,9 +83,6 @@ h1 { font-family: var(--sans); font-weight: 650; font-size: clamp(38px, 7vw, 92p
 .btn-acc:hover { background: #a3ffc9; }
 .hint { font-size: 12px; color: var(--mute); margin: 26px 0 0; transition: opacity 1s; }
 .hint.gone { opacity: 0; }
-.ticker { margin-top: 48px; font-size: 12px; color: var(--mute); letter-spacing: .04em; border-top: 1px solid var(--line); padding-top: 14px; display: flex; gap: 0; overflow: hidden; white-space: nowrap; }
-.ticker i { font-style: normal; color: var(--acc); }
-.ticker s { text-decoration: none; margin: 0 14px; color: var(--line-2); }
 
 /* sections */
 .sec { padding: clamp(64px, 10vw, 128px) 0; border-top: 1px solid var(--line); }
@@ -200,6 +197,5 @@ details p { margin: 0 0 22px; color: #c7d0cd; max-width: 70ch; }
   .svc:nth-last-child(2) { border-bottom: 1px solid var(--line); }
   .steps { grid-template-columns: 1fr; gap: 12px; }
   .row2 { grid-template-columns: 1fr; }
-  .ticker { display: none; }
   .foot { padding-bottom: 92px; }
 }

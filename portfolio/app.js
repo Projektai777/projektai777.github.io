@@ -45,13 +45,9 @@
     },
     push: function (x, y, amp, life) {
       var rs = this.ripples;
-      if (rs.length >= MAX_RIPPLES) {
-        // replace the most faded ripple instead of dropping the oldest live one abruptly
-        var k = 0, best = -1;
-        for (var i = 0; i < rs.length; i++) { var f = (S.t - rs[i].t0) / rs[i].life; if (f > best) { best = f; k = i; } }
-        if (best < 0.6) return; // everything is still lively: skip this emission rather than cut one off
-        rs.splice(k, 1);
-      }
+      // at the cap a NEW ripple is skipped; a live one is never removed, so every ripple finishes its fade
+      // (glance 2026-09-12: replacing the most faded one could still cut a ripple with 40 % of its amplitude left)
+      if (rs.length >= MAX_RIPPLES) return;
       rs.push({ x: x, y: y, t0: S.t, amp: amp, life: life });
     },
     frame: function () {
