@@ -82,7 +82,7 @@ h1 { font-family: var(--sans); font-weight: 650; font-size: clamp(38px, 7vw, 92p
 .hint.gone { opacity: 0; }
 
 /* sections */
-.sec { padding: clamp(64px, 10vw, 128px) 0; border-top: 1px solid var(--line); }
+.sec { padding: clamp(64px, 10vw, 128px) 0; } /* no divider line between sections (owner 2026-09-12) */
 .sec-head { margin-bottom: clamp(32px, 5vw, 56px); }
 h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 4.4vw, 52px); line-height: 1.1; letter-spacing: -.01em; margin: 0 0 18px; max-width: 24ch; }
 h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12px; letter-spacing: -.01em; }
