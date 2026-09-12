@@ -35,10 +35,7 @@ a { color: inherit; }
 /* the living background */
 /* the canvas box is the LARGE viewport on phones (100lvh), so the address bar showing/hiding never resizes it (2026-09-12) */
 #fx { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0; display: block; }
-.grain {
-  position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .05;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
+/* no grain overlay since 2026-09-12: a full-screen composited layer over the animated canvas cost frames on phones */
 header, main, footer { position: relative; z-index: 2; }
 
 .mono { font-family: var(--mono); }
@@ -75,7 +72,7 @@ h1 { font-family: var(--sans); font-weight: 650; font-size: clamp(38px, 7vw, 92p
 .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
 .btn {
   display: inline-block; padding: 13px 22px; border: 1px solid var(--line-2); border-radius: 6px;
-  text-decoration: none; font-size: 15px; font-weight: 500; background: rgba(7,10,13,.55);
+  text-decoration: none; font-size: 15px; font-weight: 500; background: rgba(7,10,13,.88);
   transition: transform .15s, border-color .2s, background .2s; cursor: pointer; color: var(--fg); font-family: var(--sans);
 }
 .btn:hover, .btn:focus-visible { border-color: var(--acc); transform: translateY(-1px); }
@@ -95,7 +92,7 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 @media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; transition: none; } }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: rgba(13,18,24,.55); backdrop-filter: blur(6px); }
+.svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: rgba(13,18,24,.92); }
 .svc { padding: clamp(22px, 3vw, 40px); border-bottom: 1px solid var(--line); position: relative; }
 .svc:nth-child(odd) { border-right: 1px solid var(--line); }
 .svc:nth-last-child(-n+2) { border-bottom: 0; }
@@ -103,7 +100,7 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .svc .how { color: #b9c3c0; margin: 0 0 16px; font-size: 15px; }
 .svc ul { margin: 0; padding: 0; list-style: none; }
 .svc li { padding: 7px 0 7px 22px; position: relative; font-size: 15px; border-top: 1px dashed var(--line); }
-.svc li::before { content: "›"; position: absolute; left: 4px; color: var(--acc); font-family: var(--mono); }
+.svc li::before { content: "•"; position: absolute; left: 4px; color: var(--acc); font-family: var(--mono); } /* a dot, not a chevron: a chevron read as "click to open" (owner 2026-09-12) */
 .process { margin-top: clamp(40px, 6vw, 72px); }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; counter-reset: st; }
 .steps li { counter-increment: st; padding-top: 14px; border-top: 1px solid var(--line-2); position: relative; }
@@ -119,7 +116,7 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .work-group h3 i { font-style: normal; color: var(--acc); }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
 .card {
-  border: 1px solid var(--line); border-radius: 10px; padding: 22px; background: rgba(13,18,24,.55);
+  border: 1px solid var(--line); border-radius: 10px; padding: 22px; background: rgba(13,18,24,.92);
   display: flex; flex-direction: column; gap: 10px; transition: border-color .2s, transform .2s; position: relative;
 }
 .card:hover { border-color: var(--line-2); transform: translateY(-2px); }
@@ -162,7 +159,7 @@ details p { margin: 0 0 22px; color: #c7d0cd; max-width: 70ch; }
 .cform label { display: flex; flex-direction: column; gap: 6px; }
 .cform label > span { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform input, .cform textarea {
-  font: 16px/1.5 var(--sans); color: var(--fg); background: rgba(13,18,24,.7); border: 1px solid var(--line-2); border-radius: 6px;
+  font: 16px/1.5 var(--sans); color: var(--fg); background: rgba(13,18,24,.94); border: 1px solid var(--line-2); border-radius: 6px;
   padding: 12px 14px; outline: none; transition: border-color .2s, box-shadow .2s; resize: vertical; width: 100%;
 }
 .cform input:focus, .cform textarea:focus { border-color: var(--acc); box-shadow: 0 0 0 3px rgba(125,255,179,.12); }
