@@ -27,7 +27,10 @@
   function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
   function rnd(a, b) { return a + Math.random() * (b - a); }
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
-  function budget(perPx, min, max) { return Math.round(clamp((S.w * S.h) / perPx, min, max)); }
+  // prefers-reduced-motion is honoured as a CALMER mode, not a frozen one: 60 % of the particles at half
+  // frame rate. Windows sets it for anyone who switched off "animation effects", and a still, dead
+  // background reads as broken rather than considerate (found on the owner's own PC, 2026-09-12).
+  function budget(perPx, min, max) { var n = Math.round(clamp((S.w * S.h) / perPx, min, max)); return reduce ? Math.round(n * 0.6) : n; }
   function impulse(x, y, power) { S.impulses.push({ x: x, y: y, t0: S.t, power: power || 1 }); if (S.impulses.length > 10) S.impulses.shift(); }
 
   // ---------- themes ----------
@@ -120,7 +123,7 @@
           var w = Math.sin(band * 0.09) * Math.exp(-band * band / 4200) * r.amp * (1 - age / r.life);
           ox += dx / d * w * 6; oy += dy / d * w * 6; dz += w;
         }
-        var a = clamp(0.12 + Math.abs(dz) * 0.5, 0.12, 1), rad = 1 + Math.abs(dz) * 1.6;
+        var a = clamp(0.26 + Math.abs(dz) * 0.5, 0.26, 1), rad = 1.3 + Math.abs(dz) * 1.6;
         ctx.fillStyle = dz > 0.25 ? rgba(ACC, a) : dz < -0.25 ? rgba(ACC2, a) : rgba([120, 135, 140], a);
         ctx.beginPath(); ctx.arc(x + ox, y + oy, rad, 0, 6.283); ctx.fill();
       }
@@ -132,7 +135,7 @@
     trail: true,
     init: function () {
       var n = budget(3200, 160, 420); this.ps = [];
-      for (var i = 0; i < n; i++) this.ps.push({ x: rnd(0, S.w), y: rnd(0, S.h), vx: rnd(-1, 1), vy: rnd(-1, 1), c: Math.random() < 0.25 ? ACC2 : ACC, r: rnd(0.8, 2) });
+      for (var i = 0; i < n; i++) this.ps.push({ x: rnd(0, S.w), y: rnd(0, S.h), vx: rnd(-1, 1), vy: rnd(-1, 1), c: Math.random() < 0.25 ? ACC2 : ACC, r: rnd(1.4, 2.8) });
       this.wells = [{ x: S.w * 0.3, y: S.h * 0.4, a: 0, s: 1 }, { x: S.w * 0.72, y: S.h * 0.6, a: 2.1, s: -1 }];
       ctx.fillStyle = BG; ctx.fillRect(0, 0, S.w, S.h);
     },
@@ -171,14 +174,16 @@
       this.scatterUntil = 0; this.mode = 'word';
     },
     sample: function (word, n) {
-      var off = document.createElement('canvas'), w = Math.min(S.w, 900) | 0, h = Math.min(S.h * 0.5, 320) | 0;
+      // the word sits where the hero leaves room: the right half on wide screens, below the copy on phones
+      var wide = S.w > 900;
+      var off = document.createElement('canvas'), w = (wide ? Math.min(S.w * 0.42, 620) : Math.min(S.w, 900)) | 0, h = Math.min(S.h * 0.5, wide ? 260 : 200) | 0;
       off.width = w; off.height = h; var c = off.getContext('2d');
       c.fillStyle = '#fff'; c.textAlign = 'center'; c.textBaseline = 'middle';
       var size = Math.min(h * 0.8, w / (word.length * 0.62)); c.font = 'italic 500 ' + size + 'px "Playfair Display", Georgia, serif';
       c.fillText(word, w / 2, h / 2);
       var data = c.getImageData(0, 0, w, h).data, pts = [], step = 3;
       for (var y = 0; y < h; y += step) for (var x = 0; x < w; x += step) if (data[(y * w + x) * 4 + 3] > 128) pts.push([x, y]);
-      var out = [], ox = (S.w - w) / 2, oy = S.h * 0.42 - h / 2;
+      var out = [], ox = wide ? S.w * 0.74 - w / 2 : (S.w - w) / 2, oy = (wide ? S.h * 0.45 : S.h * 0.8) - h / 2;
       if (!pts.length) return null;
       for (var i = 0; i < n; i++) { var p = pts[(Math.random() * pts.length) | 0]; out.push([p[0] + ox, p[1] + oy]); }
       return out;
@@ -259,12 +264,12 @@
         if (S.pActive && d < 120) { if (Math.abs(dx) < 50) { c.y -= speed * 0.4; continue; } }
         c.y += speed * (burst ? 2.5 : 1);
         var g = ch[(Math.random() * ch.length) | 0];
-        ctx.fillStyle = rgba(ACC, 0.95); ctx.fillText(g, x, c.y);
-        ctx.fillStyle = rgba(ACC, 0.35); ctx.fillText(c.gl, x, c.y - fs);
+        ctx.fillStyle = rgba(ACC, 0.8); ctx.fillText(g, x, c.y);
+        ctx.fillStyle = rgba(ACC, 0.28); ctx.fillText(c.gl, x, c.y - fs);
         c.gl = g;
         if (c.y > S.h + fs * 4) { c.y = rnd(-S.h * 0.6, -fs); c.s = rnd(2, 6); }
       }
-      if (S.pActive) { ctx.fillStyle = rgba(ACC2, 0.08); ctx.beginPath(); ctx.arc(S.px, S.py, 60, 0, 6.283); ctx.fill(); }
+      if (S.pActive) { ctx.strokeStyle = rgba(ACC2, 0.18); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(S.px, S.py, 58 + Math.sin(S.t * 0.08) * 4, 0, 6.283); ctx.stroke(); }
     }
   };
 
@@ -285,16 +290,16 @@
     if (nameEl) nameEl.textContent = (PF.themes && PF.themes[name]) || name;
     if (save) savePref(name);
     if (btn) { btn.classList.remove('spin'); void btn.offsetWidth; btn.classList.add('spin'); }
-    if (reduce) cur.frame(1);
   }
   function next() { setTheme(order[(order.indexOf(curName) + 1) % order.length], true); }
+  window.__pf = { S: S, themes: themes }; // read-only debug handle for tools/portfolio-verify.js
 
   if (ctx) {
     var last = 0, skip = false, resizeT = 0;
     function loop(now) {
       requestAnimationFrame(loop);
       if (document.hidden) { last = now; return; }
-      if (S.deep && (skip = !skip)) return; // half rate deep in the page
+      if ((S.deep || reduce) && (skip = !skip)) return; // half rate deep in the page or under reduced motion
       var dt = clamp((now - last) / 16.67, 0.2, 2.5); last = now; S.t += dt;
       S.wind *= 0.92; S.pvx *= 0.8; S.pvy *= 0.8;
       for (var i = S.impulses.length - 1; i >= 0; i--) if (S.t - S.impulses[i].t0 > 300) S.impulses.splice(i, 1);
@@ -302,7 +307,7 @@
     }
     resize();
     setTheme(readPref() || order[0], false);
-    if (!reduce) requestAnimationFrame(function (n) { last = n; loop(n); });
+    requestAnimationFrame(function (n) { last = n; loop(n); });
     window.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(resize, 150); });
 
     var hint = document.getElementById('hint'), hinted = false;
