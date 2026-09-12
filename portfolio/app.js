@@ -27,10 +27,13 @@
   function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
   function rnd(a, b) { return a + Math.random() * (b - a); }
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
-  // prefers-reduced-motion is honoured as a CALMER mode, not a frozen one: 60 % of the particles at half
-  // frame rate. Windows sets it for anyone who switched off "animation effects", and a still, dead
-  // background reads as broken rather than considerate (found on the owner's own PC, 2026-09-12).
+  // prefers-reduced-motion: the background holds a settled frame and moves ONLY while the visitor is
+  // touching or moving over it (and for a moment after), at 60 % of the particles and half rate. Nothing
+  // moves on its own, which is what the setting asks for; a dead, never-reacting canvas read as broken on
+  // this PC (Windows "animation effects" off), which is why it is not simply frozen (glance 2026-09-12).
   function budget(perPx, min, max) { var n = Math.round(clamp((S.w * S.h) / perPx, min, max)); return reduce ? Math.round(n * 0.6) : n; }
+  var lastInput = 0;
+  function input() { lastInput = performance.now(); }
   function impulse(x, y, power) { S.impulses.push({ x: x, y: y, t0: S.t, power: power || 1 }); if (S.impulses.length > 10) S.impulses.shift(); }
 
   // ---------- themes ----------
@@ -299,6 +302,7 @@
     function loop(now) {
       requestAnimationFrame(loop);
       if (document.hidden) { last = now; return; }
+      if (reduce && now - lastInput > 1500) { last = now; return; } // reduced motion: still unless interacted with
       if ((S.deep || reduce) && (skip = !skip)) return; // half rate deep in the page or under reduced motion
       var dt = clamp((now - last) / 16.67, 0.2, 2.5); last = now; S.t += dt;
       S.wind *= 0.92; S.pvx *= 0.8; S.pvy *= 0.8;
@@ -307,11 +311,12 @@
     }
     resize();
     setTheme(readPref() || order[0], false);
+    if (reduce) { for (var w = 0; w < 40; w++) cur.frame(1); } // settle a still frame to start from
     requestAnimationFrame(function (n) { last = n; loop(n); });
     window.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(resize, 150); });
 
     var hint = document.getElementById('hint'), hinted = false;
-    function touched() { if (!hinted && hint) { hinted = true; setTimeout(function () { hint.classList.add('gone'); }, 2500); } }
+    function touched() { input(); if (!hinted && hint) { hinted = true; setTimeout(function () { hint.classList.add('gone'); }, 2500); } }
     window.addEventListener('pointermove', function (e) {
       if (e.pointerType === 'touch') return; // touchmove below keeps the touch path passive
       S.pvx = e.clientX - S.px; S.pvy = e.clientY - S.py; if (Math.abs(S.pvx) > 200) { S.pvx = 0; S.pvy = 0; }
@@ -333,7 +338,7 @@
       var y = window.scrollY; S.wind = clamp(S.wind + (y - lastY) * 0.05, -12, 12); lastY = y; S.scrollY = y; S.deep = y > S.h * 1.6; touched();
     }, { passive: true });
 
-    if (btn) btn.addEventListener('click', next);
+    if (btn) btn.addEventListener('click', function () { input(); next(); if (reduce) { for (var w = 0; w < 40; w++) cur.frame(1); } });
     window.addEventListener('keydown', function (e) { if ((e.key === 't' || e.key === 'T') && !/input|textarea/i.test(document.activeElement && document.activeElement.tagName)) next(); });
   }
 
