@@ -849,18 +849,28 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     } catch { return { ok: false, error: 'net' }; }
   }
 
-  function paintCode(code) {
-    const url = `${cardBase()}?b=${encodeURIComponent(slug)}&grant=${code}`;
-    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=10&data=${encodeURIComponent(url)}`;
-    if ($('qr').dataset.code !== code) { $('qr').src = qrSrc; $('qr').dataset.code = code; }
+  let qrFailedAt = 0;   // when the outside QR image last failed; a retry waits 15 s, not one per tick
+  function paintTimer() {
     const left = secondsLeft();
     $('secs').textContent = `${left} s`;
     $('ring').style.setProperty('--p', String((left / TOTP_PERIOD) * 100));
   }
+  function paintCode(code) {
+    const url = `${cardBase()}?b=${encodeURIComponent(slug)}&grant=${code}`;
+    const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=10&data=${encodeURIComponent(url)}`;
+    const waiting = qrFailedAt && (Date.now() - qrFailedAt) < 15000;
+    // this one place owns the QR box while its image service is failing: keep the network message
+    // showing (another path may have cleared it) instead of an empty box with no explanation
+    if (waiting) { $('codeErr').textContent = tr('errNet'); }
+    else if ($('qr').dataset.code !== code) { $('qr').src = qrSrc; $('qr').dataset.code = code; }
+    paintTimer();
+  }
 
   // The QR image comes from an outside service; when it cannot load, say so instead of showing a
-  // broken image, and forget the code so the next tick retries (project scan 2026-09-15).
-  $('qr').onerror = () => { $('qr').dataset.code = ''; setCodeError('net'); };
+  // broken image and retry after 15 s; the message clears by itself once an image loads again
+  // (project scan 2026-09-15, glance fixes the same day).
+  $('qr').onerror = () => { if (!$('qr').getAttribute('src')) return; qrFailedAt = Date.now(); $('qr').dataset.code = ''; setCodeError('net'); };
+  $('qr').onload = () => { if (qrFailedAt) { qrFailedAt = 0; clearCodeError(); } };
   let codeInFlight = false;
   async function tick() {
     if (isServerTenant) {
@@ -868,7 +878,9 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
       if (serverCode.period !== p) {            // only hit the Worker once per 30 s period
         // one request at a time: the 1 s ticker must not re-send the password and GPS while a
         // slow location fix is still pending (project scan 2026-09-15)
-        if (codeInFlight) return;
+        // keep the countdown moving while the new code is pending, but never leave the previous
+        // period's (already expired) QR on screen under the new countdown
+        if (codeInFlight) { $('qr').removeAttribute('src'); $('qr').dataset.code = ''; paintTimer(); return; }
         codeInFlight = true;
         let j;
         try { j = await fetchServerCode(); } finally { codeInFlight = false; }
