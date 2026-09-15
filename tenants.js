@@ -60,6 +60,7 @@ export default {
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
     google_review_url: 'https://www.google.com/maps/search/?api=1&query=Berneli%C5%B3+u%C5%BEeiga',
     preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
+    archived: true, // owner 2026-09-15: abandoned - hidden from projects.html; the card page stays online
     staff_demo_pass: 'berneliai2026', // PREVIEW-ONLY: rodomas savininko puslapyje, kad prospektas galėtų pažiūrėti darbuotojo pusę; pašalinti įdiegus
     staff_secret: '3798bc6a93d45c798242d999ea43b6bf',     // rotating-code raktas
     staff_pass_hash: 'ae4964eeffe94ad8cbd2ec334814ec1b6b9b568d4729fadd74daf9caf7209ab1', // /tools/staff.html slaptažodis: berneliai2026
@@ -96,6 +97,7 @@ export default {
     google_review_url: 'https://www.google.com/maps/search/?api=1&query=Berneli%C5%B3+u%C5%BEeiga',
     poster: true,  // NAUJA: statinio QR ("ant stalo") režimas
     preview: true, // demo: kliento pusėje, atleista nuo cooldown/geofence — galima kartoti laisvai
+    archived: true, // owner 2026-09-15: abandoned - hidden from projects.html; the card page stays online
     // staff_secret + staff_pass_hash privalomi (check-tenants.js) IR naudojami demo simuliacijai
     // (currentCode -> staticBackend.verifyCode); tikram klientui šie laukai keliauja į Worker'į.
     // staff_demo_pass NEnurodytas tyčia — statinio QR režime NĖRA darbuotojo puslapio.
@@ -140,6 +142,7 @@ export default {
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
     google_review_url: 'https://www.google.com/maps/search/?api=1&query=KEBAB+inn',
     preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
+    archived: true, // owner 2026-09-15: abandoned - hidden from projects.html; the card page stays online
     staff_demo_pass: 'kebabinn2026', // PREVIEW-ONLY: rodomas savininko puslapyje, kad prospektas pamatytų darbuotojo pusę; pašalinti įdiegus
     staff_secret: '82817f34fc753ec35f83a8d796a689c7',     // rotating-code raktas
     staff_pass_hash: '1cc34dd7af7a3501dd99af8d4d098d8e0ec83e7c1513d9343eb787cbda1bcfc5', // /tools/staff.html slaptažodis: kebabinn2026
@@ -173,6 +176,7 @@ export default {
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
     google_review_url: 'https://www.google.com/maps/search/?api=1&query=Rugil%C4%97s+blakstienos+Kaunas',
     preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
+    archived: true, // owner 2026-09-15: abandoned - hidden from projects.html; the card page stays online
     staff_demo_pass: 'rugile2026', // PREVIEW-ONLY: rodomas savininko puslapyje, kad prospektas pamatytų darbuotojo pusę; pašalinti įdiegus
     staff_secret: '3f5145aa6c20ee2f264990f9ab00d654',     // rotating-code raktas
     staff_pass_hash: 'd7c89cdfdb36ffd19be0e9de7dd6376a4b2a738852b82dee9005d82f6c9524dc', // /tools/staff.html slaptažodis: rugile2026
@@ -208,6 +212,7 @@ export default {
     // Tikram klientui įdėkite tikslų „rašyti atsiliepimą" URL; čia – paieška pagal pavadinimą.
     google_review_url: 'https://www.google.com/maps/search/?api=1&query=Auto+Bondas+Tel%C5%A1iai',
     preview: true, // rodo pardavimų funkcijas (auto-pildymą, darbuotojo gidą, CTA) — pašalinti įdiegus klientui
+    archived: true, // owner 2026-09-15: abandoned - hidden from projects.html; the card page stays online
     staff_demo_pass: 'autobondas2026', // PREVIEW-ONLY: rodomas savininko puslapyje; pašalinti įdiegus
     staff_secret: 'a2f1e0b143941c2127a6fa7aa6b9687e',     // rotating-code raktas
     staff_pass_hash: 'ded97b32282d7f7d1e8c4431f6950468e22c000142a847e2ab038e7bcbfae2cb', // /tools/staff.html slaptažodis: autobondas2026
