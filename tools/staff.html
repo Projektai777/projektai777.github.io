@@ -78,6 +78,7 @@
   /* QR */
   .qr-box { background: #fff; border-radius: 22px; padding: 18px; width: 100%; display: grid; place-items: center; box-shadow: 0 10px 30px rgb(0 0 0 / .08); }
   .qr-box img { width: 100%; max-width: 320px; aspect-ratio: 1; display: block; border-radius: 10px; }
+  .qr-box img.stale { opacity: .25; filter: blur(3px); }
   .qr-cap { font-size: .85rem; color: #78716c; line-height: 1.5; }
   .timer { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: .9rem; color: #57534e; font-weight: 600; }
   .ring { --p: 100; width: 22px; height: 22px; border-radius: 50%;
@@ -342,6 +343,7 @@ const S = {
     clearSample: '🗑️ Išvalyti pavyzdinę statistiką', clearing: 'Valoma…', lock: 'Užrakinti',
     errOffsite: '📍 Šį kodą galima rodyti tik įstaigoje.', errNeedLoc: '📍 Įjunkite vietos nustatymą, kad matytumėte kodą.',
     errNet: '⚠️ Nėra ryšio. Bandykite dar kartą.',
+    codeUpdating: '⏳ Atnaujinamas kodas…',
     statsLoading: 'Netrukus galėsite peržiūrėti statistiką',
     legStamps: 'Antspaudai', legPrizes: 'Prizai', noData: 'Dar nėra duomenų.',
     stamps: 'antsp.', prizes: 'prizai', loadMore: '← slinkite, kad matytumėte senesnius',
@@ -368,6 +370,7 @@ const S = {
     clearSample: '🗑️ Clear sample stats', clearing: 'Clearing…', lock: 'Lock',
     errOffsite: '📍 This code can only be shown at the venue.', errNeedLoc: '📍 Enable location to show the code.',
     errNet: '⚠️ No connection. Please try again.',
+    codeUpdating: '⏳ Updating the code…',
     legStamps: 'Stamps', legPrizes: 'Rewards', noData: 'No data yet.',
     stamps: 'st.', prizes: 'rewards', loadMore: '← scroll to see older',
     months: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
@@ -862,7 +865,7 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     // this one place owns the QR box while its image service is failing: keep the network message
     // showing (another path may have cleared it) instead of an empty box with no explanation
     if (waiting) { $('codeErr').textContent = tr('errNet'); }
-    else if ($('qr').dataset.code !== code) { $('qr').src = qrSrc; $('qr').dataset.code = code; }
+    else if ($('qr').dataset.code !== code) { $('qr').classList.add('stale'); $('qr').src = qrSrc; $('qr').dataset.code = code; }
     paintTimer();
   }
 
@@ -870,21 +873,30 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   // broken image and retry after 15 s; the message clears by itself once an image loads again
   // (project scan 2026-09-15, glance fixes the same day).
   $('qr').onerror = () => { if (!$('qr').getAttribute('src')) return; qrFailedAt = Date.now(); $('qr').dataset.code = ''; setCodeError('net'); };
-  $('qr').onload = () => { if (qrFailedAt) { qrFailedAt = 0; clearCodeError(); } };
+  // the fade/blur on the QR is removed only when the NEW image has actually loaded (a slow or stalled image
+  // service leaves the old, expiring code blurred instead of showing it at full strength)
+  $('qr').onload = () => { $('qr').classList.remove('stale'); if (qrFailedAt) { qrFailedAt = 0; clearCodeError(); } };
   let codeInFlight = false;
+  let codeRetryAt = 0;   // after a failed /staffcode request, the next try waits until this time
   async function tick() {
     if (isServerTenant) {
       const p = periodNow();
       if (serverCode.period !== p) {            // only hit the Worker once per 30 s period
         // one request at a time: the 1 s ticker must not re-send the password and GPS while a
         // slow location fix is still pending (project scan 2026-09-15)
-        // keep the countdown moving while the new code is pending, but never leave the previous
-        // period's (already expired) QR on screen under the new countdown
-        if (codeInFlight) { $('qr').removeAttribute('src'); $('qr').dataset.code = ''; paintTimer(); return; }
+        // while the new code is pending, blur the previous (expiring) QR and say it is updating (without
+        // overwriting a standing error), so staff never see an empty box or an unmarked old code; a failed
+        // request waits before the next try - 5 s for a network error, 30 s for "not at the venue" or
+        // "location off", which do not fix themselves in seconds (glances 2026-09-15)
+        const markStale = () => { $('qr').classList.add('stale'); if (!$('codeErr').textContent) $('codeErr').textContent = tr('codeUpdating'); paintTimer(); };
+        if (codeInFlight) { markStale(); return; }
+        if (Date.now() < codeRetryAt) { paintTimer(); return; }
         codeInFlight = true;
+        markStale();
         let j;
         try { j = await fetchServerCode(); } finally { codeInFlight = false; }
-        if (!j.ok) { setCodeError(j.error); return; }
+        if (!j.ok) { codeRetryAt = Date.now() + (j.error === 'net' ? 5000 : 30000); setCodeError(j.error); return; }
+        codeRetryAt = 0;
         serverCode = { code: j.code, period: p };
         clearCodeError();
       }
