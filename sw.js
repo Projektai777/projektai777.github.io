@@ -6,7 +6,7 @@
 // prefer the fresh network copy and only fall back to cache when offline.
 // A cache-first worker once served a stale tenants.js and a new tenant
 // showed "Kortelė nerasta" for everyone who had visited before.
-const CACHE = 'lojalumas-v34';
+const CACHE = 'lojalumas-v35';
 const SHELL = ['./', './index.html', './app.js', './tenants.js', './totp.js', './styles.css', './manifest.webmanifest'];
 
 self.addEventListener('install', (e) => {
@@ -36,8 +36,12 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(
     fetch(e.request, { cache: 'no-cache' })
       .then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((c) => c.put(e.request, copy));
+        // only a good GET replaces the cached copy - a 404/5xx during a deploy window must never
+        // overwrite the last working file the offline card falls back to (project scan 2026-09-15)
+        if (e.request.method === 'GET' && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+        }
         return res;
       })
       .catch(() => caches.match(e.request, { ignoreSearch: true }))
