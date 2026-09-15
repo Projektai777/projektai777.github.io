@@ -840,16 +840,23 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   // Ask the Worker for the current code. Returns the JSON ({ok,code,...} or {ok:false,error}).
   // `device` is just a label for the per-device stats; geofence is the only staff gate.
   async function fetchServerCode() {
-    const base = await resolveCounter();
-    if (!base) return { ok: false, error: 'net' };
-    const pos = await getPos();                 // transient; only sent for the geofence check
-    const dev = deviceLabel() || 'terminal';
-    let url = `${base}/staffcode?b=${encodeURIComponent(slug)}&device=${encodeURIComponent(dev)}`;
-    if (pos) url += `&lat=${pos.lat}&lon=${pos.lon}`;
+    // never throws: every failure (older browsers without AbortController included) is { ok: false, error: 'net' }
+    let abortTimer = null;
     try {
-      const r = await fetch(url, { method: 'POST', headers: { 'x-staff-pass': staffPass } });
+      const base = await resolveCounter();
+      if (!base) return { ok: false, error: 'net' };
+      // transient; only sent for the geofence check. Bounded at 20 s: an unanswered location prompt must not hold
+      // the single in-flight request forever, while staff reading the prompt still have time to allow it (glances 2026-09-15)
+      const pos = await Promise.race([getPos(), new Promise((res) => setTimeout(() => res(null), 20000))]);
+      const dev = deviceLabel() || 'terminal';
+      let url = `${base}/staffcode?b=${encodeURIComponent(slug)}&device=${encodeURIComponent(dev)}`;
+      if (pos) url += `&lat=${pos.lat}&lon=${pos.lon}`;
+      const ctl = (typeof AbortController === 'function') ? new AbortController() : null;
+      if (ctl) abortTimer = setTimeout(() => ctl.abort(), 10000);   // a hung Worker call counts as a network error
+      const r = await fetch(url, { method: 'POST', headers: { 'x-staff-pass': staffPass }, signal: ctl ? ctl.signal : undefined });
       return await r.json();
     } catch { return { ok: false, error: 'net' }; }
+    finally { if (abortTimer) clearTimeout(abortTimer); }
   }
 
   let qrFailedAt = 0;   // when the outside QR image last failed; a retry waits 15 s, not one per tick
@@ -913,8 +920,9 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     if (isServerTenant) {
       // No local hash to check — the Worker verifies the password on the first /staffcode.
       staffPass = pass;
+      const p0 = periodNow();   // the period the request was made in, not the one after the (slow) reply
       const j = await fetchServerCode();
-      if (j.ok) { serverCode = { code: j.code, period: periodNow() }; showCode(); return; }
+      if (j.ok) { serverCode = { code: j.code, period: p0 }; showCode(); return; }
       staffPass = '';
       $('loginErr').textContent = tr(
         { bad_pass: 'badPass', offsite: 'errOffsite', need_location: 'errNeedLoc' }[j.error] || 'errNet'
