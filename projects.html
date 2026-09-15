@@ -326,10 +326,14 @@
         // The bare 'demo' slug is just the template for parameterized sales demos
         // (/?b=demo&n=Name&c=...&r=...), not a real project — don't list its placeholder card.
         if (slug === 'demo') continue;
+        // archived:true = abandoned project or old demo (owner 2026-09-15): hidden here, its page stays online.
+        if (t.archived) continue;
         (isDemo(slug, t) ? demos : live).push({ kind:'tenant', slug, t });
       }
-      for (const p of EXTRA_PROJECTS){ (p.live ? live : demos).push({ kind:'extra', p }); }
+      for (const p of EXTRA_PROJECTS){ if (p.archived) continue; (p.live ? live : demos).push({ kind:'extra', p }); }
 
+      // A section with nothing to show is hidden instead of printing an empty grid.
+      document.getElementById('demosSec').hidden = demos.length === 0;
       document.getElementById('demos').innerHTML = sectionHtml(demos);
       document.getElementById('live').innerHTML = sectionHtml(live) || `<div class="empty">
         Kol kas nėra įdiegtų tikrų klientų.<br>
