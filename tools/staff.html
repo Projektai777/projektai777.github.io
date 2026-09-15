@@ -720,6 +720,9 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     });
   }
 
+  // Device/branch labels come from the Worker's audit log, which anyone can post to - always
+  // escape them before they touch innerHTML (project scan 2026-09-15: stored XSS in the staff page).
+  const escHtml = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   let branchFilter = '';   // '' = all branches; otherwise a device/branch label
   let auditBase = null;     // remembered for branch-swap re-fetches
   let knownBranches = [];   // existing branch labels (for the "this device is" picker)
@@ -732,7 +735,7 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     bar.classList.remove('hidden');
     const all = `<button class="branch-chip ${branchFilter === '' ? 'on' : ''}" data-dev="">${tr('branchAll')}</button>`;
     chips.innerHTML = all + devices.map((d) =>
-      `<button class="branch-chip ${branchFilter === d.device ? 'on' : ''}" data-dev="${d.device}">${d.device}</button>`).join('');
+      `<button class="branch-chip ${branchFilter === d.device ? 'on' : ''}" data-dev="${escHtml(d.device)}">${escHtml(d.device)}</button>`).join('');
     chips.querySelectorAll('.branch-chip').forEach((b) => {
       b.onclick = () => {
         if (b.dataset.dev === branchFilter) return;
@@ -799,14 +802,14 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
   $('devEdit').onclick = () => {
     if ($('branchPicker')) return closeBranchPicker(); // toggle
     const existing = knownBranches.filter((b) => b && b !== deviceLabel());
-    const opts = existing.map((b) => `<button type="button" class="branch-chip" data-pick="${b}">${b}</button>`).join('');
+    const opts = existing.map((b) => `<button type="button" class="branch-chip" data-pick="${escHtml(b)}">${escHtml(b)}</button>`).join('');
     const el = document.createElement('div');
     el.className = 'branch-picker'; el.id = 'branchPicker';
     el.innerHTML = `
       <p class="branch-pick-lead">${tr('setWorkBranch')}</p>
       ${existing.length ? `<div class="branch-chips">${opts}</div>` : ''}
       <div class="branch-new">
-        <input id="branchNewInput" type="text" maxlength="60" placeholder="${tr('promptRename')}" value="${deviceLabel() || ''}">
+        <input id="branchNewInput" type="text" maxlength="60" placeholder="${tr('promptRename')}" value="${escHtml(deviceLabel() || '')}">
         <button type="button" class="dev-edit" id="branchNewSave">OK</button>
       </div>`;
     $('devEdit').closest('.device-row').insertAdjacentElement('afterend', el);
@@ -855,11 +858,20 @@ if (!tenant || (!tenant.staff_secret && !isServerTenant)) {
     $('ring').style.setProperty('--p', String((left / TOTP_PERIOD) * 100));
   }
 
+  // The QR image comes from an outside service; when it cannot load, say so instead of showing a
+  // broken image, and forget the code so the next tick retries (project scan 2026-09-15).
+  $('qr').onerror = () => { $('qr').dataset.code = ''; setCodeError('net'); };
+  let codeInFlight = false;
   async function tick() {
     if (isServerTenant) {
       const p = periodNow();
       if (serverCode.period !== p) {            // only hit the Worker once per 30 s period
-        const j = await fetchServerCode();
+        // one request at a time: the 1 s ticker must not re-send the password and GPS while a
+        // slow location fix is still pending (project scan 2026-09-15)
+        if (codeInFlight) return;
+        codeInFlight = true;
+        let j;
+        try { j = await fetchServerCode(); } finally { codeInFlight = false; }
         if (!j.ok) { setCodeError(j.error); return; }
         serverCode = { code: j.code, period: p };
         clearCodeError();
