@@ -344,7 +344,8 @@
 
       // Skaičiai rodo AKTYVIUS (nepaslėptus) projektus.
       const visN = (arr) => arr.filter(it => !HIDDEN.has(projId(it))).length;
-      const nD = visN(demos), nL = visN(live), nH = HIDDEN.size;
+      // hidden = cards this browser hid that are still listed; an archived project no longer counts (glance cfe6bb66)
+      const nD = visN(demos), nL = visN(live), nH = [...demos, ...live].filter(it => HIDDEN.has(projId(it))).length;
       document.getElementById('demoCount').textContent = nD;
       document.getElementById('liveCount').textContent = nL;
       document.getElementById('stat').innerHTML =
