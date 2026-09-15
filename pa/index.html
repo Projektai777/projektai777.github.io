@@ -297,7 +297,14 @@ async function demoApi(path, body){
   }
 }
 
-let API = qs.get('api') || '';
+// ?api= is a LOCAL test switch only: honouring any other origin would let a crafted link send the
+// client's password to that site (project scan 2026-09-15 security repair; nothing else changed here).
+// This PC only (127.0.0.1 / localhost, any port and path): browsers block other plain-http addresses
+// from the https live page anyway, so a home-network address could never work here.
+const apiParam = qs.get('api') || '';
+const apiLocal = /^http:\/\/(127\.0\.0\.1|localhost)(:\d{1,5})?(\/[^?#]*)?$/.test(apiParam);
+if (apiParam && !apiLocal) console.warn('?api= ignored: only a local test address on this PC (http://127.0.0.1 or http://localhost) is allowed');
+let API = apiLocal ? apiParam.replace(/\/$/, '') : '';
 const ready = (DEMO || API) ? Promise.resolve() :
   fetch('./endpoint.json').then(r=>r.json()).then(c=>{ if(c.enabled && c.base) API = c.base; }).catch(()=>{});
 
