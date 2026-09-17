@@ -145,13 +145,28 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .cform { max-width: 720px; display: flex; flex-direction: column; gap: 16px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .cform label { display: flex; flex-direction: column; gap: 6px; }
-.cform label > span { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
+.cform label > span:not(.ta-wrap) { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform input, .cform textarea {
   font: 16px/1.5 var(--sans); color: var(--fg); background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 6px;
   padding: 12px 14px; outline: none; transition: border-color .2s, box-shadow .2s; resize: vertical; width: 100%;
 }
 .cform input:focus, .cform textarea:focus { border-color: var(--acc); box-shadow: 0 0 0 3px rgba(125,255,179,.12); }
 .cform textarea::placeholder, .cform input::placeholder { color: #667077; }
+/* rotating example requests (app.js): an overlay in the textarea's own box, opacity-only (a dissolve is the
+   reduced-motion-safe transition), hidden as soon as the box holds any text; the native placeholder stays
+   in the markup for no-JS visitors and screen readers but turns transparent while the overlay runs */
+.ta-wrap { position: relative; display: block; }
+.ta-wrap textarea { display: block; }
+.ta-wrap.cycling textarea::placeholder { color: transparent; }
+.ph-cycle {
+  position: absolute; top: 13px; left: 15px; right: 15px; bottom: 13px; overflow: hidden; pointer-events: none;
+  font: 16px/1.5 var(--sans); color: #667077; opacity: 0; transition: opacity .6s ease;
+}
+.ta-wrap.cycling .ph-cycle.on { opacity: 1; }
+.ta-wrap.has-text .ph-cycle.on { opacity: 0; transition-duration: .12s; }
+.form-alt { margin: 0; color: var(--mute); }
+.form-alt a { color: var(--fg); }
+.form-alt.gone { display: none; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .form-foot { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .form-msg { min-height: 1.4em; font-size: 13px; color: var(--acc); margin: 0; }
