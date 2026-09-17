@@ -93,6 +93,9 @@
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     resonance.init();
+    // resizing clears the canvas; under reduced motion the loop may be idle, so redraw the settled frame now
+    // (without emitting a pointer ripple) instead of leaving the grid blank until the next interaction
+    if (reduce) { var pa = S.pActive; S.pActive = false; resonance.frame(); S.pActive = pa; }
   }
 
   if (ctx) {
@@ -144,6 +147,37 @@
 
   // ---------- contact form ----------
   var form = document.getElementById('cform'), msg = document.getElementById('formMsg'), sendBtn = document.getElementById('sendBtn');
+  // the markup ships the send button disabled and a mailbox line visible, so a visitor whose browser blocked this
+  // script can never submit the form into the URL and still has a way to write; both flip once the handler exists
+  var formAlt = document.getElementById('formAlt');
+  if (form && sendBtn) { sendBtn.disabled = false; if (formAlt) formAlt.classList.add('gone'); }
+
+  // rotating example requests in the empty message box: one line at a time, dissolving in and out (opacity only,
+  // the reduced-motion-safe transition), held while the tab is hidden or the box has text, hidden once anything is typed
+  var taWrap = document.getElementById('taWrap'), phCycle = document.getElementById('phCycle');
+  var ta = form && form.querySelector('textarea[name=message]');
+  var examples = ((PF.form || {}).examples || []).filter(function (x) { return typeof x === 'string' && x; });
+  if (taWrap && phCycle && ta && examples.length) {
+    var exI = 0, EX_SHOW = 4600, EX_FADE = 650;
+    var filled = function () { taWrap.classList.toggle('has-text', ta.value.length > 0); };
+    phCycle.textContent = examples[0];
+    taWrap.classList.add('cycling'); filled();
+    requestAnimationFrame(function () { phCycle.classList.add('on'); });
+    var nextExample = function () {
+      setTimeout(function () {
+        if (document.hidden || ta.value.length > 0) return nextExample(); // keep the current line for another round
+        phCycle.classList.remove('on');
+        setTimeout(function () {
+          exI = (exI + 1) % examples.length; phCycle.textContent = examples[exI]; phCycle.classList.add('on'); nextExample();
+        }, EX_FADE);
+      }, EX_SHOW);
+    };
+    if (examples.length > 1) nextExample();
+    ta.addEventListener('input', filled);
+    form.addEventListener('reset', function () { setTimeout(filled, 0); });
+    window.addEventListener('pageshow', filled); // a restored page (back button) may bring its typed text back
+  }
+
   if (form) form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!form.reportValidity()) return;
