@@ -1,0 +1,46 @@
+# Local configuration and secret material
+.env
+.env.*
+!.env.example
+.dev.vars
+**/secrets/**
+**/credentials/**
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.cer
+*.crt
+
+# Local data, exports, archives, logs, and backups
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.sql
+*.csv
+*.tsv
+*.zip
+*.7z
+*.rar
+*.tar
+*.tgz
+*.gz
+*.log
+*.bak
+*.backup
+
+# Editor, OS, and temporary caches
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.cache/
+.tmp/
+tmp/
+node_modules/

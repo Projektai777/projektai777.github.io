@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://projektai777.eu/sitemap.xml
