@@ -200,6 +200,12 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .form-alt { margin: 0; color: var(--mute); }
 .form-alt a { color: var(--fg); }
 .form-alt.gone { display: none; }
+/* privacy fold-out under the form (owner 2026-10-01: no separate privacy page; closed by default) */
+.pd { margin-top: -6px; }
+.pd summary { cursor: pointer; width: max-content; max-width: 100%; }
+.pd summary:hover, .pd[open] summary { color: var(--fg); }
+.pd summary:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.pd p { margin: 8px 0 0; max-width: 72ch; line-height: 1.6; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .form-foot { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .form-msg { min-height: 1.4em; font-size: 13px; color: var(--acc); margin: 0; }
