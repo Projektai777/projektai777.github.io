@@ -228,7 +228,7 @@
       msg.className = 'form-msg mono err';
       var mail = PF.email || ''; var body = encodeURIComponent(data.message + '\n\n' + data.name + ' <' + data.email + '>' + (data.company ? '\n' + data.company : ''));
       msg.innerHTML = ''; msg.appendChild(document.createTextNode((L.err || 'Error.') + ' '));
-      var a = document.createElement('a'); a.href = 'mailto:' + mail + '?subject=' + encodeURIComponent('Užklausa iš svetainės') + '&body=' + body; a.textContent = mail; msg.appendChild(a);
+      var a = document.createElement('a'); a.href = 'mailto:' + mail + '?subject=' + encodeURIComponent(L.subject || 'Užklausa iš svetainės') + '&body=' + body; a.textContent = mail; msg.appendChild(a);
       sendBtn.disabled = false;
     };
     if (!PF.contact) return fail();
