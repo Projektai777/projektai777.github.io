@@ -315,6 +315,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .form-alt { margin: 0; color: var(--mute); }
 .form-alt a { color: var(--fg); }
 .form-alt.gone { display: none; }
+#formTg a { white-space: nowrap; }
+.form-alt .tg-ic { vertical-align: -2px; margin-right: 4px; }
 /* privacy fold-out under the form (owner 2026-10-01: no separate privacy page; closed by default) */
 .pd { margin-top: -6px; }
 .pd summary { cursor: pointer; width: max-content; max-width: 100%; }
