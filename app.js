@@ -185,6 +185,52 @@
     document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
   } else document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('in'); });
 
+  // ---------- work rows: sideways scrolling + the hint arrow ----------
+  // Each group of project cards is one row that scrolls sideways (owner 2026-10-03: not stacked down the page). The arrow
+  // buttons step one card; .more-l / .more-r mark that there is more to that side (style.css fades that edge and shows
+  // that arrow). Until the visitor first scrolls a row (swipe, wheel, keys or an arrow) the "next" arrow nudges as a
+  // hint; html.pf-swiped then stops it, and localStorage pf-swiped keeps it stopped on later visits.
+  (function () {
+    var rails = document.querySelectorAll('.rail'), root = document.documentElement, W = PF.work || {};
+    if (!rails.length) return;
+    try { if (localStorage.getItem('pf-swiped')) root.classList.add('pf-swiped'); } catch (e) { /* storage blocked: the hint shows each visit */ }
+    function tried() {
+      if (root.classList.contains('pf-swiped')) return;
+      root.classList.add('pf-swiped');
+      try { localStorage.setItem('pf-swiped', '1'); } catch (e) { /* storage blocked: only this visit remembers */ }
+    }
+    var ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    Array.prototype.forEach.call(rails, function (rail) {
+      var row = rail.querySelector('.cards');
+      if (!row) return;
+      function step(d) {
+        var c = row.querySelector('.card'), gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+        row.scrollBy({ left: d * ((c ? c.offsetWidth : row.clientWidth * 0.8) + gap), behavior: reduce ? 'auto' : 'smooth' });
+      }
+      ['prev', 'next'].forEach(function (dir) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'rail-btn ' + dir; b.innerHTML = ARROW;
+        b.setAttribute('aria-label', W[dir] || ''); b.setAttribute('aria-controls', row.id);
+        b.addEventListener('click', function () { tried(); step(dir === 'next' ? 1 : -1); });
+        rail.appendChild(b);
+      });
+      var x0 = row.scrollLeft;
+      function update() {
+        var max = row.scrollWidth - row.clientWidth;
+        rail.classList.toggle('more-l', row.scrollLeft > 2);
+        rail.classList.toggle('more-r', row.scrollLeft < max - 2);
+        // a row that fits needs no stop in the keyboard order
+        if (max > 2) row.setAttribute('tabindex', '0'); else row.removeAttribute('tabindex');
+        // an arrow that just reached the end hides: keep a keyboard user's place by moving focus to the row
+        var f = document.activeElement;
+        if (f && f.parentNode === rail && f.classList.contains('rail-btn') && getComputedStyle(f).display === 'none') row.focus({ preventScroll: true });
+      }
+      row.addEventListener('scroll', function () { if (Math.abs(row.scrollLeft - x0) > 8) tried(); update(); }, { passive: true });
+      if ('ResizeObserver' in window) new ResizeObserver(update).observe(row); else window.addEventListener('resize', update);
+      update();
+    });
+  })();
+
   // ---------- contact form ----------
   var form = document.getElementById('cform'), msg = document.getElementById('formMsg'), sendBtn = document.getElementById('sendBtn');
   // the markup ships the send button disabled, so a visitor whose browser blocked this script can never submit the
