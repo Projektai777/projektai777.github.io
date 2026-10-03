@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Built by Business/tools/portfolio/build.js from template.html + i18n.json + config.json - edit those, never this file. -->
+<!-- Built by Business/tools/portfolio/build.js from template.html + i18n.json + config.json - edit those, never this file. The clone's style.css is inlined below at build time (owner 2026-10-03: speed only, nothing visible; see build.js SPEED). -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -27,7 +27,414 @@
   <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
   <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="/style.css?v=9aab3474">
+  <style>
+/* Fonts served from this site (owner 2026-10-01: no visitor address goes to Google). Playfair Display and JetBrains Mono,
+   SIL Open Font License 1.1: see /fonts/OFL-*.txt. Subsets: latin, latin-ext, cyrillic(-ext) for the five languages. */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-cyrillic-ext.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-cyrillic-ext.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/jetbrains-mono-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/playfair-display-500i-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/playfair-display-500i-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/playfair-display-500i-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/playfair-display-500-cyrillic.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/playfair-display-500-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/fonts/playfair-display-500-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Projektai777 portfolio - one deliberate dark look (no light theme on purpose).
+   Serif italic for the human voice, mono for the machine voice, system sans for reading. */
+:root {
+  --bg: #070a0d;
+  --bg-2: #0d1218;
+  --fg: #e7ecea;
+  --mute: #8d989d;
+  --acc: #7dffb3;
+  --acc-2: #6fd3ff;
+  --line: rgba(231, 236, 234, 0.1);
+  --line-2: rgba(231, 236, 234, 0.2);
+  --serif: "Playfair Display", "Georgia", "Times New Roman", serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --max: 1180px;
+  --pad: clamp(18px, 4vw, 56px);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.6 var(--sans);
+  overflow-x: hidden;
+}
+a { color: inherit; }
+::selection { background: var(--acc); color: #06110b; }
+
+.skip { position: absolute; left: -999px; top: 8px; background: var(--acc); color: #06110b; padding: 8px 12px; z-index: 50; }
+.skip:focus { left: 8px; }
+
+/* the living background */
+/* the canvas box is the LARGE viewport on phones (100lvh), so the address bar showing/hiding never resizes it (2026-09-12) */
+#fx { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0; display: block; }
+/* no grain overlay since 2026-09-12: a full-screen composited layer over the animated canvas cost frames on phones */
+header, main, footer { position: relative; z-index: 2; }
+
+.mono { font-family: var(--mono); }
+.small { font-size: 12px; color: var(--mute); }
+.kicker {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--acc); margin: 0 0 14px;
+}
+.lead { font-size: clamp(17px, 1.6vw, 20px); color: #c7d0cd; max-width: 62ch; margin: 0; }
+
+/* header */
+.top {
+  display: flex; align-items: center; gap: 24px;
+  padding: 18px var(--pad); max-width: calc(var(--max) + 2 * var(--pad)); margin: 0 auto;
+}
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--mono); font-size: 15px; letter-spacing: .02em; }
+.brand b { color: var(--acc); font-weight: 500; }
+.brand-logo { height: 17px; width: auto; flex: none; color: var(--fg); display: block; }
+.mark { fill: var(--fg); }
+.nav { display: flex; gap: 22px; margin-left: auto; font-size: 14px; }
+.nav a { text-decoration: none; color: var(--mute); padding: 6px 0; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+.nav a:hover, .nav a:focus-visible { color: var(--fg); border-color: var(--acc); }
+.nav .nav-cta { color: var(--fg); }
+.top { position: relative; z-index: 20; } /* above main, so the language list can drop over the page */
+.langs { display: flex; flex-wrap: wrap; gap: 4px; font-family: var(--mono); font-size: 12px; } /* footer: plain links */
+.langs a { text-decoration: none; color: var(--mute); padding: 4px 7px; border: 1px solid transparent; border-radius: 4px; }
+.langs a:hover { color: var(--fg); }
+.langs a[aria-current="page"] { color: var(--acc); border-color: var(--line-2); }
+
+/* language menu (header): a button + a list of real links. Without script (no html.js) the button is hidden and the
+   list is simply a row of links; with script app.js opens/closes it (.open) */
+.lm { position: relative; flex: none; }
+.top > .lm { margin-left: 8px; }
+.nav + .lm { margin-left: 0; }
+.lm-btn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 6px 10px 6px 12px; cursor: pointer;
+  font: 500 12px/1 var(--mono); letter-spacing: .06em; color: var(--fg); background: var(--bg-2);
+  border: 1px solid var(--line-2); border-radius: 6px; transition: border-color .2s;
+}
+.lm-btn:hover, .lm.open .lm-btn { border-color: var(--acc); }
+.lm-btn:focus-visible, .lm-list a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.lm-caret { width: 6px; height: 6px; border-right: 1.5px solid var(--acc); border-bottom: 1.5px solid var(--acc); transform: translateY(-2px) rotate(45deg); transition: transform .15s; }
+.lm.open .lm-caret { transform: translateY(1px) rotate(-135deg); }
+.lm-list {
+  list-style: none; margin: 0; padding: 4px; position: absolute; right: 0; top: calc(100% + 6px); z-index: 30;
+  min-width: 168px; max-width: calc(100vw - 2 * var(--pad)); max-height: calc(100vh - 96px); max-height: calc(100svh - 96px); overflow-y: auto;
+  background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 8px; box-shadow: 0 12px 32px rgba(0, 0, 0, .5);
+}
+.lm-list a { display: flex; justify-content: space-between; align-items: center; gap: 18px; min-height: 40px; padding: 8px 12px; border-radius: 5px; text-decoration: none; color: var(--fg); font-size: 14px; }
+.lm-list a:hover, .lm-list a:focus-visible { background: rgba(231, 236, 234, .07); }
+.lm-list a[aria-current="page"] { color: var(--acc); }
+.lm-code { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--mute); }
+html.js .lm:not(.open) .lm-list { display: none; }
+html:not(.js) .lm-btn { display: none; }
+html:not(.js) .top { flex-wrap: wrap; }
+html:not(.js) .lm-list { position: static; display: flex; flex-wrap: wrap; gap: 4px; padding: 0; min-width: 0; max-height: none; overflow: visible; background: none; border: 0; box-shadow: none; }
+html:not(.js) .lm-list a { min-height: 0; padding: 4px 7px; gap: 6px; font-size: 12px; font-family: var(--mono); color: var(--mute); }
+html:not(.js) .lm-list a[aria-current="page"] { color: var(--acc); }
+html:not(.js) .lm-code { display: none; }
+
+/* hero */
+main { max-width: calc(var(--max) + 2 * var(--pad)); margin: 0 auto; padding: 0 var(--pad); }
+.hero { min-height: calc(100vh - 80px); min-height: calc(100svh - 80px); display: flex; flex-direction: column; justify-content: center; padding: 48px 0 40px; }
+h1 { font-family: var(--sans); font-weight: 650; font-size: clamp(38px, 7vw, 92px); line-height: 1.02; letter-spacing: -.025em; margin: 0 0 28px; max-width: 14ch; }
+.h1b { font-family: var(--serif); font-style: italic; font-weight: 500; color: var(--acc); letter-spacing: -.01em; }
+.hero .lead { margin-bottom: 34px; }
+.cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn {
+  display: inline-block; padding: 13px 22px; border: 1px solid var(--line-2); border-radius: 6px;
+  text-decoration: none; font-size: 15px; font-weight: 500; background: var(--bg);
+  transition: transform .15s, border-color .2s, background .2s; cursor: pointer; color: var(--fg); font-family: var(--sans);
+}
+.btn:hover, .btn:focus-visible { border-color: var(--acc); transform: translateY(-1px); }
+.btn-acc { background: var(--acc); color: #06110b; border-color: var(--acc); }
+.btn-acc:hover { background: #a3ffc9; }
+.hint { font-size: 12px; color: var(--mute); margin: 26px 0 0; transition: opacity 1s; }
+.hint.gone { opacity: 0; }
+
+/* sections */
+.sec { padding: clamp(64px, 10vw, 128px) 0; } /* no divider line between sections (owner 2026-09-12) */
+.sec-head { margin-bottom: clamp(32px, 5vw, 56px); }
+h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 4.4vw, 52px); line-height: 1.1; letter-spacing: -.01em; margin: 0 0 18px; max-width: 24ch; }
+h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12px; letter-spacing: -.01em; }
+
+[data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+[data-reveal].in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; transition: none; } }
+
+/* services */
+.svc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc { padding: clamp(22px, 3vw, 40px); position: relative; }
+.svc + .svc { border-left: 1px solid var(--line); } /* three cards in one row since 2026-09-12 */
+.svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
+.svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
+.process { margin-top: clamp(40px, 6vw, 72px); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; counter-reset: st; }
+.steps li { counter-increment: st; padding-top: 14px; border-top: 1px solid var(--line-2); position: relative; }
+.steps li::before { content: counter(st, decimal-leading-zero); font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; display: block; margin-bottom: 8px; }
+.steps b { display: block; font-weight: 600; margin-bottom: 4px; }
+.steps span { color: var(--mute); font-size: 14px; }
+.price { margin-top: clamp(32px, 5vw, 56px); max-width: 70ch; }
+.price p:last-child { margin: 0; color: #c7d0cd; }
+
+/* work */
+.work-group { margin-bottom: 40px; }
+.work-group h3 { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-weight: 500; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); margin-bottom: 16px; }
+.work-group h3 i { font-style: normal; color: var(--acc); }
+/* each group is one sideways row (owner 2026-10-03: not stacked down the page). It scrolls by itself, also without
+   scripts; app.js adds the arrow buttons, marks .more-l / .more-r when there is more to that side (edges fade), and
+   shows the moving hint arrow until the visitor first scrolls a row (html.pf-swiped, remembered in localStorage). */
+/* the edge fades: the left one stays inside the margin before a card, so a card the row stops on is never dimmed;
+   the right one may run over the card cut off at that edge */
+.rail { position: relative; --fade-l: 20px; --fade-r: 56px; }
+.cards {
+  display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+  padding: 4px 2px 14px; margin: -4px -2px 0; /* room for the card's hover lift and focus ring */
+  scrollbar-width: thin; scrollbar-color: var(--line-2) transparent;
+}
+.cards:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 12px; }
+.cards > .card { flex: 0 0 min(340px, 84%); scroll-snap-align: start; }
+.cards > .card:only-child { flex-basis: min(340px, 100%); }
+.rail.more-r .cards { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-r)), transparent); mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-r)), transparent); }
+.rail.more-l .cards { -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-l)); mask-image: linear-gradient(to right, transparent, #000 var(--fade-l)); }
+.rail.more-l.more-r .cards { -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent); mask-image: linear-gradient(to right, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent); }
+.rail-btn {
+  position: absolute; top: 50%; z-index: 3; width: 44px; height: 44px; margin-top: -29px; padding: 0; border-radius: 50%;
+  display: none; place-items: center; cursor: pointer; color: var(--fg); background: rgba(13, 18, 24, .92);
+  border: 1px solid var(--line-2); box-shadow: 0 6px 18px rgba(0, 0, 0, .45); transition: border-color .2s, color .2s;
+}
+.rail-btn svg { width: 20px; height: 20px; display: block; }
+.rail-btn.prev svg { transform: scaleX(-1); }
+.rail-btn.prev { left: -8px; }
+.rail-btn.next { right: -8px; }
+.rail.more-l .rail-btn.prev, .rail.more-r .rail-btn.next { display: grid; }
+.rail-btn:hover { border-color: var(--acc); color: var(--acc); }
+.rail-btn:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+/* the hint: the "next" arrow glows in the accent colour and keeps nudging to the right until the visitor tries it */
+html:not(.pf-swiped) .rail-btn.next { color: #06110b; background: var(--acc); border-color: var(--acc); animation: rail-nudge 1.5s ease-in-out infinite; }
+html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b; }
+@keyframes rail-nudge {
+  0%, 100% { transform: translateX(0); box-shadow: 0 0 0 0 rgba(125,255,179,.55), 0 6px 18px rgba(0,0,0,.45); }
+  45% { transform: translateX(9px); }
+  70% { box-shadow: 0 0 0 12px rgba(125,255,179,0), 0 6px 18px rgba(0,0,0,.45); }
+}
+@media (prefers-reduced-motion: reduce) { html:not(.pf-swiped) .rail-btn.next { animation: none; } }
+/* on touch screens the arrows go once the visitor has swiped: the swipe is the way to move there */
+@media (hover: none) { html.pf-swiped .rail .rail-btn.prev, html.pf-swiped .rail .rail-btn.next { display: none; } }
+.card {
+  border: 1px solid var(--line); border-radius: 10px; padding: 22px; background: var(--bg-2);
+  display: flex; flex-direction: column; gap: 10px; transition: border-color .2s, transform .2s; position: relative;
+}
+.card:hover { border-color: var(--line-2); transform: translateY(-2px); }
+.card .cat { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--acc-2); }
+.card h4 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
+.card p { margin: 0; color: #b9c3c0; font-size: 14.5px; flex: 1; }
+.card .st { font-family: var(--mono); font-size: 11px; color: var(--mute); display: flex; justify-content: space-between; align-items: center; gap: 10px; border-top: 1px dashed var(--line); padding-top: 10px; }
+.card .st .pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--acc); margin-right: 7px; box-shadow: 0 0 0 0 rgba(125,255,179,.6); animation: pulse 2.2s infinite; vertical-align: 1px; }
+.card .st .done { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--acc-2); margin-right: 7px; vertical-align: 1px; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(125,255,179,.55); } 70% { box-shadow: 0 0 0 8px rgba(125,255,179,0); } 100% { box-shadow: 0 0 0 0 rgba(125,255,179,0); } }
+@media (prefers-reduced-motion: reduce) { .card .st .pulse { animation: none; } }
+.card a.open { color: var(--fg); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--acc); padding-bottom: 1px; }
+.card a.open:hover { color: var(--acc); }
+.card.anon h4 { color: #d8dedc; }
+.empty { border: 1px dashed var(--line-2); border-radius: 10px; padding: 22px; color: var(--mute); font-size: 15px; }
+.anon-note { font-family: var(--mono); font-size: 12px; color: var(--mute); margin: 8px 0 0; }
+
+/* about */
+.about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(28px, 5vw, 72px); align-items: start; }
+.about-text p { font-size: clamp(17px, 1.5vw, 19px); color: #d3dbd8; margin: 0 0 18px; }
+.facts { list-style: none; margin: 0; padding: 0; }
+.facts li { padding: 18px 0; border-top: 1px solid var(--line); }
+.facts li:last-child { border-bottom: 1px solid var(--line); }
+.facts b { display: block; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 22px; margin-bottom: 6px; color: var(--acc); }
+.facts span { color: #b9c3c0; font-size: 15px; }
+
+/* no FAQ section since 2026-09-12 (owner: "remove klausimai part whatsoever") */
+
+/* contact */
+.cform { max-width: 720px; display: flex; flex-direction: column; gap: 16px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cform label { display: flex; flex-direction: column; gap: 6px; }
+.cform label > span:not(.ta-wrap) { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
+.cform input, .cform textarea {
+  font: 16px/1.5 var(--sans); color: var(--fg); background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 6px;
+  padding: 12px 14px; outline: none; transition: border-color .2s, box-shadow .2s; resize: vertical; width: 100%;
+}
+.cform input:focus, .cform textarea:focus { border-color: var(--acc); box-shadow: 0 0 0 3px rgba(125,255,179,.12); }
+.cform textarea::placeholder, .cform input::placeholder { color: #667077; }
+/* rotating example requests (app.js): an overlay in the textarea's own box, opacity-only (a dissolve is the
+   reduced-motion-safe transition), hidden as soon as the box holds any text; the native placeholder stays
+   in the markup for no-JS visitors and screen readers but turns transparent while the overlay runs */
+.ta-wrap { position: relative; display: block; }
+.ta-wrap textarea { display: block; }
+.ta-wrap.cycling textarea::placeholder { color: transparent; }
+.ph-cycle {
+  position: absolute; top: 13px; left: 15px; right: 15px; bottom: 13px; overflow: hidden; pointer-events: none;
+  font: 16px/1.5 var(--sans); color: #667077; opacity: 0; transition: opacity .6s ease;
+}
+.ta-wrap.cycling .ph-cycle.on { opacity: 1; }
+.ta-wrap.has-text .ph-cycle.on { opacity: 0; transition-duration: .12s; }
+.form-alt { margin: 0; color: var(--mute); }
+.form-alt a { color: var(--fg); }
+.form-alt.gone { display: none; }
+#formTg a { white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
+/* Telegram icon: 3x the old 14px, blinks slowly in Telegram blue to invite a message (owner 2026-10-03);
+   steady with its glow when the visitor asks for less motion */
+.form-alt .tg-ic { flex: none; color: #2aabee; animation: tg-blink 2.4s ease-in-out infinite; }
+@keyframes tg-blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } 50% { opacity: .35; filter: none; } }
+@media (prefers-reduced-motion: reduce) { .form-alt .tg-ic { animation: none; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } }
+/* privacy fold-out, last in the form after the e-mail and Telegram lines (owner 2026-10-01: no separate privacy page;
+   closed by default; moved last 2026-10-03) */
+.pd summary { cursor: pointer; width: max-content; max-width: 100%; }
+.pd summary:hover, .pd[open] summary { color: var(--fg); }
+.pd summary:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.pd p { margin: 8px 0 0; max-width: 72ch; line-height: 1.6; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form-foot { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.form-msg { min-height: 1.4em; font-size: 13px; color: var(--acc); margin: 0; }
+.form-msg.err { color: #ff9a9a; }
+.form-msg a { color: var(--fg); }
+.contact-alt { margin: 34px 0 0; color: var(--mute); }
+.mail { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--acc); font-family: var(--mono); font-size: 15px; padding-bottom: 1px; }
+.mail:hover { color: var(--acc); }
+
+/* footer */
+.foot { max-width: calc(var(--max) + 2 * var(--pad)); margin: 0 auto; padding: 32px var(--pad) 110px; border-top: 1px solid var(--line); display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+.foot p { margin: 0; }
+.foot .langs { margin-left: auto; }
+
+
+/* responsive */
+@media (max-width: 960px) {
+  .steps { grid-template-columns: repeat(2, 1fr); }
+  .about-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  .nav { display: none; }
+  .top { gap: 12px; }
+  .top > .lm { margin-left: auto; }
+  .hero { min-height: 0; padding: 28px 0 32px; }
+  h1 { max-width: none; font-size: clamp(36px, 10.5vw, 56px); }
+  .svc-grid { grid-template-columns: 1fr; }
+  .svc + .svc { border-left: 0; border-top: 1px solid var(--line); }
+  .steps { grid-template-columns: 1fr; gap: 12px; }
+  .row2 { grid-template-columns: 1fr; }
+  /* phones: the rows run edge to edge, so a card slides off the screen instead of being cut at the margin */
+  .cards { margin: -4px calc(-1 * var(--pad)) 0; padding: 4px var(--pad) 14px; scroll-padding-inline: var(--pad); }
+  .rail { --fade-l: var(--pad); }
+  .rail-btn.prev { left: 6px; }
+  .rail-btn.next { right: 6px; }
+  .foot { padding-bottom: 92px; }
+}
+  </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Projektai777","url":"https://projektai777.eu/en/","email":"info@projektai777.eu","description":"Websites, process automation and AI tools for business at a fixed price. A fixed price, the code stays yours.","areaServed":["LT","LV","EE"],"availableLanguage":["lt","lv","et","en","ru"],"priceRange":"€€","address":{"@type":"PostalAddress","addressLocality":"Kaunas","addressCountry":"LT"},"founder":{"@type":"Person","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs"]}</script>
 </head>
 <body>
