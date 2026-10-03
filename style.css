@@ -316,10 +316,11 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .form-alt a { color: var(--fg); }
 .form-alt.gone { display: none; }
 #formTg a { white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
-/* Telegram icon: 3x the old 14px, blinks slowly in Telegram blue to invite a message (owner 2026-10-03). A slow fade,
-   not movement, so it runs with reduced motion too (this PC reports reduced motion and the owner must see it). */
+/* Telegram icon: 3x the old 14px, blinks slowly in Telegram blue to invite a message (owner 2026-10-03);
+   steady with its glow when the visitor asks for less motion */
 .form-alt .tg-ic { flex: none; color: #2aabee; animation: tg-blink 2.4s ease-in-out infinite; }
 @keyframes tg-blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } 50% { opacity: .35; filter: none; } }
+@media (prefers-reduced-motion: reduce) { .form-alt .tg-ic { animation: none; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } }
 /* privacy fold-out, last in the form after the e-mail and Telegram lines (owner 2026-10-01: no separate privacy page;
    closed by default; moved last 2026-10-03) */
 .pd summary { cursor: pointer; width: max-content; max-width: 100%; }
