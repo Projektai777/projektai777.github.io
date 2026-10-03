@@ -261,7 +261,9 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 /* each group is one sideways row (owner 2026-10-03: not stacked down the page). It scrolls by itself, also without
    scripts; app.js adds the arrow buttons, marks .more-l / .more-r when there is more to that side (edges fade), and
    shows the moving hint arrow until the visitor first scrolls a row (html.pf-swiped, remembered in localStorage). */
-.rail { position: relative; }
+/* the edge fades: the left one stays inside the margin before a card, so a card the row stops on is never dimmed;
+   the right one may run over the card cut off at that edge */
+.rail { position: relative; --fade-l: 20px; --fade-r: 56px; }
 .cards {
   display: flex; gap: 14px; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
@@ -271,9 +273,9 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .cards:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 12px; }
 .cards > .card { flex: 0 0 min(340px, 84%); scroll-snap-align: start; }
 .cards > .card:only-child { flex-basis: min(340px, 100%); }
-.rail.more-r .cards { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 56px), transparent); }
-.rail.more-l .cards { -webkit-mask-image: linear-gradient(to right, transparent, #000 56px); mask-image: linear-gradient(to right, transparent, #000 56px); }
-.rail.more-l.more-r .cards { -webkit-mask-image: linear-gradient(to right, transparent, #000 56px, #000 calc(100% - 56px), transparent); mask-image: linear-gradient(to right, transparent, #000 56px, #000 calc(100% - 56px), transparent); }
+.rail.more-r .cards { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-r)), transparent); mask-image: linear-gradient(to right, #000 calc(100% - var(--fade-r)), transparent); }
+.rail.more-l .cards { -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-l)); mask-image: linear-gradient(to right, transparent, #000 var(--fade-l)); }
+.rail.more-l.more-r .cards { -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent); mask-image: linear-gradient(to right, transparent, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent); }
 .rail-btn {
   position: absolute; top: 50%; z-index: 3; width: 44px; height: 44px; margin-top: -29px; padding: 0; border-radius: 50%;
   display: none; place-items: center; cursor: pointer; color: var(--fg); background: rgba(13, 18, 24, .92);
@@ -397,6 +399,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .row2 { grid-template-columns: 1fr; }
   /* phones: the rows run edge to edge, so a card slides off the screen instead of being cut at the margin */
   .cards { margin: -4px calc(-1 * var(--pad)) 0; padding: 4px var(--pad) 14px; scroll-padding-inline: var(--pad); }
+  .rail { --fade-l: var(--pad); }
   .rail-btn.prev { left: 6px; }
   .rail-btn.next { right: 6px; }
   .foot { padding-bottom: 92px; }
