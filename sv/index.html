@@ -285,9 +285,10 @@ h1 { font-family: var(--sans); font-weight: 650; font-size: clamp(38px, 7vw, 92p
 h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 4.4vw, 52px); line-height: 1.1; letter-spacing: -.01em; margin: 0 0 18px; max-width: 24ch; }
 h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12px; letter-spacing: -.01em; }
 
-[data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
-[data-reveal].in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; transition: none; } }
+/* nothing waits invisible (owner 2026-10-06): a reader that never scrolls still sees every section; the slide-in stays */
+[data-reveal] { transform: translateY(18px); transition: transform .7s ease; }
+[data-reveal].in { transform: none; }
+@media (prefers-reduced-motion: reduce) { [data-reveal] { transform: none; transition: none; } }
 
 /* services */
 .svc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
@@ -576,7 +577,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <p class="form-alt mono small" id="formAlt">Eller skriv direkt: <a href="mailto:info@projektai777.eu">info@projektai777.eu</a></p>
       <p class="form-alt mono small" id="formTg">Eller skriv till mig på Telegram: <a href="https://t.me/IgnasProjektai777"><svg class="tg-ic" viewBox="0 0 24 24" width="42" height="42" aria-hidden="true" focusable="false"><path fill="currentColor" d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5L18 6.2c.4-.4-.1-.6-.6-.2L6.2 13.1l-4.8-1.5c-1-.3-1.1-1 .2-1.5L20.5 2.9c.9-.3 1.6.2 1.4 1.4Z"/></svg>@IgnasProjektai777</a></p>
       <!-- privacy fold-out last, after the e-mail and Telegram lines (owner 2026-10-03) -->
-      <details class="pd mono small" id="privacyMore"><summary>Mer om dina uppgifter</summary><p>Meddelandena går till Ignas (egenföretagare, Kaunas, Litauen), info@projektai777.eu. Jag använder ditt namn, din e-postadress, ditt företag och ditt meddelande endast för att svara och diskutera din förfrågan (dataskyddsförordningen (GDPR) art. 6.1 b). Om du kom via en Google-annons ser jag bara annonskampanjen och sökordet. Jag sparar meddelandet i 12 månader efter det senaste mejlet, eller så länge lagen kräver om vi tecknar ett avtal. Formuläret och e-posten körs på Cloudflare, Google och Brevo. Om du skriver på Telegram hanteras meddelandet av Telegram (ett företag utanför EU) enligt egna regler, och jag använder det bara för att svara; skicka avtal och personliga dokument via e-post. Webbplatsen använder inga cookies; din webbläsare kommer bara ihåg vilket språk du har valt. Du kan begära att få se, rätta, radera eller få en kopia av dina uppgifter, eller att användningen av dem begränsas (info@projektai777.eu), och du kan klaga hos en dataskyddsmyndighet.</p></details>
+      <details class="pd mono small" id="privacyMore"><summary>Mer om dina uppgifter</summary><p>Meddelandena går till Ignas (egenföretagare, Kaunas, Litauen), info@projektai777.eu. Jag använder ditt namn, din e-postadress, ditt företag och ditt meddelande endast för att svara och diskutera din förfrågan (dataskyddsförordningen (GDPR) art. 6.1 b). Om du kom via en Google-annons ser jag bara annonskampanjen och sökordet. Det använder jag bara för att räkna hur många meddelanden som kommer via annonser (berättigat intresse, dataskyddsförordningen (GDPR) art. 6.1 f). Jag sparar meddelandet i 12 månader efter det senaste mejlet, eller så länge lagen kräver om vi tecknar ett avtal. Formuläret och e-posten körs på Cloudflare, Google och Brevo. Om du skriver på Telegram hanteras meddelandet av Telegram (ett företag utanför EU) enligt egna regler, och jag använder det bara för att svara; skicka avtal och personliga dokument via e-post. Webbplatsen använder inga cookies; din webbläsare kommer bara ihåg vilket språk du har valt. Du kan begära att få se, rätta, radera eller få en kopia av dina uppgifter, eller att användningen av dem begränsas (info@projektai777.eu), och du kan klaga hos en dataskyddsmyndighet.</p></details>
     </form>
   </section>
 </main>
@@ -588,6 +589,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"sv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Skickar…","ok":"Mottaget. Jag svarar inom en arbetsdag.","err":"Det gick inte att skicka. Skriv direkt till mig:","examples":["T.ex.: vi har en hemsida men beställningarna kommer bara per telefon; vi vill att kunderna ska kunna beställa eller boka själva…","T.ex.: varje dag svarar vi på samma kundfrågor; vi vill att AI ska svara åt oss…","T.ex.: vi för över data från mejl och beställningar till Excel för hand; vi vill att det ska ske av sig självt…","T.ex.: vår hemsida är föråldrad och krånglig i mobilen; vi vill fräscha upp den…","T.ex.: vi räknar ut offerter till kunder för hand; vi vill ha ett verktyg som tar fram dem på några minuter…","T.ex.: vi får många fakturor och dokument; vi vill ha ett system som läser och sorterar dem av sig självt…","T.ex.: vi följer beställningar, lager och jobb i olika kalkylblad; vi vill ha ett enkelt system som samlar allt på ett ställe…"],"subject":"Förfrågan från hemsidan"},"work":{"next":"Nästa projekt","prev":"Föregående projekt"}};</script>
-<script src="/app.js?v=809297f4" defer></script>
+<script src="/app.js?v=cbf0323e" defer></script>
 </body>
 </html>

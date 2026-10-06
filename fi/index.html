@@ -285,9 +285,10 @@ h1 { font-family: var(--sans); font-weight: 650; font-size: clamp(38px, 7vw, 92p
 h2 { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 4.4vw, 52px); line-height: 1.1; letter-spacing: -.01em; margin: 0 0 18px; max-width: 24ch; }
 h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12px; letter-spacing: -.01em; }
 
-[data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
-[data-reveal].in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; transition: none; } }
+/* nothing waits invisible (owner 2026-10-06): a reader that never scrolls still sees every section; the slide-in stays */
+[data-reveal] { transform: translateY(18px); transition: transform .7s ease; }
+[data-reveal].in { transform: none; }
+@media (prefers-reduced-motion: reduce) { [data-reveal] { transform: none; transition: none; } }
 
 /* services */
 .svc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
@@ -576,7 +577,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <p class="form-alt mono small" id="formAlt">Tai kirjoittakaa suoraan: <a href="mailto:info@projektai777.eu">info@projektai777.eu</a></p>
       <p class="form-alt mono small" id="formTg">Tai kirjoittakaa Telegramissa: <a href="https://t.me/IgnasProjektai777"><svg class="tg-ic" viewBox="0 0 24 24" width="42" height="42" aria-hidden="true" focusable="false"><path fill="currentColor" d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.4-5L18 6.2c.4-.4-.1-.6-.6-.2L6.2 13.1l-4.8-1.5c-1-.3-1.1-1 .2-1.5L20.5 2.9c.9-.3 1.6.2 1.4 1.4Z"/></svg>@IgnasProjektai777</a></p>
       <!-- privacy fold-out last, after the e-mail and Telegram lines (owner 2026-10-03) -->
-      <details class="pd mono small" id="privacyMore"><summary>Lisää tietojenne käsittelystä</summary><p>Viestit vastaanottaa Ignas (itsenäinen ammatinharjoittaja, Kaunas, Liettua), info@projektai777.eu. Käytän nimeänne, sähköpostiosoitettanne, yritystänne ja viestiänne vain vastatakseni ja keskustellakseni tiedustelustanne (tietosuoja-asetus (GDPR) 6 artiklan 1 kohdan b alakohta). Jos tulitte Google-mainoksen kautta, näen vain mainoskampanjan ja hakusanan. Säilytän viestin 12 kuukautta viimeisen sähköpostin jälkeen tai, jos teemme sopimuksen, niin kauan kuin laki edellyttää. Lomaketta ja sähköpostia ylläpitävät Cloudflare, Google ja Brevo. Jos kirjoitatte Telegramissa, viestiä käsittelee Telegram (EU:n ulkopuolinen yritys) omien sääntöjensä mukaisesti, ja käytän sitä vain vastaamiseen; lähettäkää sopimukset ja henkilökohtaiset asiakirjat sähköpostitse. Sivusto ei käytä evästeitä; selaimenne muistaa vain valitsemanne kielen. Voitte pyytää tietojenne näyttämistä, oikaisemista, poistamista tai siirtämistä taikka niiden käytön rajoittamista (info@projektai777.eu), ja voitte tehdä valituksen tietosuojaviranomaiselle.</p></details>
+      <details class="pd mono small" id="privacyMore"><summary>Lisää tietojenne käsittelystä</summary><p>Viestit vastaanottaa Ignas (itsenäinen ammatinharjoittaja, Kaunas, Liettua), info@projektai777.eu. Käytän nimeänne, sähköpostiosoitettanne, yritystänne ja viestiänne vain vastatakseni ja keskustellakseni tiedustelustanne (tietosuoja-asetus (GDPR) 6 artiklan 1 kohdan b alakohta). Jos tulitte Google-mainoksen kautta, näen vain mainoskampanjan ja hakusanan. Käytän tätä vain laskeakseni, montako viestiä tulee mainosten kautta (oikeutettu etu, tietosuoja-asetus (GDPR) 6 artiklan 1 kohdan f alakohta). Säilytän viestin 12 kuukautta viimeisen sähköpostin jälkeen tai, jos teemme sopimuksen, niin kauan kuin laki edellyttää. Lomaketta ja sähköpostia ylläpitävät Cloudflare, Google ja Brevo. Jos kirjoitatte Telegramissa, viestiä käsittelee Telegram (EU:n ulkopuolinen yritys) omien sääntöjensä mukaisesti, ja käytän sitä vain vastaamiseen; lähettäkää sopimukset ja henkilökohtaiset asiakirjat sähköpostitse. Sivusto ei käytä evästeitä; selaimenne muistaa vain valitsemanne kielen. Voitte pyytää tietojenne näyttämistä, oikaisemista, poistamista tai siirtämistä taikka niiden käytön rajoittamista (info@projektai777.eu), ja voitte tehdä valituksen tietosuojaviranomaiselle.</p></details>
     </form>
   </section>
 </main>
@@ -588,6 +589,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"fi","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Lähetetään…","ok":"Viesti vastaanotettu. Vastaan työpäivän kuluessa.","err":"Lähetys ei onnistunut. Kirjoittakaa minulle suoraan:","examples":["Esim.: meillä on verkkosivusto, mutta tilaukset tulevat vain puhelimitse; haluaisimme, että asiakkaat voisivat tilata tai varata itse…","Esim.: vastaamme joka päivä samoihin asiakkaiden kysymyksiin; haluaisimme, että tekoäly vastaisi puolestamme…","Esim.: siirrämme tietoja sähköposteista ja tilauksista käsin Exceliin; haluaisimme, että se tapahtuisi itsestään…","Esim.: verkkosivustomme on vanhentunut ja hankala puhelimella; haluaisimme uusia sen…","Esim.: laskemme asiakkaille tarjoukset käsin; haluaisimme työkalun, joka valmistelee ne muutamassa minuutissa…","Esim.: saamme paljon laskuja ja asiakirjoja; haluaisimme, että järjestelmä lukisi ja lajittelisi ne itse…","Esim.: seuraamme tilauksia, varastoa ja töitä eri taulukoissa; haluaisimme yksinkertaisen järjestelmän, jossa kaikki on yhdessä…"],"subject":"Tiedustelu verkkosivuilta"},"work":{"next":"Seuraava projekti","prev":"Edellinen projekti"}};</script>
-<script src="/app.js?v=809297f4" defer></script>
+<script src="/app.js?v=cbf0323e" defer></script>
 </body>
 </html>
