@@ -304,6 +304,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   display: flex; flex-direction: column; gap: 10px; transition: border-color .2s, transform .2s; position: relative;
 }
 .card:hover { border-color: var(--line-2); transform: translateY(-2px); }
+.card .logo { display: block; height: 36px; width: auto; max-width: 70%; object-fit: contain; margin: 0 0 12px; padding: 6px 10px; background: #fff; border-radius: 6px; }
 .card .cat { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--acc-2); }
 .card h4 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
 .card p { margin: 0; color: #b9c3c0; font-size: 14.5px; flex: 1; }
