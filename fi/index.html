@@ -366,6 +366,8 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 @media (prefers-reduced-motion: reduce) { .card .st .pulse { animation: none; } }
 .card a.open { color: var(--fg); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--acc); padding-bottom: 1px; }
 .card a.open:hover { color: var(--acc); }
+.card a.more { align-self: flex-start; color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
+.card a.more:hover, .card a.more:focus-visible { border-color: var(--acc); }
 .card.anon h4 { color: #d8dedc; }
 .empty { border: 1px dashed var(--line-2); border-radius: 10px; padding: 22px; color: var(--mute); font-size: 15px; }
 .anon-note { font-family: var(--mono); font-size: 12px; color: var(--mute); margin: 8px 0 0; }
@@ -433,6 +435,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .foot p { margin: 0; }
 .foot .langs { margin-left: auto; }
 
+
+/* job pages (2026-10-07): one page per named job and language, built by build.js from jobs/<slug>/<lang>.json */
+.job { max-width: 820px; padding-top: clamp(28px, 5vw, 56px); overflow-wrap: anywhere; }
+.crumbs { color: var(--mute); margin: 0 0 clamp(28px, 4vw, 44px); }
+.crumbs a { color: var(--mute); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+.crumbs a:hover, .crumbs a:focus-visible { color: var(--fg); }
+.job-head { margin-bottom: clamp(28px, 4vw, 44px); }
+.job-logo { display: block; height: 44px; width: auto; max-width: 60%; object-fit: contain; margin: 0 0 22px; padding: 7px 12px; background: #fff; border-radius: 6px; }
+.job-h1 { font-size: clamp(30px, 4.6vw, 54px); line-height: 1.08; max-width: 24ch; margin: 0 0 22px; }
+.job-facts { margin: 0 0 clamp(36px, 5vw, 56px); }
+.job-facts b { font-size: 18px; }
+.job-facts a { color: var(--fg); }
+.job-part { margin: 0 0 clamp(32px, 4vw, 48px); }
+.job-part h2 { font-size: clamp(26px, 3.2vw, 38px); }
+.job-part p { color: #c7d0cd; font-size: 17px; max-width: 68ch; margin: 0 0 14px; }
+.job-list { margin: 0; padding: 0 0 0 1.2em; color: #c7d0cd; font-size: 16.5px; max-width: 70ch; }
+.job-list li { margin: 0 0 10px; padding-left: 4px; }
+.job-list li::marker { color: var(--acc); }
+.job-note { color: var(--mute); max-width: 80ch; margin: 0 0 32px; line-height: 1.6; }
 
 /* responsive */
 @media (max-width: 960px) {
@@ -518,15 +539,15 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     </div>
     <div class="work-group"><h3 id="work-progress-h"><i>◉</i> Työn alla <span class="small">3</span></h3>
       <div class="rail"><div class="cards" id="work-progress" role="region" aria-labelledby="work-progress-h" tabindex="0">
-      <article id="p-planas-product" class="card anon"><span class="cat">Tekoälyratkaisu</span><h4>Tinystudy – tehokas ja kätevä opiskelusuunnitelma Moodlen opiskelumateriaalien pohjalta</h4><p>Moodlen diat, asiakirjat ja videoluennot muuttuvat lyhyiksi opiskeluaiheiksi, ja suunnitelma valitsee joka päivä, mitä opiskella ja mitä kerrata ennen seuraavaa koetta.</p><div class="st"><span><span class="pulse"></span>Työn alla</span><span>syyskuu 2026</span></div></article>
+      <article id="p-planas-product" class="card anon"><span class="cat">Tekoälyratkaisu</span><h4>Tinystudy – tehokas ja kätevä opiskelusuunnitelma Moodlen opiskelumateriaalien pohjalta</h4><p>Moodlen diat, asiakirjat ja videoluennot muuttuvat lyhyiksi opiskeluaiheiksi, ja suunnitelma valitsee joka päivä, mitä opiskella ja mitä kerrata ennen seuraavaa koetta.</p><a class="more" href="/fi/work/tinystudy/">Lisää tästä työstä →</a><div class="st"><span><span class="pulse"></span>Työn alla</span><span>syyskuu 2026</span></div></article>
       <article id="p-0f9db1ed61" class="card anon"><span class="cat">Sisäinen järjestelmä</span><h4>Autohuollon tilaus- ja korjausseurantamoduuli</h4><p>Autohuollon verkkosivustolle rakennetaan verkkoajanvaraus, jokaiselle asiakkaalle korjauksen tilalinkki, tekstiviestimuistutukset ja paperisten työmääräysten lukeminen tekoälyllä.</p><div class="st"><span><span class="pulse"></span>Työn alla</span><span>syyskuu 2026</span></div></article>
       <article id="p-4a4905b48a" class="card anon"><span class="cat">Sisäinen järjestelmä</span><h4>Huonekalujen materiaalimäärien laskentatyökalu valmistajalle</h4><p>Työkalu lukee huonekalun luonnoksen, laskee levyt, reunanauhat ja helat ja täyttää valmistajan oman Excel-laskurin.</p><div class="st"><span><span class="pulse"></span>Työn alla</span><span>syyskuu 2026</span></div></article>
       </div></div>
     </div>
     <div class="work-group"><h3 id="work-done-h"><i>◎</i> Valmis <span class="small">2</span></h3>
       <div class="rail"><div class="cards" id="work-done" role="region" aria-labelledby="work-done-h" tabindex="0">
-      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="190" height="69" loading="lazy" decoding="async"><span class="cat">Verkkosivusto</span><h4>Fortuna Hostel — Hotellin verkkosivuston uudistus varausmoduulilla</h4><p>Kolmikieliseen WordPress-sivustoon lisättiin sisäänrakennettu varausikkuna, valokuvagalleria, jota henkilökunta hallinnoi itse, ja Google-arvostelujen keräys.</p><div class="st"><span><span class="done"></span>Valmis</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Avaa ↗</a></div></article>
-      <article id="p-neramiojiklase" class="card"><img class="logo" src="/logos/neramioji-klase.png" alt="Neramioji klasė" width="768" height="182" loading="lazy" decoding="async"><span class="cat">Verkkosivusto</span><h4>Neramioji klasė — Oppilaiden luovan alustan verkkosivusto rekisteröitymisellä ja töiden latauksella</h4><p>Uusi aloitussivu, englanninkielinen versio ja rekisteröitymislomake, jonka kautta oppilaat lataavat töitään suoraan organisaation omaan tallennustilaan, huoltajan suostumuksen tarkistuksella.</p><div class="st"><span><span class="done"></span>Valmis</span><a class="open" href="https://neramiojiklase.lt" rel="noopener" target="_blank">Avaa ↗</a></div></article>
+      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="190" height="69" loading="lazy" decoding="async"><span class="cat">Verkkosivusto</span><h4>Fortuna Hostel — Hotellin verkkosivuston uudistus varausmoduulilla</h4><p>Kolmikieliseen WordPress-sivustoon lisättiin sisäänrakennettu varausikkuna, valokuvagalleria, jota henkilökunta hallinnoi itse, ja Google-arvostelujen keräys.</p><a class="more" href="/fi/work/fortuna-hostel/">Lisää tästä työstä →</a><div class="st"><span><span class="done"></span>Valmis</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Avaa ↗</a></div></article>
+      <article id="p-neramiojiklase" class="card"><img class="logo" src="/logos/neramioji-klase.png" alt="Neramioji klasė" width="768" height="182" loading="lazy" decoding="async"><span class="cat">Verkkosivusto</span><h4>Neramioji klasė — Oppilaiden luovan alustan verkkosivusto rekisteröitymisellä ja töiden latauksella</h4><p>Uusi aloitussivu, englanninkielinen versio ja rekisteröitymislomake, jonka kautta oppilaat lataavat töitään suoraan organisaation omaan tallennustilaan, huoltajan suostumuksen tarkistuksella.</p><a class="more" href="/fi/work/neramioji-klase/">Lisää tästä työstä →</a><div class="st"><span><span class="done"></span>Valmis</span><a class="open" href="https://neramiojiklase.lt" rel="noopener" target="_blank">Avaa ↗</a></div></article>
       </div></div>
     </div>
 
@@ -589,6 +610,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"fi","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Lähetetään…","ok":"Viesti vastaanotettu. Vastaan työpäivän kuluessa.","err":"Lähetys ei onnistunut. Kirjoittakaa minulle suoraan:","examples":["Esim.: meillä on verkkosivusto, mutta tilaukset tulevat vain puhelimitse; haluaisimme, että asiakkaat voisivat tilata tai varata itse…","Esim.: vastaamme joka päivä samoihin asiakkaiden kysymyksiin; haluaisimme, että tekoäly vastaisi puolestamme…","Esim.: siirrämme tietoja sähköposteista ja tilauksista käsin Exceliin; haluaisimme, että se tapahtuisi itsestään…","Esim.: verkkosivustomme on vanhentunut ja hankala puhelimella; haluaisimme uusia sen…","Esim.: laskemme asiakkaille tarjoukset käsin; haluaisimme työkalun, joka valmistelee ne muutamassa minuutissa…","Esim.: saamme paljon laskuja ja asiakirjoja; haluaisimme, että järjestelmä lukisi ja lajittelisi ne itse…","Esim.: seuraamme tilauksia, varastoa ja töitä eri taulukoissa; haluaisimme yksinkertaisen järjestelmän, jossa kaikki on yhdessä…"],"subject":"Tiedustelu verkkosivuilta"},"work":{"next":"Seuraava projekti","prev":"Edellinen projekti"}};</script>
-<script src="/app.js?v=cbf0323e" defer></script>
+<script src="/app.js?v=cb45c370" defer></script>
 </body>
 </html>

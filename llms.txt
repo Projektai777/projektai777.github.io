@@ -21,6 +21,12 @@ Ignas — Self-employed (individual activity) · Kaunas, Lithuania.
 - Svenska: https://projektai777.eu/sv/
 - Suomi: https://projektai777.eu/fi/
 
+## Work
+
+- Fortuna Hostel (finished): A Vilnius hostel's three-language WordPress website gained a booking window inside the site, a photo gallery the staff manage themselves, Google review collection and a safe technical upgrade. https://projektai777.eu/en/work/fortuna-hostel/
+- Neramioji klasė (finished): A national creative platform for pupils got a new entry page, an English version and one registration form through which pupils upload their work straight into the organisation's own storage, with no account needed. https://projektai777.eu/en/work/neramioji-klase/
+- Tinystudy (in progress): My own product in progress for adult students whose school or university uses Moodle: course materials become short study topics, and the plan picks what to learn and what to review each day before the next test. https://projektai777.eu/en/work/tinystudy/
+
 ## Contact
 
 - E-mail: info@projektai777.eu
