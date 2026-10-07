@@ -366,6 +366,8 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 @media (prefers-reduced-motion: reduce) { .card .st .pulse { animation: none; } }
 .card a.open { color: var(--fg); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--acc); padding-bottom: 1px; }
 .card a.open:hover { color: var(--acc); }
+.card a.more { align-self: flex-start; color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
+.card a.more:hover, .card a.more:focus-visible { border-color: var(--acc); }
 .card.anon h4 { color: #d8dedc; }
 .empty { border: 1px dashed var(--line-2); border-radius: 10px; padding: 22px; color: var(--mute); font-size: 15px; }
 .anon-note { font-family: var(--mono); font-size: 12px; color: var(--mute); margin: 8px 0 0; }
@@ -433,6 +435,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .foot p { margin: 0; }
 .foot .langs { margin-left: auto; }
 
+
+/* job pages (2026-10-07): one page per named job and language, built by build.js from jobs/<slug>/<lang>.json */
+.job { max-width: 820px; padding-top: clamp(28px, 5vw, 56px); overflow-wrap: anywhere; }
+.crumbs { color: var(--mute); margin: 0 0 clamp(28px, 4vw, 44px); }
+.crumbs a { color: var(--mute); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+.crumbs a:hover, .crumbs a:focus-visible { color: var(--fg); }
+.job-head { margin-bottom: clamp(28px, 4vw, 44px); }
+.job-logo { display: block; height: 44px; width: auto; max-width: 60%; object-fit: contain; margin: 0 0 22px; padding: 7px 12px; background: #fff; border-radius: 6px; }
+.job-h1 { font-size: clamp(30px, 4.6vw, 54px); line-height: 1.08; max-width: 24ch; margin: 0 0 22px; }
+.job-facts { margin: 0 0 clamp(36px, 5vw, 56px); }
+.job-facts b { font-size: 18px; }
+.job-facts a { color: var(--fg); }
+.job-part { margin: 0 0 clamp(32px, 4vw, 48px); }
+.job-part h2 { font-size: clamp(26px, 3.2vw, 38px); }
+.job-part p { color: #c7d0cd; font-size: 17px; max-width: 68ch; margin: 0 0 14px; }
+.job-list { margin: 0; padding: 0 0 0 1.2em; color: #c7d0cd; font-size: 16.5px; max-width: 70ch; }
+.job-list li { margin: 0 0 10px; padding-left: 4px; }
+.job-list li::marker { color: var(--acc); }
+.job-note { color: var(--mute); max-width: 80ch; margin: 0 0 32px; line-height: 1.6; }
 
 /* responsive */
 @media (max-width: 960px) {
@@ -518,15 +539,15 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     </div>
     <div class="work-group"><h3 id="work-progress-h"><i>◉</i> Notiek <span class="small">3</span></h3>
       <div class="rail"><div class="cards" id="work-progress" role="region" aria-labelledby="work-progress-h" tabindex="0">
-      <article id="p-planas-product" class="card anon"><span class="cat">MI risinājums</span><h4>Tinystudy – efektīvs un ērts mācību plāns, izmantojot Moodle mācību materiālus</h4><p>Moodle slaidi, dokumenti un video lekcijas pārtop īsās mācību tēmās, bet plāns katru dienu izvēlas, ko mācīties un ko atkārtot pirms tuvākā testa.</p><div class="st"><span><span class="pulse"></span>Notiek</span><span>septembris 2026</span></div></article>
+      <article id="p-planas-product" class="card anon"><span class="cat">MI risinājums</span><h4>Tinystudy – efektīvs un ērts mācību plāns, izmantojot Moodle mācību materiālus</h4><p>Moodle slaidi, dokumenti un video lekcijas pārtop īsās mācību tēmās, bet plāns katru dienu izvēlas, ko mācīties un ko atkārtot pirms tuvākā testa.</p><a class="more" href="/lv/work/tinystudy/">Vairāk par šo darbu →</a><div class="st"><span><span class="pulse"></span>Notiek</span><span>septembris 2026</span></div></article>
       <article id="p-0f9db1ed61" class="card anon"><span class="cat">Iekšējā sistēma</span><h4>Autoservisa pasūtījumu un remonta izsekošanas modulis</h4><p>Autoservisa mājaslapā tiek veidota pieteikšanās, remonta statusa saite klientam, SMS atgādinājumi un papīra pasūtījumu lapu nolasīšana ar MI.</p><div class="st"><span><span class="pulse"></span>Notiek</span><span>septembris 2026</span></div></article>
       <article id="p-4a4905b48a" class="card anon"><span class="cat">Iekšējā sistēma</span><h4>Mēbeļu materiālu daudzumu aprēķina rīks ražotājam</h4><p>Rīks no mēbeļu skices saskaita plātnes, malas un furnitūru un pats aizpilda ražotāja Excel kalkulatoru.</p><div class="st"><span><span class="pulse"></span>Notiek</span><span>septembris 2026</span></div></article>
       </div></div>
     </div>
     <div class="work-group"><h3 id="work-done-h"><i>◎</i> Pabeigts <span class="small">2</span></h3>
       <div class="rail"><div class="cards" id="work-done" role="region" aria-labelledby="work-done-h" tabindex="0">
-      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="190" height="69" loading="lazy" decoding="async"><span class="cat">Vietne</span><h4>Fortuna Hostel — Viesnīcas mājaslapas atjaunošana ar rezervāciju moduli</h4><p>Trīsvalodu WordPress mājaslapā iebūvēts rezervāciju logs, foto galerija, ko darbinieki pārvalda paši, un Google atsauksmju vākšana.</p><div class="st"><span><span class="done"></span>Pabeigts</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Atvērt ↗</a></div></article>
-      <article id="p-neramiojiklase" class="card"><img class="logo" src="/logos/neramioji-klase.png" alt="Neramioji klasė" width="768" height="182" loading="lazy" decoding="async"><span class="cat">Vietne</span><h4>Neramioji klasė — Skolēnu radošās platformas vietne ar reģistrāciju un darbu augšupielādi</h4><p>Jauna sākumlapa, angļu valodas versija un reģistrācijas forma, caur kuru skolēni augšupielādē darbus tieši organizācijas krātuvē, ar vecāku piekrišanas pārbaudi.</p><div class="st"><span><span class="done"></span>Pabeigts</span><a class="open" href="https://neramiojiklase.lt" rel="noopener" target="_blank">Atvērt ↗</a></div></article>
+      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="190" height="69" loading="lazy" decoding="async"><span class="cat">Vietne</span><h4>Fortuna Hostel — Viesnīcas mājaslapas atjaunošana ar rezervāciju moduli</h4><p>Trīsvalodu WordPress mājaslapā iebūvēts rezervāciju logs, foto galerija, ko darbinieki pārvalda paši, un Google atsauksmju vākšana.</p><a class="more" href="/lv/work/fortuna-hostel/">Vairāk par šo darbu →</a><div class="st"><span><span class="done"></span>Pabeigts</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Atvērt ↗</a></div></article>
+      <article id="p-neramiojiklase" class="card"><img class="logo" src="/logos/neramioji-klase.png" alt="Neramioji klasė" width="768" height="182" loading="lazy" decoding="async"><span class="cat">Vietne</span><h4>Neramioji klasė — Skolēnu radošās platformas vietne ar reģistrāciju un darbu augšupielādi</h4><p>Jauna sākumlapa, angļu valodas versija un reģistrācijas forma, caur kuru skolēni augšupielādē darbus tieši organizācijas krātuvē, ar vecāku piekrišanas pārbaudi.</p><a class="more" href="/lv/work/neramioji-klase/">Vairāk par šo darbu →</a><div class="st"><span><span class="done"></span>Pabeigts</span><a class="open" href="https://neramiojiklase.lt" rel="noopener" target="_blank">Atvērt ↗</a></div></article>
       </div></div>
     </div>
 
@@ -589,6 +610,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"lv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sūta…","ok":"Saņēmu. Atbildēšu darbadienas laikā.","err":"Nevarēja sūtīt. Rakstiet man tieši:","examples":["Piem.: mums ir vietne, bet pasūtījumi nāk tikai telefoniski; gribētu, lai klienti paši varētu pasūtīt vai rezervēt…","Piem.: katru dienu atbildam uz vieniem un tiem pašiem klientu jautājumiem; gribētu, lai AI atbildētu mūsu vietā…","Piem.: datus no vēstulēm un pasūtījumiem ar rokām pārnesam uz Excel; gribētu, lai tas notiktu pats…","Piem.: mūsu mājaslapa ir novecojusi un neērta telefonā; gribētu to atjaunot…","Piem.: cenu piedāvājumus klientiem aprēķinām ar rokām; gribētu rīku, kas tos sagatavo dažu minūšu laikā…","Piem.: saņemam daudz rēķinu un dokumentu; gribētu, lai sistēma patstāvīgi tos nolasītu un kārtotu…","Piem.: pasūtījumus, noliktavu un darbus uzskaitām dažādās tabulās; gribētu vienkāršu sistēmu, kur viss būtu kopā…"],"subject":"Pieprasījums no mājaslapas"},"work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"}};</script>
-<script src="/app.js?v=cbf0323e" defer></script>
+<script src="/app.js?v=cb45c370" defer></script>
 </body>
 </html>

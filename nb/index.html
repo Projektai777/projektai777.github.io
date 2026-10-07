@@ -366,6 +366,8 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 @media (prefers-reduced-motion: reduce) { .card .st .pulse { animation: none; } }
 .card a.open { color: var(--fg); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--acc); padding-bottom: 1px; }
 .card a.open:hover { color: var(--acc); }
+.card a.more { align-self: flex-start; color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
+.card a.more:hover, .card a.more:focus-visible { border-color: var(--acc); }
 .card.anon h4 { color: #d8dedc; }
 .empty { border: 1px dashed var(--line-2); border-radius: 10px; padding: 22px; color: var(--mute); font-size: 15px; }
 .anon-note { font-family: var(--mono); font-size: 12px; color: var(--mute); margin: 8px 0 0; }
@@ -433,6 +435,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .foot p { margin: 0; }
 .foot .langs { margin-left: auto; }
 
+
+/* job pages (2026-10-07): one page per named job and language, built by build.js from jobs/<slug>/<lang>.json */
+.job { max-width: 820px; padding-top: clamp(28px, 5vw, 56px); overflow-wrap: anywhere; }
+.crumbs { color: var(--mute); margin: 0 0 clamp(28px, 4vw, 44px); }
+.crumbs a { color: var(--mute); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+.crumbs a:hover, .crumbs a:focus-visible { color: var(--fg); }
+.job-head { margin-bottom: clamp(28px, 4vw, 44px); }
+.job-logo { display: block; height: 44px; width: auto; max-width: 60%; object-fit: contain; margin: 0 0 22px; padding: 7px 12px; background: #fff; border-radius: 6px; }
+.job-h1 { font-size: clamp(30px, 4.6vw, 54px); line-height: 1.08; max-width: 24ch; margin: 0 0 22px; }
+.job-facts { margin: 0 0 clamp(36px, 5vw, 56px); }
+.job-facts b { font-size: 18px; }
+.job-facts a { color: var(--fg); }
+.job-part { margin: 0 0 clamp(32px, 4vw, 48px); }
+.job-part h2 { font-size: clamp(26px, 3.2vw, 38px); }
+.job-part p { color: #c7d0cd; font-size: 17px; max-width: 68ch; margin: 0 0 14px; }
+.job-list { margin: 0; padding: 0 0 0 1.2em; color: #c7d0cd; font-size: 16.5px; max-width: 70ch; }
+.job-list li { margin: 0 0 10px; padding-left: 4px; }
+.job-list li::marker { color: var(--acc); }
+.job-note { color: var(--mute); max-width: 80ch; margin: 0 0 32px; line-height: 1.6; }
 
 /* responsive */
 @media (max-width: 960px) {
@@ -518,15 +539,15 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     </div>
     <div class="work-group"><h3 id="work-progress-h"><i>◉</i> Pågår <span class="small">3</span></h3>
       <div class="rail"><div class="cards" id="work-progress" role="region" aria-labelledby="work-progress-h" tabindex="0">
-      <article id="p-planas-product" class="card anon"><span class="cat">KI-løsning</span><h4>Tinystudy – en effektiv og praktisk studieplan bygget på Moodle-materialet ditt</h4><p>Lysbilder, dokumenter og videoforelesninger fra Moodle blir til korte studietemaer, og planen velger hver dag hva du skal lære og hva du skal repetere før neste prøve.</p><div class="st"><span><span class="pulse"></span>Pågår</span><span>september 2026</span></div></article>
+      <article id="p-planas-product" class="card anon"><span class="cat">KI-løsning</span><h4>Tinystudy – en effektiv og praktisk studieplan bygget på Moodle-materialet ditt</h4><p>Lysbilder, dokumenter og videoforelesninger fra Moodle blir til korte studietemaer, og planen velger hver dag hva du skal lære og hva du skal repetere før neste prøve.</p><a class="more" href="/nb/work/tinystudy/">Mer om arbeidet →</a><div class="st"><span><span class="pulse"></span>Pågår</span><span>september 2026</span></div></article>
       <article id="p-0f9db1ed61" class="card anon"><span class="cat">Internt system</span><h4>Modul for bestillinger og reparasjonsoppfølging for et bilverksted</h4><p>Nettsiden til et bilverksted får timebestilling på nett, en lenke til reparasjonsstatus for hver kunde, SMS-påminnelser og KI-lesing av bestillingsskjemaer på papir.</p><div class="st"><span><span class="pulse"></span>Pågår</span><span>september 2026</span></div></article>
       <article id="p-4a4905b48a" class="card anon"><span class="cat">Internt system</span><h4>Kalkulator for materialmengder til møbler for en produsent</h4><p>Et verktøy som leser en møbelskisse, teller plater, kantlister og beslag, og fyller ut produsentens eget Excel-regneark.</p><div class="st"><span><span class="pulse"></span>Pågår</span><span>september 2026</span></div></article>
       </div></div>
     </div>
     <div class="work-group"><h3 id="work-done-h"><i>◎</i> Ferdig <span class="small">2</span></h3>
       <div class="rail"><div class="cards" id="work-done" role="region" aria-labelledby="work-done-h" tabindex="0">
-      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="190" height="69" loading="lazy" decoding="async"><span class="cat">Nettside</span><h4>Fortuna Hostel — Oppgradering av hotellnettside med bestillingsmodul</h4><p>En WordPress-nettside på tre språk fikk et innebygd bestillingsvindu, et bildegalleri som de ansatte selv administrerer, og innsamling av Google-anmeldelser.</p><div class="st"><span><span class="done"></span>Ferdig</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Åpne ↗</a></div></article>
-      <article id="p-neramiojiklase" class="card"><img class="logo" src="/logos/neramioji-klase.png" alt="Neramioji klasė" width="768" height="182" loading="lazy" decoding="async"><span class="cat">Nettside</span><h4>Neramioji klasė — Nettside for en kreativ plattform for elever, med registrering og opplasting av arbeider</h4><p>En ny startside, en engelsk versjon og et registreringsskjema der elevene laster opp arbeidene sine rett til organisasjonens eget lager, med kontroll av foreldrenes samtykke.</p><div class="st"><span><span class="done"></span>Ferdig</span><a class="open" href="https://neramiojiklase.lt" rel="noopener" target="_blank">Åpne ↗</a></div></article>
+      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="190" height="69" loading="lazy" decoding="async"><span class="cat">Nettside</span><h4>Fortuna Hostel — Oppgradering av hotellnettside med bestillingsmodul</h4><p>En WordPress-nettside på tre språk fikk et innebygd bestillingsvindu, et bildegalleri som de ansatte selv administrerer, og innsamling av Google-anmeldelser.</p><a class="more" href="/nb/work/fortuna-hostel/">Mer om arbeidet →</a><div class="st"><span><span class="done"></span>Ferdig</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Åpne ↗</a></div></article>
+      <article id="p-neramiojiklase" class="card"><img class="logo" src="/logos/neramioji-klase.png" alt="Neramioji klasė" width="768" height="182" loading="lazy" decoding="async"><span class="cat">Nettside</span><h4>Neramioji klasė — Nettside for en kreativ plattform for elever, med registrering og opplasting av arbeider</h4><p>En ny startside, en engelsk versjon og et registreringsskjema der elevene laster opp arbeidene sine rett til organisasjonens eget lager, med kontroll av foreldrenes samtykke.</p><a class="more" href="/nb/work/neramioji-klase/">Mer om arbeidet →</a><div class="st"><span><span class="done"></span>Ferdig</span><a class="open" href="https://neramiojiklase.lt" rel="noopener" target="_blank">Åpne ↗</a></div></article>
       </div></div>
     </div>
 
@@ -589,6 +610,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"nb","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sender…","ok":"Mottatt. Jeg svarer innen en arbeidsdag.","err":"Kunne ikke sende. Skriv til meg direkte:","examples":["F.eks.: vi har en nettside, men bestillingene kommer bare på telefon; vi vil at kundene selv skal kunne bestille eller reservere…","F.eks.: hver dag svarer vi på de samme kundespørsmålene; vi vil at KI skal svare for oss…","F.eks.: vi flytter data fra e-poster og bestillinger over i Excel for hånd; vi vil at det skal skje av seg selv…","F.eks.: nettsiden vår er utdatert og tungvint på mobil; vi vil gjerne fornye den…","F.eks.: vi regner ut tilbud til kunder for hånd; vi vil ha et verktøy som lager dem på noen minutter…","F.eks.: vi får mange fakturaer og dokumenter; vi vil at et system skal lese og sortere dem selv…","F.eks.: vi følger opp bestillinger, lager og oppdrag i separate regneark; vi vil ha et enkelt system der alt er samlet…"],"subject":"Henvendelse fra nettsiden"},"work":{"next":"Neste prosjekt","prev":"Forrige prosjekt"}};</script>
-<script src="/app.js?v=cbf0323e" defer></script>
+<script src="/app.js?v=cb45c370" defer></script>
 </body>
 </html>
