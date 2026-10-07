@@ -238,6 +238,12 @@
   // (owner 2026-10-01: many people prefer writing an e-mail to filling in a form)
   if (form && sendBtn) sendBtn.disabled = false;
 
+  // Messenger line (owner 2026-10-07): m.me opens the Messenger app on a phone, but on a computer it passes messenger.com's
+  // cookie and sign-in screens; there data-desk, Facebook's own chat address, opens the page's chat at once for a visitor
+  // signed in to Facebook. Only a mouse-and-hover device switches; the markup keeps m.me for everyone else.
+  var msgrLink = document.querySelector('#formMsgr a[data-desk]');
+  if (msgrLink && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) msgrLink.href = msgrLink.getAttribute('data-desk');
+
   // rotating example requests in the empty message box: one line at a time, dissolving in and out (opacity only,
   // the reduced-motion-safe transition), held while the tab is hidden or the box has text, hidden once anything is typed
   var taWrap = document.getElementById('taWrap'), phCycle = document.getElementById('phCycle');
