@@ -409,13 +409,18 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .form-alt { margin: 0; color: var(--mute); }
 .form-alt a { color: var(--fg); }
 .form-alt.gone { display: none; }
-#formTg a { white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
+#formTg a, #formMsgr a { white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
 /* Telegram icon: 3x the old 14px, blinks slowly in Telegram blue to invite a message (owner 2026-10-03);
    steady with its glow when the visitor asks for less motion */
 .form-alt .tg-ic { flex: none; color: #2aabee; animation: tg-blink 2.4s ease-in-out infinite; }
 @keyframes tg-blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } 50% { opacity: .35; filter: none; } }
 @media (prefers-reduced-motion: reduce) { .form-alt .tg-ic { animation: none; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } }
-/* privacy fold-out, last in the form after the e-mail and Telegram lines (owner 2026-10-01: no separate privacy page;
+/* Messenger icon (owner 2026-10-07): Messenger's own gradient (in the SVG), the same size and the same slow blink as the
+   Telegram icon, so the two pulse together; steady with its glow when the visitor asks for less motion */
+.form-alt .msgr-ic { flex: none; animation: msgr-blink 2.4s ease-in-out infinite; }
+@keyframes msgr-blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(160,51,255,.55)); } 50% { opacity: .35; filter: none; } }
+@media (prefers-reduced-motion: reduce) { .form-alt .msgr-ic { animation: none; filter: drop-shadow(0 0 6px rgba(160,51,255,.55)); } }
+/* privacy fold-out, last in the form after the e-mail, Telegram and Messenger lines (owner 2026-10-01: no separate privacy page;
    closed by default; moved last 2026-10-03) */
 .pd summary { cursor: pointer; width: max-content; max-width: 100%; }
 .pd summary:hover, .pd[open] summary { color: var(--fg); }
@@ -551,6 +556,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"fi","work":{"next":"Seuraava projekti","prev":"Edellinen projekti"}};</script>
-<script src="/app.js?v=cb45c370" defer></script>
+<script src="/app.js?v=9c405682" defer></script>
 </body>
 </html>
