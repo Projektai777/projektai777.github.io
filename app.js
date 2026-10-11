@@ -211,10 +211,10 @@
         var b = document.createElement('button');
         b.type = 'button'; b.className = 'rail-btn ' + dir; b.innerHTML = ARROW;
         b.setAttribute('aria-label', W[dir] || ''); b.setAttribute('aria-controls', row.id);
-        b.addEventListener('click', function () { tried(); step(dir === 'next' ? 1 : -1); });
+        b.addEventListener('click', function (e) { tried(); kb = e.detail === 0 ? b : null; step(dir === 'next' ? 1 : -1); });
         rail.appendChild(b);
       });
-      var x0 = row.scrollLeft;
+      var x0 = row.scrollLeft, kb = null; // kb: the arrow last pressed from the keyboard (Enter / Space)
       function update() {
         var max = row.scrollWidth - row.clientWidth;
         rail.classList.toggle('more-l', row.scrollLeft > 2);
@@ -222,8 +222,10 @@
         // a row that fits needs no stop in the keyboard order
         if (max > 2) row.setAttribute('tabindex', '0'); else row.removeAttribute('tabindex');
         // an arrow that just reached the end hides: keep a keyboard user's place by moving focus to the row
+        // (the browser may already have dropped focus to the page body when the arrow hid, so the pressed arrow counts too)
         var f = document.activeElement;
         if (f && f.parentNode === rail && f.classList.contains('rail-btn') && getComputedStyle(f).display === 'none') row.focus({ preventScroll: true });
+        else if (kb && (!f || f === document.body || f === kb) && getComputedStyle(kb).display === 'none') { kb = null; row.focus({ preventScroll: true }); }
       }
       row.addEventListener('scroll', function () { if (Math.abs(row.scrollLeft - x0) > 8) tried(); update(); }, { passive: true });
       if ('ResizeObserver' in window) new ResizeObserver(update).observe(row); else window.addEventListener('resize', update);
