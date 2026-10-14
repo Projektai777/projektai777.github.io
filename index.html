@@ -7,7 +7,7 @@
   <script>document.documentElement.classList.add("js")</script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Svetainių kūrimas ir automatizavimas verslui | Projektai777</title>
-  <meta name="description" content="Svetainių kūrimas, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.">
+  <meta name="description" content="Svetainių kūrimas, CRM sistemos, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <meta name="theme-color" content="#070a0d">
   <link rel="canonical" href="https://projektai777.eu/">
@@ -22,13 +22,13 @@
   <link rel="alternate" hreflang="x-default" href="https://projektai777.eu/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Svetainių kūrimas ir automatizavimas verslui | Projektai777">
-  <meta property="og:description" content="Svetainių kūrimas, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.">
+  <meta property="og:description" content="Svetainių kūrimas, CRM sistemos, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.">
   <meta property="og:url" content="https://projektai777.eu/">
   <meta property="og:image" content="https://projektai777.eu/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
-  <meta property="og:image:alt" content="Projektai777: svetainės, automatizavimas ir dirbtinio intelekto įrankiai verslui">
+  <meta property="og:image:alt" content="Projektai777: svetainės, CRM, automatizavimas ir dirbtinio intelekto įrankiai verslui">
   <meta property="og:site_name" content="Projektai777">
   <meta property="og:locale" content="lt_LT">
   <meta property="og:locale:alternate" content="lv_LV">
@@ -40,9 +40,9 @@
   <meta property="og:locale:alternate" content="fi_FI">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Svetainių kūrimas ir automatizavimas verslui | Projektai777">
-  <meta name="twitter:description" content="Svetainių kūrimas, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.">
+  <meta name="twitter:description" content="Svetainių kūrimas, CRM sistemos, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.">
   <meta name="twitter:image" content="https://projektai777.eu/og.png">
-  <meta name="twitter:image:alt" content="Projektai777: svetainės, automatizavimas ir dirbtinio intelekto įrankiai verslui">
+  <meta name="twitter:image:alt" content="Projektai777: svetainės, CRM, automatizavimas ir dirbtinio intelekto įrankiai verslui">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
@@ -292,9 +292,14 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 @media (prefers-reduced-motion: reduce) { [data-reveal] { transform: none; transition: none; } }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
 .svc { padding: clamp(22px, 3vw, 40px); position: relative; }
-.svc + .svc { border-left: 1px solid var(--line); } /* three cards in one row since 2026-09-12 */
+.svc + .svc { border-left: 1px solid var(--line); } /* four cards in one row since 2026-10-14 (CRM added) */
+@media (max-width: 1000px) {
+  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 x 2 */
+  .svc:nth-child(odd) { border-left: 0; }
+  .svc:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
 .svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
 .process { margin-top: clamp(40px, 6vw, 72px); }
@@ -484,8 +489,8 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .foot { padding-bottom: 92px; }
 }
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Svetainių kūrimas, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"address":{"@type":"PostalAddress","addressLocality":"Kaunas","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Ką darau: svetainės, automatizavimas, DI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Svetainių ir el. parduotuvių kūrimas","description":"Nauja svetainė, esamos patobulinimas arba naujos funkcijos jau veikiančiai."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Procesų automatizavimas","description":"Sujungiu įrankius, kuriuos jau naudojate, kad pasikartojantys darbai vyktų be jūsų rankų."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Dirbtinio intelekto įrankiai","description":"Dirbtinis intelektas, kuris dirba už jus: atsako klientams, rūšiuoja užklausas, nuskaito dokumentus."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://projektai777.eu/#website","url":"https://projektai777.eu/","name":"Projektai777","inLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"publisher":{"@id":"https://projektai777.eu/#business"}},{"@type":"WebPage","@id":"https://projektai777.eu/#page","url":"https://projektai777.eu/","name":"Svetainių kūrimas ir automatizavimas verslui | Projektai777","description":"Svetainių kūrimas, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.","inLanguage":"lt","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Svetainių kūrimas, CRM sistemos, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"address":{"@type":"PostalAddress","addressLocality":"Kaunas","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Ką darau: svetainės, CRM, automatizavimas, DI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Svetainių ir el. parduotuvių kūrimas","description":"Nauja svetainė, esamos patobulinimas arba naujos funkcijos jau veikiančiai."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM sistemos","description":"Sukuriu CRM sistemą pagal jūsų darbą: klientai, užsakymai ir priminimai vienoje vietoje."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Procesų automatizavimas","description":"Sujungiu įrankius, kuriuos jau naudojate, kad pasikartojantys darbai vyktų be jūsų rankų."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Dirbtinio intelekto įrankiai","description":"Dirbtinis intelektas, kuris dirba už jus: atsako klientams, rūšiuoja užklausas, nuskaito dokumentus."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://projektai777.eu/#website","url":"https://projektai777.eu/","name":"Projektai777","inLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"publisher":{"@id":"https://projektai777.eu/#business"}},{"@type":"WebPage","@id":"https://projektai777.eu/#page","url":"https://projektai777.eu/","name":"Svetainių kūrimas ir automatizavimas verslui | Projektai777","description":"Svetainių kūrimas, CRM sistemos, procesų automatizavimas ir dirbtinio intelekto įrankiai verslui. Aiški apimtis, fiksuota kaina, kodas lieka jums. Atsakau per darbo dieną.","inLanguage":"lt","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"}}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Pereiti prie turinio</a>
@@ -508,7 +513,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   <section class="hero" id="top">
     <p class="kicker mono">Programavimo paslaugos verslui</p>
     <h1><span class="h1a">Programuoju tai,</span><br><em class="h1b">kas taupo jūsų laiką.</em></h1>
-    <p class="lead">Svetainės, procesų automatizavimas ir dirbtinio intelekto įrankiai už fiksuotą kainą. Jūs pasakote, ko reikia — apimtį ir kainą surašau aš.</p>
+    <p class="lead">Svetainės, CRM sistemos, procesų automatizavimas ir dirbtinio intelekto įrankiai už fiksuotą kainą. Jūs pasakote, ko reikia — apimtį ir kainą surašau aš.</p>
     <div class="cta-row">
       <a class="btn btn-acc" href="#contact">Papasakokite, ko reikia</a>
       <a class="btn" href="#work">Peržiūrėti darbus</a>
@@ -519,13 +524,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   <section class="sec services" id="services" data-reveal>
     <div class="sec-head">
       <p class="kicker mono">01 — Paslaugos</p>
-      <h2>Ką darau: svetainės, automatizavimas, DI</h2>
-      <p class="lead">Trys kryptys. Jei jūsų poreikis netelpa nė į vieną — vis tiek susisiekite ir rasiu jums sprendimą.</p>
+      <h2>Ką darau: svetainės, CRM, automatizavimas, DI</h2>
+      <p class="lead">Keturios kryptys. Jei jūsų poreikis netelpa nė į vieną — vis tiek susisiekite ir rasiu jums sprendimą.</p>
     </div>
     <div class="svc-grid">
       <article class="svc"><span class="n">01</span><h3>Svetainių ir el. parduotuvių kūrimas</h3><p class="how">Nauja svetainė, esamos patobulinimas arba naujos funkcijos jau veikiančiai.</p></article>
-      <article class="svc"><span class="n">02</span><h3>Procesų automatizavimas</h3><p class="how">Sujungiu įrankius, kuriuos jau naudojate, kad pasikartojantys darbai vyktų be jūsų rankų.</p></article>
-      <article class="svc"><span class="n">03</span><h3>Dirbtinio intelekto įrankiai</h3><p class="how">Dirbtinis intelektas, kuris dirba už jus: atsako klientams, rūšiuoja užklausas, nuskaito dokumentus.</p></article>
+      <article class="svc"><span class="n">02</span><h3>CRM sistemos</h3><p class="how">Sukuriu CRM sistemą pagal jūsų darbą: klientai, užsakymai ir priminimai vienoje vietoje.</p></article>
+      <article class="svc"><span class="n">03</span><h3>Procesų automatizavimas</h3><p class="how">Sujungiu įrankius, kuriuos jau naudojate, kad pasikartojantys darbai vyktų be jūsų rankų.</p></article>
+      <article class="svc"><span class="n">04</span><h3>Dirbtinio intelekto įrankiai</h3><p class="how">Dirbtinis intelektas, kuris dirba už jus: atsako klientams, rūšiuoja užklausas, nuskaito dokumentus.</p></article>
     </div>
     <div class="process" data-reveal>
       <p class="kicker mono">Kaip vyksta darbas</p>
@@ -552,7 +558,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     </div>
     <div class="work-group"><h3 id="work-done-h"><i>◎</i> Baigta <span class="small">2</span></h3>
       <div class="rail"><div class="cards" id="work-done" role="region" aria-labelledby="work-done-h" tabindex="0">
-      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="190" height="69" loading="lazy" decoding="async"><span class="cat">Svetainė</span><h4>Fortuna Hostel — Viešbučio svetainės atnaujinimas su rezervacijų moduliu</h4><p>Trijų kalbų WordPress svetainėje įdiegtas rezervacijų sistemos langas, nuotraukų galerija, kurią darbuotojai tvarko patys, ir Google atsiliepimų rinkimas.</p><a class="more" href="/work/fortuna-hostel/">Plačiau apie darbą →</a><div class="st"><span><span class="done"></span>Baigta</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Atidaryti ↗</a></div></article>
+      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="196" height="75" loading="lazy" decoding="async"><span class="cat">Svetainė</span><h4>Fortuna Hostel — Viešbučio svetainės atnaujinimas su rezervacijų moduliu</h4><p>Trijų kalbų WordPress svetainėje įdiegtas rezervacijų sistemos langas, nuotraukų galerija, kurią darbuotojai tvarko patys, ir Google atsiliepimų rinkimas.</p><a class="more" href="/work/fortuna-hostel/">Plačiau apie darbą →</a><div class="st"><span><span class="done"></span>Baigta</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Atidaryti ↗</a></div></article>
       <article id="p-neramiojiklase" class="card"><img class="logo" src="/logos/neramioji-klase.png" alt="Neramioji klasė" width="768" height="182" loading="lazy" decoding="async"><span class="cat">Svetainė</span><h4>Neramioji klasė — Moksleivių kūrybos platformos svetainė su registracija ir darbų įkėlimu</h4><p>Sukurti naujas pradžios puslapis, anglų kalbos versija ir registracijos forma, per kurią mokiniai įkelia darbus tiesiai į organizacijos saugyklą, su tėvų sutikimo patikra.</p><a class="more" href="/work/neramioji-klase/">Plačiau apie darbą →</a><div class="st"><span><span class="done"></span>Baigta</span><a class="open" href="https://neramiojiklase.lt" rel="noopener" target="_blank">Atidaryti ↗</a></div></article>
       </div></div>
     </div>
@@ -618,6 +624,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"lt","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Siunčiama…","ok":"Gavau. Atsakysiu per darbo dieną.","err":"Nepavyko išsiųsti. Parašykite tiesiai:","examples":["Pvz.: turime svetainę, bet užsakymai ateina tik telefonu; norėtume, kad klientai galėtų užsisakyti ar rezervuoti patys…","Pvz.: kasdien atsakinėjame į tuos pačius klientų klausimus; norėtume, kad dirbtinis intelektas atsakytų už mus…","Pvz.: duomenis iš laiškų ir užsakymų ranka perkeliame į Excel; norėtume, kad tai vyktų savaime…","Pvz.: mūsų svetainė pasenusi ir nepatogi telefone; norėtume ją atnaujinti…","Pvz.: kainų pasiūlymus klientams skaičiuojame ranka; norėtume įrankio, kuris juos paruoštų per kelias minutes…","Pvz.: gauname daug sąskaitų ir dokumentų; norėtume, kad sistema pati juos nuskaitytų ir surūšiuotų…","Pvz.: užsakymus, sandėlį ir darbus sekame skirtingose lentelėse; norėtume paprastos sistemos, kurioje viskas būtų kartu…"],"subject":"Užklausa iš svetainės"},"work":{"next":"Kitas projektas","prev":"Ankstesnis projektas"}};</script>
-<script src="/app.js?v=f47544a8" defer></script>
+<script src="/app.js?v=f8455318" defer></script>
 </body>
 </html>

@@ -1,12 +1,13 @@
 # Projektai777
 
-> Website development, process automation and AI tools for business. Clear scope, fixed price, the code stays yours. I reply within a working day.
+> Website development, CRM systems, process automation and AI tools for business. Clear scope, fixed price, the code stays yours. I reply within a working day.
 
 Ignas — Self-employed (individual activity) · Kaunas, Lithuania.
 
 ## Services
 
 - Websites: A new site, an improvement of the one you have, or new features added to it.
+- CRM systems: I build a CRM around how you work: clients, orders and reminders in one place.
 - Process automation: I connect the tools you already use so the repetitive work happens without your hands.
 - AI tools: Artificial intelligence that works for you: answers customers, sorts inquiries, reads documents.
 
