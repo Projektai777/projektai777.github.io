@@ -241,9 +241,14 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 @media (prefers-reduced-motion: reduce) { [data-reveal] { transform: none; transition: none; } }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
 .svc { padding: clamp(22px, 3vw, 40px); position: relative; }
-.svc + .svc { border-left: 1px solid var(--line); } /* three cards in one row since 2026-09-12 */
+.svc + .svc { border-left: 1px solid var(--line); } /* four cards in one row since 2026-10-14 (CRM added) */
+@media (max-width: 1000px) {
+  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 x 2 */
+  .svc:nth-child(odd) { border-left: 0; }
+  .svc:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
 .svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
 .process { margin-top: clamp(40px, 6vw, 72px); }

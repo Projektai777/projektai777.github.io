@@ -6,7 +6,7 @@
   <script>document.documentElement.classList.add("js")</script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Nettsider og automatisering for bedrifter | Projektai777</title>
-  <meta name="description" content="Webutvikling, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.">
+  <meta name="description" content="Webutvikling, CRM-systemer, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <meta name="theme-color" content="#070a0d">
   <link rel="canonical" href="https://projektai777.eu/nb/">
@@ -21,13 +21,13 @@
   <link rel="alternate" hreflang="x-default" href="https://projektai777.eu/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Nettsider og automatisering for bedrifter | Projektai777">
-  <meta property="og:description" content="Webutvikling, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.">
+  <meta property="og:description" content="Webutvikling, CRM-systemer, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.">
   <meta property="og:url" content="https://projektai777.eu/nb/">
   <meta property="og:image" content="https://projektai777.eu/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
-  <meta property="og:image:alt" content="Projektai777: nettsider, automatisering og KI-verktøy for bedrifter">
+  <meta property="og:image:alt" content="Projektai777: nettsider, CRM, automatisering og KI-verktøy for bedrifter">
   <meta property="og:site_name" content="Projektai777">
   <meta property="og:locale" content="nb_NO">
   <meta property="og:locale:alternate" content="lt_LT">
@@ -39,9 +39,9 @@
   <meta property="og:locale:alternate" content="fi_FI">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Nettsider og automatisering for bedrifter | Projektai777">
-  <meta name="twitter:description" content="Webutvikling, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.">
+  <meta name="twitter:description" content="Webutvikling, CRM-systemer, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.">
   <meta name="twitter:image" content="https://projektai777.eu/og.png">
-  <meta name="twitter:image:alt" content="Projektai777: nettsider, automatisering og KI-verktøy for bedrifter">
+  <meta name="twitter:image:alt" content="Projektai777: nettsider, CRM, automatisering og KI-verktøy for bedrifter">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
@@ -291,9 +291,14 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 @media (prefers-reduced-motion: reduce) { [data-reveal] { transform: none; transition: none; } }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
 .svc { padding: clamp(22px, 3vw, 40px); position: relative; }
-.svc + .svc { border-left: 1px solid var(--line); } /* three cards in one row since 2026-09-12 */
+.svc + .svc { border-left: 1px solid var(--line); } /* four cards in one row since 2026-10-14 (CRM added) */
+@media (max-width: 1000px) {
+  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 x 2 */
+  .svc:nth-child(odd) { border-left: 0; }
+  .svc:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
 .svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
 .process { margin-top: clamp(40px, 6vw, 72px); }
@@ -483,8 +488,8 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .foot { padding-bottom: 92px; }
 }
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Webutvikling, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"address":{"@type":"PostalAddress","addressLocality":"Kaunas","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Dette gjør jeg: nettsider, automatisering, KI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Nettsider","description":"En ny nettside, en forbedring av den du har, eller nye funksjoner på en side som allerede er i drift."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Automatisering av prosesser","description":"Jeg kobler sammen verktøyene du allerede bruker, slik at gjentakende arbeid skjer uten at du må gjøre noe."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"KI-verktøy","description":"Kunstig intelligens som jobber for deg: svarer kunder, sorterer henvendelser, leser dokumenter."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://projektai777.eu/#website","url":"https://projektai777.eu/","name":"Projektai777","inLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"publisher":{"@id":"https://projektai777.eu/#business"}},{"@type":"WebPage","@id":"https://projektai777.eu/nb/#page","url":"https://projektai777.eu/nb/","name":"Nettsider og automatisering for bedrifter | Projektai777","description":"Webutvikling, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.","inLanguage":"nb","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Webutvikling, CRM-systemer, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"address":{"@type":"PostalAddress","addressLocality":"Kaunas","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Dette gjør jeg: nettsider, CRM, automatisering, KI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Nettsider","description":"En ny nettside, en forbedring av den du har, eller nye funksjoner på en side som allerede er i drift."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM-systemer","description":"Jeg bygger et CRM-system rundt måten du jobber på: kunder, bestillinger og påminnelser på ett sted."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Automatisering av prosesser","description":"Jeg kobler sammen verktøyene du allerede bruker, slik at gjentakende arbeid skjer uten at du må gjøre noe."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"KI-verktøy","description":"Kunstig intelligens som jobber for deg: svarer kunder, sorterer henvendelser, leser dokumenter."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://projektai777.eu/#website","url":"https://projektai777.eu/","name":"Projektai777","inLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"publisher":{"@id":"https://projektai777.eu/#business"}},{"@type":"WebPage","@id":"https://projektai777.eu/nb/#page","url":"https://projektai777.eu/nb/","name":"Nettsider og automatisering for bedrifter | Projektai777","description":"Webutvikling, CRM-systemer, automatisering av prosesser og KI-verktøy for bedrifter. Tydelig omfang, fast pris, koden blir din. Jeg svarer innen en arbeidsdag.","inLanguage":"nb","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"}}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Gå til innholdet</a>
@@ -507,7 +512,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   <section class="hero" id="top">
     <p class="kicker mono">Webutvikling og programmering for bedrifter</p>
     <h1><span class="h1a">Jeg bygger det</span><br><em class="h1b">som gir deg tiden tilbake.</em></h1>
-    <p class="lead">Nettsider, automatisering av prosesser og KI-verktøy til fast pris. Du sier hva du trenger — omfang og pris skriver jeg.</p>
+    <p class="lead">Nettsider, CRM-systemer, automatisering av prosesser og KI-verktøy til fast pris. Du sier hva du trenger — omfang og pris skriver jeg.</p>
     <div class="cta-row">
       <a class="btn btn-acc" href="#contact">Fortell meg hva du trenger</a>
       <a class="btn" href="#work">Se arbeidene mine</a>
@@ -518,13 +523,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   <section class="sec services" id="services" data-reveal>
     <div class="sec-head">
       <p class="kicker mono">01 — Tjenester</p>
-      <h2>Dette gjør jeg: nettsider, automatisering, KI</h2>
-      <p class="lead">Tre områder. Passer behovet ditt ikke inn i noen av dem, ta likevel kontakt, så finner jeg en løsning for deg.</p>
+      <h2>Dette gjør jeg: nettsider, CRM, automatisering, KI</h2>
+      <p class="lead">Fire områder. Passer behovet ditt ikke inn i noen av dem, ta likevel kontakt, så finner jeg en løsning for deg.</p>
     </div>
     <div class="svc-grid">
       <article class="svc"><span class="n">01</span><h3>Nettsider</h3><p class="how">En ny nettside, en forbedring av den du har, eller nye funksjoner på en side som allerede er i drift.</p></article>
-      <article class="svc"><span class="n">02</span><h3>Automatisering av prosesser</h3><p class="how">Jeg kobler sammen verktøyene du allerede bruker, slik at gjentakende arbeid skjer uten at du må gjøre noe.</p></article>
-      <article class="svc"><span class="n">03</span><h3>KI-verktøy</h3><p class="how">Kunstig intelligens som jobber for deg: svarer kunder, sorterer henvendelser, leser dokumenter.</p></article>
+      <article class="svc"><span class="n">02</span><h3>CRM-systemer</h3><p class="how">Jeg bygger et CRM-system rundt måten du jobber på: kunder, bestillinger og påminnelser på ett sted.</p></article>
+      <article class="svc"><span class="n">03</span><h3>Automatisering av prosesser</h3><p class="how">Jeg kobler sammen verktøyene du allerede bruker, slik at gjentakende arbeid skjer uten at du må gjøre noe.</p></article>
+      <article class="svc"><span class="n">04</span><h3>KI-verktøy</h3><p class="how">Kunstig intelligens som jobber for deg: svarer kunder, sorterer henvendelser, leser dokumenter.</p></article>
     </div>
     <div class="process" data-reveal>
       <p class="kicker mono">Slik foregår arbeidet</p>
@@ -551,7 +557,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     </div>
     <div class="work-group"><h3 id="work-done-h"><i>◎</i> Ferdig <span class="small">2</span></h3>
       <div class="rail"><div class="cards" id="work-done" role="region" aria-labelledby="work-done-h" tabindex="0">
-      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="190" height="69" loading="lazy" decoding="async"><span class="cat">Nettside</span><h4>Fortuna Hostel — Oppgradering av hotellnettside med bestillingsmodul</h4><p>En WordPress-nettside på tre språk fikk et innebygd bestillingsvindu, et bildegalleri som de ansatte selv administrerer, og innsamling av Google-anmeldelser.</p><a class="more" href="/nb/work/fortuna-hostel/">Mer om arbeidet →</a><div class="st"><span><span class="done"></span>Ferdig</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Åpne ↗</a></div></article>
+      <article id="p-eceeef5c4f" class="card"><img class="logo" src="/logos/fortuna-hostel.png" alt="Fortuna Hostel" width="196" height="75" loading="lazy" decoding="async"><span class="cat">Nettside</span><h4>Fortuna Hostel — Oppgradering av hotellnettside med bestillingsmodul</h4><p>En WordPress-nettside på tre språk fikk et innebygd bestillingsvindu, et bildegalleri som de ansatte selv administrerer, og innsamling av Google-anmeldelser.</p><a class="more" href="/nb/work/fortuna-hostel/">Mer om arbeidet →</a><div class="st"><span><span class="done"></span>Ferdig</span><a class="open" href="https://fortunahostel.lt" rel="noopener" target="_blank">Åpne ↗</a></div></article>
       <article id="p-neramiojiklase" class="card"><img class="logo" src="/logos/neramioji-klase.png" alt="Neramioji klasė" width="768" height="182" loading="lazy" decoding="async"><span class="cat">Nettside</span><h4>Neramioji klasė — Nettside for en kreativ plattform for elever, med registrering og opplasting av arbeider</h4><p>En ny startside, en engelsk versjon og et registreringsskjema der elevene laster opp arbeidene sine rett til organisasjonens eget lager, med kontroll av foreldrenes samtykke.</p><a class="more" href="/nb/work/neramioji-klase/">Mer om arbeidet →</a><div class="st"><span><span class="done"></span>Ferdig</span><a class="open" href="https://neramiojiklase.lt" rel="noopener" target="_blank">Åpne ↗</a></div></article>
       </div></div>
     </div>
@@ -617,6 +623,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"nb","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sender…","ok":"Mottatt. Jeg svarer innen en arbeidsdag.","err":"Kunne ikke sende. Skriv til meg direkte:","examples":["F.eks.: vi har en nettside, men bestillingene kommer bare på telefon; vi vil at kundene selv skal kunne bestille eller reservere…","F.eks.: hver dag svarer vi på de samme kundespørsmålene; vi vil at KI skal svare for oss…","F.eks.: vi flytter data fra e-poster og bestillinger over i Excel for hånd; vi vil at det skal skje av seg selv…","F.eks.: nettsiden vår er utdatert og tungvint på mobil; vi vil gjerne fornye den…","F.eks.: vi regner ut tilbud til kunder for hånd; vi vil ha et verktøy som lager dem på noen minutter…","F.eks.: vi får mange fakturaer og dokumenter; vi vil at et system skal lese og sortere dem selv…","F.eks.: vi følger opp bestillinger, lager og oppdrag i separate regneark; vi vil ha et enkelt system der alt er samlet…"],"subject":"Henvendelse fra nettsiden"},"work":{"next":"Neste prosjekt","prev":"Forrige prosjekt"}};</script>
-<script src="/app.js?v=f47544a8" defer></script>
+<script src="/app.js?v=f8455318" defer></script>
 </body>
 </html>
