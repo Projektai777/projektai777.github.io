@@ -183,7 +183,6 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0;
   background: var(--bg);
@@ -288,19 +287,25 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 /* nothing waits invisible (owner 2026-10-06): a reader that never scrolls still sees every section; the slide-in stays */
 [data-reveal] { transform: translateY(18px); transition: transform .7s ease; }
 [data-reveal].in { transform: none; }
-@media (prefers-reduced-motion: reduce) { [data-reveal] { transform: none; transition: none; } }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
 .svc { padding: clamp(22px, 3vw, 40px); position: relative; }
-.svc + .svc { border-left: 1px solid var(--line); } /* four cards in one row since 2026-10-14 (CRM added) */
-@media (max-width: 1000px) {
-  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 x 2 */
+.svc + .svc { border-left: 1px solid var(--line); } /* five cards in one row since 2026-10-21 (AI search added) */
+@media (max-width: 1180px) {
+  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 + 2 + the fifth card across both columns */
   .svc:nth-child(odd) { border-left: 0; }
   .svc:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .svc:nth-child(5) { grid-column: 1 / -1; }
 }
 .svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
+.ads-note { margin-top: 16px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
+.ads-note .kicker { margin: 0 0 6px; }
+.ads-note .ads-t { margin: 0 0 10px; }
+.ads-note .ads-t b { color: var(--fg); font-weight: 500; }
+.ads-cta { color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
+.ads-cta:hover, .ads-cta:focus-visible { border-color: var(--acc); }
 .process { margin-top: clamp(40px, 6vw, 72px); }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; counter-reset: st; }
 .steps li { counter-increment: st; padding-top: 14px; border-top: 1px solid var(--line-2); position: relative; }
@@ -352,7 +357,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   45% { transform: translateX(9px); }
   70% { box-shadow: 0 0 0 12px rgba(125,255,179,0), 0 6px 18px rgba(0,0,0,.45); }
 }
-@media (prefers-reduced-motion: reduce) { html:not(.pf-swiped) .rail-btn.next { animation: none; } }
 /* on touch screens the arrows go once the visitor has swiped: the swipe is the way to move there */
 @media (hover: none) { html.pf-swiped .rail .rail-btn.prev, html.pf-swiped .rail .rail-btn.next { display: none; } }
 .card {
@@ -368,7 +372,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .card .st .pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--acc); margin-right: 7px; box-shadow: 0 0 0 0 rgba(125,255,179,.6); animation: pulse 2.2s infinite; vertical-align: 1px; }
 .card .st .done { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--acc-2); margin-right: 7px; vertical-align: 1px; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(125,255,179,.55); } 70% { box-shadow: 0 0 0 8px rgba(125,255,179,0); } 100% { box-shadow: 0 0 0 0 rgba(125,255,179,0); } }
-@media (prefers-reduced-motion: reduce) { .card .st .pulse { animation: none; } }
 .card a.open { color: var(--fg); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--acc); padding-bottom: 1px; }
 .card a.open:hover { color: var(--acc); }
 .card a.more { align-self: flex-start; color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
@@ -400,7 +403,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform input:focus, .cform textarea:focus { border-color: var(--acc); box-shadow: 0 0 0 3px rgba(125,255,179,.12); }
 .cform textarea::placeholder, .cform input::placeholder { color: #667077; }
 /* rotating example requests (app.js): an overlay in the textarea's own box, opacity-only (a dissolve is the
-   reduced-motion-safe transition), hidden as soon as the box holds any text; the native placeholder stays
+   plain opacity transition), hidden as soon as the box holds any text; the native placeholder stays
    in the markup for no-JS visitors and screen readers but turns transparent while the overlay runs */
 .ta-wrap { position: relative; display: block; }
 .ta-wrap textarea { display: block; }
@@ -415,16 +418,13 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .form-alt a { color: var(--fg); }
 .form-alt.gone { display: none; }
 #formTg a, #formMsgr a { white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
-/* Telegram icon: 3x the old 14px, blinks slowly in Telegram blue to invite a message (owner 2026-10-03);
-   steady with its glow when the visitor asks for less motion */
+/* Telegram icon: 3x the old 14px, blinks slowly in Telegram blue to invite a message (owner 2026-10-03) */
 .form-alt .tg-ic { flex: none; color: #2aabee; animation: tg-blink 2.4s ease-in-out infinite; }
 @keyframes tg-blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } 50% { opacity: .35; filter: none; } }
-@media (prefers-reduced-motion: reduce) { .form-alt .tg-ic { animation: none; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } }
 /* Messenger icon (owner 2026-10-07): Messenger's own gradient (in the SVG), the same size and the same slow blink as the
-   Telegram icon, so the two pulse together; steady with its glow when the visitor asks for less motion */
+   Telegram icon, so the two pulse together */
 .form-alt .msgr-ic { flex: none; animation: msgr-blink 2.4s ease-in-out infinite; }
 @keyframes msgr-blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(160,51,255,.55)); } 50% { opacity: .35; filter: none; } }
-@media (prefers-reduced-motion: reduce) { .form-alt .msgr-ic { animation: none; filter: drop-shadow(0 0 6px rgba(160,51,255,.55)); } }
 /* privacy fold-out, last in the form after the e-mail, Telegram and Messenger lines (owner 2026-10-01: no separate privacy page;
    closed by default; moved last 2026-10-03) */
 .pd summary { cursor: pointer; width: max-content; max-width: 100%; }
@@ -549,6 +549,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"fi","work":{"next":"Seuraava projekti","prev":"Edellinen projekti"}};</script>
-<script src="/app.js?v=f8455318" defer></script>
+<script src="/app.js?v=9bd7f1ef" defer></script>
 </body>
 </html>

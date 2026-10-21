@@ -6,7 +6,7 @@
   <script>document.documentElement.classList.add("js")</script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Webbutveckling och automatisering för företag | Projektai777</title>
-  <meta name="description" content="Webbutveckling, CRM-system, processautomatisering och AI-verktyg för företag. Tydlig omfattning, fast pris, koden blir din. Jag svarar inom en arbetsdag.">
+  <meta name="description" content="Webbplatser, CRM-system, processautomatisering, AI-verktyg och synlighet i AI-sökning för företag. Fast pris, koden blir din. Jag svarar inom en arbetsdag.">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <meta name="theme-color" content="#070a0d">
   <link rel="canonical" href="https://projektai777.eu/sv/">
@@ -21,7 +21,7 @@
   <link rel="alternate" hreflang="x-default" href="https://projektai777.eu/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Webbutveckling och automatisering för företag | Projektai777">
-  <meta property="og:description" content="Webbutveckling, CRM-system, processautomatisering och AI-verktyg för företag. Tydlig omfattning, fast pris, koden blir din. Jag svarar inom en arbetsdag.">
+  <meta property="og:description" content="Webbplatser, CRM-system, processautomatisering, AI-verktyg och synlighet i AI-sökning för företag. Fast pris, koden blir din. Jag svarar inom en arbetsdag.">
   <meta property="og:url" content="https://projektai777.eu/sv/">
   <meta property="og:image" content="https://projektai777.eu/og.png">
   <meta property="og:image:width" content="1200">
@@ -39,7 +39,7 @@
   <meta property="og:locale:alternate" content="fi_FI">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Webbutveckling och automatisering för företag | Projektai777">
-  <meta name="twitter:description" content="Webbutveckling, CRM-system, processautomatisering och AI-verktyg för företag. Tydlig omfattning, fast pris, koden blir din. Jag svarar inom en arbetsdag.">
+  <meta name="twitter:description" content="Webbplatser, CRM-system, processautomatisering, AI-verktyg och synlighet i AI-sökning för företag. Fast pris, koden blir din. Jag svarar inom en arbetsdag.">
   <meta name="twitter:image" content="https://projektai777.eu/og.png">
   <meta name="twitter:image:alt" content="Projektai777: hemsidor, CRM, automatisering och AI-verktyg för företag">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -183,7 +183,6 @@
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0;
   background: var(--bg);
@@ -288,19 +287,25 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 /* nothing waits invisible (owner 2026-10-06): a reader that never scrolls still sees every section; the slide-in stays */
 [data-reveal] { transform: translateY(18px); transition: transform .7s ease; }
 [data-reveal].in { transform: none; }
-@media (prefers-reduced-motion: reduce) { [data-reveal] { transform: none; transition: none; } }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
 .svc { padding: clamp(22px, 3vw, 40px); position: relative; }
-.svc + .svc { border-left: 1px solid var(--line); } /* four cards in one row since 2026-10-14 (CRM added) */
-@media (max-width: 1000px) {
-  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 x 2 */
+.svc + .svc { border-left: 1px solid var(--line); } /* five cards in one row since 2026-10-21 (AI search added) */
+@media (max-width: 1180px) {
+  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 + 2 + the fifth card across both columns */
   .svc:nth-child(odd) { border-left: 0; }
   .svc:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .svc:nth-child(5) { grid-column: 1 / -1; }
 }
 .svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
+.ads-note { margin-top: 16px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
+.ads-note .kicker { margin: 0 0 6px; }
+.ads-note .ads-t { margin: 0 0 10px; }
+.ads-note .ads-t b { color: var(--fg); font-weight: 500; }
+.ads-cta { color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
+.ads-cta:hover, .ads-cta:focus-visible { border-color: var(--acc); }
 .process { margin-top: clamp(40px, 6vw, 72px); }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; counter-reset: st; }
 .steps li { counter-increment: st; padding-top: 14px; border-top: 1px solid var(--line-2); position: relative; }
@@ -352,7 +357,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   45% { transform: translateX(9px); }
   70% { box-shadow: 0 0 0 12px rgba(125,255,179,0), 0 6px 18px rgba(0,0,0,.45); }
 }
-@media (prefers-reduced-motion: reduce) { html:not(.pf-swiped) .rail-btn.next { animation: none; } }
 /* on touch screens the arrows go once the visitor has swiped: the swipe is the way to move there */
 @media (hover: none) { html.pf-swiped .rail .rail-btn.prev, html.pf-swiped .rail .rail-btn.next { display: none; } }
 .card {
@@ -368,7 +372,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .card .st .pulse { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--acc); margin-right: 7px; box-shadow: 0 0 0 0 rgba(125,255,179,.6); animation: pulse 2.2s infinite; vertical-align: 1px; }
 .card .st .done { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--acc-2); margin-right: 7px; vertical-align: 1px; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(125,255,179,.55); } 70% { box-shadow: 0 0 0 8px rgba(125,255,179,0); } 100% { box-shadow: 0 0 0 0 rgba(125,255,179,0); } }
-@media (prefers-reduced-motion: reduce) { .card .st .pulse { animation: none; } }
 .card a.open { color: var(--fg); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--acc); padding-bottom: 1px; }
 .card a.open:hover { color: var(--acc); }
 .card a.more { align-self: flex-start; color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
@@ -400,7 +403,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform input:focus, .cform textarea:focus { border-color: var(--acc); box-shadow: 0 0 0 3px rgba(125,255,179,.12); }
 .cform textarea::placeholder, .cform input::placeholder { color: #667077; }
 /* rotating example requests (app.js): an overlay in the textarea's own box, opacity-only (a dissolve is the
-   reduced-motion-safe transition), hidden as soon as the box holds any text; the native placeholder stays
+   plain opacity transition), hidden as soon as the box holds any text; the native placeholder stays
    in the markup for no-JS visitors and screen readers but turns transparent while the overlay runs */
 .ta-wrap { position: relative; display: block; }
 .ta-wrap textarea { display: block; }
@@ -415,16 +418,13 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .form-alt a { color: var(--fg); }
 .form-alt.gone { display: none; }
 #formTg a, #formMsgr a { white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
-/* Telegram icon: 3x the old 14px, blinks slowly in Telegram blue to invite a message (owner 2026-10-03);
-   steady with its glow when the visitor asks for less motion */
+/* Telegram icon: 3x the old 14px, blinks slowly in Telegram blue to invite a message (owner 2026-10-03) */
 .form-alt .tg-ic { flex: none; color: #2aabee; animation: tg-blink 2.4s ease-in-out infinite; }
 @keyframes tg-blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } 50% { opacity: .35; filter: none; } }
-@media (prefers-reduced-motion: reduce) { .form-alt .tg-ic { animation: none; filter: drop-shadow(0 0 6px rgba(42,171,238,.6)); } }
 /* Messenger icon (owner 2026-10-07): Messenger's own gradient (in the SVG), the same size and the same slow blink as the
-   Telegram icon, so the two pulse together; steady with its glow when the visitor asks for less motion */
+   Telegram icon, so the two pulse together */
 .form-alt .msgr-ic { flex: none; animation: msgr-blink 2.4s ease-in-out infinite; }
 @keyframes msgr-blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(160,51,255,.55)); } 50% { opacity: .35; filter: none; } }
-@media (prefers-reduced-motion: reduce) { .form-alt .msgr-ic { animation: none; filter: drop-shadow(0 0 6px rgba(160,51,255,.55)); } }
 /* privacy fold-out, last in the form after the e-mail, Telegram and Messenger lines (owner 2026-10-01: no separate privacy page;
    closed by default; moved last 2026-10-03) */
 .pd summary { cursor: pointer; width: max-content; max-width: 100%; }
@@ -488,8 +488,8 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .foot { padding-bottom: 92px; }
 }
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Webbutveckling, CRM-system, processautomatisering och AI-verktyg för företag. Tydlig omfattning, fast pris, koden blir din. Jag svarar inom en arbetsdag.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"address":{"@type":"PostalAddress","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Det här gör jag: hemsidor, CRM, automatisering, AI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Hemsidor","description":"En ny hemsida, en förbättring av den du har eller nya funktioner till den."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM-system","description":"Jag bygger ett CRM-system efter hur du arbetar: kunder, beställningar och påminnelser på ett ställe."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Processautomatisering","description":"Jag kopplar ihop verktygen du redan använder så att det återkommande arbetet sköter sig utan att du behöver lyfta ett finger."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"AI-verktyg","description":"Artificiell intelligens som arbetar åt dig: svarar kunder, sorterar förfrågningar, läser dokument."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://projektai777.eu/#website","url":"https://projektai777.eu/","name":"Projektai777","inLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"publisher":{"@id":"https://projektai777.eu/#business"}},{"@type":"WebPage","@id":"https://projektai777.eu/sv/#page","url":"https://projektai777.eu/sv/","name":"Webbutveckling och automatisering för företag | Projektai777","description":"Webbutveckling, CRM-system, processautomatisering och AI-verktyg för företag. Tydlig omfattning, fast pris, koden blir din. Jag svarar inom en arbetsdag.","inLanguage":"sv","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Webbplatser, CRM-system, processautomatisering, AI-verktyg och synlighet i AI-sökning för företag. Fast pris, koden blir din. Jag svarar inom en arbetsdag.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"address":{"@type":"PostalAddress","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs","AI search visibility","generative engine optimization","online advertising"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Det här gör jag: hemsidor, CRM, automatisering, AI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Hemsidor","description":"En ny hemsida, en förbättring av den du har eller nya funktioner till den."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM-system","description":"Jag bygger ett CRM-system efter hur du arbetar: kunder, beställningar och påminnelser på ett ställe."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Processautomatisering","description":"Jag kopplar ihop verktygen du redan använder så att det återkommande arbetet sköter sig utan att du behöver lyfta ett finger."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"AI-verktyg","description":"Artificiell intelligens som arbetar åt dig: svarar kunder, sorterar förfrågningar, läser dokument."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Synlighet i AI-sökning","description":"Så att ChatGPT, Gemini och Googles AI-svar nämner ditt företag: den första kontrollen gör jag gratis, därefter skickar jag en kort rapport varje månad."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Annonsering på Google, Facebook och Instagram","description":"En månadstjänst utan långa avtal: du kan avsluta när som helst, annonspengarna betalar du direkt till Google och Meta, och varje månad får du en kort rapport om hur många förfrågningar som kom och vad en kostade. Kör jag dina annonser är AI-sökkontrollen gratis."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://projektai777.eu/#website","url":"https://projektai777.eu/","name":"Projektai777","inLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"publisher":{"@id":"https://projektai777.eu/#business"}},{"@type":"WebPage","@id":"https://projektai777.eu/sv/#page","url":"https://projektai777.eu/sv/","name":"Webbutveckling och automatisering för företag | Projektai777","description":"Webbplatser, CRM-system, processautomatisering, AI-verktyg och synlighet i AI-sökning för företag. Fast pris, koden blir din. Jag svarar inom en arbetsdag.","inLanguage":"sv","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"}}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Hoppa till innehållet</a>
@@ -524,14 +524,16 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <div class="sec-head">
       <p class="kicker mono">01 — Tjänster</p>
       <h2>Det här gör jag: hemsidor, CRM, automatisering, AI</h2>
-      <p class="lead">Fyra inriktningar. Om ditt behov inte passar in i någon av dem, hör ändå av dig så hittar jag en lösning åt dig.</p>
+      <p class="lead">Fem inriktningar. Om ditt behov inte passar in i någon av dem, hör ändå av dig så hittar jag en lösning åt dig.</p>
     </div>
     <div class="svc-grid">
       <article class="svc"><span class="n">01</span><h3>Hemsidor</h3><p class="how">En ny hemsida, en förbättring av den du har eller nya funktioner till den.</p></article>
       <article class="svc"><span class="n">02</span><h3>CRM-system</h3><p class="how">Jag bygger ett CRM-system efter hur du arbetar: kunder, beställningar och påminnelser på ett ställe.</p></article>
       <article class="svc"><span class="n">03</span><h3>Processautomatisering</h3><p class="how">Jag kopplar ihop verktygen du redan använder så att det återkommande arbetet sköter sig utan att du behöver lyfta ett finger.</p></article>
       <article class="svc"><span class="n">04</span><h3>AI-verktyg</h3><p class="how">Artificiell intelligens som arbetar åt dig: svarar kunder, sorterar förfrågningar, läser dokument.</p></article>
+      <article class="svc"><span class="n">05</span><h3>Synlighet i AI-sökning</h3><p class="how">Så att ChatGPT, Gemini och Googles AI-svar nämner ditt företag: den första kontrollen gör jag gratis, därefter skickar jag en kort rapport varje månad.</p></article>
     </div>
+    <aside class="ads-note"><p class="kicker mono">Även</p><p class="ads-t"><b>Annonsering på Google, Facebook och Instagram</b> En månadstjänst utan långa avtal: du kan avsluta när som helst, annonspengarna betalar du direkt till Google och Meta, och varje månad får du en kort rapport om hur många förfrågningar som kom och vad en kostade. Kör jag dina annonser är AI-sökkontrollen gratis.</p><a class="ads-cta" href="#contact">Fråga om annonsering</a></aside>
     <div class="process" data-reveal>
       <p class="kicker mono">Så går arbetet till</p>
       <ol class="steps">
@@ -577,7 +579,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <ul class="facts">
         <li><b>Ignas</b><span>Egenföretagare (individuell verksamhet) · Litauen</span></li>
         <li><b>Koden blir din</b><span>Du får hela källkoden och rätten att ändra den, lagra den var du vill och lämna den vidare till andra.</span></li>
-        <li><b>Inga månadsavgifter</b><span>Jag väljer gratis infrastruktur där det är möjligt.</span></li>
+        <li><b>Inga månadsavgifter för webbplatsen</b><span>Jag väljer gratis infrastruktur där det är möjligt.</span></li>
         <li><b>Svar inom en arbetsdag</b><span>Ett konkret svar, inte ett förslag om att boka ett samtal.</span></li>
       </ul>
     </div>
@@ -623,6 +625,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"sv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Skickar…","ok":"Mottaget. Jag svarar inom en arbetsdag.","err":"Det gick inte att skicka. Skriv direkt till mig:","examples":["T.ex.: vi har en hemsida men beställningarna kommer bara per telefon; vi vill att kunderna ska kunna beställa eller boka själva…","T.ex.: varje dag svarar vi på samma kundfrågor; vi vill att AI ska svara åt oss…","T.ex.: vi för över data från mejl och beställningar till Excel för hand; vi vill att det ska ske av sig självt…","T.ex.: vår hemsida är föråldrad och krånglig i mobilen; vi vill fräscha upp den…","T.ex.: vi räknar ut offerter till kunder för hand; vi vill ha ett verktyg som tar fram dem på några minuter…","T.ex.: vi får många fakturor och dokument; vi vill ha ett system som läser och sorterar dem av sig självt…","T.ex.: vi följer beställningar, lager och jobb i olika kalkylblad; vi vill ha ett enkelt system som samlar allt på ett ställe…"],"subject":"Förfrågan från hemsidan"},"work":{"next":"Nästa projekt","prev":"Föregående projekt"}};</script>
-<script src="/app.js?v=f8455318" defer></script>
+<script src="/app.js?v=9bd7f1ef" defer></script>
 </body>
 </html>
