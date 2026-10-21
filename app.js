@@ -6,14 +6,13 @@
    - the canvas is sized from its own box (CSS 100lvh on phones), so the mobile address bar showing/hiding no longer
      resizes the buffer, resets the ripples or leaves a blank strip - the two "cuts off on mobile" causes (2026-09-12)
    - ripples survive a resize; the ripple cap never drops a live ripple abruptly
-   - prefers-reduced-motion: a settled frame that moves only while the visitor interacts (a frozen canvas read as broken)
+   - the system's reduced-motion setting is ignored on purpose: motion is the same on every device (owner 2026-10-14, docs/motion.md)
    Pointer, touch and scroll all feed the same shared state. */
 (function () {
   'use strict';
   var PF = window.PF || {};
   var canvas = document.getElementById('fx');
   var ctx = canvas && canvas.getContext('2d', { alpha: false });
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var BG = '#070a0d';
   var ACC = [125, 255, 179];
   var ACC2 = [111, 211, 255];
@@ -93,9 +92,6 @@
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     resonance.init();
-    // resizing clears the canvas; under reduced motion the loop may be idle, so redraw the settled frame now
-    // (without emitting a pointer ripple) instead of leaving the grid blank until the next interaction
-    if (reduce) { var pa = S.pActive; S.pActive = false; resonance.frame(); S.pActive = pa; }
   }
 
   if (ctx) {
@@ -103,14 +99,12 @@
     function loop(now) {
       requestAnimationFrame(loop);
       if (document.hidden) { last = now; return; }
-      if (reduce && now - lastInput > 1500) { last = now; return; } // reduced motion: still unless interacted with
       var dt = clamp((now - last) / 16.67, 0.2, 2.5); last = now; S.t += dt;
       S.wind *= 0.92; S.pvx *= 0.8; S.pvy *= 0.8;
       for (var i = S.impulses.length - 1; i >= 0; i--) if (S.t - S.impulses[i].t0 > 300) S.impulses.splice(i, 1);
       resonance.frame();
     }
     resize();
-    if (reduce) { for (var w0 = 0; w0 < 40; w0++) resonance.frame(); } // settle a still frame to start from
     requestAnimationFrame(function (n) { last = n; loop(n); });
     window.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(resize, 120); });
     if (window.visualViewport) window.visualViewport.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(resize, 120); });
@@ -180,7 +174,7 @@
   })();
 
   // ---------- page: reveal on scroll ----------
-  if ('IntersectionObserver' in window && !reduce) {
+  if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
     document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
   } else document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('in'); });
@@ -205,7 +199,7 @@
       if (!row) return;
       function step(d) {
         var c = row.querySelector('.card'), gap = parseFloat(getComputedStyle(row).columnGap) || 0;
-        row.scrollBy({ left: d * ((c ? c.offsetWidth : row.clientWidth * 0.8) + gap), behavior: reduce ? 'auto' : 'smooth' });
+        row.scrollBy({ left: d * ((c ? c.offsetWidth : row.clientWidth * 0.8) + gap), behavior: 'smooth' });
       }
       ['prev', 'next'].forEach(function (dir) {
         var b = document.createElement('button');
@@ -247,7 +241,7 @@
   if (msgrLink && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) msgrLink.href = msgrLink.getAttribute('data-desk');
 
   // rotating example requests in the empty message box: one line at a time, dissolving in and out (opacity only,
-  // the reduced-motion-safe transition), held while the tab is hidden or the box has text, hidden once anything is typed
+  // the plain opacity transition), held while the tab is hidden or the box has text, hidden once anything is typed
   var taWrap = document.getElementById('taWrap'), phCycle = document.getElementById('phCycle');
   var ta = form && form.querySelector('textarea[name=message]');
   var examples = ((PF.form || {}).examples || []).filter(function (x) { return typeof x === 'string' && x; });
