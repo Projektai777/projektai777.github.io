@@ -266,6 +266,14 @@
     window.addEventListener('pageshow', filled); // a restored page (back button) may bring its typed text back
   }
 
+  // a link to one question (#faq-N: llms.txt, an AI answer's citation) opens its answer, not just a closed row
+  function openFaq() {
+    var d = /^#faq-\d+$/.test(location.hash) && document.getElementById(location.hash.slice(1));
+    if (d && d.tagName === 'DETAILS') d.open = true;
+  }
+  openFaq();
+  window.addEventListener('hashchange', openFaq);
+
   if (form) form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!form.reportValidity()) return;
