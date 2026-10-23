@@ -289,21 +289,30 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 [data-reveal].in { transform: none; }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
 .svc { padding: clamp(22px, 3vw, 40px); position: relative; }
-.svc + .svc { border-left: 1px solid var(--line); } /* five cards in one row since 2026-10-21 (AI search added) */
+.svc + .svc { border-left: 1px solid var(--line); } /* four cards in one row; card 05 is the large card under them (owner 2026-10-23) */
 @media (max-width: 1180px) {
-  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 + 2 + the fifth card across both columns */
+  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 + 2 */
   .svc:nth-child(odd) { border-left: 0; }
   .svc:nth-child(n+3) { border-top: 1px solid var(--line); }
-  .svc:nth-child(5) { grid-column: 1 / -1; }
 }
-.svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
+.svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
-.ads-note { margin-top: 16px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.ads-note .kicker { margin: 0 0 6px; }
-.ads-note .ads-t { margin: 0 0 10px; }
-.ads-note .ads-t b { color: var(--fg); font-weight: 500; }
+/* card 05 (owner 2026-10-23, ryr48cfe7b): AI search, ads and the automated client search in one large card with a soft
+   green tint, a short headline first so a visitor sees at once what it is about */
+.svc-big { margin-top: 16px; padding: clamp(24px, 3.4vw, 44px); border: 1px solid rgba(125, 255, 179, 0.32); border-radius: 10px;
+  background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, 0.13), rgba(111, 211, 255, 0.05) 55%, transparent 80%), var(--bg-2); }
+.svc-big h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.15; margin: 0 0 10px; overflow-wrap: break-word; }
+.svc-big .big-lead { color: #c7d0cd; font-size: clamp(16px, 1.4vw, 18px); max-width: 70ch; margin: 0 0 clamp(20px, 3vw, 30px); }
+.big-parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 2.6vw, 32px); }
+.big-parts > div { padding-top: 14px; border-top: 1px solid rgba(125, 255, 179, 0.28); min-width: 0; }
+.big-parts h4 { font-family: var(--sans); font-weight: 600; font-size: 17px; margin: 0 0 8px; color: var(--fg); overflow-wrap: break-word; }
+.big-parts p { color: #b9c3c0; margin: 0; font-size: 15px; }
+.big-cta { margin: clamp(20px, 3vw, 28px) 0 0; }
+@media (max-width: 900px) {
+  .big-parts { grid-template-columns: 1fr; }
+}
 .ads-cta { color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
 .ads-cta:hover, .ads-cta:focus-visible { border-color: var(--acc); }
 .process { margin-top: clamp(40px, 6vw, 72px); }
@@ -542,9 +551,18 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <article class="svc"><span class="n">02</span><h3>CRM-системы</h3><p class="how">Создаю CRM-систему под вашу работу: клиенты, заказы и напоминания в одном месте.</p></article>
       <article class="svc"><span class="n">03</span><h3>Автоматизация процессов</h3><p class="how">Соединяю инструменты, которыми вы уже пользуетесь, чтобы повторяющаяся работа шла без ваших рук.</p></article>
       <article class="svc"><span class="n">04</span><h3>Инструменты ИИ</h3><p class="how">Искусственный интеллект, который работает за вас: отвечает клиентам, сортирует заявки, считывает документы.</p></article>
-      <article class="svc"><span class="n">05</span><h3>Видимость в ИИ-поиске</h3><p class="how">Чтобы ChatGPT, Gemini и ИИ-ответы Google упоминали ваш бизнес: первую проверку делаю бесплатно, затем каждый месяц присылаю короткий отчёт.</p></article>
     </div>
-    <aside class="ads-note"><p class="kicker mono">Также</p><p class="ads-t"><b>Реклама в Google, Facebook и Instagram</b> Ежемесячная услуга без долгих договоров: остановить можно в любой момент, деньги на рекламу вы платите напрямую Google и Meta, а каждый месяц получаете короткий отчёт о том, сколько было обращений и во сколько обошлось одно. Тем, кому я веду рекламу, проверка видимости в ИИ-поиске бесплатна.</p><p class="ads-t"><b>Автоматический поиск клиентов</b> Система находит подходящие вашему бизнесу компании по их открыто опубликованным контактам и в спокойном темпе отправляет каждой короткое письмо от вашего имени с почты вашей компании. В каждом письме есть ссылка для отказа, а ответы заинтересованных сразу приходят вам.</p><a class="ads-cta" href="#contact">Спросить об этих услугах</a></aside>
+    <article class="svc-big" id="clients">
+      <span class="n">05</span>
+      <h3>Больше клиентов для вашего бизнеса</h3>
+      <p class="big-lead">Три способа привлечь новых клиентов: ИИ-поиск, реклама и автоматический поиск клиентов. Выберите один или все три.</p>
+      <div class="big-parts">
+        <div><h4>Видимость в ИИ-поиске</h4><p>Чтобы ChatGPT, Gemini и ИИ-ответы Google упоминали ваш бизнес: первую проверку делаю бесплатно, затем каждый месяц присылаю короткий отчёт.</p></div>
+        <div><h4>Реклама в Google, Facebook и Instagram</h4><p>Ежемесячная услуга без долгих договоров: остановить можно в любой момент, деньги на рекламу вы платите напрямую Google и Meta, а каждый месяц получаете короткий отчёт о том, сколько было обращений и во сколько обошлось одно. Тем, кому я веду рекламу, проверка видимости в ИИ-поиске бесплатна.</p></div>
+        <div><h4>Автоматический поиск клиентов</h4><p>Система находит подходящие вашему бизнесу компании по их открыто опубликованным контактам и в спокойном темпе отправляет каждой короткое письмо от вашего имени с почты вашей компании. В каждом письме есть ссылка для отказа, а ответы заинтересованных сразу приходят вам.</p></div>
+      </div>
+      <p class="big-cta"><a class="ads-cta" href="#contact">Спросить об этих услугах</a></p>
+    </article>
     <div class="process" data-reveal>
       <p class="kicker mono">Как проходит работа</p>
       <ol class="steps">
@@ -646,6 +664,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"ru","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Отправляю…","ok":"Получил. Отвечу в течение рабочего дня.","err":"Не удалось отправить. Напишите напрямую:","examples":["Например: у нас есть сайт, но заказы приходят только по телефону; хотим, чтобы клиенты заказывали или бронировали сами…","Например: каждый день отвечаем на повторяющиеся вопросы клиентов; хотим, чтобы за нас отвечал искусственный интеллект…","Например: данные из писем и заказов переносим в Excel вручную; хотим, чтобы это происходило само…","Например: наш сайт устарел и неудобен на телефоне; хотим его обновить…","Например: коммерческие предложения для клиентов считаем вручную; хотим инструмент, который готовит их за несколько минут…","Например: получаем много счетов и документов; хотим, чтобы система сама их считывала и сортировала…","Например: заказы, склад и работы ведём в разных таблицах; хотим простую систему, где всё собрано вместе…"],"subject":"Запрос с сайта"},"work":{"next":"Следующий проект","prev":"Предыдущий проект"}};</script>
-<script src="/app.js?v=51d0090b" defer></script>
+<script src="/app.js?v=d8629cd1" defer></script>
 </body>
 </html>
