@@ -289,21 +289,30 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 [data-reveal].in { transform: none; }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
 .svc { padding: clamp(22px, 3vw, 40px); position: relative; }
-.svc + .svc { border-left: 1px solid var(--line); } /* five cards in one row since 2026-10-21 (AI search added) */
+.svc + .svc { border-left: 1px solid var(--line); } /* four cards in one row; card 05 is the large card under them (owner 2026-10-23) */
 @media (max-width: 1180px) {
-  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 + 2 + the fifth card across both columns */
+  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 + 2 */
   .svc:nth-child(odd) { border-left: 0; }
   .svc:nth-child(n+3) { border-top: 1px solid var(--line); }
-  .svc:nth-child(5) { grid-column: 1 / -1; }
 }
-.svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
+.svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
-.ads-note { margin-top: 16px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.ads-note .kicker { margin: 0 0 6px; }
-.ads-note .ads-t { margin: 0 0 10px; }
-.ads-note .ads-t b { color: var(--fg); font-weight: 500; }
+/* card 05 (owner 2026-10-23, ryr48cfe7b): AI search, ads and the automated client search in one large card with a soft
+   green tint, a short headline first so a visitor sees at once what it is about */
+.svc-big { margin-top: 16px; padding: clamp(24px, 3.4vw, 44px); border: 1px solid rgba(125, 255, 179, 0.32); border-radius: 10px;
+  background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, 0.13), rgba(111, 211, 255, 0.05) 55%, transparent 80%), var(--bg-2); }
+.svc-big h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.15; margin: 0 0 10px; overflow-wrap: break-word; }
+.svc-big .big-lead { color: #c7d0cd; font-size: clamp(16px, 1.4vw, 18px); max-width: 70ch; margin: 0 0 clamp(20px, 3vw, 30px); }
+.big-parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 2.6vw, 32px); }
+.big-parts > div { padding-top: 14px; border-top: 1px solid rgba(125, 255, 179, 0.28); min-width: 0; }
+.big-parts h4 { font-family: var(--sans); font-weight: 600; font-size: 17px; margin: 0 0 8px; color: var(--fg); overflow-wrap: break-word; }
+.big-parts p { color: #b9c3c0; margin: 0; font-size: 15px; }
+.big-cta { margin: clamp(20px, 3vw, 28px) 0 0; }
+@media (max-width: 900px) {
+  .big-parts { grid-template-columns: 1fr; }
+}
 .ads-cta { color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
 .ads-cta:hover, .ads-cta:focus-visible { border-color: var(--acc); }
 .process { margin-top: clamp(40px, 6vw, 72px); }
@@ -542,9 +551,18 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <article class="svc"><span class="n">02</span><h3>CRM-system</h3><p class="how">Jag bygger ett CRM-system efter hur du arbetar: kunder, beställningar och påminnelser på ett ställe.</p></article>
       <article class="svc"><span class="n">03</span><h3>Processautomatisering</h3><p class="how">Jag kopplar ihop verktygen du redan använder så att det återkommande arbetet sköter sig utan att du behöver lyfta ett finger.</p></article>
       <article class="svc"><span class="n">04</span><h3>AI-verktyg</h3><p class="how">Artificiell intelligens som arbetar åt dig: svarar kunder, sorterar förfrågningar, läser dokument.</p></article>
-      <article class="svc"><span class="n">05</span><h3>Synlighet i AI-sökning</h3><p class="how">Så att ChatGPT, Gemini och Googles AI-svar nämner ditt företag: den första kontrollen gör jag gratis, därefter skickar jag en kort rapport varje månad.</p></article>
     </div>
-    <aside class="ads-note"><p class="kicker mono">Även</p><p class="ads-t"><b>Annonsering på Google, Facebook och Instagram</b> En månadstjänst utan långa avtal: du kan avsluta när som helst, annonspengarna betalar du direkt till Google och Meta, och varje månad får du en kort rapport om hur många förfrågningar som kom och vad en kostade. Kör jag dina annonser är AI-sökkontrollen gratis.</p><p class="ads-t"><b>Automatisk kundsökning</b> Systemet hittar företag som passar din verksamhet utifrån deras offentliga kontaktuppgifter och skickar i lugn takt ett kort mejl till vart och ett i ditt namn från företagets egen e-post. Varje mejl har en länk för att avregistrera sig, och svar från intresserade kommer direkt till dig.</p><a class="ads-cta" href="#contact">Fråga om dessa tjänster</a></aside>
+    <article class="svc-big" id="clients">
+      <span class="n">05</span>
+      <h3>Fler kunder till ditt företag</h3>
+      <p class="big-lead">Tre sätt att få nya kunder: AI-sökning, annonsering och automatisk kundsökning. Välj ett eller alla tre.</p>
+      <div class="big-parts">
+        <div><h4>Synlighet i AI-sökning</h4><p>Så att ChatGPT, Gemini och Googles AI-svar nämner ditt företag: den första kontrollen gör jag gratis, därefter skickar jag en kort rapport varje månad.</p></div>
+        <div><h4>Annonsering på Google, Facebook och Instagram</h4><p>En månadstjänst utan långa avtal: du kan avsluta när som helst, annonspengarna betalar du direkt till Google och Meta, och varje månad får du en kort rapport om hur många förfrågningar som kom och vad en kostade. Kör jag dina annonser är AI-sökkontrollen gratis.</p></div>
+        <div><h4>Automatisk kundsökning</h4><p>Systemet hittar företag som passar din verksamhet utifrån deras offentliga kontaktuppgifter och skickar i lugn takt ett kort mejl till vart och ett i ditt namn från företagets egen e-post. Varje mejl har en länk för att avregistrera sig, och svar från intresserade kommer direkt till dig.</p></div>
+      </div>
+      <p class="big-cta"><a class="ads-cta" href="#contact">Fråga om dessa tjänster</a></p>
+    </article>
     <div class="process" data-reveal>
       <p class="kicker mono">Så går arbetet till</p>
       <ol class="steps">
@@ -646,6 +664,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"sv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Skickar…","ok":"Mottaget. Jag svarar inom en arbetsdag.","err":"Det gick inte att skicka. Skriv direkt till mig:","examples":["T.ex.: vi har en hemsida men beställningarna kommer bara per telefon; vi vill att kunderna ska kunna beställa eller boka själva…","T.ex.: varje dag svarar vi på samma kundfrågor; vi vill att AI ska svara åt oss…","T.ex.: vi för över data från mejl och beställningar till Excel för hand; vi vill att det ska ske av sig självt…","T.ex.: vår hemsida är föråldrad och krånglig i mobilen; vi vill fräscha upp den…","T.ex.: vi räknar ut offerter till kunder för hand; vi vill ha ett verktyg som tar fram dem på några minuter…","T.ex.: vi får många fakturor och dokument; vi vill ha ett system som läser och sorterar dem av sig självt…","T.ex.: vi följer beställningar, lager och jobb i olika kalkylblad; vi vill ha ett enkelt system som samlar allt på ett ställe…"],"subject":"Förfrågan från hemsidan"},"work":{"next":"Nästa projekt","prev":"Föregående projekt"}};</script>
-<script src="/app.js?v=51d0090b" defer></script>
+<script src="/app.js?v=d8629cd1" defer></script>
 </body>
 </html>

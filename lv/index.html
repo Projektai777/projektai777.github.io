@@ -289,21 +289,30 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 [data-reveal].in { transform: none; }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
 .svc { padding: clamp(22px, 3vw, 40px); position: relative; }
-.svc + .svc { border-left: 1px solid var(--line); } /* five cards in one row since 2026-10-21 (AI search added) */
+.svc + .svc { border-left: 1px solid var(--line); } /* four cards in one row; card 05 is the large card under them (owner 2026-10-23) */
 @media (max-width: 1180px) {
-  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 + 2 + the fifth card across both columns */
+  .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 + 2 */
   .svc:nth-child(odd) { border-left: 0; }
   .svc:nth-child(n+3) { border-top: 1px solid var(--line); }
-  .svc:nth-child(5) { grid-column: 1 / -1; }
 }
-.svc .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
+.svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
-.ads-note { margin-top: 16px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.ads-note .kicker { margin: 0 0 6px; }
-.ads-note .ads-t { margin: 0 0 10px; }
-.ads-note .ads-t b { color: var(--fg); font-weight: 500; }
+/* card 05 (owner 2026-10-23, ryr48cfe7b): AI search, ads and the automated client search in one large card with a soft
+   green tint, a short headline first so a visitor sees at once what it is about */
+.svc-big { margin-top: 16px; padding: clamp(24px, 3.4vw, 44px); border: 1px solid rgba(125, 255, 179, 0.32); border-radius: 10px;
+  background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, 0.13), rgba(111, 211, 255, 0.05) 55%, transparent 80%), var(--bg-2); }
+.svc-big h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.15; margin: 0 0 10px; overflow-wrap: break-word; }
+.svc-big .big-lead { color: #c7d0cd; font-size: clamp(16px, 1.4vw, 18px); max-width: 70ch; margin: 0 0 clamp(20px, 3vw, 30px); }
+.big-parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 2.6vw, 32px); }
+.big-parts > div { padding-top: 14px; border-top: 1px solid rgba(125, 255, 179, 0.28); min-width: 0; }
+.big-parts h4 { font-family: var(--sans); font-weight: 600; font-size: 17px; margin: 0 0 8px; color: var(--fg); overflow-wrap: break-word; }
+.big-parts p { color: #b9c3c0; margin: 0; font-size: 15px; }
+.big-cta { margin: clamp(20px, 3vw, 28px) 0 0; }
+@media (max-width: 900px) {
+  .big-parts { grid-template-columns: 1fr; }
+}
 .ads-cta { color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
 .ads-cta:hover, .ads-cta:focus-visible { border-color: var(--acc); }
 .process { margin-top: clamp(40px, 6vw, 72px); }
@@ -542,9 +551,18 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <article class="svc"><span class="n">02</span><h3>CRM sistēmas</h3><p class="how">Izveidoju CRM sistēmu pēc Jūsu darba veida: klienti, pasūtījumi un atgādinājumi vienuviet.</p></article>
       <article class="svc"><span class="n">03</span><h3>Procesu automatizācija</h3><p class="how">Savienoju rīkus, ko Jūs jau izmantojat, lai atkārtots darbs notiktu bez Jūsu līdzdalības.</p></article>
       <article class="svc"><span class="n">04</span><h3>AI rīki</h3><p class="how">Mākslīgais intelekts, kas strādā Jūsu labā: atbild klientiem, kārto pieprasījumus, nolasa dokumentus.</p></article>
-      <article class="svc"><span class="n">05</span><h3>Redzamība AI meklēšanā</h3><p class="how">Lai ChatGPT, Gemini un Google AI atbildēs tiktu minēts Jūsu uzņēmums: pirmo pārbaudi veicu bez maksas, vēlāk katru mēnesi nosūtu īsu atskaiti.</p></article>
     </div>
-    <aside class="ads-note"><p class="kicker mono">Arī</p><p class="ads-t"><b>Reklāma Google, Facebook un Instagram</b> Ikmēneša pakalpojums bez ilgiem līgumiem: apturēt var jebkurā brīdī, reklāmas naudu maksājat tieši Google un Meta, un katru mēnesi saņemat īsu atskaiti par to, cik bija pieprasījumu un cik izmaksāja viens. Kam vadu reklāmu, tiem AI meklēšanas pārbaude ir bez maksas.</p><p class="ads-t"><b>Automātiska klientu meklēšana</b> Sistēma atrod jūsu biznesam piemērotus uzņēmumus pēc to publiski norādītajiem kontaktiem un mierīgā tempā no jūsu uzņēmuma e-pasta nosūta katram īsu vēstuli jūsu vārdā. Katrā vēstulē ir atteikšanās saite, un ieinteresēto atbildes uzreiz nonāk pie jums.</p><a class="ads-cta" href="#contact">Pajautāt par šiem pakalpojumiem</a></aside>
+    <article class="svc-big" id="clients">
+      <span class="n">05</span>
+      <h3>Vairāk klientu Jūsu biznesam</h3>
+      <p class="big-lead">Trīs veidi, kā iegūt jaunus klientus: AI meklēšana, reklāma un automātiska klientu meklēšana. Izvēlieties vienu vai visus trīs.</p>
+      <div class="big-parts">
+        <div><h4>Redzamība AI meklēšanā</h4><p>Lai ChatGPT, Gemini un Google AI atbildēs tiktu minēts Jūsu uzņēmums: pirmo pārbaudi veicu bez maksas, vēlāk katru mēnesi nosūtu īsu atskaiti.</p></div>
+        <div><h4>Reklāma Google, Facebook un Instagram</h4><p>Ikmēneša pakalpojums bez ilgiem līgumiem: apturēt var jebkurā brīdī, reklāmas naudu maksājat tieši Google un Meta, un katru mēnesi saņemat īsu atskaiti par to, cik bija pieprasījumu un cik izmaksāja viens. Kam vadu reklāmu, tiem AI meklēšanas pārbaude ir bez maksas.</p></div>
+        <div><h4>Automātiska klientu meklēšana</h4><p>Sistēma atrod jūsu biznesam piemērotus uzņēmumus pēc to publiski norādītajiem kontaktiem un mierīgā tempā no jūsu uzņēmuma e-pasta nosūta katram īsu vēstuli jūsu vārdā. Katrā vēstulē ir atteikšanās saite, un ieinteresēto atbildes uzreiz nonāk pie jums.</p></div>
+      </div>
+      <p class="big-cta"><a class="ads-cta" href="#contact">Pajautāt par šiem pakalpojumiem</a></p>
+    </article>
     <div class="process" data-reveal>
       <p class="kicker mono">Kā darbs notiek</p>
       <ol class="steps">
@@ -646,6 +664,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"lv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sūta…","ok":"Saņēmu. Atbildēšu darbadienas laikā.","err":"Nevarēja sūtīt. Rakstiet man tieši:","examples":["Piem.: mums ir vietne, bet pasūtījumi nāk tikai telefoniski; gribētu, lai klienti paši varētu pasūtīt vai rezervēt…","Piem.: katru dienu atbildam uz vieniem un tiem pašiem klientu jautājumiem; gribētu, lai AI atbildētu mūsu vietā…","Piem.: datus no vēstulēm un pasūtījumiem ar rokām pārnesam uz Excel; gribētu, lai tas notiktu pats…","Piem.: mūsu mājaslapa ir novecojusi un neērta telefonā; gribētu to atjaunot…","Piem.: cenu piedāvājumus klientiem aprēķinām ar rokām; gribētu rīku, kas tos sagatavo dažu minūšu laikā…","Piem.: saņemam daudz rēķinu un dokumentu; gribētu, lai sistēma patstāvīgi tos nolasītu un kārtotu…","Piem.: pasūtījumus, noliktavu un darbus uzskaitām dažādās tabulās; gribētu vienkāršu sistēmu, kur viss būtu kopā…"],"subject":"Pieprasījums no mājaslapas"},"work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"}};</script>
-<script src="/app.js?v=51d0090b" defer></script>
+<script src="/app.js?v=d8629cd1" defer></script>
 </body>
 </html>
