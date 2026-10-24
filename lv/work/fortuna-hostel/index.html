@@ -289,13 +289,16 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 [data-reveal].in { transform: none; }
 
 /* services */
-.svc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
-.svc { padding: clamp(22px, 3vw, 40px); position: relative; }
-.svc + .svc { border-left: 1px solid var(--line); } /* four cards in one row; card 05 is the large card under them (owner 2026-10-23) */
+/* cards 01-04 (owner 2026-10-24, r0nuj6abf3): the same soft gradient as card 05, but blue-led, on each card so every card
+   carries it in the one-column phone view; frame and dividers tinted blue at every width */
+.svc-grid { --svc-line: rgba(111, 211, 255, 0.22); display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid rgba(111, 211, 255, 0.32); border-radius: 10px; overflow: hidden; background: var(--bg-2); }
+.svc { padding: clamp(22px, 3vw, 40px); position: relative;
+  background: radial-gradient(120% 140% at 0% 0%, rgba(111, 211, 255, 0.13), rgba(125, 255, 179, 0.04) 55%, transparent 80%), var(--bg-2); }
+.svc + .svc { border-left: 1px solid var(--svc-line); } /* four cards in one row; card 05 is the large card under them (owner 2026-10-23) */
 @media (max-width: 1180px) {
   .svc-grid { grid-template-columns: 1fr 1fr; } /* 2 + 2 */
   .svc:nth-child(odd) { border-left: 0; }
-  .svc:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .svc:nth-child(n+3) { border-top: 1px solid var(--svc-line); }
 }
 .svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
@@ -309,7 +312,16 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .big-parts > div { padding-top: 14px; border-top: 1px solid rgba(125, 255, 179, 0.28); min-width: 0; }
 .big-parts h4 { font-family: var(--sans); font-weight: 600; font-size: 17px; margin: 0 0 8px; color: var(--fg); overflow-wrap: break-word; }
 .big-parts p { color: #b9c3c0; margin: 0; font-size: 15px; }
-.big-cta { margin: clamp(20px, 3vw, 28px) 0 0; }
+/* card 05 links as clear buttons, apart from each other (owner 2026-10-24, r0omvx6dc8): the first (ask) filled like the
+   hero button, the second outlined; the dot between them is hidden; long text wraps inside the button */
+.big-cta { margin: clamp(22px, 3vw, 30px) 0 0; display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; }
+.big-cta > span[aria-hidden] { display: none; }
+.big-cta .ads-cta { display: inline-flex; align-items: center; max-width: 100%; padding: 12px 18px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px;
+  background: rgba(125, 255, 179, 0.07); color: var(--acc); font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; transition: border-color .2s, background .2s, transform .2s; }
+.big-cta .ads-cta:first-child { background: var(--acc); border-color: var(--acc); color: #06110b; font-weight: 500; }
+.big-cta .ads-cta:hover, .big-cta .ads-cta:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.14); transform: translateY(-1px); }
+.big-cta .ads-cta:first-child:hover, .big-cta .ads-cta:first-child:focus-visible { background: #9dffc6; }
+.big-cta .ads-cta:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
 @media (max-width: 900px) {
   .big-parts { grid-template-columns: 1fr; }
 }
@@ -497,7 +509,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .hero { min-height: 0; padding: 28px 0 32px; }
   h1 { max-width: none; font-size: clamp(36px, 10.5vw, 56px); }
   .svc-grid { grid-template-columns: 1fr; }
-  .svc + .svc { border-left: 0; border-top: 1px solid var(--line); }
+  .svc + .svc { border-left: 0; border-top: 1px solid var(--svc-line); }
   .steps { grid-template-columns: 1fr; gap: 12px; }
   .row2 { grid-template-columns: 1fr; }
   /* phones: the rows run edge to edge, so a card slides off the screen instead of being cut at the margin */
@@ -582,6 +594,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"lv","work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"}};</script>
-<script src="/app.js?v=d8629cd1" defer></script>
+<script src="/app.js?v=ffed5e02" defer></script>
 </body>
 </html>
