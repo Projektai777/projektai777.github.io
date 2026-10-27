@@ -14,6 +14,8 @@ Ignas — Self-employed (individual activity) · Lithuania.
 - Automated client search: The system finds companies that fit your business from their publicly listed contacts and, at a calm pace, sends each one a short letter in your name from your own company mailbox. Every letter has an opt-out link, and interested replies reach you straight away.
 - Ads on Google, Facebook and Instagram: A monthly service with no long contract: stop any time, the ad money goes straight to Google and Meta, and each month you get a short report on how many enquiries came and what one cost. If I run your ads, the AI search check is free.
 - Visibility in AI search, automated client search and online ads (page in Lithuanian): https://projektai777.eu/reklama/
+- Custom CRM systems built around how a small business works (page in Lithuanian): https://projektai777.eu/crm-sistemos/
+- Business process automation: connecting the tools a business already uses (page in Lithuanian): https://projektai777.eu/procesu-automatizavimas/
 
 ## Questions
 
