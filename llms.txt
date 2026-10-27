@@ -11,19 +11,19 @@ Ignas — Self-employed (individual activity) · Lithuania.
 - Process automation: I connect the tools you already use so the repetitive work happens without your hands.
 - AI tools: Artificial intelligence that works for you: answers customers, sorts inquiries, reads documents.
 - Visibility in AI search: So that ChatGPT, Gemini and Google's AI answers name your business: the first check is free, then I send a short report each month.
-- Ads on Google, Facebook and Instagram: A monthly service with no long contract: stop any time, the ad money goes straight to Google and Meta, and each month you get a short report on how many enquiries came and what one cost. If I run your ads, the AI search check is free.
 - Automated client search: The system finds companies that fit your business from their publicly listed contacts and, at a calm pace, sends each one a short letter in your name from your own company mailbox. Every letter has an opt-out link, and interested replies reach you straight away.
-- Online ads, visibility in AI search and automated client search (page in Lithuanian): https://projektai777.eu/reklama/
+- Ads on Google, Facebook and Instagram: A monthly service with no long contract: stop any time, the ad money goes straight to Google and Meta, and each month you get a short report on how many enquiries came and what one cost. If I run your ads, the AI search check is free.
+- Visibility in AI search, automated client search and online ads (page in Lithuanian): https://projektai777.eu/reklama/
 
 ## Questions
 
-- [How much does a website, CRM or automation cost?](https://projektai777.eu/en/#faq-1): The price depends on the scope, so I name it once you write what you need: within a working day you get a clear description of the work and a fixed, one-off price. You pay a 50 % advance and the rest after handover.
-- [How long does the work take?](https://projektai777.eu/en/#faq-2): The deadline goes into the contract together with the price, counted in working days from the advance and the materials you provide. Along the way I show an intermediate result and, within the agreed work, change it until it fits.
+- [How much does a website, CRM or automation cost?](https://projektai777.eu/en/#faq-1): It depends on the number of pages and features and on how many other systems it has to connect to. For the agreed work the price is fixed and does not grow along the way: you pay a 50 % advance at the start and the rest only after handover.
+- [How long does the work take?](https://projektai777.eu/en/#faq-2): The deadline goes into the contract together with the price, counted in working days from the advance and the materials you provide. The work goes fastest when your texts, photos and logins are ready from the start.
 - [Can you improve the website I already have?](https://projektai777.eu/en/#faq-3): Yes. I improve working sites and add new features to them, for example a booking window, a photo gallery or a registration form. That is what I did for Fortuna Hostel and Neramioji klasė.
-- [Will I get the source code?](https://projektai777.eu/en/#faq-4): Yes. Once the work is paid in full, you get the full source code and the right to change it, host it anywhere and pass it on.
-- [Are there monthly fees?](https://projektai777.eu/en/#faq-5): For a website you pay me no monthly fee: the price is one-off, and wherever possible I choose free infrastructure. A domain, hosting or other paid outside service, if one is needed, you pay straight to its provider, and the account is in your name. Only the ads service and the monthly AI search reports are paid each month.
-- [What is visibility in AI search?](https://projektai777.eu/en/#faq-6): It is work to make ChatGPT, Gemini and Google's AI answers name your business when people ask about what you offer. The first check is free; after that I send a short report each month.
-- [How do I start?](https://projektai777.eu/en/#faq-7): Write a few sentences in the contact form (https://projektai777.eu/en/#contact), by e-mail, Telegram or Messenger. I reply within a working day with a clear scope and price, not with an offer to schedule a call.
+- [Will we need to meet or have a call?](https://projektai777.eu/en/#faq-4): There is no need. Everything is done in writing, by e-mail, Telegram or Messenger. That way every agreement stays on record, and I can work with businesses wherever they are.
+- [Are there any costs besides the price of the work?](https://projektai777.eu/en/#faq-5): If a domain, paid hosting or another paid outside service is needed, you pay its provider directly and the account is in your name, so the site stays in your hands even after we stop working together. Only the ads service and the monthly AI search reports are paid each month.
+- [Will Google and AI answers find my new website?](https://projektai777.eu/en/#faq-6): Every site I build gets the search basics free: schema.org data, robots.txt and llms.txt files and a Google Business Profile. Ongoing work to get your business named in AI answers is a separate monthly service.
+- [What should I prepare before writing?](https://projektai777.eu/en/#faq-7): Nothing special: just say what you want to change or improve and, if you have them, add a link to your current site and to a site you like. I will ask about anything missing myself.
 
 ## Pages by language
 
