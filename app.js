@@ -282,7 +282,8 @@
     var L = PF.form || {}; msg.className = 'form-msg mono'; msg.textContent = L.sending || '…'; sendBtn.disabled = true;
     var fail = function () {
       msg.className = 'form-msg mono err';
-      var mail = PF.email || ''; var body = encodeURIComponent(data.message + '\n\n' + data.name + ' <' + data.email + '>' + (data.company ? '\n' + data.company : ''));
+      var picks = []; ['website', 'crm', 'automation', 'ai_tools', 'ai', 'ads', 'gbp', 'leads'].forEach(function (k) { var v = data['interest_' + k]; if (v) picks.push(v.slice(0, 60)); });
+      var mail = PF.email || ''; var body = encodeURIComponent(data.message + (picks.length ? '\n\n' + (L.picks || 'Domina') + ': ' + picks.join(', ') : '') + '\n\n' + data.name + ' <' + data.email + '>' + (data.company ? '\n' + data.company : ''));
       msg.innerHTML = ''; msg.appendChild(document.createTextNode((L.err || 'Error.') + ' '));
       var a = document.createElement('a'); a.href = 'mailto:' + mail + '?subject=' + encodeURIComponent(L.subject || 'Užklausa iš svetainės') + '&body=' + body; a.textContent = mail; msg.appendChild(a);
       sendBtn.disabled = false;

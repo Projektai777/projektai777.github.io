@@ -528,9 +528,70 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .rail-btn.next { right: 6px; }
   .foot { padding-bottom: 92px; }
 }
+
+/* round 2: v4 path "Kas po svetainės" (a thin connected line with three dots after the work section) */
+.path { padding: clamp(36px, 5vw, 64px) 0; }
+.path-head { margin-bottom: 22px; }
+.path-head .kicker { margin-bottom: 8px; }
+.path-h { font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.15; letter-spacing: -.01em; margin: 0; max-width: none; }
+.path-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.path-steps li { position: relative; padding-top: 30px; }
+.path-steps li::before { content: ""; position: absolute; top: 0; left: 0; width: 11px; height: 11px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid var(--acc); background: var(--bg); transition: opacity .5s ease, transform .5s ease, background .25s ease, box-shadow .25s ease; }
+.path-steps li:first-child::before { background: var(--acc); }
+.path-steps li:not(:last-child)::after { content: ""; position: absolute; top: 5px; left: 19px; right: -16px; height: 1px; background: var(--line-2); transform-origin: left center; transition: transform .9s ease; }
+.path-steps li:nth-child(2)::before { transition-delay: .55s, .55s, 0s, 0s; }
+.path-steps li:nth-child(3)::before { transition-delay: 1.1s, 1.1s, 0s, 0s; }
+.path-steps li:nth-child(4)::before { transition-delay: 1.65s, 1.65s, 0s, 0s; }
+.path-steps li:nth-child(3)::after { transition-delay: 1.25s; }
+.path-steps li:nth-child(1)::after { transition-delay: .15s; }
+.path-steps li:nth-child(2)::after { transition-delay: .7s; }
+.js .path:not(.in) .path-steps li::before { opacity: 0; transform: scale(.4); }
+.js .path:not(.in) .path-steps li::after { transform: scaleX(0); }
+.path-steps li:hover::before { box-shadow: 0 0 0 4px var(--line-2); }
+.path-steps li:not(:first-child):hover::before { background: var(--acc); }
+.path-t, .path-a { display: block; font-weight: 600; font-size: 15px; color: var(--fg); text-decoration: none; margin-bottom: 4px; transition: color .2s ease; }
+.path-a::after { content: ""; position: absolute; inset: 0; border-radius: 8px; }
+.path-a:hover, .path-a:focus-visible { color: var(--acc); }
+.path-a:focus-visible { outline: none; }
+.path-a:focus-visible::after { outline: 2px solid var(--acc); outline-offset: 4px; }
+.path-s { display: block; color: var(--mute); font-size: 14px; max-width: 34ch; }
+@media (max-width: 720px) {
+  .path-steps { grid-template-columns: 1fr; gap: 0; }
+  .path-steps li { padding: 0 0 22px 30px; }
+  .path-steps li:last-child { padding-bottom: 0; }
+  .path-steps li::before { top: 4px; }
+  .path-steps li:not(:last-child)::after { top: 22px; bottom: -2px; left: 5px; right: auto; width: 1px; height: auto; transform-origin: center top; }
+  .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
+}
+
+/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+.contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
+.contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
+.contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
+.contact .side-card { grid-column: 1; grid-row: 2; }
+.contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
+.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
+.side-card .kicker { margin: 0 0 6px; }
+.side-card p { margin: 0 0 10px; }
+.side-card p:last-child { margin: 0; }
+.side-card .side-t { color: var(--fg); font-size: 15px; }
+.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
+.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
+.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
+.picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
+.cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
+.cform .pick:hover, .cform .pick:focus-within, .cform .pick:has(input:checked) { border-color: var(--acc); }
+.cform .pick input { width: 16px; height: 16px; padding: 0; margin: 0; flex: none; accent-color: var(--acc); cursor: pointer; }
+.cform .pick input:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; box-shadow: none; }
+.cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
+@media (max-width: 960px) {
+  .contact { display: block; }
+  .contact .side-card { margin-bottom: 32px; }
+}
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Nettsider, CRM-systemer, automatisering, KI-verktøy og synlighet i KI-søk for bedrifter. Fast pris, koden blir din. Jeg svarer innen en arbeidsdag.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"address":{"@type":"PostalAddress","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs","AI search visibility","generative engine optimization","online advertising"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Dette gjør jeg: nettsider, CRM, automatisering, KI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Nettsider","description":"En ny nettside, en forbedring av den du har, eller nye funksjoner på en side som allerede er i drift."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM-systemer","description":"Jeg bygger et CRM-system rundt måten du jobber på: kunder, bestillinger og påminnelser på ett sted."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Automatisering av prosesser","description":"Jeg kobler sammen verktøyene du allerede bruker, slik at gjentakende arbeid skjer uten at du må gjøre noe."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"KI-verktøy","description":"Kunstig intelligens som jobber for deg: svarer kunder, sorterer henvendelser, leser dokumenter."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Synlighet i KI-søk","description":"Slik at ChatGPT, Gemini og Googles KI-svar nevner bedriften din: den første kontrollen gjør jeg gratis, deretter sender jeg en kort rapport hver måned."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Automatisk kundesøk","description":"Systemet finner bedrifter som passer for virksomheten din, ut fra kontaktinformasjonen de selv har gjort offentlig, og sender hver av dem i rolig tempo en kort e-post i ditt navn fra bedriftens egen e-postadresse. Hver e-post har en lenke for å melde seg av, og svar fra interesserte kommer rett til deg."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Annonsering på Google, Facebook og Instagram","description":"En månedlig tjeneste uten lange avtaler: du kan stoppe når som helst, annonsepengene betaler du direkte til Google og Meta, og hver måned får du en kort rapport om hvor mange henvendelser som kom og hva én kostet. Kjører jeg annonsene dine, er KI-søkkontrollen gratis."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://projektai777.eu/#website","url":"https://projektai777.eu/","name":"Projektai777","inLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"publisher":{"@id":"https://projektai777.eu/#business"}},{"@type":"WebPage","@id":"https://projektai777.eu/nb/#page","url":"https://projektai777.eu/nb/","name":"Nettsider og automatisering for bedrifter | Projektai777","description":"Nettsider, CRM-systemer, automatisering, KI-verktøy og synlighet i KI-søk for bedrifter. Fast pris, koden blir din. Jeg svarer innen en arbeidsdag.","inLanguage":"nb","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"}},{"@type":"FAQPage","@id":"https://projektai777.eu/nb/#faq","url":"https://projektai777.eu/nb/","inLanguage":"nb","isPartOf":{"@id":"https://projektai777.eu/nb/#page"},"mainEntity":[{"@type":"Question","name":"Hva koster en nettside, et CRM-system eller automatisering?","acceptedAnswer":{"@type":"Answer","text":"Det avhenger av hvor mange sider og funksjoner som trengs, og hvor mange andre systemer løsningen skal kobles til. For det avtalte arbeidet er prisen fast og øker ikke underveis: du betaler 50 % forskudd ved oppstart og resten først etter overlevering."}},{"@type":"Question","name":"Hvor lang tid tar arbeidet?","acceptedAnswer":{"@type":"Answer","text":"Fristen skriver jeg inn i avtalen sammen med prisen, regnet i arbeidsdager fra forskuddet og materialet ditt er mottatt. Arbeidet går raskest når tekster, bilder og innlogginger er klare fra start."}},{"@type":"Question","name":"Kan du forbedre nettsiden jeg allerede har?","acceptedAnswer":{"@type":"Answer","text":"Ja. Jeg forbedrer eksisterende nettsider og legger til nye funksjoner, for eksempel bestillingsvindu, bildegalleri eller registreringsskjema. Det har jeg gjort for nettsidene til Fortuna Hostel og Neramioji klasė."}},{"@type":"Question","name":"Må vi møtes eller ta en samtale?","acceptedAnswer":{"@type":"Answer","text":"Det trengs ikke. Alt foregår skriftlig, på e-post, Telegram eller Messenger. Slik står alle avtaler skriftlig, og jeg kan jobbe med bedrifter uansett hvor de holder til."}},{"@type":"Question","name":"Blir det andre kostnader enn prisen for arbeidet?","acceptedAnswer":{"@type":"Answer","text":"Trengs det domene, betalt hosting eller en annen betalt ekstern tjeneste, betaler du direkte til leverandøren, og kontoen står i ditt navn, så nettsiden forblir din også etter at samarbeidet er over. Bare annonsetjenesten og de månedlige rapportene om KI-søk betales hver måned."}},{"@type":"Question","name":"Vil Google og KI-svar finne den nye nettsiden min?","acceptedAnswer":{"@type":"Answer","text":"Hver nettside jeg lager, får grunnlaget for søk gratis: schema.org-data, filene robots.txt og llms.txt og en Google-bedriftsprofil. Løpende arbeid for at KI-svar skal nevne bedriften din, er en egen månedlig tjeneste."}},{"@type":"Question","name":"Hva bør jeg forberede før jeg skriver?","acceptedAnswer":{"@type":"Answer","text":"Ikke noe spesielt: det holder å skrive hva du vil endre eller forbedre, og gjerne legge ved en lenke til nettsiden din og til en nettside du liker. Det som mangler, spør jeg om selv."}}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://projektai777.eu/#website","url":"https://projektai777.eu/","name":"Projektai777","inLanguage":["lt","lv","et","en","ru","nb","sv","fi"],"publisher":{"@id":"https://projektai777.eu/#business"}},{"@type":"WebPage","@id":"https://projektai777.eu/nb/#page","url":"https://projektai777.eu/nb/","name":"Nettsider og automatisering for bedrifter | Projektai777","description":"Nettsider, CRM-systemer, automatisering, KI-verktøy og synlighet i KI-søk for bedrifter. Fast pris, koden blir din. Jeg svarer innen en arbeidsdag.","inLanguage":"nb","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"}},{"@type":"FAQPage","@id":"https://projektai777.eu/nb/#faq","url":"https://projektai777.eu/nb/","inLanguage":"nb","isPartOf":{"@id":"https://projektai777.eu/nb/#page"},"mainEntity":[{"@type":"Question","name":"Hva koster en nettside, et CRM-system eller automatisering?","acceptedAnswer":{"@type":"Answer","text":"Det avhenger av hvor mange sider og funksjoner som trengs, og hvor mange andre systemer løsningen skal kobles til. For det avtalte arbeidet er prisen fast og øker ikke underveis: du betaler 50 % forskudd ved oppstart og resten først etter overlevering."}},{"@type":"Question","name":"Hvor lang tid tar arbeidet?","acceptedAnswer":{"@type":"Answer","text":"Fristen skriver jeg inn i avtalen sammen med prisen, regnet i arbeidsdager fra forskuddet og materialet ditt er mottatt. Arbeidet går raskest når tekster, bilder og innlogginger er klare fra start."}},{"@type":"Question","name":"Kan du forbedre nettsiden jeg allerede har?","acceptedAnswer":{"@type":"Answer","text":"Ja. Jeg forbedrer eksisterende nettsider og legger til nye funksjoner, for eksempel bestillingsvindu, bildegalleri eller registreringsskjema. Det har jeg gjort for nettsidene til Fortuna Hostel og Neramioji klasė."}},{"@type":"Question","name":"Må vi møtes eller ta en samtale?","acceptedAnswer":{"@type":"Answer","text":"Det trengs ikke. Alt foregår skriftlig, på e-post, Telegram eller Messenger. Slik står alle avtaler skriftlig, og jeg kan jobbe med bedrifter uansett hvor de holder til."}},{"@type":"Question","name":"Blir det andre kostnader enn prisen for arbeidet?","acceptedAnswer":{"@type":"Answer","text":"Trengs det domene, betalt hosting eller en annen betalt ekstern tjeneste, betaler du direkte til leverandøren, og kontoen står i ditt navn, så nettsiden forblir din også etter at samarbeidet er over. Bare annonsetjenesten og de månedlige rapportene om KI-søk betales hver måned."}},{"@type":"Question","name":"Vil Google og KI-svar finne den nye nettsiden min?","acceptedAnswer":{"@type":"Answer","text":"Hver nettside jeg lager, får grunnlaget for søk gratis: schema.org-data, filene robots.txt og llms.txt og en Google-bedriftsprofil hvis bedriften oppfyller Googles krav. Løpende arbeid for at KI-svar skal nevne bedriften din, er en egen månedlig tjeneste."}},{"@type":"Question","name":"Hva bør jeg forberede før jeg skriver?","acceptedAnswer":{"@type":"Answer","text":"Ikke noe spesielt: det holder å skrive hva du vil endre eller forbedre, og gjerne legge ved en lenke til nettsiden din og til en nettside du liker. Det som mangler, spør jeg om selv."}}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Gå til innholdet</a>
@@ -582,7 +643,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
         <div><h4>Automatisk kundesøk</h4><p>Systemet finner bedrifter som passer for virksomheten din, ut fra kontaktinformasjonen de selv har gjort offentlig, og sender hver av dem i rolig tempo en kort e-post i ditt navn fra bedriftens egen e-postadresse. Hver e-post har en lenke for å melde seg av, og svar fra interesserte kommer rett til deg.</p></div>
         <div><h4>Annonsering på Google, Facebook og Instagram</h4><p>En månedlig tjeneste uten lange avtaler: du kan stoppe når som helst, annonsepengene betaler du direkte til Google og Meta, og hver måned får du en kort rapport om hvor mange henvendelser som kom og hva én kostet. Kjører jeg annonsene dine, er KI-søkkontrollen gratis.</p></div>
       </div>
-      <p class="big-cta"><a class="ads-cta" href="#contact">Spør om disse tjenestene</a></p>
+      <p class="big-cta"><a class="ads-cta" href="#contact">Spør om disse tjenestene</a><span aria-hidden="true"> · </span><a class="ads-cta" href="/nb/reklama/">Mer om KI-søk, kundesøk og annonsering →</a></p>
     </article>
     <div class="process" data-reveal>
       <p class="kicker mono">Slik foregår arbeidet</p>
@@ -616,6 +677,20 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
   </section>
 
+  <section class="sec path" id="path" data-reveal aria-labelledby="path-h">
+    <div class="path-head">
+      <p class="kicker mono">I tillegg</p>
+      <h2 class="path-h" id="path-h">Hva kommer etter nettsiden</h2>
+    </div>
+    <ol class="path-steps">
+      <li><span class="path-t">Nettside</span><span class="path-s">Jeg bygger nettsiden og legger inn det grunnleggende for KI-søk gratis.</span></li>
+      <li><a class="path-a" href="/nb/reklama/#di-paieska">KI-søk <span aria-hidden="true">→</span></a><span class="path-s">Slik at ChatGPT og Gemini nevner virksomheten din. Første sjekk er gratis.</span></li>
+      <li><a class="path-a" href="/nb/reklama/#reklama">Annonsering <span aria-hidden="true">→</span></a><span class="path-s">Annonsering måned for måned uten lange avtaler, og automatisk kundesøk.</span></li>
+      <li><a class="path-a" href="/nb/verslo-profilis/">Bedriftsprofil <span aria-hidden="true">→</span></a><span class="path-s">En Google-bedriftsprofil, slik at folk finner deg i Google Maps.</span></li>
+    </ol>
+  </section>
+
+
   <section class="sec about" id="about" data-reveal>
     <div class="sec-head">
       <p class="kicker mono">03 — Om meg</p>
@@ -642,7 +717,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <details class="faq-q" id="faq-3"><summary>Kan du forbedre nettsiden jeg allerede har?</summary><p>Ja. Jeg forbedrer eksisterende nettsider og legger til nye funksjoner, for eksempel bestillingsvindu, bildegalleri eller registreringsskjema. Det har jeg gjort for nettsidene til Fortuna Hostel og Neramioji klasė.</p></details>
       <details class="faq-q" id="faq-4"><summary>Må vi møtes eller ta en samtale?</summary><p>Det trengs ikke. Alt foregår skriftlig, på e-post, Telegram eller Messenger. Slik står alle avtaler skriftlig, og jeg kan jobbe med bedrifter uansett hvor de holder til.</p></details>
       <details class="faq-q" id="faq-5"><summary>Blir det andre kostnader enn prisen for arbeidet?</summary><p>Trengs det domene, betalt hosting eller en annen betalt ekstern tjeneste, betaler du direkte til leverandøren, og kontoen står i ditt navn, så nettsiden forblir din også etter at samarbeidet er over. Bare annonsetjenesten og de månedlige rapportene om KI-søk betales hver måned.</p></details>
-      <details class="faq-q" id="faq-6"><summary>Vil Google og KI-svar finne den nye nettsiden min?</summary><p>Hver nettside jeg lager, får grunnlaget for søk gratis: schema.org-data, filene robots.txt og llms.txt og en Google-bedriftsprofil. Løpende arbeid for at KI-svar skal nevne bedriften din, er en egen månedlig tjeneste.</p></details>
+      <details class="faq-q" id="faq-6"><summary>Vil Google og KI-svar finne den nye nettsiden min?</summary><p>Hver nettside jeg lager, får grunnlaget for søk gratis: schema.org-data, filene robots.txt og llms.txt og en Google-bedriftsprofil hvis bedriften oppfyller Googles krav. Løpende arbeid for at KI-svar skal nevne bedriften din, er en egen månedlig tjeneste.</p></details>
       <details class="faq-q" id="faq-7"><summary>Hva bør jeg forberede før jeg skriver?</summary><p>Ikke noe spesielt: det holder å skrive hva du vil endre eller forbedre, og gjerne legge ved en lenke til nettsiden din og til en nettside du liker. Det som mangler, spør jeg om selv.</p></details></div>
   </section>
 
@@ -652,6 +727,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Fortell meg hva du ønsker</h2>
       <p class="lead">Selv to setninger holder. Jeg svarer innen en arbeidsdag med et tydelig omfang og en pris.</p>
     </div>
+    <aside class="side-card" aria-labelledby="side-h">
+      <p class="kicker mono">I tillegg</p>
+      <p class="side-t" id="side-h">Har du allerede en nettside? Jeg kan hjelpe folk med å finne den.</p>
+      <p><a class="side-a" href="/nb/reklama/#di-paieska">Synlighet i KI-søk <span aria-hidden="true">→</span></a> Slik at ChatGPT, Gemini og Googles KI-svar nevner virksomheten din. Første sjekk gjør jeg gratis.</p>
+      <p><a class="side-a" href="/nb/reklama/#reklama">Annonsering på Google, Facebook og Instagram <span aria-hidden="true">→</span></a> En månedlig tjeneste uten lange avtaler, som kan stoppes når som helst. Jeg måler henvendelser, ikke klikk.</p>
+      <p><a class="side-a" href="/nb/verslo-profilis/">Google-bedriftsprofil <span aria-hidden="true">→</span></a> Jeg oppretter eller rydder opp i profilen, slik at du blir funnet i Google-søk og Maps.</p>
+      <p><a class="side-a" href="/nb/reklama/#klientu-paieska">Automatisk kundesøk <span aria-hidden="true">→</span></a> Systemet finner bedrifter som passer for deg og skriver et kort brev til dem på dine vegne. Svar fra interesserte kommer rett til deg.</p>
+    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -661,6 +744,17 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       </div>
       <label><span>Bedrift eller nettside (valgfritt)</span><input name="company" type="text" maxlength="160" autocomplete="organization"></label>
       <label><span>Hva ønsker du?</span><span class="ta-wrap" id="taWrap"><textarea name="message" required minlength="10" maxlength="4000" rows="6" placeholder="F.eks.: vi har en nettside, men bestillingene kommer bare på telefon; vi vil at kundene selv skal kunne bestille eller reservere…"></textarea><span class="ph-cycle" id="phCycle" aria-hidden="true"></span></span></label>
+      <fieldset class="picks" id="picks"><legend>Interessert i (valgfritt)</legend>
+        <label class="pick"><input type="checkbox" name="interest_website" value="nettside eller nettbutikk"><span>Nettside eller nettbutikk</span></label>
+        <label class="pick"><input type="checkbox" name="interest_crm" value="CRM-system"><span>CRM-system</span></label>
+        <label class="pick"><input type="checkbox" name="interest_automation" value="automatisering av prosesser"><span>Automatisering av prosesser</span></label>
+        <label class="pick"><input type="checkbox" name="interest_ai_tools" value="KI-verktøy"><span>KI-verktøy</span></label>
+        <label class="pick"><input type="checkbox" name="interest_ai" value="synlighet i KI-søk"><span>Synlighet i KI-søk</span></label>
+        <label class="pick"><input type="checkbox" name="interest_ads" value="annonsering"><span>Annonsering</span></label>
+        <label class="pick"><input type="checkbox" name="interest_gbp" value="Google-bedriftsprofil"><span>Google-bedriftsprofil</span></label>
+        <label class="pick"><input type="checkbox" name="interest_leads" value="automatisk kundesøk"><span>Kundesøk</span></label>
+      </fieldset>
+      <script>(function(){function t(k){var b=k&&document.querySelector('#picks input[name="interest_'+k+'"]');if(b)b.checked=true}var m=/[?&]i=(website|crm|automation|ai_tools|ai|ads|gbp|leads)(?:&|$)/.exec(location.search);if(m)t(m[1]);var s=location.hash.length>1&&document.getElementById(location.hash.slice(1));if(s&&s.hasAttribute('data-tick'))t(s.getAttribute('data-tick'));document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[data-tick]');if(a)t(a.getAttribute('data-tick'))})})()</script>
       <label class="hp" aria-hidden="true"><input name="website" type="text" tabindex="-1" autocomplete="off"></label>
       <input type="hidden" name="lang" value="nb">
       <div class="form-foot">
@@ -684,7 +778,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 </footer>
 
 
-<script>window.PF={"lang":"nb","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sender…","ok":"Mottatt. Jeg svarer innen en arbeidsdag.","err":"Kunne ikke sende. Skriv til meg direkte:","examples":["F.eks.: vi har en nettside, men bestillingene kommer bare på telefon; vi vil at kundene selv skal kunne bestille eller reservere…","F.eks.: hver dag svarer vi på de samme kundespørsmålene; vi vil at KI skal svare for oss…","F.eks.: vi flytter data fra e-poster og bestillinger over i Excel for hånd; vi vil at det skal skje av seg selv…","F.eks.: nettsiden vår er utdatert og tungvint på mobil; vi vil gjerne fornye den…","F.eks.: vi regner ut tilbud til kunder for hånd; vi vil ha et verktøy som lager dem på noen minutter…","F.eks.: vi får mange fakturaer og dokumenter; vi vil at et system skal lese og sortere dem selv…","F.eks.: vi følger opp bestillinger, lager og oppdrag i separate regneark; vi vil ha et enkelt system der alt er samlet…"],"subject":"Henvendelse fra nettsiden"},"work":{"next":"Neste prosjekt","prev":"Forrige prosjekt"}};</script>
-<script src="/app.js?v=87892520" defer></script>
+<script>window.PF={"lang":"nb","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sender…","ok":"Mottatt. Jeg svarer innen en arbeidsdag.","err":"Kunne ikke sende. Skriv til meg direkte:","examples":["F.eks.: vi har en nettside, men bestillingene kommer bare på telefon; vi vil at kundene selv skal kunne bestille eller reservere…","F.eks.: hver dag svarer vi på de samme kundespørsmålene; vi vil at KI skal svare for oss…","F.eks.: vi flytter data fra e-poster og bestillinger over i Excel for hånd; vi vil at det skal skje av seg selv…","F.eks.: nettsiden vår er utdatert og tungvint på mobil; vi vil gjerne fornye den…","F.eks.: vi regner ut tilbud til kunder for hånd; vi vil ha et verktøy som lager dem på noen minutter…","F.eks.: vi får mange fakturaer og dokumenter; vi vil at et system skal lese og sortere dem selv…","F.eks.: vi følger opp bestillinger, lager og oppdrag i separate regneark; vi vil ha et enkelt system der alt er samlet…"],"subject":"Henvendelse fra nettsiden","picks":"Interessert i"},"work":{"next":"Neste prosjekt","prev":"Forrige prosjekt"}};</script>
+<script src="/app.js?v=479b322b" defer></script>
 </body>
 </html>
