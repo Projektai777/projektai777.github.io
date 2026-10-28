@@ -528,6 +528,67 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .rail-btn.next { right: 6px; }
   .foot { padding-bottom: 92px; }
 }
+
+/* round 2: v4 path "Kas po svetainės" (a thin connected line with three dots after the work section) */
+.path { padding: clamp(36px, 5vw, 64px) 0; }
+.path-head { margin-bottom: 22px; }
+.path-head .kicker { margin-bottom: 8px; }
+.path-h { font-family: var(--serif); font-weight: 500; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.15; letter-spacing: -.01em; margin: 0; max-width: none; }
+.path-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.path-steps li { position: relative; padding-top: 30px; }
+.path-steps li::before { content: ""; position: absolute; top: 0; left: 0; width: 11px; height: 11px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid var(--acc); background: var(--bg); transition: opacity .5s ease, transform .5s ease, background .25s ease, box-shadow .25s ease; }
+.path-steps li:first-child::before { background: var(--acc); }
+.path-steps li:not(:last-child)::after { content: ""; position: absolute; top: 5px; left: 19px; right: -16px; height: 1px; background: var(--line-2); transform-origin: left center; transition: transform .9s ease; }
+.path-steps li:nth-child(2)::before { transition-delay: .55s, .55s, 0s, 0s; }
+.path-steps li:nth-child(3)::before { transition-delay: 1.1s, 1.1s, 0s, 0s; }
+.path-steps li:nth-child(4)::before { transition-delay: 1.65s, 1.65s, 0s, 0s; }
+.path-steps li:nth-child(3)::after { transition-delay: 1.25s; }
+.path-steps li:nth-child(1)::after { transition-delay: .15s; }
+.path-steps li:nth-child(2)::after { transition-delay: .7s; }
+.js .path:not(.in) .path-steps li::before { opacity: 0; transform: scale(.4); }
+.js .path:not(.in) .path-steps li::after { transform: scaleX(0); }
+.path-steps li:hover::before { box-shadow: 0 0 0 4px var(--line-2); }
+.path-steps li:not(:first-child):hover::before { background: var(--acc); }
+.path-t, .path-a { display: block; font-weight: 600; font-size: 15px; color: var(--fg); text-decoration: none; margin-bottom: 4px; transition: color .2s ease; }
+.path-a::after { content: ""; position: absolute; inset: 0; border-radius: 8px; }
+.path-a:hover, .path-a:focus-visible { color: var(--acc); }
+.path-a:focus-visible { outline: none; }
+.path-a:focus-visible::after { outline: 2px solid var(--acc); outline-offset: 4px; }
+.path-s { display: block; color: var(--mute); font-size: 14px; max-width: 34ch; }
+@media (max-width: 720px) {
+  .path-steps { grid-template-columns: 1fr; gap: 0; }
+  .path-steps li { padding: 0 0 22px 30px; }
+  .path-steps li:last-child { padding-bottom: 0; }
+  .path-steps li::before { top: 4px; }
+  .path-steps li:not(:last-child)::after { top: 22px; bottom: -2px; left: 5px; right: auto; width: 1px; height: auto; transform-origin: center top; }
+  .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
+}
+
+/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+.contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
+.contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
+.contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
+.contact .side-card { grid-column: 1; grid-row: 2; }
+.contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
+.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
+.side-card .kicker { margin: 0 0 6px; }
+.side-card p { margin: 0 0 10px; }
+.side-card p:last-child { margin: 0; }
+.side-card .side-t { color: var(--fg); font-size: 15px; }
+.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
+.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
+.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
+.picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
+.cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
+.cform .pick:hover, .cform .pick:focus-within, .cform .pick:has(input:checked) { border-color: var(--acc); }
+.cform .pick input { width: 16px; height: 16px; padding: 0; margin: 0; flex: none; accent-color: var(--acc); cursor: pointer; }
+.cform .pick input:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; box-shadow: none; }
+.cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
+@media (max-width: 960px) {
+  .contact { display: block; }
+  .contact .side-card { margin-bottom: 32px; }
+}
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/lv/work/neramioji-klase/#page","url":"https://projektai777.eu/lv/work/neramioji-klase/","name":"Neramioji klasė: reģistrācija un darbu augšupielāde skolēnu radošajai platformai | Projektai777","description":"Skolēnu radošā platforma ieguva jaunu ieejas lapu, angļu valodas versiju un reģistrācijas veidlapu, kurā skolēni augšupielādē darbus ar vecāku piekrišanu.","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/#website"},"mainEntity":{"@id":"https://projektai777.eu/lv/work/neramioji-klase/#work"},"breadcrumb":{"@id":"https://projektai777.eu/lv/work/neramioji-klase/#crumbs"}},{"@type":"CreativeWork","@id":"https://projektai777.eu/lv/work/neramioji-klase/#work","name":"Neramioji klasė: reģistrācija un darbu augšupielāde skolēnu radošajai platformai","description":"Nacionālā skolēnu radošā platforma ieguva jaunu ieejas lapu, angļu valodas versiju un vienu reģistrācijas veidlapu, kurā skolēni augšupielādē darbus tieši organizācijas pašas krātuvē, bez konta.","inLanguage":"lv","creator":{"@id":"https://projektai777.eu/#business"},"dateCreated":"2026-09","creativeWorkStatus":"Done","keywords":"HTML, CSS, JavaScript, Node.js","temporalCoverage":"2026-09/2026-10","about":{"@type":"WebSite","name":"Neramioji klasė","url":"https://neramiojiklase.lt"}},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/lv/work/neramioji-klase/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/lv/"},{"@type":"ListItem","position":2,"name":"Darbi","item":"https://projektai777.eu/lv/#work"},{"@type":"ListItem","position":3,"name":"Neramioji klasė","item":"https://projektai777.eu/lv/work/neramioji-klase/"}]}]}</script>
 </head>
@@ -603,6 +664,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"lv","work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"}};</script>
-<script src="/app.js?v=87892520" defer></script>
+<script src="/app.js?v=479b322b" defer></script>
 </body>
 </html>
