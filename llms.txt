@@ -17,6 +17,7 @@ Ignas — Self-employed (individual activity) · Lithuania.
 - Google Business Profile: created or tidied up so a business is found in Google search, on maps and in AI answers: https://projektai777.eu/en/verslo-profilis/
 - Custom CRM systems built around how a small business works (page in Lithuanian): https://projektai777.eu/crm-sistemos/
 - Business process automation: connecting the tools a business already uses (page in Lithuanian): https://projektai777.eu/procesu-automatizavimas/
+- Free website check (Lithuanian only: phone speed, secure address, title and description, broken links, crawler access): https://projektai777.eu/patikra/
 - Price finder (five questions, then the starting price of the matching package; one page per site language): https://projektai777.eu/en/kaina/
 
 ## Questions
