@@ -548,20 +548,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
-.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
-.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.side-card .kicker { margin: 0 0 6px; }
-.side-card p { margin: 0 0 10px; }
-.side-card p:last-child { margin: 0; }
-.side-card .side-t { color: var(--fg); font-size: 15px; }
-.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
-.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
-.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -571,7 +562,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
   .contact { display: block; }
-  .contact .side-card { margin-bottom: 32px; }
+}
+
+/* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
+.top-tools { display: flex; gap: 8px; flex: none; }
+.top-tool { padding: 7px 12px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+.top-tool:hover, .top-tool:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.1); }
+.top-tool:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.tools-row { margin-top: 14px; }
+.svc-big + .tools-row { margin-top: clamp(18px, 2.4vw, 26px); }
+.btn-tool { border-color: rgba(125, 255, 179, 0.45); }
+.btn-tool:hover, .btn-tool:focus-visible { background: rgba(125, 255, 179, 0.1); }
+.part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
+.part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+@media (max-width: 720px) {
+  .top-tools { margin-left: auto; }
+  .top > .top-tools + .lm { margin-left: 0; }
+  .top-tool { padding: 6px 10px; font-size: 12px; }
+  .top-tool.tool-check { display: none; } /* the phone header keeps the calculator; the check button is under the hero */
 }
   </style>
   <style>
@@ -593,6 +602,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     .ck-row.ck-unknown{border-left-color:#c9c9c9}
     .ck-state{font-weight:700}
     .ck-target{overflow-wrap:anywhere}
+    .ck-reused{margin:.4rem 0 0;color:var(--mute);max-width:70ch}
+    .ck-next{margin:2rem 0 1.4rem;padding:1.2rem 1.3rem;border:1px solid var(--line-2);border-radius:10px}
+    .ck-next h2{margin:0 0 .6rem}
+    .ck-next p{margin:.5rem 0}
+    .ck-next .cta-row{margin-top:1rem}
+    .ck-svcs{list-style:none;margin:.6rem 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:.5rem 1.2rem}
+    .ck-svcs a{color:var(--fg);text-decoration:none;border-bottom:1px solid var(--line-2)}
+    .ck-svcs a:hover,.ck-svcs a:focus-visible{color:var(--acc);border-color:var(--acc)}
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","@id":"https://projektai777.eu/patikra/#app","name":"Nemokama svetainės patikra","url":"https://projektai777.eu/patikra/","description":"Nemokama svetainės patikra: greitis telefone, saugus adresas, pavadinimas ir aprašymas, sugedusios nuorodos, „Google“ ir DI robotų leidimai.","applicationCategory":"BusinessApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"inLanguage":"lt","provider":{"@id":"https://projektai777.eu/#business"}},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/patikra/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/"},{"@type":"ListItem","position":2,"name":"Svetainės patikra","item":"https://projektai777.eu/patikra/"}]}]}</script>
 </head>
@@ -610,7 +627,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="/#about">Apie mane</a>
     <a href="#contact" class="nav-cta">Susisiekti</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Kalba"><span class="lm-cur">LT</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/patikra/" hreflang="lt" lang="lt" aria-current="page"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-price" href="/kaina/">Sužinokite kainą</a><a class="top-tool tool-check" href="/patikra/">Nemokama svetainės patikra</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Kalba"><span class="lm-cur">LT</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/patikra/" hreflang="lt" lang="lt" aria-current="page"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -632,6 +649,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <div id="ck-results" aria-live="polite" hidden>
       <h2>Rezultatai</h2>
       <p class="ck-target mono small" id="ck-target"></p>
+      <p class="ck-reused small" id="ck-reused" hidden></p>
       <ul class="ck-rows">
         <li class="ck-row" data-k="phone"><h3>Greitis telefone</h3><p>Per kiek sekundžių telefonu su lėtu 4G ryšiu atsiranda pagrindinis puslapio turinys. Iki 2,5 s yra gerai, virš 4 s jau lėta.</p><p class="ck-state"></p><p class="ck-line"></p></li>
         <li class="ck-row" data-k="https"><h3>Saugus adresas</h3><p>Ar svetainė atsidaro per saugų adresą (https). Be jo naršyklės rodo įspėjimą.</p><p class="ck-state"></p><p class="ck-line"></p></li>
@@ -639,7 +657,24 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
         <li class="ck-row" data-k="links"><h3>Sugedusios nuorodos</h3><p>Ar nuorodos pagrindiniame puslapyje neveda į neegzistuojančius puslapius. Tikrinama iki 20 nuorodų.</p><p class="ck-state"></p><p class="ck-line"></p></li>
         <li class="ck-row" data-k="crawlers"><h3>„Google“ ir DI robotai</h3><p>Ar failas robots.txt ir puslapio žymos leidžia „Google“ bei DI atsakymų robotams skaityti svetainę. Tai tik leidimas, o ne garantija, kad svetainė bus rodoma.</p><p class="ck-state"></p><p class="ck-line"></p></li>
       </ul>
-      <p>Norite, kad tai, kas pažymėta, būtų sutvarkyta? <a href="#contact">Parašykite man</a></p>
+    </div>
+    <!-- what next (owner 10-29, rir8pmc22b): shown after every result and at the daily limit; every service, the calculator, the form -->
+    <div id="ck-next" class="ck-next" hidden>
+      <h2>Kas toliau?</h2>
+      <div id="ck-next-fail" hidden><p id="ck-next-fail-text">Pažymėtus dalykus galiu sutvarkyti už jus.</p><p id="ck-next-unknown" hidden>Kai kurių dalykų išmatuoti nepavyko. Galiu peržiūrėti svetainę pats ir pasakyti, ką verta sutvarkyti.</p><div class="cta-row"><a class="btn btn-acc" href="#contact" data-tick="website">Noriu, kad sutvarkytumėte</a></div></div>
+      <p id="ck-next-pass" hidden>Puiku: šie penki dalykai jūsų svetainėje tvarkingi. Tačiau vien gera svetainė klientų neatveda: jie dar turi jus rasti.</p>
+      <p>Ką dar galiu padaryti jūsų verslui:</p>
+      <ul class="ck-svcs">
+        <li><a href="#contact" data-tick="website">Svetainė ar el. parduotuvė <span aria-hidden="true">→</span></a></li>
+        <li><a href="/crm-sistemos/">CRM sistema <span aria-hidden="true">→</span></a></li>
+        <li><a href="/procesu-automatizavimas/">Procesų automatizavimas <span aria-hidden="true">→</span></a></li>
+        <li><a href="#contact" data-tick="ai_tools">Dirbtinio intelekto įrankiai <span aria-hidden="true">→</span></a></li>
+        <li><a href="/reklama/#di-paieska">Matomumas DI paieškoje <span aria-hidden="true">→</span></a></li>
+        <li><a href="/reklama/#reklama">Reklama <span aria-hidden="true">→</span></a></li>
+        <li><a href="/reklama/#verslo-profilis">„Google“ verslo profilis <span aria-hidden="true">→</span></a></li>
+        <li><a href="/reklama/#klientu-paieska">Klientų paieška <span aria-hidden="true">→</span></a></li>
+      </ul>
+      <div class="cta-row"><a class="btn btn-tool" href="/kaina/">Sužinokite kainą per 5 klausimus <span aria-hidden="true">→</span></a><a class="btn" href="#contact">Parašykite man</a></div>
     </div>
     <p class="mono small">Įvestas adresas saugomas iki 7 dienų, kad galėtume parodyti rezultatą. Slapukų nenaudojame.</p>
   </section>
@@ -650,14 +685,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Papasakokite, ko norite</h2>
       <p class="lead">Kad ir dviem sakiniais. Atsakau per darbo dieną su aiškia apimtimi ir kaina.</p>
     </div>
-    <aside class="side-card" aria-labelledby="side-h">
-      <p class="kicker mono">Papildomai</p>
-      <p class="side-t" id="side-h">Jau turite svetainę? Galiu padėti, kad ją rastų.</p>
-      <p><a class="side-a" href="/reklama/#di-paieska">Matomumas DI paieškoje <span aria-hidden="true">→</span></a> Kad „ChatGPT“, „Gemini“ ir „Google“ DI atsakymuose būtų minimas jūsų verslas. Pirmą patikrą atlieku nemokamai.</p>
-      <p><a class="side-a" href="/reklama/#reklama">Reklama „Google“, „Facebook“ ir „Instagram“ <span aria-hidden="true">→</span></a> Mėnesinė paslauga be ilgų sutarčių, sustabdoma bet kada. Matuoju užklausas, o ne paspaudimus.</p>
-      <p><a class="side-a" href="/verslo-profilis/">„Google“ verslo profilis <span aria-hidden="true">→</span></a> Sukuriu arba sutvarkau profilį, kad jus rastų „Google“ paieškoje ir žemėlapiuose.</p>
-      <p><a class="side-a" href="/reklama/#klientu-paieska">Automatinė klientų paieška <span aria-hidden="true">→</span></a> Sistema randa jums tinkančias įmones ir jūsų vardu parašo joms trumpą laišką. Susidomėjusiųjų atsakymai ateina tiesiai jums.</p>
-    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -705,14 +732,20 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 <script>window.PF={"lang":"lt","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Siunčiama…","ok":"Gavau. Atsakysiu per darbo dieną.","err":"Nepavyko išsiųsti. Parašykite tiesiai:","examples":["Pvz.: turime svetainę, bet užsakymai ateina tik telefonu; norėtume, kad klientai galėtų užsisakyti ar rezervuoti patys…","Pvz.: kasdien atsakinėjame į tuos pačius klientų klausimus; norėtume, kad dirbtinis intelektas atsakytų už mus…","Pvz.: duomenis iš laiškų ir užsakymų ranka perkeliame į Excel; norėtume, kad tai vyktų savaime…","Pvz.: mūsų svetainė pasenusi ir nepatogi telefone; norėtume ją atnaujinti…","Pvz.: kainų pasiūlymus klientams skaičiuojame ranka; norėtume įrankio, kuris juos paruoštų per kelias minutes…","Pvz.: gauname daug sąskaitų ir dokumentų; norėtume, kad sistema pati juos nuskaitytų ir surūšiuotų…","Pvz.: užsakymus, sandėlį ir darbus sekame skirtingose lentelėse; norėtume paprastos sistemos, kurioje viskas būtų kartu…"],"subject":"Užklausa iš svetainės","picks":"Domina"},"work":{"next":"Kitas projektas","prev":"Ankstesnis projektas"}};</script>
 <script>
 (function () {
-  var C = {"stateLabel":"Būsena","states":{"pass":"Gerai","fail":"Reikia taisyti","unknown":"Nepavyko nustatyti"},"lines":{"phone":"Pagrindinis turinys atsiranda po {s} s.","httpsPass":"Svetainė atsidaro per saugų adresą.","httpsHttp":"Svetainė atsidaro be apsaugos (http).","httpsCert":"Svetainės saugos sertifikatas neteisingas.","metaPass":"Pavadinimas ir aprašymas yra.","metaMissing":"Trūksta {list}.","metaTitle":"pavadinimo","metaDescription":"aprašymo","linksPass":"Sugedusių nuorodų nerasta.","linksFail":"Sugedusių nuorodų: {n}.","crawlersPass":"Robotams leidžiama skaityti svetainę.","crawlersBlocked":"Šiems robotams neleidžiama skaityti svetainės: {list}."},"unknownLine":"Šio dalyko išmatuoti nepavyko: svetainė neatsakė arba jo išmatuoti negalima.","errUrl":"Šio adreso patikrinti negalime. Įveskite viešai pasiekiamos svetainės adresą, pavyzdžiui, pavyzdys.lt.","errBusy":"Šiuo metu patikrų daug. Pabandykite vėliau.","errFailed":"Patikra nepavyko. Pabandykite dar kartą vėliau.","errTimeout":"Patikra trunka ilgiau nei įprastai. Pabandykite vėliau.","errNetwork":"Nepavyko susisiekti su patikros serveriu. Pabandykite vėliau.","working":"Tikriname. Tai gali užtrukti iki kelių minučių."};
+  var C = {"stateLabel":"Būsena","states":{"pass":"Gerai","fail":"Reikia taisyti","unknown":"Nepavyko nustatyti"},"lines":{"phone":"Pagrindinis turinys atsiranda po {s} s.","httpsPass":"Svetainė atsidaro per saugų adresą.","httpsHttp":"Svetainė atsidaro be apsaugos (http).","httpsCert":"Svetainės saugos sertifikatas neteisingas.","metaPass":"Pavadinimas ir aprašymas yra.","metaMissing":"Trūksta {list}.","metaTitle":"pavadinimo","metaDescription":"aprašymo","linksPass":"Sugedusių nuorodų nerasta.","linksFail":"Sugedusių nuorodų: {n}.","crawlersPass":"Robotams leidžiama skaityti svetainę.","crawlersBlocked":"Šiems robotams neleidžiama skaityti svetainės: {list}."},"unknownLine":"Šio dalyko išmatuoti nepavyko: svetainė neatsakė arba jo išmatuoti negalima.","errUrl":"Šio adreso patikrinti negalime. Įveskite viešai pasiekiamos svetainės adresą, pavyzdžiui, pavyzdys.lt.","errBusy":"Šiuo metu patikrų daug. Pabandykite vėliau.","errLimit":"Šiandien iš šio interneto ryšio jau atliktos 3 nemokamos patikros. Kitą galėsite atlikti rytoj, o jei norite, kad svetainę peržiūrėčiau dabar, parašykite man.","errFailed":"Patikra nepavyko. Pabandykite dar kartą vėliau.","errTimeout":"Patikra trunka ilgiau nei įprastai. Pabandykite vėliau.","errNetwork":"Nepavyko susisiekti su patikros serveriu. Pabandykite vėliau.","working":"Tikriname. Tai gali užtrukti iki kelių minučių.","reusedLine":"Ši svetainė jau buvo tikrinta {date}, todėl rodome tą rezultatą. Nemokama tos pačios svetainės patikra atnaujinama kartą per 7 dienas. Ką nors sutvarkėte ir norite naujo patikrinimo? Parašykite man."};
   var origin = ''; try { origin = new URL(window.PF.contact).origin; } catch (e) {}
   var form = document.getElementById('ck-form'), input = document.getElementById('ck-url'), go = document.getElementById('ck-go');
   var busy = document.getElementById('ck-busy'), busyText = document.getElementById('ck-busy-text'), err = document.getElementById('ck-err');
-  var results = document.getElementById('ck-results'), target = document.getElementById('ck-target');
+  var results = document.getElementById('ck-results'), target = document.getElementById('ck-target'), reused = document.getElementById('ck-reused');
+  var next = document.getElementById('ck-next'), nextFail = document.getElementById('ck-next-fail'), nextPass = document.getElementById('ck-next-pass');
+  var failText = document.getElementById('ck-next-fail-text'), unknownText = document.getElementById('ck-next-unknown');
   var timer = null, deadline = 0;
   function say(el, text) { el.textContent = text; el.hidden = !text; }
   function stop() { if (timer) { clearInterval(timer); timer = null; } busy.hidden = true; go.disabled = false; }
+  // which = 'fail' | 'pass' | '' (the daily limit: services only)
+  // unknown: nothing failed but not everything could be measured, so the fix button stays (review 10-30)
+  function showNext(which) { nextFail.hidden = which !== 'fail' && which !== 'unknown'; failText.hidden = which !== 'fail'; unknownText.hidden = which !== 'unknown'; nextPass.hidden = which !== 'pass'; next.hidden = false; }
+  function day(ms) { var d = new Date(ms), p = function (n) { return (n < 10 ? '0' : '') + n; }; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
   function fail(key) { stop(); say(err, C[key]); }
   function fill(tpl, vars) { return String(tpl).replace(/\{(\w+)\}/g, function (m, k) { return Object.prototype.hasOwnProperty.call(vars, k) ? String(vars[k]) : m; }); }
   function word(v) { return typeof v === 'string' ? v : ''; }
@@ -738,16 +771,19 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   }
   function show(res) {
     stop(); say(err, '');
-    var rows = results.querySelectorAll('.ck-row');
+    var rows = results.querySelectorAll('.ck-row'), anyFail = false, allPass = rows.length > 0;
     for (var i = 0; i < rows.length; i++) {
       var key = rows[i].getAttribute('data-k'), e = res && res.results && res.results[key];
       var st = e && ['pass', 'fail', 'unknown'].indexOf(e.state) >= 0 ? e.state : 'unknown';
       e = e || { state: st };
       rows[i].className = 'ck-row ck-' + st;
+      if (st === 'fail') anyFail = true;
+      if (st !== 'pass') allPass = false;
       rows[i].querySelector('.ck-state').textContent = C.stateLabel + ': ' + C.states[st];
       rows[i].querySelector('.ck-line').textContent = lineFor(key, e);
     }
     results.hidden = false;
+    showNext(anyFail ? 'fail' : allPass ? 'pass' : 'unknown');
   }
   function poll(id) {
     deadline = Date.now() + 180000;
@@ -766,18 +802,24 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     var url = input.value.trim();
-    say(err, ''); results.hidden = true;
+    say(err, ''); say(reused, ''); results.hidden = true; next.hidden = true;
     if (!url || !origin) { say(err, C.errUrl); return; }
     go.disabled = true; say(busyText, C.working); busy.hidden = false;
     fetch(origin + '/check', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url: url }) })
       .then(function (r) { return r.json().catch(function () { return null; }).then(function (j) { return { s: r.status, j: j }; }); })
       .then(function (x) {
-        if (x.j && x.j.ok && typeof x.j.id === 'string') { target.textContent = url; poll(x.j.id); return; }
-        if (x.j && x.j.why === 'url') fail('errUrl'); else if (x.s === 429 || (x.j && x.j.why === 'busy')) fail('errBusy'); else fail('errNetwork');
+        if (x.j && x.j.ok && typeof x.j.id === 'string') {
+          // the same site within 7 days: the earlier result (the worker's reuse), shown for that check's own address and date
+          var old = x.j.reused === true && typeof x.j.at === 'number';
+          target.textContent = old && typeof x.j.page === 'string' ? x.j.page : url;
+          say(reused, old ? fill(C.reusedLine, { date: day(x.j.at) }) : '');
+          poll(x.j.id); return;
+        }
+        if (x.j && x.j.why === 'url') fail('errUrl'); else if (x.j && x.j.why === 'limit') { fail('errLimit'); showNext(''); } else if (x.s === 429 || (x.j && x.j.why === 'busy')) fail('errBusy'); else fail('errNetwork');
       }, function () { fail('errNetwork'); });
   });
 })();
 </script>
-<script src="/app.js?v=479b322b" defer></script>
+<script src="/app.js?v=9e946cdb" defer></script>
 </body>
 </html>

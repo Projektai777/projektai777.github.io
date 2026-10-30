@@ -564,20 +564,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
-.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
-.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.side-card .kicker { margin: 0 0 6px; }
-.side-card p { margin: 0 0 10px; }
-.side-card p:last-child { margin: 0; }
-.side-card .side-t { color: var(--fg); font-size: 15px; }
-.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
-.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
-.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -587,10 +578,28 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
   .contact { display: block; }
-  .contact .side-card { margin-bottom: 32px; }
+}
+
+/* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
+.top-tools { display: flex; gap: 8px; flex: none; }
+.top-tool { padding: 7px 12px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+.top-tool:hover, .top-tool:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.1); }
+.top-tool:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.tools-row { margin-top: 14px; }
+.svc-big + .tools-row { margin-top: clamp(18px, 2.4vw, 26px); }
+.btn-tool { border-color: rgba(125, 255, 179, 0.45); }
+.btn-tool:hover, .btn-tool:focus-visible { background: rgba(125, 255, 179, 0.1); }
+.part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
+.part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+@media (max-width: 720px) {
+  .top-tools { margin-left: auto; }
+  .top > .top-tools + .lm { margin-left: 0; }
+  .top-tool { padding: 6px 10px; font-size: 12px; }
+  .top-tool.tool-check { display: none; } /* the phone header keeps the calculator; the check button is under the hero */
 }
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/lv/reklama/#page","url":"https://projektai777.eu/lv/reklama/","name":"AI meklēšana, klientu meklēšana un reklāma | Projektai777","description":"Redzamība ChatGPT un Gemini atbildēs, automātiska klientu meklēšana un reklāma Google, Facebook un Instagram Jūsu uzņēmumam.","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"},"breadcrumb":{"@id":"https://projektai777.eu/lv/reklama/#crumbs"}},{"@type":"Service","@id":"https://projektai777.eu/lv/reklama/#di-paieska","name":"Redzamība AI meklēšanā","description":"Lai ChatGPT, Gemini un Google AI atbildēs tiktu minēts Jūsu uzņēmums. Der jebkuram uzņēmumam, neatkarīgi no tā, kas veidojis Jūsu vietni.","url":"https://projektai777.eu/lv/reklama/#di-paieska","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/lv/reklama/#klientu-paieska","name":"Automātiska klientu meklēšana","description":"Sistēma atrod Jūsu uzņēmumam piemērotus uzņēmumus un raksta tiem Jūsu vārdā, bet ieinteresētie atbild tieši Jums.","url":"https://projektai777.eu/lv/reklama/#klientu-paieska","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/lv/reklama/#reklama","name":"Reklāma Google, Facebook un Instagram","description":"Der arī tad, ja Jums nav vietnes vai to veidojuši citi. Mēru pieprasījumus, nevis klikšķus.","url":"https://projektai777.eu/lv/reklama/#reklama","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/lv/reklama/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/lv/"},{"@type":"ListItem","position":2,"name":"Pakalpojumi","item":"https://projektai777.eu/lv/#services"},{"@type":"ListItem","position":3,"name":"AI meklēšana, klientu meklēšana un reklāma","item":"https://projektai777.eu/lv/reklama/"}]},{"@type":"FAQPage","@id":"https://projektai777.eu/lv/reklama/#faq","url":"https://projektai777.eu/lv/reklama/","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/lv/reklama/#page"},"mainEntity":[{"@type":"Question","name":"Ar ko tas atšķiras no reklāmas?","acceptedAnswer":{"@type":"Answer","text":"Reklāmu redzat blakus meklēšanas rezultātiem, bet šeit svarīgi, vai uzņēmumu min pati AI atbilde."}},{"@type":"Question","name":"Vai varat apsolīt, ka AI minēs manu uzņēmumu?","acceptedAnswer":{"@type":"Answer","text":"Nē, to nevar apsolīt neviens, jo atbildi veido pats AI. Es sakārtoju to, ko tas lasa: vietnes datus, aprakstus un pieminējumus citās vietnēs, bet katru mēnesi pārbaudu, vai tas palīdz."}},{"@type":"Question","name":"Vai būs jāmaina mana vietne?","acceptedAnswer":{"@type":"Answer","text":"Parasti pietiek ar dažām tehniskām izmaiņām, kuras apmeklētāji nemana. Ja vietni veidojuši citi, izmaiņas veicu pats vai uzrakstu, ko mainīt Jūsu programmētājam."}},{"@type":"Question","name":"Vai tas ir likumīgi?","acceptedAnswer":{"@type":"Answer","text":"Pirms pirmās vēstules kopā pārskatām tiesisko pusi saskaņā ar VDAR un elektronisko sakaru likumu: kam drīkst rakstīt, kas vēstulē jānorāda un kā tiek apstrādāti atteikumi."}},{"@type":"Question","name":"Kas uzraksta vēstules tekstu?","acceptedAnswer":{"@type":"Answer","text":"Sagatavoju es pēc Jūsu piedāvājuma, bet Jūs to apstiprināt pirms pirmās sūtīšanas. Pirmajās nedēļās salīdzinu atbildes un pilnveidoju vēstuli vai nozares, līdz atbilžu kļūst vairāk."}},{"@type":"Question","name":"Vai necietīs mana pasta reputācija?","acceptedAnswer":{"@type":"Answer","text":"Nedarbojošās adreses un atteikušies uzņēmumi tiek nekavējoties izslēgti, bet pirms pirmās vēstules pārbaudu Jūsu pasta iestatījumus, lai vēstules nenonāktu surogātpastā."}},{"@type":"Question","name":"Uz kā vārda būs reklāmas konti?","acceptedAnswer":{"@type":"Answer","text":"Uz Jūsu. Kontus izveidoju Jūsu vārdā vai pieslēdzu Jūsu esošos, tāpēc redzat visus izdevumus, un pēc pakalpojuma apturēšanas konti paliek Jums."}},{"@type":"Question","name":"Kas tiek skaitīts kā pieprasījums?","acceptedAnswer":{"@type":"Answer","text":"Ziņa, kas no reklāmas atnākusi caur vietnes formu, Messenger vai e-pastu. Skatījumi un klikšķi, pēc kuriem neviens nav uzrakstījis, atskaitē pieprasījumos netiek ieskaitīti."}},{"@type":"Question","name":"Kad kļūst skaidrs, vai reklāma darbojas?","acceptedAnswer":{"@type":"Answer","text":"Pirmos skaitļus redzat pēc dažām dienām, bet kuri sludinājumi atnes pieprasījumus, kļūst skaidrs dažu nedēļu laikā. Tad vājākos apturu, bet budžetu novirzu labākajiem."}}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/lv/reklama/#page","url":"https://projektai777.eu/lv/reklama/","name":"AI meklēšana, klientu meklēšana un reklāma | Projektai777","description":"Redzamība ChatGPT un Gemini atbildēs, automātiska klientu meklēšana un reklāma Google, Facebook un Instagram Jūsu uzņēmumam.","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"},"breadcrumb":{"@id":"https://projektai777.eu/lv/reklama/#crumbs"}},{"@type":"Service","@id":"https://projektai777.eu/lv/reklama/#di-paieska","name":"Redzamība AI meklēšanā","description":"Lai ChatGPT, Gemini un Google AI atbildēs tiktu minēts Jūsu uzņēmums. Der jebkuram uzņēmumam, neatkarīgi no tā, kas veidojis Jūsu vietni.","url":"https://projektai777.eu/lv/reklama/#di-paieska","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/lv/reklama/#klientu-paieska","name":"Automātiska klientu meklēšana","description":"Sistēma atrod Jūsu uzņēmumam piemērotus uzņēmumus un raksta tiem Jūsu vārdā, bet ieinteresētie atbild tieši Jums.","url":"https://projektai777.eu/lv/reklama/#klientu-paieska","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/lv/reklama/#verslo-profilis","name":"Google uzņēmuma profils","description":"Lai Jūsu uzņēmumu atrastu Google meklēšanā, kartēs un AI atbildēs. Der uzņēmumiem, kas ar klientiem tiekas klātienē: savās telpās vai pie klienta. Nav svarīgi, kas veidojis Jūsu vietni.","url":"https://projektai777.eu/lv/reklama/#verslo-profilis","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/lv/reklama/#reklama","name":"Reklāma Google, Facebook un Instagram","description":"Der arī tad, ja Jums nav vietnes vai to veidojuši citi. Mēru pieprasījumus, nevis klikšķus.","url":"https://projektai777.eu/lv/reklama/#reklama","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/lv/reklama/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/lv/"},{"@type":"ListItem","position":2,"name":"Pakalpojumi","item":"https://projektai777.eu/lv/#services"},{"@type":"ListItem","position":3,"name":"AI meklēšana, klientu meklēšana un reklāma","item":"https://projektai777.eu/lv/reklama/"}]},{"@type":"FAQPage","@id":"https://projektai777.eu/lv/reklama/#faq","url":"https://projektai777.eu/lv/reklama/","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/lv/reklama/#page"},"mainEntity":[{"@type":"Question","name":"Ar ko tas atšķiras no reklāmas?","acceptedAnswer":{"@type":"Answer","text":"Reklāmu redzat blakus meklēšanas rezultātiem, bet šeit svarīgi, vai uzņēmumu min pati AI atbilde."}},{"@type":"Question","name":"Vai varat apsolīt, ka AI minēs manu uzņēmumu?","acceptedAnswer":{"@type":"Answer","text":"Nē, to nevar apsolīt neviens, jo atbildi veido pats AI. Es sakārtoju to, ko tas lasa: vietnes datus, aprakstus un pieminējumus citās vietnēs, bet katru mēnesi pārbaudu, vai tas palīdz."}},{"@type":"Question","name":"Vai būs jāmaina mana vietne?","acceptedAnswer":{"@type":"Answer","text":"Parasti pietiek ar dažām tehniskām izmaiņām, kuras apmeklētāji nemana. Ja vietni veidojuši citi, izmaiņas veicu pats vai uzrakstu, ko mainīt Jūsu programmētājam."}},{"@type":"Question","name":"Vai tas ir likumīgi?","acceptedAnswer":{"@type":"Answer","text":"Pirms pirmās vēstules kopā pārskatām tiesisko pusi saskaņā ar VDAR un elektronisko sakaru likumu: kam drīkst rakstīt, kas vēstulē jānorāda un kā tiek apstrādāti atteikumi."}},{"@type":"Question","name":"Kas uzraksta vēstules tekstu?","acceptedAnswer":{"@type":"Answer","text":"Sagatavoju es pēc Jūsu piedāvājuma, bet Jūs to apstiprināt pirms pirmās sūtīšanas. Pirmajās nedēļās salīdzinu atbildes un pilnveidoju vēstuli vai nozares, līdz atbilžu kļūst vairāk."}},{"@type":"Question","name":"Vai necietīs mana pasta reputācija?","acceptedAnswer":{"@type":"Answer","text":"Nedarbojošās adreses un atteikušies uzņēmumi tiek nekavējoties izslēgti, bet pirms pirmās vēstules pārbaudu Jūsu pasta iestatījumus, lai vēstules nenonāktu surogātpastā."}},{"@type":"Question","name":"Kam tas vajadzīgs?","acceptedAnswer":{"@type":"Answer","text":"Kad kāds tuvumā meklē Jūsu pakalpojumu, Google vispirms kartē rāda uzņēmumu profilus. Tos lasa arī AI atbildes."}},{"@type":"Question","name":"Vai jābūt vietnei?","acceptedAnswer":{"@type":"Answer","text":"Nē. Profils ir noderīgs arī bez vietnes, bet, ja tā ir, to sasaistu ar profilu."}},{"@type":"Question","name":"Kas pārvalda profilu?","acceptedAnswer":{"@type":"Answer","text":"Jūs. Profils paliek Jūsu Google kontā, es tikai palīdzu to sakārtot."}},{"@type":"Question","name":"Uz kā vārda būs reklāmas konti?","acceptedAnswer":{"@type":"Answer","text":"Uz Jūsu. Kontus izveidoju Jūsu vārdā vai pieslēdzu Jūsu esošos, tāpēc redzat visus izdevumus, un pēc pakalpojuma apturēšanas konti paliek Jums."}},{"@type":"Question","name":"Kas tiek skaitīts kā pieprasījums?","acceptedAnswer":{"@type":"Answer","text":"Ziņa, kas no reklāmas atnākusi caur vietnes formu, Messenger vai e-pastu. Skatījumi un klikšķi, pēc kuriem neviens nav uzrakstījis, atskaitē pieprasījumos netiek ieskaitīti."}},{"@type":"Question","name":"Kad kļūst skaidrs, vai reklāma darbojas?","acceptedAnswer":{"@type":"Answer","text":"Pirmos skaitļus redzat pēc dažām dienām, bet kuri sludinājumi atnes pieprasījumus, kļūst skaidrs dažu nedēļu laikā. Tad vājākos apturu, bet budžetu novirzu labākajiem."}}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Pāriet uz saturu</a>
@@ -606,12 +615,13 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="/lv/#about">Par mani</a>
     <a href="#contact" class="nav-cta">Kontakts</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Valoda"><span class="lm-cur">LV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/reklama/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/reklama/" hreflang="lv" lang="lv" aria-current="page"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/reklama/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/reklama/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/reklama/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/reklama/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/reklama/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/reklama/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-price" href="/lv/kaina/">Uzziniet cenu</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Valoda"><span class="lm-cur">LV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/reklama/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/reklama/" hreflang="lv" lang="lv" aria-current="page"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/reklama/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/reklama/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/reklama/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/reklama/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/reklama/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/reklama/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
   <section class="sec job" id="di-paieska" data-tick="ai">
     <nav class="crumbs mono small" aria-label="Navigācijas ceļš"><a href="/lv/">Projektai777</a><span aria-hidden="true"> / </span><a href="/lv/#services">Pakalpojumi</a><span aria-hidden="true"> / </span><span aria-current="page">AI meklēšana, klientu meklēšana un reklāma</span></nav>
+    <nav class="part-nav" aria-label="Pakalpojumi"><a href="#di-paieska">Redzamība AI meklēšanā</a><a href="#klientu-paieska">Automātiska klientu meklēšana</a><a href="#verslo-profilis">Google uzņēmuma profils</a><a href="#reklama">Reklāma Google, Facebook un Instagram</a></nav>
     <header class="job-head">
       <p class="kicker mono">Pakalpojums</p>
       <h1 class="job-h1">Redzamība AI meklēšanā</h1>
@@ -660,6 +670,31 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <div class="faq-list job-part"><details class="faq-q"><summary>Vai tas ir likumīgi?</summary><p>Pirms pirmās vēstules kopā pārskatām tiesisko pusi saskaņā ar VDAR un elektronisko sakaru likumu: kam drīkst rakstīt, kas vēstulē jānorāda un kā tiek apstrādāti atteikumi.</p></details><details class="faq-q"><summary>Kas uzraksta vēstules tekstu?</summary><p>Sagatavoju es pēc Jūsu piedāvājuma, bet Jūs to apstiprināt pirms pirmās sūtīšanas. Pirmajās nedēļās salīdzinu atbildes un pilnveidoju vēstuli vai nozares, līdz atbilžu kļūst vairāk.</p></details><details class="faq-q"><summary>Vai necietīs mana pasta reputācija?</summary><p>Nedarbojošās adreses un atteikušies uzņēmumi tiek nekavējoties izslēgti, bet pirms pirmās vēstules pārbaudu Jūsu pasta iestatījumus, lai vēstules nenonāktu surogātpastā.</p></details></div>
     <div class="cta-row"><a class="btn btn-acc" href="#contact" data-tick="leads">Jautāt par klientu meklēšanu</a></div>
   </section>
+  <section class="sec job" id="verslo-profilis" data-tick="gbp">
+    <header class="job-head">
+      <p class="kicker mono">Pakalpojums</p>
+      <h2 class="job-h1">Google uzņēmuma profils</h2>
+      <p class="lead">Lai Jūsu uzņēmumu atrastu Google meklēšanā, kartēs un AI atbildēs. Der uzņēmumiem, kas ar klientiem tiekas klātienē: savās telpās vai pie klienta. Nav svarīgi, kas veidojis Jūsu vietni.</p>
+    </header>
+    <div class="job-part">
+      <h2>Ko Jūs saņemat</h2>
+      <ul class="job-list">
+        <li>Profilu izveidoju vai sakārtoju pats: darbības jomu, darba laiku, pakalpojumus un fotogrāfijas.</li>
+        <li>Pārbaudu, lai nosaukums, adrese un tālrunis visur sakristu.</li>
+        <li>Padomus, kā iegūt vairāk atsauksmju.</li>
+      </ul>
+    </div>
+    <div class="job-part">
+      <h2>Nosacījumi</h2>
+      <ul class="job-list">
+        <li>Cenu nosaucu iepriekš, kad redzu, kas nepieciešams.</li>
+        <li>Profils paliek Jūsu Google kontā.</li>
+        <li>Katra mana izveidotā vietne to saņem bez maksas, ja uzņēmums atbilst Google noteikumiem.</li>
+      </ul>
+    </div>
+    <div class="faq-list job-part"><details class="faq-q"><summary>Kam tas vajadzīgs?</summary><p>Kad kāds tuvumā meklē Jūsu pakalpojumu, Google vispirms kartē rāda uzņēmumu profilus. Tos lasa arī AI atbildes.</p></details><details class="faq-q"><summary>Vai jābūt vietnei?</summary><p>Nē. Profils ir noderīgs arī bez vietnes, bet, ja tā ir, to sasaistu ar profilu.</p></details><details class="faq-q"><summary>Kas pārvalda profilu?</summary><p>Jūs. Profils paliek Jūsu Google kontā, es tikai palīdzu to sakārtot.</p></details></div>
+    <div class="cta-row"><a class="btn btn-acc" href="#contact" data-tick="gbp">Jautāt par uzņēmuma profilu</a></div>
+  </section>
   <section class="sec job" id="reklama" data-tick="ads">
     <header class="job-head">
       <p class="kicker mono">Pakalpojums</p>
@@ -692,14 +727,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Pastāstiet, kas Jums nepieciešams</h2>
       <p class="lead">Pat tikai divos teikumos. Atbildu darbadienas laikā ar skaidru apjomu un cenu.</p>
     </div>
-    <aside class="side-card" aria-labelledby="side-h">
-      <p class="kicker mono">Papildus</p>
-      <p class="side-t" id="side-h">Jau ir mājaslapa? Varu palīdzēt, lai to atrod.</p>
-      <p><a class="side-a" href="/lv/reklama/#di-paieska">Redzamība AI meklēšanā <span aria-hidden="true">→</span></a> Lai ChatGPT, Gemini un Google AI atbildēs tiktu minēts Jūsu uzņēmums. Pirmo pārbaudi veicu bez maksas.</p>
-      <p><a class="side-a" href="/lv/reklama/#reklama">Reklāma Google, Facebook un Instagram <span aria-hidden="true">→</span></a> Ikmēneša pakalpojums bez ilgiem līgumiem, jebkurā brīdī apturams. Mēru pieprasījumus, nevis klikšķus.</p>
-      <p><a class="side-a" href="/lv/verslo-profilis/">Google uzņēmuma profils <span aria-hidden="true">→</span></a> Izveidoju vai sakārtoju profilu, lai Jūs atrastu Google meklēšanā un kartēs.</p>
-      <p><a class="side-a" href="/lv/reklama/#klientu-paieska">Automātiska klientu meklēšana <span aria-hidden="true">→</span></a> Sistēma atrod Jums piemērotus uzņēmumus un Jūsu vārdā uzraksta tiem īsu vēstuli. Ieinteresēto atbildes nāk tieši Jums.</p>
-    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -745,6 +772,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"lv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sūta…","ok":"Saņēmu. Atbildēšu darbadienas laikā.","err":"Nevarēja sūtīt. Rakstiet man tieši:","examples":["Piem.: mums ir vietne, bet pasūtījumi nāk tikai telefoniski; gribētu, lai klienti paši varētu pasūtīt vai rezervēt…","Piem.: katru dienu atbildam uz vieniem un tiem pašiem klientu jautājumiem; gribētu, lai AI atbildētu mūsu vietā…","Piem.: datus no vēstulēm un pasūtījumiem ar rokām pārnesam uz Excel; gribētu, lai tas notiktu pats…","Piem.: mūsu mājaslapa ir novecojusi un neērta telefonā; gribētu to atjaunot…","Piem.: cenu piedāvājumus klientiem aprēķinām ar rokām; gribētu rīku, kas tos sagatavo dažu minūšu laikā…","Piem.: saņemam daudz rēķinu un dokumentu; gribētu, lai sistēma patstāvīgi tos nolasītu un kārtotu…","Piem.: pasūtījumus, noliktavu un darbus uzskaitām dažādās tabulās; gribētu vienkāršu sistēmu, kur viss būtu kopā…"],"subject":"Pieprasījums no mājaslapas","picks":"Mani interesē"},"work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"}};</script>
-<script src="/app.js?v=479b322b" defer></script>
+<script src="/app.js?v=9e946cdb" defer></script>
 </body>
 </html>

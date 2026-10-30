@@ -564,20 +564,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
-.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
-.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.side-card .kicker { margin: 0 0 6px; }
-.side-card p { margin: 0 0 10px; }
-.side-card p:last-child { margin: 0; }
-.side-card .side-t { color: var(--fg); font-size: 15px; }
-.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
-.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
-.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -587,7 +578,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
   .contact { display: block; }
-  .contact .side-card { margin-bottom: 32px; }
+}
+
+/* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
+.top-tools { display: flex; gap: 8px; flex: none; }
+.top-tool { padding: 7px 12px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+.top-tool:hover, .top-tool:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.1); }
+.top-tool:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.tools-row { margin-top: 14px; }
+.svc-big + .tools-row { margin-top: clamp(18px, 2.4vw, 26px); }
+.btn-tool { border-color: rgba(125, 255, 179, 0.45); }
+.btn-tool:hover, .btn-tool:focus-visible { background: rgba(125, 255, 179, 0.1); }
+.part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
+.part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+@media (max-width: 720px) {
+  .top-tools { margin-left: auto; }
+  .top > .top-tools + .lm { margin-left: 0; }
+  .top-tool { padding: 6px 10px; font-size: 12px; }
+  .top-tool.tool-check { display: none; } /* the phone header keeps the calculator; the check button is under the hero */
 }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Mājaslapas, CRM sistēmas, procesu automatizācija, AI rīki un redzamība AI meklēšanā uzņēmumiem. Fiksēta cena, kods paliek Jums.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"address":{"@type":"PostalAddress","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs","AI search visibility","generative engine optimization","online advertising"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Ko es daru: mājaslapas, CRM, automatizācija, AI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Mājaslapu un interneta veikalu izveide","description":"Jauna mājaslapa, esošās uzlabošana vai jaunas funkcijas jau strādājošai mājaslapai."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM sistēmas","description":"Izveidoju CRM sistēmu pēc Jūsu darba veida: klienti, pasūtījumi un atgādinājumi vienuviet."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Procesu automatizācija","description":"Savienoju rīkus, ko Jūs jau izmantojat, lai atkārtots darbs notiktu bez Jūsu līdzdalības."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"AI rīki","description":"Mākslīgais intelekts, kas strādā Jūsu labā: atbild klientiem, kārto pieprasījumus, nolasa dokumentus."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Redzamība AI meklēšanā","description":"Lai ChatGPT, Gemini un Google AI atbildēs tiktu minēts Jūsu uzņēmums: pirmo pārbaudi veicu bez maksas, vēlāk katru mēnesi nosūtu īsu atskaiti."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Automātiska klientu meklēšana","description":"Sistēma atrod jūsu biznesam piemērotus uzņēmumus pēc to publiski norādītajiem kontaktiem un mierīgā tempā no jūsu uzņēmuma e-pasta nosūta katram īsu vēstuli jūsu vārdā. Katrā vēstulē ir atteikšanās saite, un ieinteresēto atbildes uzreiz nonāk pie jums."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Reklāma Google, Facebook un Instagram","description":"Ikmēneša pakalpojums bez ilgiem līgumiem: apturēt var jebkurā brīdī, reklāmas naudu maksājat tieši Google un Meta, un katru mēnesi saņemat īsu atskaiti par to, cik bija pieprasījumu un cik izmaksāja viens. Kam vadu reklāmu, tiem AI meklēšanas pārbaude ir bez maksas."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
@@ -607,7 +616,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="#about">Par mani</a>
     <a href="#contact" class="nav-cta">Kontakts</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Valoda"><span class="lm-cur">LV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv" aria-current="page"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-price" href="/lv/kaina/">Uzziniet cenu</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Valoda"><span class="lm-cur">LV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv" aria-current="page"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -619,6 +628,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <a class="btn btn-acc" href="#contact">Pastāstiet, kas Jums nepieciešams</a>
       <a class="btn" href="#work">Skatīt darbus</a>
     </div>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/lv/kaina/">Uzziniet cenu ar 5 jautājumiem <span aria-hidden="true">→</span></a></div>
     <p class="hint mono" id="hint">Pārvietojiet peli vai pirkstu — fons reaģē.</p>
   </section>
 
@@ -645,7 +655,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       </div>
       <p class="big-cta"><a class="ads-cta" href="#contact">Pajautāt par šiem pakalpojumiem</a><span aria-hidden="true"> · </span><a class="ads-cta" href="/lv/reklama/">Vairāk par AI meklēšanu, klientu meklēšanu un reklāmu →</a></p>
     </article>
-    <p class="finder-line"><a class="svc-more" href="/lv/kaina/">Uzziniet cenu ar 5 jautājumiem →</a></p>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/lv/kaina/">Uzziniet cenu ar 5 jautājumiem <span aria-hidden="true">→</span></a></div>
     <div class="process" data-reveal>
       <p class="kicker mono">Kā darbs notiek</p>
       <ol class="steps">
@@ -680,14 +690,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
   <section class="sec path" id="path" data-reveal aria-labelledby="path-h">
     <div class="path-head">
-      <p class="kicker mono">Papildus</p>
+      <p class="kicker mono">Nākamie soļi</p>
       <h2 class="path-h" id="path-h">Kas notiek pēc mājaslapas</h2>
     </div>
     <ol class="path-steps">
       <li><span class="path-t">Mājaslapa</span><span class="path-s">Izveidoju mājaslapu un bez maksas pievienoju AI meklēšanas pamatus.</span></li>
       <li><a class="path-a" href="/lv/reklama/#di-paieska">AI meklēšana <span aria-hidden="true">→</span></a><span class="path-s">Lai ChatGPT un Gemini min Jūsu uzņēmumu. Pirmā pārbaude ir bezmaksas.</span></li>
       <li><a class="path-a" href="/lv/reklama/#reklama">Reklāma <span aria-hidden="true">→</span></a><span class="path-s">Reklāma katru mēnesi bez ilgiem līgumiem un automātiska klientu meklēšana.</span></li>
-      <li><a class="path-a" href="/lv/verslo-profilis/">Uzņēmuma profils <span aria-hidden="true">→</span></a><span class="path-s">Google uzņēmuma profils, lai Jūs atrastu Google kartēs.</span></li>
+      <li><a class="path-a" href="/lv/reklama/#verslo-profilis">Uzņēmuma profils <span aria-hidden="true">→</span></a><span class="path-s">Google uzņēmuma profils, lai Jūs atrastu Google kartēs.</span></li>
     </ol>
   </section>
 
@@ -728,14 +738,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Pastāstiet, kas Jums nepieciešams</h2>
       <p class="lead">Pat tikai divos teikumos. Atbildu darbadienas laikā ar skaidru apjomu un cenu.</p>
     </div>
-    <aside class="side-card" aria-labelledby="side-h">
-      <p class="kicker mono">Papildus</p>
-      <p class="side-t" id="side-h">Jau ir mājaslapa? Varu palīdzēt, lai to atrod.</p>
-      <p><a class="side-a" href="/lv/reklama/#di-paieska">Redzamība AI meklēšanā <span aria-hidden="true">→</span></a> Lai ChatGPT, Gemini un Google AI atbildēs tiktu minēts Jūsu uzņēmums. Pirmo pārbaudi veicu bez maksas.</p>
-      <p><a class="side-a" href="/lv/reklama/#reklama">Reklāma Google, Facebook un Instagram <span aria-hidden="true">→</span></a> Ikmēneša pakalpojums bez ilgiem līgumiem, jebkurā brīdī apturams. Mēru pieprasījumus, nevis klikšķus.</p>
-      <p><a class="side-a" href="/lv/verslo-profilis/">Google uzņēmuma profils <span aria-hidden="true">→</span></a> Izveidoju vai sakārtoju profilu, lai Jūs atrastu Google meklēšanā un kartēs.</p>
-      <p><a class="side-a" href="/lv/reklama/#klientu-paieska">Automātiska klientu meklēšana <span aria-hidden="true">→</span></a> Sistēma atrod Jums piemērotus uzņēmumus un Jūsu vārdā uzraksta tiem īsu vēstuli. Ieinteresēto atbildes nāk tieši Jums.</p>
-    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -781,6 +783,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"lv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sūta…","ok":"Saņēmu. Atbildēšu darbadienas laikā.","err":"Nevarēja sūtīt. Rakstiet man tieši:","examples":["Piem.: mums ir vietne, bet pasūtījumi nāk tikai telefoniski; gribētu, lai klienti paši varētu pasūtīt vai rezervēt…","Piem.: katru dienu atbildam uz vieniem un tiem pašiem klientu jautājumiem; gribētu, lai AI atbildētu mūsu vietā…","Piem.: datus no vēstulēm un pasūtījumiem ar rokām pārnesam uz Excel; gribētu, lai tas notiktu pats…","Piem.: mūsu mājaslapa ir novecojusi un neērta telefonā; gribētu to atjaunot…","Piem.: cenu piedāvājumus klientiem aprēķinām ar rokām; gribētu rīku, kas tos sagatavo dažu minūšu laikā…","Piem.: saņemam daudz rēķinu un dokumentu; gribētu, lai sistēma patstāvīgi tos nolasītu un kārtotu…","Piem.: pasūtījumus, noliktavu un darbus uzskaitām dažādās tabulās; gribētu vienkāršu sistēmu, kur viss būtu kopā…"],"subject":"Pieprasījums no mājaslapas","picks":"Mani interesē"},"work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"}};</script>
-<script src="/app.js?v=479b322b" defer></script>
+<script src="/app.js?v=9e946cdb" defer></script>
 </body>
 </html>

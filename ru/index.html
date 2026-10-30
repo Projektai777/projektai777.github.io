@@ -564,20 +564,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
-.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
-.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.side-card .kicker { margin: 0 0 6px; }
-.side-card p { margin: 0 0 10px; }
-.side-card p:last-child { margin: 0; }
-.side-card .side-t { color: var(--fg); font-size: 15px; }
-.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
-.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
-.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -587,7 +578,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
   .contact { display: block; }
-  .contact .side-card { margin-bottom: 32px; }
+}
+
+/* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
+.top-tools { display: flex; gap: 8px; flex: none; }
+.top-tool { padding: 7px 12px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+.top-tool:hover, .top-tool:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.1); }
+.top-tool:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.tools-row { margin-top: 14px; }
+.svc-big + .tools-row { margin-top: clamp(18px, 2.4vw, 26px); }
+.btn-tool { border-color: rgba(125, 255, 179, 0.45); }
+.btn-tool:hover, .btn-tool:focus-visible { background: rgba(125, 255, 179, 0.1); }
+.part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
+.part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+@media (max-width: 720px) {
+  .top-tools { margin-left: auto; }
+  .top > .top-tools + .lm { margin-left: 0; }
+  .top-tool { padding: 6px 10px; font-size: 12px; }
+  .top-tool.tool-check { display: none; } /* the phone header keeps the calculator; the check button is under the hero */
 }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Сайты, CRM-системы, автоматизация процессов, инструменты ИИ и видимость в ИИ-поиске для бизнеса. Фиксированная цена, код остаётся вам.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"address":{"@type":"PostalAddress","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs","AI search visibility","generative engine optimization","online advertising"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Чем я занимаюсь: сайты, CRM, автоматизация, ИИ","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Разработка сайтов и интернет-магазинов","description":"Новый сайт, улучшение существующего или новые функции для него."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM-системы","description":"Создаю CRM-систему под вашу работу: клиенты, заказы и напоминания в одном месте."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Автоматизация процессов","description":"Соединяю инструменты, которыми вы уже пользуетесь, чтобы повторяющаяся работа шла без ваших рук."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Инструменты ИИ","description":"Искусственный интеллект, который работает за вас: отвечает клиентам, сортирует заявки, считывает документы."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Видимость в ИИ-поиске","description":"Чтобы ChatGPT, Gemini и ИИ-ответы Google упоминали ваш бизнес: первую проверку делаю бесплатно, затем каждый месяц присылаю короткий отчёт."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Автоматический поиск клиентов","description":"Система находит подходящие вашему бизнесу компании по их открыто опубликованным контактам и в спокойном темпе отправляет каждой короткое письмо от вашего имени с почты вашей компании. В каждом письме есть ссылка для отказа, а ответы заинтересованных сразу приходят вам."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Реклама в Google, Facebook и Instagram","description":"Ежемесячная услуга без долгих договоров: остановить можно в любой момент, деньги на рекламу вы платите напрямую Google и Meta, а каждый месяц получаете короткий отчёт о том, сколько было обращений и во сколько обошлось одно. Тем, кому я веду рекламу, проверка видимости в ИИ-поиске бесплатна."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
@@ -607,7 +616,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="#about">Обо мне</a>
     <a href="#contact" class="nav-cta">Контакты</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Язык"><span class="lm-cur">RU</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru" aria-current="page"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-price" href="/ru/kaina/">Узнать цену</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Язык"><span class="lm-cur">RU</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru" aria-current="page"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -619,6 +628,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <a class="btn btn-acc" href="#contact">Расскажите, что нужно</a>
       <a class="btn" href="#work">Посмотреть работы</a>
     </div>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/ru/kaina/">Узнайте цену за 5 вопросов <span aria-hidden="true">→</span></a></div>
     <p class="hint mono" id="hint">Подвигайте мышью или пальцем — фон реагирует.</p>
   </section>
 
@@ -645,7 +655,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       </div>
       <p class="big-cta"><a class="ads-cta" href="#contact">Спросить об этих услугах</a><span aria-hidden="true"> · </span><a class="ads-cta" href="/ru/reklama/">Подробнее об ИИ-поиске, поиске клиентов и рекламе →</a></p>
     </article>
-    <p class="finder-line"><a class="svc-more" href="/ru/kaina/">Узнайте цену за 5 вопросов →</a></p>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/ru/kaina/">Узнайте цену за 5 вопросов <span aria-hidden="true">→</span></a></div>
     <div class="process" data-reveal>
       <p class="kicker mono">Как проходит работа</p>
       <ol class="steps">
@@ -680,14 +690,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
   <section class="sec path" id="path" data-reveal aria-labelledby="path-h">
     <div class="path-head">
-      <p class="kicker mono">Дополнительно</p>
+      <p class="kicker mono">Следующие шаги</p>
       <h2 class="path-h" id="path-h">Что после сайта</h2>
     </div>
     <ol class="path-steps">
       <li><span class="path-t">Сайт</span><span class="path-s">Создаю сайт и бесплатно закладываю основы видимости в ИИ-поиске.</span></li>
       <li><a class="path-a" href="/ru/reklama/#di-paieska">ИИ-поиск <span aria-hidden="true">→</span></a><span class="path-s">Чтобы ChatGPT и Gemini упоминали ваш бизнес. Первая проверка бесплатна.</span></li>
       <li><a class="path-a" href="/ru/reklama/#reklama">Реклама <span aria-hidden="true">→</span></a><span class="path-s">Реклама помесячно, без долгих договоров, и автоматический поиск клиентов.</span></li>
-      <li><a class="path-a" href="/ru/verslo-profilis/">Профиль компании <span aria-hidden="true">→</span></a><span class="path-s">Профиль компании в Google, чтобы вас находили на Google Картах.</span></li>
+      <li><a class="path-a" href="/ru/reklama/#verslo-profilis">Профиль компании <span aria-hidden="true">→</span></a><span class="path-s">Профиль компании в Google, чтобы вас находили на Google Картах.</span></li>
     </ol>
   </section>
 
@@ -728,14 +738,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Расскажите, чего вы хотите</h2>
       <p class="lead">Хоть двумя предложениями. Отвечаю в течение рабочего дня с понятным объёмом и ценой.</p>
     </div>
-    <aside class="side-card" aria-labelledby="side-h">
-      <p class="kicker mono">Дополнительно</p>
-      <p class="side-t" id="side-h">Сайт уже есть? Помогу, чтобы его находили.</p>
-      <p><a class="side-a" href="/ru/reklama/#di-paieska">Видимость в ИИ-поиске <span aria-hidden="true">→</span></a> Чтобы в ответах ChatGPT, Gemini и ИИ Google упоминался ваш бизнес. Первую проверку делаю бесплатно.</p>
-      <p><a class="side-a" href="/ru/reklama/#reklama">Реклама в Google, Facebook и Instagram <span aria-hidden="true">→</span></a> Ежемесячная услуга без долгих договоров, её можно остановить в любой момент. Считаю заявки, а не клики.</p>
-      <p><a class="side-a" href="/ru/verslo-profilis/">Профиль компании в Google <span aria-hidden="true">→</span></a> Создаю или привожу в порядок профиль, чтобы вас находили в поиске Google и на картах.</p>
-      <p><a class="side-a" href="/ru/reklama/#klientu-paieska">Автоматический поиск клиентов <span aria-hidden="true">→</span></a> Система находит подходящие вам компании и от вашего имени пишет им короткое письмо. Ответы заинтересовавшихся приходят прямо вам.</p>
-    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -781,6 +783,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"ru","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Отправляю…","ok":"Получил. Отвечу в течение рабочего дня.","err":"Не удалось отправить. Напишите напрямую:","examples":["Например: у нас есть сайт, но заказы приходят только по телефону; хотим, чтобы клиенты заказывали или бронировали сами…","Например: каждый день отвечаем на повторяющиеся вопросы клиентов; хотим, чтобы за нас отвечал искусственный интеллект…","Например: данные из писем и заказов переносим в Excel вручную; хотим, чтобы это происходило само…","Например: наш сайт устарел и неудобен на телефоне; хотим его обновить…","Например: коммерческие предложения для клиентов считаем вручную; хотим инструмент, который готовит их за несколько минут…","Например: получаем много счетов и документов; хотим, чтобы система сама их считывала и сортировала…","Например: заказы, склад и работы ведём в разных таблицах; хотим простую систему, где всё собрано вместе…"],"subject":"Запрос с сайта","picks":"Интересует"},"work":{"next":"Следующий проект","prev":"Предыдущий проект"}};</script>
-<script src="/app.js?v=479b322b" defer></script>
+<script src="/app.js?v=9e946cdb" defer></script>
 </body>
 </html>
