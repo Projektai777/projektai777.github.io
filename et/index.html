@@ -564,20 +564,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
-.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
-.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.side-card .kicker { margin: 0 0 6px; }
-.side-card p { margin: 0 0 10px; }
-.side-card p:last-child { margin: 0; }
-.side-card .side-t { color: var(--fg); font-size: 15px; }
-.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
-.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
-.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -587,7 +578,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
   .contact { display: block; }
-  .contact .side-card { margin-bottom: 32px; }
+}
+
+/* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
+.top-tools { display: flex; gap: 8px; flex: none; }
+.top-tool { padding: 7px 12px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+.top-tool:hover, .top-tool:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.1); }
+.top-tool:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.tools-row { margin-top: 14px; }
+.svc-big + .tools-row { margin-top: clamp(18px, 2.4vw, 26px); }
+.btn-tool { border-color: rgba(125, 255, 179, 0.45); }
+.btn-tool:hover, .btn-tool:focus-visible { background: rgba(125, 255, 179, 0.1); }
+.part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
+.part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+@media (max-width: 720px) {
+  .top-tools { margin-left: auto; }
+  .top > .top-tools + .lm { margin-left: 0; }
+  .top-tool { padding: 6px 10px; font-size: 12px; }
+  .top-tool.tool-check { display: none; } /* the phone header keeps the calculator; the check button is under the hero */
 }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Veebilehed, CRM-süsteemid, automatiseerimine, tehisintellekti tööriistad ja nähtavus tehisintellekti otsingus ettevõtetele. Fikseeritud hind, kood jääb Teile.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"address":{"@type":"PostalAddress","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs","AI search visibility","generative engine optimization","online advertising"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Mida ma teen: kodulehed, CRM, automatiseerimine, TI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Kodulehtede ja e-poodide loomine","description":"Uus koduleht, olemasoleva täiustamine või uued funktsioonid juba töötavale kodulehele."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM-süsteemid","description":"Loon CRM-süsteemi Teie töö järgi: kliendid, tellimused ja meeldetuletused ühes kohas."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Protsesside automatiseerimine","description":"Ühendan tööriistad, mida Te juba kasutate, nii et korduv töö tehakse ilma Teie osaluseta."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Tehisintellekti tööriistad","description":"Tehisintellekt, mis töötab Teie eest: vastab klientidele, sorteerib päringuid, loeb dokumente."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Nähtavus tehisintellekti otsingus","description":"Et ChatGPT, Gemini ja Google'i tehisintellekti vastustes mainitaks Teie ettevõtet: esimese kontrolli teen tasuta, edaspidi saadan igal kuul lühikese aruande."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Automaatne klientide otsing","description":"Süsteem leiab teie ärile sobivad ettevõtted nende avalikult jagatud kontaktide põhjal ja saadab igaühele rahulikus tempos teie nimel ning teie ettevõtte postkastist lühikese kirja. Igas kirjas on loobumislink ja huviliste vastused jõuavad kohe teieni."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Reklaam Google'is, Facebookis ja Instagramis","description":"Igakuine teenus ilma pikkade lepinguteta: peatada saab igal ajal, reklaamiraha maksate otse Google'ile ja Metale ning igal kuul saate lühikese aruande, mitu päringut tuli ja mis üks päring maksis. Kellele reklaami juhin, sellele on tehisintellekti otsingu kontroll tasuta."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
@@ -607,7 +616,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="#about">Minust</a>
     <a href="#contact" class="nav-cta">Kontakt</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Keel"><span class="lm-cur">ET</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et" aria-current="page"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-price" href="/et/kaina/">Teadke hinda</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Keel"><span class="lm-cur">ET</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et" aria-current="page"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -619,6 +628,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <a class="btn btn-acc" href="#contact">Kirjutage, mida Teil vaja on</a>
       <a class="btn" href="#work">Vaadake minu töid</a>
     </div>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/et/kaina/">Teadke hinda 5 küsimusega <span aria-hidden="true">→</span></a></div>
     <p class="hint mono" id="hint">Liigutage hiirt või sõrme — taust reageerib.</p>
   </section>
 
@@ -645,7 +655,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       </div>
       <p class="big-cta"><a class="ads-cta" href="#contact">Küsi nende teenuste kohta</a><span aria-hidden="true"> · </span><a class="ads-cta" href="/et/reklama/">Rohkem tehisintellekti otsingust, klientide otsingust ja reklaamist →</a></p>
     </article>
-    <p class="finder-line"><a class="svc-more" href="/et/kaina/">Teadke hinda 5 küsimusega →</a></p>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/et/kaina/">Teadke hinda 5 küsimusega <span aria-hidden="true">→</span></a></div>
     <div class="process" data-reveal>
       <p class="kicker mono">Kuidas töö käib</p>
       <ol class="steps">
@@ -680,14 +690,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
   <section class="sec path" id="path" data-reveal aria-labelledby="path-h">
     <div class="path-head">
-      <p class="kicker mono">Lisaks</p>
+      <p class="kicker mono">Järgmised sammud</p>
       <h2 class="path-h" id="path-h">Mis saab pärast kodulehte</h2>
     </div>
     <ol class="path-steps">
       <li><span class="path-t">Koduleht</span><span class="path-s">Teen kodulehe ja lisan tehisintellekti otsingu alused tasuta.</span></li>
       <li><a class="path-a" href="/et/reklama/#di-paieska">Tehisintellekti otsing <span aria-hidden="true">→</span></a><span class="path-s">Et ChatGPT ja Gemini Teie ettevõtet mainiksid. Esimene kontroll on tasuta.</span></li>
       <li><a class="path-a" href="/et/reklama/#reklama">Reklaam <span aria-hidden="true">→</span></a><span class="path-s">Reklaam iga kuu ilma pikkade lepinguteta ning automaatne klientide otsing.</span></li>
-      <li><a class="path-a" href="/et/verslo-profilis/">Ettevõtte profiil <span aria-hidden="true">→</span></a><span class="path-s">Google'i ettevõtteprofiil, et Teid leitaks Google'i kaartidelt.</span></li>
+      <li><a class="path-a" href="/et/reklama/#verslo-profilis">Ettevõtte profiil <span aria-hidden="true">→</span></a><span class="path-s">Google'i ettevõtteprofiil, et Teid leitaks Google'i kaartidelt.</span></li>
     </ol>
   </section>
 
@@ -728,14 +738,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Kirjutage, mida Te vajate</h2>
       <p class="lead">Piisab kahest lausest. Vastan ühe tööpäeva jooksul selge ulatuse ja hinnaga.</p>
     </div>
-    <aside class="side-card" aria-labelledby="side-h">
-      <p class="kicker mono">Lisaks</p>
-      <p class="side-t" id="side-h">Koduleht juba olemas? Aitan, et seda leitaks.</p>
-      <p><a class="side-a" href="/et/reklama/#di-paieska">Nähtavus tehisintellekti otsingus <span aria-hidden="true">→</span></a> Et ChatGPT, Gemini ja Google'i tehisintellekti vastustes mainitaks Teie ettevõtet. Esimese kontrolli teen tasuta.</p>
-      <p><a class="side-a" href="/et/reklama/#reklama">Reklaam Google'is, Facebookis ja Instagramis <span aria-hidden="true">→</span></a> Kuine teenus ilma pikkade lepinguteta, peatatav igal ajal. Mõõdan päringuid, mitte klikke.</p>
-      <p><a class="side-a" href="/et/verslo-profilis/">Google'i ettevõtteprofiil <span aria-hidden="true">→</span></a> Loon või korrastan profiili, et Teid leitaks Google'i otsingust ja kaartidelt.</p>
-      <p><a class="side-a" href="/et/reklama/#klientu-paieska">Automaatne klientide otsing <span aria-hidden="true">→</span></a> Süsteem leiab Teile sobivad ettevõtted ja kirjutab Teie nimel neile lühikese kirja. Huvilistelt tulevad vastused otse Teile.</p>
-    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -781,6 +783,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"et","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Saadan…","ok":"Kätte saadud. Vastan ühe tööpäeva jooksul.","err":"Ei saanud saata. Kirjutage otse:","examples":["Nt: meil on koduleht, aga tellimused tulevad ainult telefoni teel; tahaksime, et kliendid saaksid ise tellida või broneerida…","Nt: vastame iga päev samadele klientide küsimustele; tahaksime, et tehisintellekt vastaks meie eest…","Nt: kanname andmeid kirjadest ja tellimustest käsitsi Excelisse; tahaksime, et see toimuks iseenesest…","Nt: meie koduleht on vananenud ja mobiilis ebamugav; tahaksime seda uuendada…","Nt: arvutame klientidele hinnapakkumisi käsitsi; tahaksime tööriista, mis koostaks need mõne minutiga…","Nt: saame palju arveid ja dokumente; tahaksime, et süsteem loeks ja sorteeriks need ise…","Nt: jälgime tellimusi, laoseisu ja töid eri tabelites; tahaksime lihtsat süsteemi, kus kõik oleks koos…"],"subject":"Päring veebilehelt","picks":"Huvi pakub"},"work":{"next":"Järgmine projekt","prev":"Eelmine projekt"}};</script>
-<script src="/app.js?v=479b322b" defer></script>
+<script src="/app.js?v=9e946cdb" defer></script>
 </body>
 </html>

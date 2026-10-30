@@ -564,20 +564,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
-.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
-.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.side-card .kicker { margin: 0 0 6px; }
-.side-card p { margin: 0 0 10px; }
-.side-card p:last-child { margin: 0; }
-.side-card .side-t { color: var(--fg); font-size: 15px; }
-.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
-.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
-.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -587,7 +578,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
   .contact { display: block; }
-  .contact .side-card { margin-bottom: 32px; }
+}
+
+/* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
+.top-tools { display: flex; gap: 8px; flex: none; }
+.top-tool { padding: 7px 12px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+.top-tool:hover, .top-tool:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.1); }
+.top-tool:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.tools-row { margin-top: 14px; }
+.svc-big + .tools-row { margin-top: clamp(18px, 2.4vw, 26px); }
+.btn-tool { border-color: rgba(125, 255, 179, 0.45); }
+.btn-tool:hover, .btn-tool:focus-visible { background: rgba(125, 255, 179, 0.1); }
+.part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
+.part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+@media (max-width: 720px) {
+  .top-tools { margin-left: auto; }
+  .top > .top-tools + .lm { margin-left: 0; }
+  .top-tool { padding: 6px 10px; font-size: 12px; }
+  .top-tool.tool-check { display: none; } /* the phone header keeps the calculator; the check button is under the hero */
 }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Websites, CRM systems, process automation, AI tools and visibility in AI search for business. Fixed price, the code stays yours. I reply within a working day.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"address":{"@type":"PostalAddress","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs","AI search visibility","generative engine optimization","online advertising"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"What I do: websites, CRM, automation, AI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Websites","description":"A new site, an improvement of the one you have, or new features added to it."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM systems","description":"I build a CRM around how you work: clients, orders and reminders in one place."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Process automation","description":"I connect the tools you already use so the repetitive work happens without your hands."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"AI tools","description":"Artificial intelligence that works for you: answers customers, sorts inquiries, reads documents."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Visibility in AI search","description":"So that ChatGPT, Gemini and Google's AI answers name your business: the first check is free, then I send a short report each month."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Automated client search","description":"The system finds companies that fit your business from their publicly listed contacts and, at a calm pace, sends each one a short letter in your name from your own company mailbox. Every letter has an opt-out link, and interested replies reach you straight away."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Ads on Google, Facebook and Instagram","description":"A monthly service with no long contract: stop any time, the ad money goes straight to Google and Meta, and each month you get a short report on how many enquiries came and what one cost. If I run your ads, the AI search check is free."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
@@ -607,7 +616,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="#about">About me</a>
     <a href="#contact" class="nav-cta">Contact</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Language"><span class="lm-cur">EN</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en" aria-current="page"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-price" href="/en/kaina/">Find your price</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Language"><span class="lm-cur">EN</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en" aria-current="page"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -619,6 +628,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <a class="btn btn-acc" href="#contact">Tell me what you need</a>
       <a class="btn" href="#work">See my work</a>
     </div>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/en/kaina/">Find your price in 5 questions <span aria-hidden="true">→</span></a></div>
     <p class="hint mono" id="hint">Move the mouse or your finger — the background responds.</p>
   </section>
 
@@ -645,7 +655,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       </div>
       <p class="big-cta"><a class="ads-cta" href="#contact">Ask about these services</a><span aria-hidden="true"> · </span><a class="ads-cta" href="/en/reklama/">More about AI search, client search and ads →</a></p>
     </article>
-    <p class="finder-line"><a class="svc-more" href="/en/kaina/">Find your price in 5 questions →</a></p>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/en/kaina/">Find your price in 5 questions <span aria-hidden="true">→</span></a></div>
     <div class="process" data-reveal>
       <p class="kicker mono">How the work goes</p>
       <ol class="steps">
@@ -680,14 +690,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
   <section class="sec path" id="path" data-reveal aria-labelledby="path-h">
     <div class="path-head">
-      <p class="kicker mono">More</p>
+      <p class="kicker mono">Next steps</p>
       <h2 class="path-h" id="path-h">What comes after the website</h2>
     </div>
     <ol class="path-steps">
       <li><span class="path-t">Website</span><span class="path-s">I build the website and add the basics of AI search for free.</span></li>
       <li><a class="path-a" href="/en/reklama/#di-paieska">AI search <span aria-hidden="true">→</span></a><span class="path-s">So ChatGPT and Gemini mention your business. The first check is free.</span></li>
       <li><a class="path-a" href="/en/reklama/#reklama">Ads <span aria-hidden="true">→</span></a><span class="path-s">Ads month by month with no long contracts, and automated client search.</span></li>
-      <li><a class="path-a" href="/en/verslo-profilis/">Business profile <span aria-hidden="true">→</span></a><span class="path-s">A Google Business Profile, so people find you on Google Maps.</span></li>
+      <li><a class="path-a" href="/en/reklama/#verslo-profilis">Business profile <span aria-hidden="true">→</span></a><span class="path-s">A Google Business Profile, so people find you on Google Maps.</span></li>
     </ol>
   </section>
 
@@ -728,14 +738,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Tell me what you want</h2>
       <p class="lead">Even two sentences. I reply within a working day with a clear scope and price.</p>
     </div>
-    <aside class="side-card" aria-labelledby="side-h">
-      <p class="kicker mono">More</p>
-      <p class="side-t" id="side-h">Already have a website? I can help people find it.</p>
-      <p><a class="side-a" href="/en/reklama/#di-paieska">Visibility in AI search <span aria-hidden="true">→</span></a> So that ChatGPT, Gemini and Google's AI answers mention your business. I do the first check for free.</p>
-      <p><a class="side-a" href="/en/reklama/#reklama">Ads on Google, Facebook and Instagram <span aria-hidden="true">→</span></a> A monthly service with no long contracts, stop any time. I measure enquiries, not clicks.</p>
-      <p><a class="side-a" href="/en/verslo-profilis/">Google Business Profile <span aria-hidden="true">→</span></a> I create or tidy up your profile so people find you in Google Search and Maps.</p>
-      <p><a class="side-a" href="/en/reklama/#klientu-paieska">Automated client search <span aria-hidden="true">→</span></a> The system finds businesses that suit you and writes them a short letter on your behalf. Replies from interested ones come straight to you.</p>
-    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -781,6 +783,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"en","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sending…","ok":"Received. I will reply within a working day.","err":"Could not send. Write to me directly:","examples":["E.g.: we have a website but orders only come by phone; we would like customers to order or book by themselves…","E.g.: every day we answer the same customer questions; we would like AI to answer them for us…","E.g.: we copy data from e-mails and orders into Excel by hand; we would like that to happen on its own…","E.g.: our website is outdated and awkward on phones; we would like to refresh it…","E.g.: we work out price quotes for customers by hand; we would like a tool that prepares them in a few minutes…","E.g.: we receive lots of invoices and documents; we would like a system that reads and sorts them by itself…","E.g.: we track orders, stock and jobs in separate spreadsheets; we would like a simple system that keeps it all together…"],"subject":"Enquiry from the website","picks":"Interested in"},"work":{"next":"Next project","prev":"Previous project"}};</script>
-<script src="/app.js?v=479b322b" defer></script>
+<script src="/app.js?v=9e946cdb" defer></script>
 </body>
 </html>

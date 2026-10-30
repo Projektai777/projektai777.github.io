@@ -564,20 +564,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
-.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
-.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.side-card .kicker { margin: 0 0 6px; }
-.side-card p { margin: 0 0 10px; }
-.side-card p:last-child { margin: 0; }
-.side-card .side-t { color: var(--fg); font-size: 15px; }
-.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
-.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
-.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -587,7 +578,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
   .contact { display: block; }
-  .contact .side-card { margin-bottom: 32px; }
+}
+
+/* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
+.top-tools { display: flex; gap: 8px; flex: none; }
+.top-tool { padding: 7px 12px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+.top-tool:hover, .top-tool:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.1); }
+.top-tool:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.tools-row { margin-top: 14px; }
+.svc-big + .tools-row { margin-top: clamp(18px, 2.4vw, 26px); }
+.btn-tool { border-color: rgba(125, 255, 179, 0.45); }
+.btn-tool:hover, .btn-tool:focus-visible { background: rgba(125, 255, 179, 0.1); }
+.part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
+.part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+@media (max-width: 720px) {
+  .top-tools { margin-left: auto; }
+  .top > .top-tools + .lm { margin-left: 0; }
+  .top-tool { padding: 6px 10px; font-size: 12px; }
+  .top-tool.tool-check { display: none; } /* the phone header keeps the calculator; the check button is under the hero */
 }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/lv/verslo-profilis/#page","url":"https://projektai777.eu/lv/verslo-profilis/","name":"Google uzņēmuma profils | Projektai777","description":"Izveidoju vai sakārtoju Google uzņēmuma profilu, lai Jūsu uzņēmumu atrastu Google meklēšanā, kartēs un AI atbildēs.","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"},"breadcrumb":{"@id":"https://projektai777.eu/lv/verslo-profilis/#crumbs"}},{"@type":"Service","@id":"https://projektai777.eu/lv/verslo-profilis/#verslo-profilis","name":"Google uzņēmuma profils","description":"Lai Jūsu uzņēmumu atrastu Google meklēšanā, kartēs un AI atbildēs. Der uzņēmumiem, kas ar klientiem tiekas klātienē: savās telpās vai pie klienta. Nav svarīgi, kas veidojis Jūsu vietni.","url":"https://projektai777.eu/lv/verslo-profilis/#verslo-profilis","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/lv/verslo-profilis/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/lv/"},{"@type":"ListItem","position":2,"name":"Pakalpojumi","item":"https://projektai777.eu/lv/#services"},{"@type":"ListItem","position":3,"name":"Google uzņēmuma profils","item":"https://projektai777.eu/lv/verslo-profilis/"}]},{"@type":"FAQPage","@id":"https://projektai777.eu/lv/verslo-profilis/#faq","url":"https://projektai777.eu/lv/verslo-profilis/","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/lv/verslo-profilis/#page"},"mainEntity":[{"@type":"Question","name":"Kam tas vajadzīgs?","acceptedAnswer":{"@type":"Answer","text":"Kad kāds tuvumā meklē Jūsu pakalpojumu, Google vispirms kartē rāda uzņēmumu profilus. Tos lasa arī AI atbildes."}},{"@type":"Question","name":"Vai jābūt vietnei?","acceptedAnswer":{"@type":"Answer","text":"Nē. Profils ir noderīgs arī bez vietnes, bet, ja tā ir, to sasaistu ar profilu."}},{"@type":"Question","name":"Kas pārvalda profilu?","acceptedAnswer":{"@type":"Answer","text":"Jūs. Profils paliek Jūsu Google kontā, es tikai palīdzu to sakārtot."}}]}]}</script>
@@ -606,7 +615,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="/lv/#about">Par mani</a>
     <a href="#contact" class="nav-cta">Kontakts</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Valoda"><span class="lm-cur">LV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/verslo-profilis/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/verslo-profilis/" hreflang="lv" lang="lv" aria-current="page"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/verslo-profilis/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/verslo-profilis/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/verslo-profilis/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/verslo-profilis/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/verslo-profilis/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/verslo-profilis/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-price" href="/lv/kaina/">Uzziniet cenu</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Valoda"><span class="lm-cur">LV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/verslo-profilis/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/verslo-profilis/" hreflang="lv" lang="lv" aria-current="page"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/verslo-profilis/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/verslo-profilis/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/verslo-profilis/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/verslo-profilis/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/verslo-profilis/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/verslo-profilis/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -643,14 +652,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Pastāstiet, kas Jums nepieciešams</h2>
       <p class="lead">Pat tikai divos teikumos. Atbildu darbadienas laikā ar skaidru apjomu un cenu.</p>
     </div>
-    <aside class="side-card" aria-labelledby="side-h">
-      <p class="kicker mono">Papildus</p>
-      <p class="side-t" id="side-h">Jau ir mājaslapa? Varu palīdzēt, lai to atrod.</p>
-      <p><a class="side-a" href="/lv/reklama/#di-paieska">Redzamība AI meklēšanā <span aria-hidden="true">→</span></a> Lai ChatGPT, Gemini un Google AI atbildēs tiktu minēts Jūsu uzņēmums. Pirmo pārbaudi veicu bez maksas.</p>
-      <p><a class="side-a" href="/lv/reklama/#reklama">Reklāma Google, Facebook un Instagram <span aria-hidden="true">→</span></a> Ikmēneša pakalpojums bez ilgiem līgumiem, jebkurā brīdī apturams. Mēru pieprasījumus, nevis klikšķus.</p>
-      <p><a class="side-a" href="/lv/verslo-profilis/">Google uzņēmuma profils <span aria-hidden="true">→</span></a> Izveidoju vai sakārtoju profilu, lai Jūs atrastu Google meklēšanā un kartēs.</p>
-      <p><a class="side-a" href="/lv/reklama/#klientu-paieska">Automātiska klientu meklēšana <span aria-hidden="true">→</span></a> Sistēma atrod Jums piemērotus uzņēmumus un Jūsu vārdā uzraksta tiem īsu vēstuli. Ieinteresēto atbildes nāk tieši Jums.</p>
-    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -696,6 +697,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"lv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sūta…","ok":"Saņēmu. Atbildēšu darbadienas laikā.","err":"Nevarēja sūtīt. Rakstiet man tieši:","examples":["Piem.: mums ir vietne, bet pasūtījumi nāk tikai telefoniski; gribētu, lai klienti paši varētu pasūtīt vai rezervēt…","Piem.: katru dienu atbildam uz vieniem un tiem pašiem klientu jautājumiem; gribētu, lai AI atbildētu mūsu vietā…","Piem.: datus no vēstulēm un pasūtījumiem ar rokām pārnesam uz Excel; gribētu, lai tas notiktu pats…","Piem.: mūsu mājaslapa ir novecojusi un neērta telefonā; gribētu to atjaunot…","Piem.: cenu piedāvājumus klientiem aprēķinām ar rokām; gribētu rīku, kas tos sagatavo dažu minūšu laikā…","Piem.: saņemam daudz rēķinu un dokumentu; gribētu, lai sistēma patstāvīgi tos nolasītu un kārtotu…","Piem.: pasūtījumus, noliktavu un darbus uzskaitām dažādās tabulās; gribētu vienkāršu sistēmu, kur viss būtu kopā…"],"subject":"Pieprasījums no mājaslapas","picks":"Mani interesē"},"work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"}};</script>
-<script src="/app.js?v=479b322b" defer></script>
+<script src="/app.js?v=9e946cdb" defer></script>
 </body>
 </html>

@@ -564,20 +564,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
-.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
-.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.side-card .kicker { margin: 0 0 6px; }
-.side-card p { margin: 0 0 10px; }
-.side-card p:last-child { margin: 0; }
-.side-card .side-t { color: var(--fg); font-size: 15px; }
-.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
-.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
-.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -587,10 +578,28 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
   .contact { display: block; }
-  .contact .side-card { margin-bottom: 32px; }
+}
+
+/* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
+.top-tools { display: flex; gap: 8px; flex: none; }
+.top-tool { padding: 7px 12px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+.top-tool:hover, .top-tool:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.1); }
+.top-tool:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.tools-row { margin-top: 14px; }
+.svc-big + .tools-row { margin-top: clamp(18px, 2.4vw, 26px); }
+.btn-tool { border-color: rgba(125, 255, 179, 0.45); }
+.btn-tool:hover, .btn-tool:focus-visible { background: rgba(125, 255, 179, 0.1); }
+.part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
+.part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+@media (max-width: 720px) {
+  .top-tools { margin-left: auto; }
+  .top > .top-tools + .lm { margin-left: 0; }
+  .top-tool { padding: 6px 10px; font-size: 12px; }
+  .top-tool.tool-check { display: none; } /* the phone header keeps the calculator; the check button is under the hero */
 }
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/ru/reklama/#page","url":"https://projektai777.eu/ru/reklama/","name":"ИИ-поиск, поиск клиентов и реклама | Projektai777","description":"Видимость в ответах ChatGPT и Gemini, автоматический поиск клиентов и реклама в Google, Facebook и Instagram для вашего бизнеса.","inLanguage":"ru","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"},"breadcrumb":{"@id":"https://projektai777.eu/ru/reklama/#crumbs"}},{"@type":"Service","@id":"https://projektai777.eu/ru/reklama/#di-paieska","name":"Видимость в ИИ-поиске","description":"Чтобы ChatGPT, Gemini и ИИ-ответы Google упоминали ваш бизнес. Подходит любому бизнесу, независимо от того, кто делал ваш сайт.","url":"https://projektai777.eu/ru/reklama/#di-paieska","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/ru/reklama/#klientu-paieska","name":"Автоматический поиск клиентов","description":"Система находит подходящие вашему бизнесу компании и пишет им от вашего имени, а заинтересовавшиеся отвечают прямо вам.","url":"https://projektai777.eu/ru/reklama/#klientu-paieska","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/ru/reklama/#reklama","name":"Реклама в Google, Facebook и Instagram","description":"Подходит и тогда, когда сайта у вас нет или его делали другие. Я считаю обращения, а не клики.","url":"https://projektai777.eu/ru/reklama/#reklama","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/ru/reklama/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/ru/"},{"@type":"ListItem","position":2,"name":"Услуги","item":"https://projektai777.eu/ru/#services"},{"@type":"ListItem","position":3,"name":"ИИ-поиск, поиск клиентов и реклама","item":"https://projektai777.eu/ru/reklama/"}]},{"@type":"FAQPage","@id":"https://projektai777.eu/ru/reklama/#faq","url":"https://projektai777.eu/ru/reklama/","inLanguage":"ru","isPartOf":{"@id":"https://projektai777.eu/ru/reklama/#page"},"mainEntity":[{"@type":"Question","name":"Чем это отличается от рекламы?","acceptedAnswer":{"@type":"Answer","text":"Рекламу вы видите рядом с результатами поиска, а здесь важно, упоминает ли бизнес сам ИИ-ответ."}},{"@type":"Question","name":"Можете ли вы гарантировать, что ИИ упомянет мой бизнес?","acceptedAnswer":{"@type":"Answer","text":"Нет, этого не может обещать никто, потому что ответ формирует сам ИИ. Я привожу в порядок то, что он читает: данные сайта, описания и упоминания на других сайтах, а каждый месяц проверяю, помогает ли это."}},{"@type":"Question","name":"Нужно ли будет менять мой сайт?","acceptedAnswer":{"@type":"Answer","text":"Обычно достаточно нескольких технических правок, которых посетители не замечают. Если сайт делали другие, я вношу правки сам или пишу вашему программисту, что изменить."}},{"@type":"Question","name":"Это законно?","acceptedAnswer":{"@type":"Answer","text":"Перед первым письмом мы вместе разбираем правовую сторону по GDPR и закону об электронных коммуникациях: кому можно писать, что обязательно указать в письме и как обрабатываются отказы."}},{"@type":"Question","name":"Кто пишет текст письма?","acceptedAnswer":{"@type":"Answer","text":"Готовлю я по вашему предложению, а вы утверждаете его перед первой отправкой. Первые недели я сравниваю ответы и улучшаю письмо или сферы, пока ответов становится больше."}},{"@type":"Question","name":"Не пострадает ли репутация моей почты?","acceptedAnswer":{"@type":"Answer","text":"Нерабочие адреса и отказавшиеся сразу исключаются, а перед первым письмом я проверяю настройки вашей почты, чтобы письма не попадали в спам."}},{"@type":"Question","name":"На чьё имя будут рекламные аккаунты?","acceptedAnswer":{"@type":"Answer","text":"На ваше. Я создаю аккаунты на ваше имя или подключаю ваши существующие, поэтому вы видите все расходы, а после остановки услуги аккаунты остаются у вас."}},{"@type":"Question","name":"Что считается обращением?","acceptedAnswer":{"@type":"Answer","text":"Сообщение, пришедшее с рекламы через форму на сайте, Messenger или по электронной почте. Просмотры и клики, после которых никто не написал, в отчёте обращениями не считаются."}},{"@type":"Question","name":"Когда станет ясно, работает ли реклама?","acceptedAnswer":{"@type":"Answer","text":"Первые цифры вы видите через несколько дней, а какие объявления приносят обращения, выясняется за несколько недель. Тогда я останавливаю более слабые, а бюджет направляю на лучшие."}}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/ru/reklama/#page","url":"https://projektai777.eu/ru/reklama/","name":"ИИ-поиск, поиск клиентов и реклама | Projektai777","description":"Видимость в ответах ChatGPT и Gemini, автоматический поиск клиентов и реклама в Google, Facebook и Instagram для вашего бизнеса.","inLanguage":"ru","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"},"breadcrumb":{"@id":"https://projektai777.eu/ru/reklama/#crumbs"}},{"@type":"Service","@id":"https://projektai777.eu/ru/reklama/#di-paieska","name":"Видимость в ИИ-поиске","description":"Чтобы ChatGPT, Gemini и ИИ-ответы Google упоминали ваш бизнес. Подходит любому бизнесу, независимо от того, кто делал ваш сайт.","url":"https://projektai777.eu/ru/reklama/#di-paieska","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/ru/reklama/#klientu-paieska","name":"Автоматический поиск клиентов","description":"Система находит подходящие вашему бизнесу компании и пишет им от вашего имени, а заинтересовавшиеся отвечают прямо вам.","url":"https://projektai777.eu/ru/reklama/#klientu-paieska","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/ru/reklama/#verslo-profilis","name":"Профиль компании в Google","description":"Чтобы ваш бизнес находили в поиске Google, на картах и в ИИ-ответах. Подходит бизнесу, который встречается с клиентами лично: у себя или у клиента. Неважно, кто делал ваш сайт.","url":"https://projektai777.eu/ru/reklama/#verslo-profilis","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"Service","@id":"https://projektai777.eu/ru/reklama/#reklama","name":"Реклама в Google, Facebook и Instagram","description":"Подходит и тогда, когда сайта у вас нет или его делали другие. Я считаю обращения, а не клики.","url":"https://projektai777.eu/ru/reklama/#reklama","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/ru/reklama/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/ru/"},{"@type":"ListItem","position":2,"name":"Услуги","item":"https://projektai777.eu/ru/#services"},{"@type":"ListItem","position":3,"name":"ИИ-поиск, поиск клиентов и реклама","item":"https://projektai777.eu/ru/reklama/"}]},{"@type":"FAQPage","@id":"https://projektai777.eu/ru/reklama/#faq","url":"https://projektai777.eu/ru/reklama/","inLanguage":"ru","isPartOf":{"@id":"https://projektai777.eu/ru/reklama/#page"},"mainEntity":[{"@type":"Question","name":"Чем это отличается от рекламы?","acceptedAnswer":{"@type":"Answer","text":"Рекламу вы видите рядом с результатами поиска, а здесь важно, упоминает ли бизнес сам ИИ-ответ."}},{"@type":"Question","name":"Можете ли вы гарантировать, что ИИ упомянет мой бизнес?","acceptedAnswer":{"@type":"Answer","text":"Нет, этого не может обещать никто, потому что ответ формирует сам ИИ. Я привожу в порядок то, что он читает: данные сайта, описания и упоминания на других сайтах, а каждый месяц проверяю, помогает ли это."}},{"@type":"Question","name":"Нужно ли будет менять мой сайт?","acceptedAnswer":{"@type":"Answer","text":"Обычно достаточно нескольких технических правок, которых посетители не замечают. Если сайт делали другие, я вношу правки сам или пишу вашему программисту, что изменить."}},{"@type":"Question","name":"Это законно?","acceptedAnswer":{"@type":"Answer","text":"Перед первым письмом мы вместе разбираем правовую сторону по GDPR и закону об электронных коммуникациях: кому можно писать, что обязательно указать в письме и как обрабатываются отказы."}},{"@type":"Question","name":"Кто пишет текст письма?","acceptedAnswer":{"@type":"Answer","text":"Готовлю я по вашему предложению, а вы утверждаете его перед первой отправкой. Первые недели я сравниваю ответы и улучшаю письмо или сферы, пока ответов становится больше."}},{"@type":"Question","name":"Не пострадает ли репутация моей почты?","acceptedAnswer":{"@type":"Answer","text":"Нерабочие адреса и отказавшиеся сразу исключаются, а перед первым письмом я проверяю настройки вашей почты, чтобы письма не попадали в спам."}},{"@type":"Question","name":"Для чего он нужен?","acceptedAnswer":{"@type":"Answer","text":"Когда кто-то ищет вашу услугу поблизости, Google в первую очередь показывает профили компаний на карте. Их читают и ИИ-ответы."}},{"@type":"Question","name":"Нужен ли сайт?","acceptedAnswer":{"@type":"Answer","text":"Нет. Профиль полезен и без сайта, а если сайт есть, я связываю его с профилем."}},{"@type":"Question","name":"Кто управляет профилем?","acceptedAnswer":{"@type":"Answer","text":"Вы. Профиль остаётся в вашем аккаунте Google, я лишь помогаю привести его в порядок."}},{"@type":"Question","name":"На чьё имя будут рекламные аккаунты?","acceptedAnswer":{"@type":"Answer","text":"На ваше. Я создаю аккаунты на ваше имя или подключаю ваши существующие, поэтому вы видите все расходы, а после остановки услуги аккаунты остаются у вас."}},{"@type":"Question","name":"Что считается обращением?","acceptedAnswer":{"@type":"Answer","text":"Сообщение, пришедшее с рекламы через форму на сайте, Messenger или по электронной почте. Просмотры и клики, после которых никто не написал, в отчёте обращениями не считаются."}},{"@type":"Question","name":"Когда станет ясно, работает ли реклама?","acceptedAnswer":{"@type":"Answer","text":"Первые цифры вы видите через несколько дней, а какие объявления приносят обращения, выясняется за несколько недель. Тогда я останавливаю более слабые, а бюджет направляю на лучшие."}}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">К содержанию</a>
@@ -606,12 +615,13 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="/ru/#about">Обо мне</a>
     <a href="#contact" class="nav-cta">Контакты</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Язык"><span class="lm-cur">RU</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/reklama/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/reklama/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/reklama/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/reklama/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/reklama/" hreflang="ru" lang="ru" aria-current="page"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/reklama/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/reklama/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/reklama/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-price" href="/ru/kaina/">Узнать цену</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Язык"><span class="lm-cur">RU</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/reklama/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/reklama/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/reklama/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/reklama/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/reklama/" hreflang="ru" lang="ru" aria-current="page"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/reklama/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/reklama/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/reklama/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
   <section class="sec job" id="di-paieska" data-tick="ai">
     <nav class="crumbs mono small" aria-label="Навигационная цепочка"><a href="/ru/">Projektai777</a><span aria-hidden="true"> / </span><a href="/ru/#services">Услуги</a><span aria-hidden="true"> / </span><span aria-current="page">ИИ-поиск, поиск клиентов и реклама</span></nav>
+    <nav class="part-nav" aria-label="Услуги"><a href="#di-paieska">Видимость в ИИ-поиске</a><a href="#klientu-paieska">Автоматический поиск клиентов</a><a href="#verslo-profilis">Профиль компании в Google</a><a href="#reklama">Реклама в Google, Facebook и Instagram</a></nav>
     <header class="job-head">
       <p class="kicker mono">Услуга</p>
       <h1 class="job-h1">Видимость в ИИ-поиске</h1>
@@ -660,6 +670,31 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <div class="faq-list job-part"><details class="faq-q"><summary>Это законно?</summary><p>Перед первым письмом мы вместе разбираем правовую сторону по GDPR и закону об электронных коммуникациях: кому можно писать, что обязательно указать в письме и как обрабатываются отказы.</p></details><details class="faq-q"><summary>Кто пишет текст письма?</summary><p>Готовлю я по вашему предложению, а вы утверждаете его перед первой отправкой. Первые недели я сравниваю ответы и улучшаю письмо или сферы, пока ответов становится больше.</p></details><details class="faq-q"><summary>Не пострадает ли репутация моей почты?</summary><p>Нерабочие адреса и отказавшиеся сразу исключаются, а перед первым письмом я проверяю настройки вашей почты, чтобы письма не попадали в спам.</p></details></div>
     <div class="cta-row"><a class="btn btn-acc" href="#contact" data-tick="leads">Спросить о поиске клиентов</a></div>
   </section>
+  <section class="sec job" id="verslo-profilis" data-tick="gbp">
+    <header class="job-head">
+      <p class="kicker mono">Услуга</p>
+      <h2 class="job-h1">Профиль компании в Google</h2>
+      <p class="lead">Чтобы ваш бизнес находили в поиске Google, на картах и в ИИ-ответах. Подходит бизнесу, который встречается с клиентами лично: у себя или у клиента. Неважно, кто делал ваш сайт.</p>
+    </header>
+    <div class="job-part">
+      <h2>Что вы получаете</h2>
+      <ul class="job-list">
+        <li>Профиль я создаю или привожу в порядок сам: сферу деятельности, часы работы, услуги и фотографии.</li>
+        <li>Проверяю, чтобы название, адрес и телефон везде совпадали.</li>
+        <li>Советы, как получить больше отзывов.</li>
+      </ul>
+    </div>
+    <div class="job-part">
+      <h2>Условия</h2>
+      <ul class="job-list">
+        <li>Цену называю заранее, когда увижу, что нужно.</li>
+        <li>Профиль остаётся в вашем аккаунте Google.</li>
+        <li>Каждый сделанный мной сайт получает его бесплатно, если бизнес соответствует требованиям Google.</li>
+      </ul>
+    </div>
+    <div class="faq-list job-part"><details class="faq-q"><summary>Для чего он нужен?</summary><p>Когда кто-то ищет вашу услугу поблизости, Google в первую очередь показывает профили компаний на карте. Их читают и ИИ-ответы.</p></details><details class="faq-q"><summary>Нужен ли сайт?</summary><p>Нет. Профиль полезен и без сайта, а если сайт есть, я связываю его с профилем.</p></details><details class="faq-q"><summary>Кто управляет профилем?</summary><p>Вы. Профиль остаётся в вашем аккаунте Google, я лишь помогаю привести его в порядок.</p></details></div>
+    <div class="cta-row"><a class="btn btn-acc" href="#contact" data-tick="gbp">Спросить о профиле компании</a></div>
+  </section>
   <section class="sec job" id="reklama" data-tick="ads">
     <header class="job-head">
       <p class="kicker mono">Услуга</p>
@@ -692,14 +727,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Расскажите, чего вы хотите</h2>
       <p class="lead">Хоть двумя предложениями. Отвечаю в течение рабочего дня с понятным объёмом и ценой.</p>
     </div>
-    <aside class="side-card" aria-labelledby="side-h">
-      <p class="kicker mono">Дополнительно</p>
-      <p class="side-t" id="side-h">Сайт уже есть? Помогу, чтобы его находили.</p>
-      <p><a class="side-a" href="/ru/reklama/#di-paieska">Видимость в ИИ-поиске <span aria-hidden="true">→</span></a> Чтобы в ответах ChatGPT, Gemini и ИИ Google упоминался ваш бизнес. Первую проверку делаю бесплатно.</p>
-      <p><a class="side-a" href="/ru/reklama/#reklama">Реклама в Google, Facebook и Instagram <span aria-hidden="true">→</span></a> Ежемесячная услуга без долгих договоров, её можно остановить в любой момент. Считаю заявки, а не клики.</p>
-      <p><a class="side-a" href="/ru/verslo-profilis/">Профиль компании в Google <span aria-hidden="true">→</span></a> Создаю или привожу в порядок профиль, чтобы вас находили в поиске Google и на картах.</p>
-      <p><a class="side-a" href="/ru/reklama/#klientu-paieska">Автоматический поиск клиентов <span aria-hidden="true">→</span></a> Система находит подходящие вам компании и от вашего имени пишет им короткое письмо. Ответы заинтересовавшихся приходят прямо вам.</p>
-    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -745,6 +772,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"ru","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Отправляю…","ok":"Получил. Отвечу в течение рабочего дня.","err":"Не удалось отправить. Напишите напрямую:","examples":["Например: у нас есть сайт, но заказы приходят только по телефону; хотим, чтобы клиенты заказывали или бронировали сами…","Например: каждый день отвечаем на повторяющиеся вопросы клиентов; хотим, чтобы за нас отвечал искусственный интеллект…","Например: данные из писем и заказов переносим в Excel вручную; хотим, чтобы это происходило само…","Например: наш сайт устарел и неудобен на телефоне; хотим его обновить…","Например: коммерческие предложения для клиентов считаем вручную; хотим инструмент, который готовит их за несколько минут…","Например: получаем много счетов и документов; хотим, чтобы система сама их считывала и сортировала…","Например: заказы, склад и работы ведём в разных таблицах; хотим простую систему, где всё собрано вместе…"],"subject":"Запрос с сайта","picks":"Интересует"},"work":{"next":"Следующий проект","prev":"Предыдущий проект"}};</script>
-<script src="/app.js?v=479b322b" defer></script>
+<script src="/app.js?v=9e946cdb" defer></script>
 </body>
 </html>

@@ -565,20 +565,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact card and ticks, three side services (owner 10-22, rziehg0783) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
-.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
-.side-card { padding: 14px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; }
-.side-card .kicker { margin: 0 0 6px; }
-.side-card p { margin: 0 0 10px; }
-.side-card p:last-child { margin: 0; }
-.side-card .side-t { color: var(--fg); font-size: 15px; }
-.side-card .side-a { display: block; color: var(--fg); font-weight: 500; text-decoration: none; }
-.side-card .side-a:hover, .side-card .side-a:focus-visible { color: var(--acc); }
-.side-card .side-a:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; border-radius: 2px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -588,7 +579,25 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
   .contact { display: block; }
-  .contact .side-card { margin-bottom: 32px; }
+}
+
+/* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
+.top-tools { display: flex; gap: 8px; flex: none; }
+.top-tool { padding: 7px 12px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; white-space: nowrap; transition: border-color .2s, background .2s; }
+.top-tool:hover, .top-tool:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.1); }
+.top-tool:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.tools-row { margin-top: 14px; }
+.svc-big + .tools-row { margin-top: clamp(18px, 2.4vw, 26px); }
+.btn-tool { border-color: rgba(125, 255, 179, 0.45); }
+.btn-tool:hover, .btn-tool:focus-visible { background: rgba(125, 255, 179, 0.1); }
+.part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
+.part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+@media (max-width: 720px) {
+  .top-tools { margin-left: auto; }
+  .top > .top-tools + .lm { margin-left: 0; }
+  .top-tool { padding: 6px 10px; font-size: 12px; }
+  .top-tool.tool-check { display: none; } /* the phone header keeps the calculator; the check button is under the hero */
 }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://projektai777.eu/#business","name":"Projektai777","alternateName":["Projektai 777"],"url":"https://projektai777.eu/","email":"info@projektai777.eu","logo":"https://projektai777.eu/icon-512.png","image":"https://projektai777.eu/og.png","description":"Svetainės, CRM sistemos, procesų automatizavimas, dirbtinio intelekto įrankiai ir matomumas DI paieškoje verslui. Fiksuota kaina, kodas lieka jums.","areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"],"address":{"@type":"PostalAddress","addressCountry":"LT"},"founder":{"@type":"Person","@id":"https://projektai777.eu/#ignas","name":"Ignas"},"knowsAbout":["web development","business process automation","AI integration","loyalty programs","AI search visibility","generative engine optimization","online advertising"],"contactPoint":{"@type":"ContactPoint","contactType":"sales","email":"info@projektai777.eu","availableLanguage":["lt","lv","et","en","ru","nb","sv","fi"]},"hasOfferCatalog":{"@type":"OfferCatalog","name":"Ką darau: svetainės, CRM, automatizavimas, DI","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Svetainių ir el. parduotuvių kūrimas","description":"Nauja svetainė, esamos patobulinimas arba naujos funkcijos jau veikiančiai."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"CRM sistemos","description":"Sukuriu CRM sistemą pagal jūsų darbą: klientai, užsakymai ir priminimai vienoje vietoje."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Procesų automatizavimas","description":"Sujungiu įrankius, kuriuos jau naudojate, kad pasikartojantys darbai vyktų be jūsų rankų."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Dirbtinio intelekto įrankiai","description":"Dirbtinis intelektas, kuris dirba už jus: atsako klientams, rūšiuoja užklausas, nuskaito dokumentus."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Matomumas DI paieškoje","description":"Kad „ChatGPT“, „Gemini“ ir „Google“ DI atsakymuose būtų minimas jūsų verslas: pirmą patikrą atlieku nemokamai, o vėliau kas mėnesį atsiunčiu trumpą ataskaitą."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Automatinė klientų paieška","description":"Sistema randa jūsų verslui tinkančias įmones pagal jų viešai skelbiamus kontaktus ir ramiu tempu, iš jūsų įmonės pašto, parašo joms trumpą laišką jūsų vardu. Kiekviename laiške yra atsisakymo nuoroda, o susidomėjusiųjų atsakymai iškart ateina jums."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Reklama „Google“, „Facebook“ ir „Instagram“","description":"Mėnesinė paslauga be ilgų sutarčių: sustabdote bet kada, reklamos pinigus mokate tiesiai „Google“ ir „Meta“, o kas mėnesį gaunate trumpą ataskaitą, kiek buvo užklausų ir kiek kainavo viena. Kam vedu reklamą, tiems DI paieškos patikra nemokama."}}]},"sameAs":["https://t.me/IgnasProjektai777","https://www.facebook.com/profile.php?id=61595332703632"]}</script>
@@ -608,7 +617,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="#about">Apie mane</a>
     <a href="#contact" class="nav-cta">Susisiekti</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Kalba"><span class="lm-cur">LT</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt" aria-current="page"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-price" href="/kaina/">Sužinokite kainą</a><a class="top-tool tool-check" href="/patikra/">Nemokama svetainės patikra</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Kalba"><span class="lm-cur">LT</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt" aria-current="page"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -620,6 +629,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <a class="btn btn-acc" href="#contact">Papasakokite, ko reikia</a>
       <a class="btn" href="#work">Peržiūrėti darbus</a>
     </div>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/kaina/">Sužinokite kainą per 5 klausimus <span aria-hidden="true">→</span></a><a class="btn btn-tool" href="/patikra/">Nemokama svetainės patikra <span aria-hidden="true">→</span></a></div>
     <p class="hint mono" id="hint">Pajudinkite pelę arba pirštą — fonas reaguoja.</p>
   </section>
 
@@ -646,7 +656,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       </div>
       <p class="big-cta"><a class="ads-cta" href="#contact">Paklausti apie šias paslaugas</a><span aria-hidden="true"> · </span><a class="ads-cta" href="/reklama/">Daugiau apie DI paiešką, klientų paiešką ir reklamą →</a></p>
     </article>
-    <p class="finder-line"><a class="svc-more" href="/kaina/">Sužinokite kainą per 5 klausimus →</a></p>
+    <div class="cta-row tools-row"><a class="btn btn-tool" href="/kaina/">Sužinokite kainą per 5 klausimus <span aria-hidden="true">→</span></a><a class="btn btn-tool" href="/patikra/">Nemokama svetainės patikra <span aria-hidden="true">→</span></a></div>
     <div class="process" data-reveal>
       <p class="kicker mono">Kaip vyksta darbas</p>
       <ol class="steps">
@@ -681,14 +691,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
   <section class="sec path" id="path" data-reveal aria-labelledby="path-h">
     <div class="path-head">
-      <p class="kicker mono">Papildomai</p>
+      <p class="kicker mono">Kiti žingsniai</p>
       <h2 class="path-h" id="path-h">Kas po svetainės</h2>
     </div>
     <ol class="path-steps">
       <li><span class="path-t">Svetainė</span><span class="path-s">Sukuriu svetainę, o DI paieškos pagrindus pridedu nemokamai.</span></li>
       <li><a class="path-a" href="/reklama/#di-paieska">DI paieška <span aria-hidden="true">→</span></a><span class="path-s">Kad „ChatGPT“ ir „Gemini“ minėtų jūsų verslą. Pirma patikra nemokama.</span></li>
       <li><a class="path-a" href="/reklama/#reklama">Reklama <span aria-hidden="true">→</span></a><span class="path-s">Reklama kas mėnesį be ilgų sutarčių ir automatinė klientų paieška.</span></li>
-      <li><a class="path-a" href="/verslo-profilis/">Verslo profilis <span aria-hidden="true">→</span></a><span class="path-s">„Google“ verslo profilis, kad jus rastų „Google“ žemėlapiuose.</span></li>
+      <li><a class="path-a" href="/reklama/#verslo-profilis">Verslo profilis <span aria-hidden="true">→</span></a><span class="path-s">„Google“ verslo profilis, kad jus rastų „Google“ žemėlapiuose.</span></li>
     </ol>
   </section>
 
@@ -729,14 +739,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Papasakokite, ko norite</h2>
       <p class="lead">Kad ir dviem sakiniais. Atsakau per darbo dieną su aiškia apimtimi ir kaina.</p>
     </div>
-    <aside class="side-card" aria-labelledby="side-h">
-      <p class="kicker mono">Papildomai</p>
-      <p class="side-t" id="side-h">Jau turite svetainę? Galiu padėti, kad ją rastų.</p>
-      <p><a class="side-a" href="/reklama/#di-paieska">Matomumas DI paieškoje <span aria-hidden="true">→</span></a> Kad „ChatGPT“, „Gemini“ ir „Google“ DI atsakymuose būtų minimas jūsų verslas. Pirmą patikrą atlieku nemokamai.</p>
-      <p><a class="side-a" href="/reklama/#reklama">Reklama „Google“, „Facebook“ ir „Instagram“ <span aria-hidden="true">→</span></a> Mėnesinė paslauga be ilgų sutarčių, sustabdoma bet kada. Matuoju užklausas, o ne paspaudimus.</p>
-      <p><a class="side-a" href="/verslo-profilis/">„Google“ verslo profilis <span aria-hidden="true">→</span></a> Sukuriu arba sutvarkau profilį, kad jus rastų „Google“ paieškoje ir žemėlapiuose.</p>
-      <p><a class="side-a" href="/reklama/#klientu-paieska">Automatinė klientų paieška <span aria-hidden="true">→</span></a> Sistema randa jums tinkančias įmones ir jūsų vardu parašo joms trumpą laišką. Susidomėjusiųjų atsakymai ateina tiesiai jums.</p>
-    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -783,6 +785,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"lt","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Siunčiama…","ok":"Gavau. Atsakysiu per darbo dieną.","err":"Nepavyko išsiųsti. Parašykite tiesiai:","examples":["Pvz.: turime svetainę, bet užsakymai ateina tik telefonu; norėtume, kad klientai galėtų užsisakyti ar rezervuoti patys…","Pvz.: kasdien atsakinėjame į tuos pačius klientų klausimus; norėtume, kad dirbtinis intelektas atsakytų už mus…","Pvz.: duomenis iš laiškų ir užsakymų ranka perkeliame į Excel; norėtume, kad tai vyktų savaime…","Pvz.: mūsų svetainė pasenusi ir nepatogi telefone; norėtume ją atnaujinti…","Pvz.: kainų pasiūlymus klientams skaičiuojame ranka; norėtume įrankio, kuris juos paruoštų per kelias minutes…","Pvz.: gauname daug sąskaitų ir dokumentų; norėtume, kad sistema pati juos nuskaitytų ir surūšiuotų…","Pvz.: užsakymus, sandėlį ir darbus sekame skirtingose lentelėse; norėtume paprastos sistemos, kurioje viskas būtų kartu…"],"subject":"Užklausa iš svetainės","picks":"Domina"},"work":{"next":"Kitas projektas","prev":"Ankstesnis projektas"}};</script>
-<script src="/app.js?v=479b322b" defer></script>
+<script src="/app.js?v=9e946cdb" defer></script>
 </body>
 </html>
