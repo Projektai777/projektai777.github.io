@@ -566,11 +566,19 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card back 11-01 on every page with the form but the home pages and /reklama/, each item with a "more about" link; on phones under the form (rswenyfd69) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
+.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
+.side-card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; overflow-wrap: break-word; }
+.side-card .kicker { margin: 0 0 6px; }
+.side-card p { margin: 0; }
+.side-card .side-t { color: var(--fg); font-size: 15px; margin-bottom: 14px; }
+.side-card .side-i + .side-i { margin-top: 18px; }
+.side-card .side-a { color: var(--fg); font-weight: 500; margin-bottom: 2px; }
+.side-card .svc-more { margin-top: 8px; font-size: 12px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -579,7 +587,8 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick input:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; box-shadow: none; }
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
-  .contact { display: block; }
+  .contact { display: flex; flex-direction: column; }
+  .contact .side-card { order: 1; margin-top: 36px; }
 }
 
 /* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
@@ -654,6 +663,14 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <h2>Расскажите, чего вы хотите</h2>
       <p class="lead">Хоть двумя предложениями. Отвечаю в течение рабочего дня с понятным объёмом и ценой.</p>
     </div>
+    <aside class="side-card" aria-labelledby="side-h">
+      <p class="kicker mono">Дополнительно</p>
+      <p class="side-t" id="side-h">Сайт уже есть? Помогу, чтобы его находили.</p>
+      <div class="side-i" data-id="di-paieska"><p class="side-a">Видимость в ИИ-поиске</p><p>Чтобы в ответах ChatGPT, Gemini и ИИ Google упоминался ваш бизнес. Первую проверку делаю бесплатно.</p><a class="svc-more" href="/ru/reklama/#di-paieska">Подробнее об ИИ-поиске →</a></div>
+      <div class="side-i" data-id="klientu-paieska"><p class="side-a">Автоматический поиск клиентов</p><p>Система находит подходящие вам компании и от вашего имени пишет им короткое письмо. Ответы заинтересовавшихся приходят прямо вам.</p><a class="svc-more" href="/ru/reklama/#klientu-paieska">Подробнее о поиске клиентов →</a></div>
+      <div class="side-i" data-id="reklama"><p class="side-a">Реклама в Google, Facebook и Instagram</p><p>Ежемесячная услуга без долгих договоров, её можно остановить в любой момент. Считаю заявки, а не клики.</p><a class="svc-more" href="/ru/reklama/#reklama">Подробнее о рекламе →</a></div>
+      <div class="side-i" data-id="verslo-profilis"><p class="side-a">Профиль компании в Google</p><p>Создаю или привожу в порядок профиль, чтобы вас находили в поиске Google и на картах.</p><a class="svc-more" href="/ru/reklama/#verslo-profilis">Подробнее о профиле компании →</a></div>
+    </aside>
     <!-- method="post" + a send button app.js enables: with app.js blocked nothing is ever submitted into the URL;
          the form-alt line always shows the mailbox (owner 2026-10-01: e-mail visible under the form) -->
     <form class="cform" id="cform" method="post" novalidate>
@@ -698,6 +715,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"ru","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Отправляю…","ok":"Получил. Отвечу в течение рабочего дня.","err":"Не удалось отправить. Напишите напрямую:","examples":["Например: у нас есть сайт, но заказы приходят только по телефону; хотим, чтобы клиенты заказывали или бронировали сами…","Например: каждый день отвечаем на повторяющиеся вопросы клиентов; хотим, чтобы за нас отвечал искусственный интеллект…","Например: данные из писем и заказов переносим в Excel вручную; хотим, чтобы это происходило само…","Например: наш сайт устарел и неудобен на телефоне; хотим его обновить…","Например: коммерческие предложения для клиентов считаем вручную; хотим инструмент, который готовит их за несколько минут…","Например: получаем много счетов и документов; хотим, чтобы система сама их считывала и сортировала…","Например: заказы, склад и работы ведём в разных таблицах; хотим простую систему, где всё собрано вместе…"],"subject":"Запрос с сайта","picks":"Интересует"},"work":{"next":"Следующий проект","prev":"Предыдущий проект"}};</script>
-<script src="/app.js?v=67fd1950" defer></script>
+<script src="/app.js?v=bfb33c72" defer></script>
 </body>
 </html>

@@ -566,11 +566,19 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .js .path:not(.in) .path-steps li::after { transform: scaleY(0); }
 }
 
-/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card removed 10-30 (rir8pmc22b) */
+/* round 3: v6 = v4 path + v5 contact ticks (owner 10-22, rziehg0783); the side card back 11-01 on every page with the form but the home pages and /reklama/, each item with a "more about" link; on phones under the form (rswenyfd69) */
 .contact { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 720px); grid-template-rows: auto 1fr; column-gap: clamp(32px, 5vw, 64px); align-items: start; }
 .contact .sec-head { grid-column: 1; grid-row: 1; margin-bottom: 24px; }
 .contact .sec-head h2 { font-size: clamp(30px, 3.4vw, 42px); }
+.contact .side-card { grid-column: 1; grid-row: 2; }
 .contact .cform { grid-column: 2; grid-row: 1 / span 2; width: 100%; }
+.side-card { padding: 16px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 14px; color: #b9c3c0; overflow-wrap: break-word; }
+.side-card .kicker { margin: 0 0 6px; }
+.side-card p { margin: 0; }
+.side-card .side-t { color: var(--fg); font-size: 15px; margin-bottom: 14px; }
+.side-card .side-i + .side-i { margin-top: 18px; }
+.side-card .side-a { color: var(--fg); font-weight: 500; margin-bottom: 2px; }
+.side-card .svc-more { margin-top: 8px; font-size: 12px; }
 .picks { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
 .picks legend { float: left; padding: 0; margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--mute); }
 .cform .pick { flex-direction: row; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 6px; cursor: pointer; transition: border-color .2s; }
@@ -579,7 +587,8 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .cform .pick input:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; box-shadow: none; }
 .cform .pick > span { color: var(--fg); font-size: 13px; letter-spacing: 0; }
 @media (max-width: 960px) {
-  .contact { display: block; }
+  .contact { display: flex; flex-direction: column; }
+  .contact .side-card { order: 1; margin-top: 36px; }
 }
 
 /* price calculator and free check buttons (owner 10-29, rir8pmc22b: easier to find and press); the jump row of a service page's parts (rucy1d4f74) */
@@ -662,6 +671,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 
 <script>window.PF={"lang":"sv","work":{"next":"Nästa projekt","prev":"Föregående projekt"}};</script>
-<script src="/app.js?v=67fd1950" defer></script>
+<script src="/app.js?v=bfb33c72" defer></script>
 </body>
 </html>
