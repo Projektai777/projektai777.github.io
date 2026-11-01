@@ -302,6 +302,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 }
 .svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
+.price-from { color: var(--acc); font-size: 13px; letter-spacing: .04em; margin: 14px 0 0; }
+.svc-big .price-from { margin: calc(-1 * clamp(10px, 1.6vw, 16px)) 0 clamp(20px, 3vw, 30px); }
 .svc-more { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 13px; color: var(--acc); text-decoration: none; border-bottom: 1px solid currentColor; overflow-wrap: anywhere; } /* a card with its own page links to it (10-27) */
 .svc-more:hover, .svc-more:focus-visible { border-bottom-width: 2px; }
 /* card 05 (owner 2026-10-23, ryr48cfe7b): AI search, ads and the automated client search in one large card with a soft
@@ -615,7 +617,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="/ru/#about">Обо мне</a>
     <a href="#contact" class="nav-cta">Контакты</a>
   </nav>
-  <span class="top-tools"><a class="top-tool tool-price" href="/ru/kaina/">Узнать цену</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Язык"><span class="lm-cur">RU</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/verslo-profilis/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/verslo-profilis/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/verslo-profilis/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/verslo-profilis/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/verslo-profilis/" hreflang="ru" lang="ru" aria-current="page"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/verslo-profilis/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/verslo-profilis/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/verslo-profilis/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Язык"><span class="lm-cur">RU</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/verslo-profilis/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/verslo-profilis/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/verslo-profilis/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/verslo-profilis/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/verslo-profilis/" hreflang="ru" lang="ru" aria-current="page"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/verslo-profilis/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/verslo-profilis/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/verslo-profilis/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -691,12 +693,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 <footer class="foot">
   <p class="mono small">© 2026 Projektai777. Все права защищены.</p>
   <p class="mono small">Код плательщика НДС LT100020891511</p>
-  <p class="mono small"><a href="/ru/kaina/">Узнать цену</a></p>
   <div class="langs" role="group" aria-label="Язык"><a href="/verslo-profilis/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/verslo-profilis/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/verslo-profilis/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/verslo-profilis/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/verslo-profilis/" hreflang="ru" lang="ru" aria-current="page" title="Русский">RU</a><a href="/nb/verslo-profilis/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/verslo-profilis/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/verslo-profilis/" hreflang="fi" lang="fi" title="Suomi">FI</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"ru","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Отправляю…","ok":"Получил. Отвечу в течение рабочего дня.","err":"Не удалось отправить. Напишите напрямую:","examples":["Например: у нас есть сайт, но заказы приходят только по телефону; хотим, чтобы клиенты заказывали или бронировали сами…","Например: каждый день отвечаем на повторяющиеся вопросы клиентов; хотим, чтобы за нас отвечал искусственный интеллект…","Например: данные из писем и заказов переносим в Excel вручную; хотим, чтобы это происходило само…","Например: наш сайт устарел и неудобен на телефоне; хотим его обновить…","Например: коммерческие предложения для клиентов считаем вручную; хотим инструмент, который готовит их за несколько минут…","Например: получаем много счетов и документов; хотим, чтобы система сама их считывала и сортировала…","Например: заказы, склад и работы ведём в разных таблицах; хотим простую систему, где всё собрано вместе…"],"subject":"Запрос с сайта","picks":"Интересует"},"work":{"next":"Следующий проект","prev":"Предыдущий проект"}};</script>
-<script src="/app.js?v=9e946cdb" defer></script>
+<script src="/app.js?v=67fd1950" defer></script>
 </body>
 </html>

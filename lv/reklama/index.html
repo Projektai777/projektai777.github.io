@@ -302,6 +302,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 }
 .svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
+.price-from { color: var(--acc); font-size: 13px; letter-spacing: .04em; margin: 14px 0 0; }
+.svc-big .price-from { margin: calc(-1 * clamp(10px, 1.6vw, 16px)) 0 clamp(20px, 3vw, 30px); }
 .svc-more { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 13px; color: var(--acc); text-decoration: none; border-bottom: 1px solid currentColor; overflow-wrap: anywhere; } /* a card with its own page links to it (10-27) */
 .svc-more:hover, .svc-more:focus-visible { border-bottom-width: 2px; }
 /* card 05 (owner 2026-10-23, ryr48cfe7b): AI search, ads and the automated client search in one large card with a soft
@@ -615,7 +617,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="/lv/#about">Par mani</a>
     <a href="#contact" class="nav-cta">Kontakts</a>
   </nav>
-  <span class="top-tools"><a class="top-tool tool-price" href="/lv/kaina/">Uzziniet cenu</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Valoda"><span class="lm-cur">LV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/reklama/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/reklama/" hreflang="lv" lang="lv" aria-current="page"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/reklama/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/reklama/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/reklama/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/reklama/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/reklama/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/reklama/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Valoda"><span class="lm-cur">LV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/reklama/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/reklama/" hreflang="lv" lang="lv" aria-current="page"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/reklama/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/reklama/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/reklama/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/reklama/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/reklama/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/reklama/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -766,12 +768,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 <footer class="foot">
   <p class="mono small">© 2026 Projektai777. Visas tiesības paturētas.</p>
   <p class="mono small">PVN maksātāja numurs LT100020891511</p>
-  <p class="mono small"><a href="/lv/kaina/">Uzziniet cenu</a></p>
   <div class="langs" role="group" aria-label="Valoda"><a href="/reklama/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/reklama/" hreflang="lv" lang="lv" aria-current="page" title="Latviešu">LV</a><a href="/et/reklama/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/reklama/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/reklama/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/reklama/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/reklama/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/reklama/" hreflang="fi" lang="fi" title="Suomi">FI</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"lv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sūta…","ok":"Saņēmu. Atbildēšu darbadienas laikā.","err":"Nevarēja sūtīt. Rakstiet man tieši:","examples":["Piem.: mums ir vietne, bet pasūtījumi nāk tikai telefoniski; gribētu, lai klienti paši varētu pasūtīt vai rezervēt…","Piem.: katru dienu atbildam uz vieniem un tiem pašiem klientu jautājumiem; gribētu, lai AI atbildētu mūsu vietā…","Piem.: datus no vēstulēm un pasūtījumiem ar rokām pārnesam uz Excel; gribētu, lai tas notiktu pats…","Piem.: mūsu mājaslapa ir novecojusi un neērta telefonā; gribētu to atjaunot…","Piem.: cenu piedāvājumus klientiem aprēķinām ar rokām; gribētu rīku, kas tos sagatavo dažu minūšu laikā…","Piem.: saņemam daudz rēķinu un dokumentu; gribētu, lai sistēma patstāvīgi tos nolasītu un kārtotu…","Piem.: pasūtījumus, noliktavu un darbus uzskaitām dažādās tabulās; gribētu vienkāršu sistēmu, kur viss būtu kopā…"],"subject":"Pieprasījums no mājaslapas","picks":"Mani interesē"},"work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"}};</script>
-<script src="/app.js?v=9e946cdb" defer></script>
+<script src="/app.js?v=67fd1950" defer></script>
 </body>
 </html>
