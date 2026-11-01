@@ -288,6 +288,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 }
 .svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
+.price-from { color: var(--acc); font-size: 13px; letter-spacing: .04em; margin: 14px 0 0; }
+.svc-big .price-from { margin: calc(-1 * clamp(10px, 1.6vw, 16px)) 0 clamp(20px, 3vw, 30px); }
 .svc-more { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 13px; color: var(--acc); text-decoration: none; border-bottom: 1px solid currentColor; overflow-wrap: anywhere; } /* a card with its own page links to it (10-27) */
 .svc-more:hover, .svc-more:focus-visible { border-bottom-width: 2px; }
 /* card 05 (owner 2026-10-23, ryr48cfe7b): AI search, ads and the automated client search in one large card with a soft
@@ -601,7 +603,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="/#about">Apie mane</a>
     <a href="#contact" class="nav-cta">Susisiekti</a>
   </nav>
-  <span class="top-tools"><a class="top-tool tool-price" href="/kaina/">Sužinokite kainą</a><a class="top-tool tool-check" href="/patikra/">Nemokama svetainės patikra</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Kalba"><span class="lm-cur">LT</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/procesu-automatizavimas/" hreflang="lt" lang="lt" aria-current="page"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-check" href="/patikra/">Nemokama svetainės patikra</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Kalba"><span class="lm-cur">LT</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/procesu-automatizavimas/" hreflang="lt" lang="lt" aria-current="page"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -638,7 +640,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       </ul>
     </div>
     <div class="faq-list job-part"><details class="faq-q"><summary>O jei mano programa nesijungia su kitomis?</summary><p>Dažniausiai pakanka, kad programa leistų eksportuoti duomenis arba siųstų el. laiškus. Jei jokio būdo nėra, pasakysiu tai iš karto, dar prieš sutartį.</p></details><details class="faq-q"><summary>Kas nutinka, jei automatizavimas sustoja?</summary><p>Kiekvieną automatizavimą kuriu taip, kad apie klaidą sužinotumėte iš karto, o nepavykusį žingsnį būtų galima pakartoti.</p></details><details class="faq-q"><summary>Ar reikės keisti dabartines programas?</summary><p>Paprastai ne. Pirmiausia jungiu tai, ką jau naudojate, kad komandai nereikėtų mokytis naujų įrankių.</p></details></div>
-    <div class="cta-row"><a class="btn btn-acc" href="#contact" data-tick="automation">Aprašykite, kas kartojasi</a><a class="btn btn-tool" href="/kaina/">Sužinokite kainą per 5 klausimus <span aria-hidden="true">→</span></a></div>
+    <div class="cta-row"><a class="btn btn-acc" href="#contact" data-tick="automation">Aprašykite, kas kartojasi</a></div>
   </section>
 
   <section class="sec contact" id="contact" data-reveal>
@@ -687,12 +689,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   <p class="mono small">© 2026 Projektai777. Visos teisės saugomos.</p>
   <p class="mono small">PVM mokėtojo kodas LT100020891511</p>
   <p class="mono small"><a href="/patikra/">Nemokama svetainės patikra</a></p>
-  <p class="mono small"><a href="/kaina/">Sužinokite kainą</a></p>
   <div class="langs" role="group" aria-label="Kalba"><a href="/procesu-automatizavimas/" hreflang="lt" lang="lt" aria-current="page" title="Lietuvių">LT</a><a href="/lv/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/" hreflang="fi" lang="fi" title="Suomi">FI</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"lt","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Siunčiama…","ok":"Gavau. Atsakysiu per darbo dieną.","err":"Nepavyko išsiųsti. Parašykite tiesiai:","examples":["Pvz.: turime svetainę, bet užsakymai ateina tik telefonu; norėtume, kad klientai galėtų užsisakyti ar rezervuoti patys…","Pvz.: kasdien atsakinėjame į tuos pačius klientų klausimus; norėtume, kad dirbtinis intelektas atsakytų už mus…","Pvz.: duomenis iš laiškų ir užsakymų ranka perkeliame į Excel; norėtume, kad tai vyktų savaime…","Pvz.: mūsų svetainė pasenusi ir nepatogi telefone; norėtume ją atnaujinti…","Pvz.: kainų pasiūlymus klientams skaičiuojame ranka; norėtume įrankio, kuris juos paruoštų per kelias minutes…","Pvz.: gauname daug sąskaitų ir dokumentų; norėtume, kad sistema pati juos nuskaitytų ir surūšiuotų…","Pvz.: užsakymus, sandėlį ir darbus sekame skirtingose lentelėse; norėtume paprastos sistemos, kurioje viskas būtų kartu…"],"subject":"Užklausa iš svetainės","picks":"Domina"},"work":{"next":"Kitas projektas","prev":"Ankstesnis projektas"}};</script>
-<script src="/app.js?v=9e946cdb" defer></script>
+<script src="/app.js?v=67fd1950" defer></script>
 </body>
 </html>

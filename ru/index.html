@@ -302,6 +302,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 }
 .svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
+.price-from { color: var(--acc); font-size: 13px; letter-spacing: .04em; margin: 14px 0 0; }
+.svc-big .price-from { margin: calc(-1 * clamp(10px, 1.6vw, 16px)) 0 clamp(20px, 3vw, 30px); }
 .svc-more { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 13px; color: var(--acc); text-decoration: none; border-bottom: 1px solid currentColor; overflow-wrap: anywhere; } /* a card with its own page links to it (10-27) */
 .svc-more:hover, .svc-more:focus-visible { border-bottom-width: 2px; }
 /* card 05 (owner 2026-10-23, ryr48cfe7b): AI search, ads and the automated client search in one large card with a soft
@@ -616,7 +618,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="#about">Обо мне</a>
     <a href="#contact" class="nav-cta">Контакты</a>
   </nav>
-  <span class="top-tools"><a class="top-tool tool-price" href="/ru/kaina/">Узнать цену</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Язык"><span class="lm-cur">RU</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru" aria-current="page"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Язык"><span class="lm-cur">RU</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/" hreflang="ru" lang="ru" aria-current="page"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -628,7 +630,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <a class="btn btn-acc" href="#contact">Расскажите, что нужно</a>
       <a class="btn" href="#work">Посмотреть работы</a>
     </div>
-    <div class="cta-row tools-row"><a class="btn btn-tool" href="/ru/kaina/">Узнайте цену за 5 вопросов <span aria-hidden="true">→</span></a></div>
     <p class="hint mono" id="hint">Подвигайте мышью или пальцем — фон реагирует.</p>
   </section>
 
@@ -639,15 +640,15 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       <p class="lead">Пять направлений. Если ваша задача не подходит ни под одно — всё равно свяжитесь со мной, и я найду для вас решение.</p>
     </div>
     <div class="svc-grid">
-      <article class="svc"><span class="n">01</span><h3>Разработка сайтов и интернет-магазинов</h3><p class="how">Новый сайт, улучшение существующего или новые функции для него.</p></article>
-      <article class="svc"><span class="n">02</span><h3>CRM-системы</h3><p class="how">Создаю CRM-систему под вашу работу: клиенты, заказы и напоминания в одном месте.</p></article>
-      <article class="svc"><span class="n">03</span><h3>Автоматизация процессов</h3><p class="how">Соединяю инструменты, которыми вы уже пользуетесь, чтобы повторяющаяся работа шла без ваших рук.</p></article>
-      <article class="svc"><span class="n">04</span><h3>Инструменты ИИ</h3><p class="how">Искусственный интеллект, который работает за вас: отвечает клиентам, сортирует заявки, считывает документы.</p></article>
+      <article class="svc"><span class="n">01</span><h3>Разработка сайтов и интернет-магазинов</h3><p class="how">Новый сайт, улучшение существующего или новые функции для него.</p><p class="price-from mono">От 400 € без НДС</p></article>
+      <article class="svc"><span class="n">02</span><h3>CRM-системы</h3><p class="how">Создаю CRM-систему под вашу работу: клиенты, заказы и напоминания в одном месте.</p><p class="price-from mono">От 400 € без НДС</p></article>
+      <article class="svc"><span class="n">03</span><h3>Автоматизация процессов</h3><p class="how">Соединяю инструменты, которыми вы уже пользуетесь, чтобы повторяющаяся работа шла без ваших рук.</p><p class="price-from mono">От 400 € без НДС</p></article>
+      <article class="svc"><span class="n">04</span><h3>Инструменты ИИ</h3><p class="how">Искусственный интеллект, который работает за вас: отвечает клиентам, сортирует заявки, считывает документы.</p><p class="price-from mono">От 400 € без НДС</p></article>
     </div>
     <article class="svc-big" id="clients">
       <span class="n">05</span>
       <h3>Больше клиентов для вашего бизнеса</h3>
-      <p class="big-lead">Три способа привлечь новых клиентов: ИИ-поиск, автоматический поиск клиентов и реклама. Выберите один или все три.</p>
+      <p class="big-lead">Три способа привлечь новых клиентов: ИИ-поиск, автоматический поиск клиентов и реклама. Выберите один или все три.</p><p class="price-from mono">От 200 € без НДС</p>
       <div class="big-parts">
         <div><h4>Видимость в ИИ-поиске</h4><p>Чтобы ChatGPT, Gemini и ИИ-ответы Google упоминали ваш бизнес: первую проверку делаю бесплатно, затем каждый месяц присылаю короткий отчёт.</p></div>
         <div><h4>Автоматический поиск клиентов</h4><p>Система находит подходящие вашему бизнесу компании по их открыто опубликованным контактам и в спокойном темпе отправляет каждой короткое письмо от вашего имени с почты вашей компании. В каждом письме есть ссылка для отказа, а ответы заинтересованных сразу приходят вам.</p></div>
@@ -655,7 +656,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
       </div>
       <p class="big-cta"><a class="ads-cta" href="#contact">Спросить об этих услугах</a><span aria-hidden="true"> · </span><a class="ads-cta" href="/ru/reklama/">Подробнее об ИИ-поиске, поиске клиентов и рекламе →</a></p>
     </article>
-    <div class="cta-row tools-row"><a class="btn btn-tool" href="/ru/kaina/">Узнайте цену за 5 вопросов <span aria-hidden="true">→</span></a></div>
     <div class="process" data-reveal>
       <p class="kicker mono">Как проходит работа</p>
       <ol class="steps">
@@ -777,12 +777,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 <footer class="foot">
   <p class="mono small">© 2026 Projektai777. Все права защищены.</p>
   <p class="mono small">Код плательщика НДС LT100020891511</p>
-  <p class="mono small"><a href="/ru/kaina/">Узнать цену</a></p>
   <div class="langs" role="group" aria-label="Язык"><a href="/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/" hreflang="ru" lang="ru" aria-current="page" title="Русский">RU</a><a href="/nb/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/" hreflang="fi" lang="fi" title="Suomi">FI</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"ru","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Отправляю…","ok":"Получил. Отвечу в течение рабочего дня.","err":"Не удалось отправить. Напишите напрямую:","examples":["Например: у нас есть сайт, но заказы приходят только по телефону; хотим, чтобы клиенты заказывали или бронировали сами…","Например: каждый день отвечаем на повторяющиеся вопросы клиентов; хотим, чтобы за нас отвечал искусственный интеллект…","Например: данные из писем и заказов переносим в Excel вручную; хотим, чтобы это происходило само…","Например: наш сайт устарел и неудобен на телефоне; хотим его обновить…","Например: коммерческие предложения для клиентов считаем вручную; хотим инструмент, который готовит их за несколько минут…","Например: получаем много счетов и документов; хотим, чтобы система сама их считывала и сортировала…","Например: заказы, склад и работы ведём в разных таблицах; хотим простую систему, где всё собрано вместе…"],"subject":"Запрос с сайта","picks":"Интересует"},"work":{"next":"Следующий проект","prev":"Предыдущий проект"}};</script>
-<script src="/app.js?v=9e946cdb" defer></script>
+<script src="/app.js?v=67fd1950" defer></script>
 </body>
 </html>

@@ -302,6 +302,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 }
 .svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
+.price-from { color: var(--acc); font-size: 13px; letter-spacing: .04em; margin: 14px 0 0; }
+.svc-big .price-from { margin: calc(-1 * clamp(10px, 1.6vw, 16px)) 0 clamp(20px, 3vw, 30px); }
 .svc-more { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 13px; color: var(--acc); text-decoration: none; border-bottom: 1px solid currentColor; overflow-wrap: anywhere; } /* a card with its own page links to it (10-27) */
 .svc-more:hover, .svc-more:focus-visible { border-bottom-width: 2px; }
 /* card 05 (owner 2026-10-23, ryr48cfe7b): AI search, ads and the automated client search in one large card with a soft
@@ -615,7 +617,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="/sv/#about">Om mig</a>
     <a href="/sv/#contact" class="nav-cta">Kontakt</a>
   </nav>
-  <span class="top-tools"><a class="top-tool tool-price" href="/sv/kaina/">Hitta ditt pris</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Språk"><span class="lm-cur">SV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/work/neramioji-klase/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/work/neramioji-klase/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/work/neramioji-klase/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/work/neramioji-klase/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/work/neramioji-klase/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/work/neramioji-klase/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/work/neramioji-klase/" hreflang="sv" lang="sv" aria-current="page"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/work/neramioji-klase/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Språk"><span class="lm-cur">SV</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/work/neramioji-klase/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/work/neramioji-klase/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/work/neramioji-klase/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/work/neramioji-klase/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/work/neramioji-klase/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/work/neramioji-klase/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/work/neramioji-klase/" hreflang="sv" lang="sv" aria-current="page"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/work/neramioji-klase/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -668,12 +670,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 <footer class="foot">
   <p class="mono small">© 2026 Projektai777. Alla rättigheter förbehållna.</p>
   <p class="mono small">Momsregistreringsnummer LT100020891511</p>
-  <p class="mono small"><a href="/sv/kaina/">Hitta ditt pris</a></p>
   <div class="langs" role="group" aria-label="Språk"><a href="/work/neramioji-klase/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/work/neramioji-klase/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/work/neramioji-klase/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/work/neramioji-klase/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/work/neramioji-klase/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/work/neramioji-klase/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/work/neramioji-klase/" hreflang="sv" lang="sv" aria-current="page" title="Svenska">SV</a><a href="/fi/work/neramioji-klase/" hreflang="fi" lang="fi" title="Suomi">FI</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"sv","work":{"next":"Nästa projekt","prev":"Föregående projekt"}};</script>
-<script src="/app.js?v=9e946cdb" defer></script>
+<script src="/app.js?v=67fd1950" defer></script>
 </body>
 </html>
