@@ -15,10 +15,10 @@ Ignas — Self-employed (individual activity) · Lithuania.
 - Ads on Google, Facebook and Instagram: A monthly service with no long contract: stop any time, the ad money goes straight to Google and Meta, and each month you get a short report on how many enquiries came and what one cost. If I run your ads, the AI search check is free.
 - Visibility in AI search, automated client search and online ads for any business: https://projektai777.eu/en/reklama/
 - Google Business Profile: created or tidied up so a business is found in Google search, on maps and in AI answers: https://projektai777.eu/en/verslo-profilis/
-- Custom CRM systems built around how a small business works (page in Lithuanian): https://projektai777.eu/crm-sistemos/
-- Business process automation: connecting the tools a business already uses (page in Lithuanian): https://projektai777.eu/procesu-automatizavimas/
-- Websites and online shops: new builds, improving an existing site and adding new features (page in Lithuanian): https://projektai777.eu/svetainiu-kurimas/
-- AI tools for small businesses: answering customers, sorting enquiries, reading documents (page in Lithuanian): https://projektai777.eu/dirbtinio-intelekto-irankiai/
+- Custom CRM systems built around how a small business works: https://projektai777.eu/en/crm-sistemos/
+- Business process automation: connecting the tools a business already uses: https://projektai777.eu/en/procesu-automatizavimas/
+- Websites and online shops: new builds, improving an existing site and adding new features: https://projektai777.eu/en/svetainiu-kurimas/
+- AI tools for small businesses: answering customers, sorting enquiries, reading documents: https://projektai777.eu/en/dirbtinio-intelekto-irankiai/
 - Free website check (Lithuanian only: phone speed, secure address, title and description, broken links, crawler access): https://projektai777.eu/patikra/
 
 ## Questions
