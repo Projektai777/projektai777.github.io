@@ -44,6 +44,7 @@ Ignas — Self-employed (individual activity) · Lithuania.
 
 ## Work
 
+- Vila Evelina (finished): A Druskininkai guest house's WordPress website now takes bookings in the villa's own booking system instead of a Booking.com window, works fully in Lithuanian, English and Russian, has a gallery the staff manage themselves and is ready for search engines and AI answers. https://projektai777.eu/en/work/vila-evelina/
 - Fortuna Hostel (finished): A Vilnius hostel's three-language WordPress website gained a booking window inside the site, a photo gallery the staff manage themselves, Google review collection and a safe technical upgrade. https://projektai777.eu/en/work/fortuna-hostel/
 - Neramioji klasė (finished): A national creative platform for pupils got a new entry page, an English version and one registration form through which pupils upload their work straight into the organisation's own storage, with no account needed. https://projektai777.eu/en/work/neramioji-klase/
 - Tinystudy (in progress): My own product in progress for adult students whose school or university uses Moodle: course materials become short study topics, and the plan picks what to learn and what to review each day before the next test. https://projektai777.eu/en/work/tinystudy/
