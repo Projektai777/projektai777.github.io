@@ -1,13 +1,3 @@
-/* Projektai777 portfolio - the living background + page behaviour.
-   ONE theme since 2026-09-12 (owner: "i choose rezonance style, so hide the theme button"): a grid of points, every
-   touch and pointer move drops a soft ripple through it. One 2D canvas, one budget: the frame must stay cheap.
-   - devicePixelRatio capped at 1.5; the grid scales with the viewport
-   - nothing runs while the tab is hidden; NO half-rate mode - the owner wants it smooth no matter what and the grid is cheap
-   - the canvas is sized from its own box (CSS 100lvh on phones), so the mobile address bar showing/hiding no longer
-     resizes the buffer, resets the ripples or leaves a blank strip - the two "cuts off on mobile" causes (2026-09-12)
-   - ripples survive a resize; the ripple cap never drops a live ripple abruptly
-   - the system's reduced-motion setting is ignored on purpose: motion is the same on every device (owner 2026-10-14, docs/motion.md)
-   Pointer, touch and scroll all feed the same shared state. */
 (function () {
   'use strict';
   var PF = window.PF || {};
@@ -18,14 +8,13 @@
   var ACC2 = [111, 211, 255];
   var GREY = [120, 135, 140];
   function mix(c, d, k) { return [Math.round(c[0] + (d[0] - c[0]) * k), Math.round(c[1] + (d[1] - c[1]) * k), Math.round(c[2] + (d[2] - c[2]) * k)]; }
-  var ACC_SOFT = mix(ACC, GREY, 0.5), ACC2_SOFT = mix(ACC2, GREY, 0.5); // muted tints for the ripple dots
+  var ACC_SOFT = mix(ACC, GREY, 0.5), ACC2_SOFT = mix(ACC2, GREY, 0.5);
 
-  // ---------- shared state ----------
   var S = {
     w: 0, h: 0, dpr: 1, t: 0,
-    px: -1e4, py: -1e4, pActive: false, pvx: 0, pvy: 0, // pointer in CSS px, velocity
-    impulses: [],      // {x,y,t0,power} taps / clicks
-    wind: 0,           // scroll velocity, decays
+    px: -1e4, py: -1e4, pActive: false, pvx: 0, pvy: 0,
+    impulses: [],
+    wind: 0,
     scrollY: 0
   };
   function rgba(c, a) { return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
@@ -34,23 +23,15 @@
   function input() { lastInput = performance.now(); }
   function impulse(x, y, power) { S.impulses.push({ x: x, y: y, t0: S.t, power: power || 1 }); if (S.impulses.length > 10) S.impulses.shift(); }
 
-  // ---------- RESONANCE ----------
-  // Strength is a QUARTER of the original (owner 2026-09-12, twice: "reduce the strength of the effect 2x", then
-  // "make the reaction to touch vfx 2x weaker and less colorful"): ripple amplitudes 0.15..0.55 for movement and
-  // 0.8 for a tap (originally 0.6..2.2 and 3.2), scroll hum quartered. LESS COLOURFUL: a dot only tints when the wave
-  // is clearly up or down (|dz| > 0.4, was 0.25) and the tint is the accent mixed half-and-half with the resting grey.
   var MAX_RIPPLES = 24;
   var resonance = {
     ripples: [], lastEmit: 0, hum: 0, sp: 34, cols: 0, rows: 0,
     init: function () {
-      // the grid is rebuilt for the new size; the ripples are kept, so a resize never "cuts" the animation
       var sp = S.w < 720 ? 30 : 34; this.sp = sp;
       this.cols = Math.ceil(S.w / sp) + 1; this.rows = Math.ceil(S.h / sp) + 2;
     },
     push: function (x, y, amp, life) {
       var rs = this.ripples;
-      // at the cap a NEW ripple is skipped; a live one is never removed, so every ripple finishes its fade
-      // (glance 2026-09-12: replacing the most faded one could still cut a ripple with 40 % of its amplitude left)
       if (rs.length >= MAX_RIPPLES) return;
       rs.push({ x: x, y: y, t0: S.t, amp: amp, life: life });
     },
@@ -69,7 +50,6 @@
         for (i = 0; i < rs.length; i++) {
           r = rs[i]; var age = S.t - r.t0, dx = x - r.x, dy = y - r.y, d = Math.sqrt(dx * dx + dy * dy) + 0.001;
           var front = age * 3.2, band = d - front; if (band > 60 || band < -140) continue;
-          // the ripple fades in over its first frames and out towards the end of its life: no pop at either end
           var env = clamp(age / 6, 0, 1) * (1 - age / r.life);
           var w = Math.sin(band * 0.09) * Math.exp(-band * band / 4200) * r.amp * env;
           ox += dx / d * w * 6; oy += dy / d * w * 6; dz += w;
@@ -80,14 +60,12 @@
       }
     }
   };
-  window.__pf = { S: S, themes: { resonance: resonance } }; // read-only debug handle for Business/tools/portfolio/verify.js
+  window.__pf = { S: S, themes: { resonance: resonance } };
 
-  // ---------- engine ----------
   function resize() {
-    // the canvas box (CSS: 100lvh on phones) is the truth, not window.innerHeight, which jumps with the address bar
     var w = canvas.clientWidth || window.innerWidth, h = canvas.clientHeight || window.innerHeight;
     var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    if (Math.abs(w - S.w) < 2 && Math.abs(h - S.h) < 2 && dpr === S.dpr) return; // nothing really changed
+    if (Math.abs(w - S.w) < 2 && Math.abs(h - S.h) < 2 && dpr === S.dpr) return;
     S.w = w; S.h = h; S.dpr = dpr;
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -112,7 +90,7 @@
     var hint = document.getElementById('hint'), hinted = false;
     function touched() { input(); if (!hinted && hint) { hinted = true; setTimeout(function () { hint.classList.add('gone'); }, 2500); } }
     window.addEventListener('pointermove', function (e) {
-      if (e.pointerType === 'touch') return; // touchmove below keeps the touch path passive
+      if (e.pointerType === 'touch') return;
       S.pvx = e.clientX - S.px; S.pvy = e.clientY - S.py; if (Math.abs(S.pvx) > 200) { S.pvx = 0; S.pvy = 0; }
       S.px = e.clientX; S.py = e.clientY; S.pActive = true; touched();
     }, { passive: true });
@@ -133,14 +111,9 @@
     }, { passive: true });
   }
 
-  // ---------- language menu ----------
-  // The list is real links in the HTML (works without this script); here it becomes a popup. Opens on click / Enter / Space
-  // (a keyboard open moves focus into the list), Arrow Up/Down/Home/End move between items, Escape closes and returns
-  // focus to the button, a click outside or leaving with Tab closes it, choosing an item closes it. A click on any language
-  // link (menu or footer) remembers the choice in localStorage pf-lang, which the automatic language on the default page respects.
   document.addEventListener('click', function (e) {
     var a = e.target && e.target.closest ? e.target.closest('.lm-list a[hreflang], .langs a[hreflang]') : null;
-    if (a) { try { localStorage.setItem('pf-lang', a.getAttribute('hreflang')); } catch (err) { /* storage blocked: the choice just is not remembered */ } }
+    if (a) { try { localStorage.setItem('pf-lang', a.getAttribute('hreflang')); } catch (err) {  } }
   });
   (function () {
     var lm = document.getElementById('lm'), btn = document.getElementById('lm-btn'), list = document.getElementById('lm-list');
@@ -155,7 +128,7 @@
     function currentIndex() { for (var i = 0; i < items.length; i++) if (items[i].getAttribute('aria-current') === 'page') return i; return 0; }
     btn.addEventListener('click', function (e) {
       var o = !isOpen(); setOpen(o);
-      if (o && e.detail === 0) focusItem(currentIndex()); // opened from the keyboard (Enter / Space)
+      if (o && e.detail === 0) focusItem(currentIndex());
     });
     btn.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); setOpen(true); focusItem(e.key === 'ArrowDown' ? currentIndex() : items.length - 1); }
@@ -173,25 +146,19 @@
     lm.addEventListener('focusout', function (e) { if (isOpen() && e.relatedTarget && !lm.contains(e.relatedTarget)) setOpen(false); });
   })();
 
-  // ---------- page: reveal on scroll ----------
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -8% 0px' });
     document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
   } else document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('in'); });
 
-  // ---------- work rows: sideways scrolling + the hint arrow ----------
-  // Each group of project cards is one row that scrolls sideways (owner 2026-10-03: not stacked down the page). The arrow
-  // buttons step one card; .more-l / .more-r mark that there is more to that side (style.css fades that edge and shows
-  // that arrow). Until the visitor first scrolls a row (swipe, wheel, keys or an arrow) the "next" arrow nudges as a
-  // hint; html.pf-swiped then stops it, and localStorage pf-swiped keeps it stopped on later visits.
   (function () {
     var rails = document.querySelectorAll('.rail'), root = document.documentElement, W = PF.work || {};
     if (!rails.length) return;
-    try { if (localStorage.getItem('pf-swiped')) root.classList.add('pf-swiped'); } catch (e) { /* storage blocked: the hint shows each visit */ }
+    try { if (localStorage.getItem('pf-swiped')) root.classList.add('pf-swiped'); } catch (e) {  }
     function tried() {
       if (root.classList.contains('pf-swiped')) return;
       root.classList.add('pf-swiped');
-      try { localStorage.setItem('pf-swiped', '1'); } catch (e) { /* storage blocked: only this visit remembers */ }
+      try { localStorage.setItem('pf-swiped', '1'); } catch (e) {  }
     }
     var ARROW = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     Array.prototype.forEach.call(rails, function (rail) {
@@ -208,15 +175,12 @@
         b.addEventListener('click', function (e) { tried(); kb = e.detail === 0 ? b : null; step(dir === 'next' ? 1 : -1); });
         rail.appendChild(b);
       });
-      var x0 = row.scrollLeft, kb = null; // kb: the arrow last pressed from the keyboard (Enter / Space)
+      var x0 = row.scrollLeft, kb = null;
       function update() {
         var max = row.scrollWidth - row.clientWidth;
         rail.classList.toggle('more-l', row.scrollLeft > 2);
         rail.classList.toggle('more-r', row.scrollLeft < max - 2);
-        // a row that fits needs no stop in the keyboard order
         if (max > 2) row.setAttribute('tabindex', '0'); else row.removeAttribute('tabindex');
-        // an arrow that just reached the end hides: keep a keyboard user's place by moving focus to the row
-        // (the browser may already have dropped focus to the page body when the arrow hid, so the pressed arrow counts too)
         var f = document.activeElement;
         if (f && f.parentNode === rail && f.classList.contains('rail-btn') && getComputedStyle(f).display === 'none') row.focus({ preventScroll: true });
         else if (kb && (!f || f === document.body || f === kb) && getComputedStyle(kb).display === 'none') { kb = null; row.focus({ preventScroll: true }); }
@@ -227,21 +191,12 @@
     });
   })();
 
-  // ---------- contact form ----------
   var form = document.getElementById('cform'), msg = document.getElementById('formMsg'), sendBtn = document.getElementById('sendBtn');
-  // the markup ships the send button disabled, so a visitor whose browser blocked this script can never submit the
-  // form into the URL; it flips once the handler exists. The mailbox line under the form always stays visible
-  // (owner 2026-10-01: many people prefer writing an e-mail to filling in a form)
   if (form && sendBtn) sendBtn.disabled = false;
 
-  // Messenger line (owner 2026-10-07): m.me opens the Messenger app on a phone, but on a computer it passes messenger.com's
-  // cookie and sign-in screens; there data-desk, Facebook's own chat address, opens the page's chat at once for a visitor
-  // signed in to Facebook. Only a mouse-and-hover device switches; the markup keeps m.me for everyone else.
   var msgrLink = document.querySelector('#formMsgr a[data-desk]');
   if (msgrLink && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) msgrLink.href = msgrLink.getAttribute('data-desk');
 
-  // rotating example requests in the empty message box: one line at a time, dissolving in and out (opacity only,
-  // the plain opacity transition), held while the tab is hidden or the box has text, hidden once anything is typed
   var taWrap = document.getElementById('taWrap'), phCycle = document.getElementById('phCycle');
   var ta = form && form.querySelector('textarea[name=message]');
   var examples = ((PF.form || {}).examples || []).filter(function (x) { return typeof x === 'string' && x; });
@@ -253,7 +208,7 @@
     requestAnimationFrame(function () { phCycle.classList.add('on'); });
     var nextExample = function () {
       setTimeout(function () {
-        if (document.hidden || ta.value.length > 0) return nextExample(); // keep the current line for another round
+        if (document.hidden || ta.value.length > 0) return nextExample();
         phCycle.classList.remove('on');
         setTimeout(function () {
           exI = (exI + 1) % examples.length; phCycle.textContent = examples[exI]; phCycle.classList.add('on'); nextExample();
@@ -263,10 +218,9 @@
     if (examples.length > 1) nextExample();
     ta.addEventListener('input', filled);
     form.addEventListener('reset', function () { setTimeout(filled, 0); });
-    window.addEventListener('pageshow', filled); // a restored page (back button) may bring its typed text back
+    window.addEventListener('pageshow', filled);
   }
 
-  // a link to one question (#faq-N: llms.txt, an AI answer's citation) opens its answer, not just a closed row
   function openFaq() {
     var d = /^#faq-\d+$/.test(location.hash) && document.getElementById(location.hash.slice(1));
     if (d && d.tagName === 'DETAILS') d.open = true;
