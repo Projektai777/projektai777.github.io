@@ -505,6 +505,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
 .part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
 .part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+.part-nav a.part-nav-ads { border-color: var(--acc); color: var(--acc); background: rgba(125, 255, 179, 0.1); font-weight: 600; }
 @media (max-width: 720px) {
   .top-tools { margin-left: auto; }
   .top > .top-tools + .lm { margin-left: 0; }
