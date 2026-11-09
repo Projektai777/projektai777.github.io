@@ -554,6 +554,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .part-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
 .part-nav a { padding: 7px 12px; border: 1px solid var(--line-2); border-radius: 6px; font-size: 13px; color: var(--fg); text-decoration: none; transition: border-color .2s; }
 .part-nav a:hover, .part-nav a:focus-visible { border-color: var(--acc); }
+.part-nav a.part-nav-ads { border-color: var(--acc); color: var(--acc); background: rgba(125, 255, 179, 0.1); font-weight: 600; }
 @media (max-width: 720px) {
   .top-tools { margin-left: auto; }
   .top > .top-tools + .lm { margin-left: 0; }
@@ -583,7 +584,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 <main id="main" data-page="service">
   <section class="sec job" id="di-paieska" data-tick="ai">
     <nav class="crumbs mono small" aria-label="Brødsmulesti"><a href="/nb/">Projektai777</a><span aria-hidden="true"> / </span><a href="/nb/#services">Tjenester</a><span aria-hidden="true"> / </span><span aria-current="page">Google og KI-søk, kundesøk og annonsering</span></nav>
-    <nav class="part-nav" aria-label="Tjenester"><a href="#di-paieska">Synlighet i Google og KI-søk</a><a href="#klientu-paieska">Automatisk kundesøk</a><a href="#verslo-profilis">Google-bedriftsprofil</a><a href="#reklama">Annonsering på Google, Facebook og Instagram</a></nav>
+    <nav class="part-nav" aria-label="Tjenester"><a href="#di-paieska">Synlighet i Google og KI-søk</a><a href="#klientu-paieska">Automatisk kundesøk</a><a href="#verslo-profilis">Google-bedriftsprofil</a><a href="#reklama" class="part-nav-ads">Annonsering på Google, Facebook og Instagram</a></nav>
     <header class="job-head">
       <p class="kicker mono">Tjeneste</p>
       <h1 class="job-h1">Synlighet i Google og KI-søk</h1>
@@ -733,6 +734,6 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 
 <script>window.PF={"lang":"nb","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sender…","ok":"Mottatt. Jeg svarer innen en arbeidsdag.","err":"Kunne ikke sende. Skriv til meg direkte:","examples":["F.eks.: vi har en nettside, men bestillingene kommer bare på telefon; vi vil at kundene selv skal kunne bestille eller reservere…","F.eks.: hver dag svarer vi på de samme kundespørsmålene; vi vil at KI skal svare for oss…","F.eks.: vi flytter data fra e-poster og bestillinger over i Excel for hånd; vi vil at det skal skje av seg selv…","F.eks.: nettsiden vår er utdatert og tungvint på mobil; vi vil gjerne fornye den…","F.eks.: vi regner ut tilbud til kunder for hånd; vi vil ha et verktøy som lager dem på noen minutter…","F.eks.: vi får mange fakturaer og dokumenter; vi vil at et system skal lese og sortere dem selv…","F.eks.: vi følger opp bestillinger, lager og oppdrag i separate regneark; vi vil ha et enkelt system der alt er samlet…"],"subject":"Henvendelse fra nettsiden","picks":"Interessert i"},"work":{"next":"Neste prosjekt","prev":"Forrige prosjekt"},"hit":"https://projektai777-portfolio.projektai777.workers.dev/hit","g":"ads"};</script>
 <script>(function(){try{var n=navigator,P=window.PF;if(n.webdriver||!n.sendBeacon||!P||!P.hit)return;var q=location.search,u=function(k){var m=new RegExp('[?&]'+k+'=([^&#]*)','i').exec(q);return m?decodeURIComponent(m[1].replace(/\+/g,' ')).toLowerCase():''},so=u('utm_source'),me=u('utm_medium'),s,h=(document.referrer.split('/')[2]||'').split(':')[0].toLowerCase().replace(/^www\./,'');if(/[?&](gclid|gbraid|wbraid)=/i.test(q)||(so==='google'&&/^(cpc|ppc|paid|paidsearch)$/.test(me)))s='ad-google';else if(/^(facebook|fb|instagram|ig)$/.test(so)&&/^(cpc|ppc|paid|paid_social|paidsocial|paid-social|social_paid)$/.test(me))s='ad-facebook';else if(me==='email'||so==='letter'||/[?&]b=demo(&|#|$)/i.test(q))s='letter';else if(!h)s='direct';else if(h===location.hostname.toLowerCase())s='internal';else if(/^(mail\.google\.com|com\.google\.android\.gm|outlook\.live\.com|outlook\.office\.com|mail\.yahoo\.com)$/.test(h))s='letter';else if(/(^|\.)google\./.test(h))s='google';else if(/(^|\.)bing\.com$/.test(h))s='bing';else if(/(^|\.)(facebook|fb)\.com$/.test(h))s='facebook';else if(/(^|\.)instagram\.com$/.test(h))s='instagram';else if(/(^|\.)linkedin\.com$/.test(h)||h==='lnkd.in')s='linkedin';else s='other-site';n.sendBeacon(P.hit,JSON.stringify({g:P.g,l:P.lang,s:s}))}catch(e){}})();</script>
-<script src="/app.js?v=c632e3e1" defer></script>
+<script src="/app.js?v=3fb4da8d" defer></script>
 </body>
 </html>
