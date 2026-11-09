@@ -228,6 +228,13 @@
   openFaq();
   window.addEventListener('hashchange', openFaq);
 
+  function oldAdsAnchor() {
+    var t = location.hash === '#reklama' && document.getElementById('rinkodara');
+    if (t) { history.replaceState(null, '', '#rinkodara'); t.scrollIntoView(); }
+  }
+  oldAdsAnchor();
+  window.addEventListener('hashchange', oldAdsAnchor);
+
   if (form) form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!form.reportValidity()) return;
