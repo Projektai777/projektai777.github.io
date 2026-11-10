@@ -1,18 +1,18 @@
 # Projektai777
 
-> Websites, CRM systems, process automation, AI tools and visibility in Google and AI search for business. Fixed price, the code stays yours. I reply within a working day.
+> Websites, CRM systems, process automation, AI tools and visibility in Google and AI search for business. Fixed price, the code stays yours. We reply within a working day.
 
-Ignas — Self-employed (individual activity) · Lithuania.
+Projektai777 — Lithuania.
 
 ## Services
 
 - Websites: A new site, an improvement of the one you have, or new features added to it.
-- CRM systems: I build a CRM around how you work: clients, orders and reminders in one place.
-- Process automation: I connect the tools you already use so the repetitive work happens without your hands.
+- CRM systems: We build a CRM around how you work: clients, orders and reminders in one place.
+- Process automation: We connect the tools you already use so the repetitive work happens without your hands.
 - AI tools: Artificial intelligence that works for you: answers customers, sorts inquiries, reads documents.
-- Visibility in Google and AI search: So that your business ranks high in Google and Bing, shows on Google Maps and is named in answers from ChatGPT, Gemini, Claude, Perplexity and Copilot: the first check is free, then I send a short report each month.
+- Visibility in Google and AI search: So that your business ranks high in Google and Bing, shows on Google Maps and is named in answers from ChatGPT, Gemini, Claude, Perplexity and Copilot: the first check is free, then we send a short report each month.
 - Automated client search: The system finds companies that fit your business from their publicly listed contacts and, at a calm pace, sends each one a short letter in your name from your own company mailbox. Every letter has an opt-out link, and interested replies reach you straight away.
-- Ads on Google, Facebook and Instagram: A monthly service with no long contract: stop any time, the ad money goes straight to Google and Meta, and each month you get a short report on how many enquiries came and what one cost. If I run your ads, the search check is free.
+- Ads on Google, Facebook and Instagram: A monthly service with no long contract: stop any time, the ad money goes straight to Google and Meta, and each month you get a short report on how many enquiries came and what one cost. If we run your ads, the search check is free.
 - Visibility in Google and AI search, automated client search and online ads for any business: https://projektai777.eu/en/reklama/
 - Google Business Profile: created or tidied up so a business is found in Google search, on maps and in AI answers: https://projektai777.eu/en/verslo-profilis/
 - Custom CRM systems built around how a small business works: https://projektai777.eu/en/crm-sistemos/
@@ -25,11 +25,11 @@ Ignas — Self-employed (individual activity) · Lithuania.
 
 - [How much does a website, CRM or automation cost?](https://projektai777.eu/en/#faq-1): It depends on the number of pages and features and on how many other systems it has to connect to. For the agreed work the price is fixed and does not grow along the way: you pay a 50 % advance at the start and the rest only after handover.
 - [How long does the work take?](https://projektai777.eu/en/#faq-2): The deadline goes into the contract together with the price, counted in working days from the advance and the materials you provide. The work goes fastest when your texts, photos and logins are ready from the start.
-- [Can you improve the website I already have?](https://projektai777.eu/en/#faq-3): Yes. I improve working sites and add new features to them, for example a booking window, a photo gallery or a registration form. That is what I did for Fortuna Hostel and Neramioji klasė.
-- [Will we need to meet or have a call?](https://projektai777.eu/en/#faq-4): There is no need. Everything is done in writing, by e-mail, Telegram or Messenger. That way every agreement stays on record, and I can work with businesses wherever they are.
+- [Can you improve the website I already have?](https://projektai777.eu/en/#faq-3): Yes. We improve working sites and add new features to them, for example a booking window, a photo gallery or a registration form. That is what we did for Fortuna Hostel and Neramioji klasė.
+- [Will we need to meet or have a call?](https://projektai777.eu/en/#faq-4): There is no need. Everything is done in writing, by e-mail, Telegram or Messenger. That way every agreement stays on record, and we can work with businesses wherever they are.
 - [Are there any costs besides the price of the work?](https://projektai777.eu/en/#faq-5): If a domain, paid hosting or another paid outside service is needed, you pay its provider directly and the account is in your name, so the site stays in your hands even after we stop working together. Only the ads service and the monthly search reports are paid each month.
-- [Will Google and AI answers find my new website?](https://projektai777.eu/en/#faq-6): Every site I build gets the search basics free: schema.org data, robots.txt and llms.txt files and a Google Business Profile, if the business meets Google's rules. Ongoing work to rank higher in Google and get your business named in AI answers is a separate monthly service.
-- [What should I prepare before writing?](https://projektai777.eu/en/#faq-7): Nothing special: just say what you want to change or improve and, if you have them, add a link to your current site and to a site you like. I will ask about anything missing myself.
+- [Will Google and AI answers find my new website?](https://projektai777.eu/en/#faq-6): Every site we build gets the search basics free: schema.org data, robots.txt and llms.txt files and a Google Business Profile, if the business meets Google's rules. Ongoing work to rank higher in Google and get your business named in AI answers is a separate monthly service.
+- [What should I prepare before writing?](https://projektai777.eu/en/#faq-7): Nothing special: just say what you want to change or improve and, if you have them, add a link to your current site and to a site you like. We will ask about anything missing ourselves.
 
 ## Pages by language
 
@@ -47,7 +47,7 @@ Ignas — Self-employed (individual activity) · Lithuania.
 - Vila Evelina (finished): A Druskininkai guest house's WordPress website now takes bookings in the villa's own booking system instead of a Booking.com window, works fully in Lithuanian, English and Russian, has a gallery the staff manage themselves and is ready for search engines and AI answers. https://projektai777.eu/en/work/vila-evelina/
 - Fortuna Hostel (finished): A Vilnius hostel's three-language WordPress website gained a booking window inside the site, a photo gallery the staff manage themselves, Google review collection and a safe technical upgrade. https://projektai777.eu/en/work/fortuna-hostel/
 - Neramioji klasė (finished): A national creative platform for pupils got a new entry page, an English version and one registration form through which pupils upload their work straight into the organisation's own storage, with no account needed. https://projektai777.eu/en/work/neramioji-klase/
-- Tinystudy (in progress): My own product in progress for adult students whose school or university uses Moodle: course materials become short study topics, and the plan picks what to learn and what to review each day before the next test. https://projektai777.eu/en/work/tinystudy/
+- Tinystudy (in progress): Our own product in progress for adult students whose school or university uses Moodle: course materials become short study topics, and the plan picks what to learn and what to review each day before the next test. https://projektai777.eu/en/work/tinystudy/
 
 ## Contact
 
