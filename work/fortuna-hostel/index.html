@@ -17,6 +17,7 @@
   <link rel="alternate" hreflang="nb" href="https://projektai777.eu/nb/work/fortuna-hostel/">
   <link rel="alternate" hreflang="sv" href="https://projektai777.eu/sv/work/fortuna-hostel/">
   <link rel="alternate" hreflang="fi" href="https://projektai777.eu/fi/work/fortuna-hostel/">
+  <link rel="alternate" hreflang="uk" href="https://projektai777.eu/uk/work/fortuna-hostel/">
   <link rel="alternate" hreflang="x-default" href="https://projektai777.eu/work/fortuna-hostel/">
   <meta property="og:type" content="article">
   <meta property="og:title" content="Fortuna Hostel: viešbučio svetainės atnaujinimas su rezervacijų langu | Projektai777">
@@ -36,6 +37,7 @@
   <meta property="og:locale:alternate" content="nb_NO">
   <meta property="og:locale:alternate" content="sv_SE">
   <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="uk_UA">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Fortuna Hostel: viešbučio svetainės atnaujinimas su rezervacijų langu | Projektai777">
   <meta name="twitter:description" content="Vilniaus hostelio svetainėje įdiegtas rezervacijų langas, galerija, kurią darbuotojai tvarko patys, Google atsiliepimų rinkimas ir saugus atnaujinimas.">
@@ -283,30 +285,28 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
   .svc:nth-child(odd) { border-left: 0; }
   .svc:nth-child(n+3) { border-top: 1px solid var(--svc-line); }
 }
-.svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc-2); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
-.svc-big .n { color: var(--big); }
+.svc .n, .svc-big .n { font-family: var(--mono); color: var(--acc); font-size: 12px; letter-spacing: .12em; margin-bottom: 14px; display: block; }
 .svc .how { color: #b9c3c0; margin: 0; font-size: 15px; }
 .price-from { color: var(--acc); font-size: 13px; letter-spacing: .04em; margin: 14px 0 0; }
 .svc-big .price-from { margin: calc(-1 * clamp(10px, 1.6vw, 16px)) 0 clamp(20px, 3vw, 30px); }
 .svc-more { display: inline-block; margin-top: 14px; font-family: var(--mono); font-size: 13px; color: var(--acc); text-decoration: none; border-bottom: 1px solid currentColor; overflow-wrap: anywhere; }
 .svc-more:hover, .svc-more:focus-visible { border-bottom-width: 2px; }
-.svc-big { --big: #ffc062; --big-rgb: 255, 192, 98; margin-top: 16px; padding: clamp(24px, 3.4vw, 44px); border: 1px solid rgba(var(--big-rgb), 0.5); border-top: 3px solid var(--big); border-radius: 10px;
-  background: radial-gradient(120% 140% at 0% 0%, rgba(var(--big-rgb), 0.2), rgba(255, 128, 80, 0.07) 55%, transparent 80%), var(--bg-2); }
+.svc-big { margin-top: 16px; padding: clamp(24px, 3.4vw, 44px); border: 1px solid rgba(125, 255, 179, 0.32); border-radius: 10px;
+  background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, 0.13), rgba(111, 211, 255, 0.05) 55%, transparent 80%), var(--bg-2); }
 .svc-big h3 { font-family: var(--serif); font-weight: 500; font-size: clamp(26px, 3.2vw, 38px); line-height: 1.15; margin: 0 0 10px; overflow-wrap: break-word; }
 .svc-big .big-lead { color: #c7d0cd; font-size: clamp(16px, 1.4vw, 18px); max-width: 70ch; margin: 0 0 clamp(20px, 3vw, 30px); }
 .big-parts { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(18px, 2.6vw, 32px); }
-.big-parts > div { padding-top: 14px; border-top: 1px solid rgba(var(--big-rgb), 0.4); min-width: 0; }
+.big-parts > div { padding-top: 14px; border-top: 1px solid rgba(125, 255, 179, 0.28); min-width: 0; }
 .big-parts h4 { font-family: var(--sans); font-weight: 600; font-size: 17px; margin: 0 0 8px; color: var(--fg); overflow-wrap: break-word; }
 .big-parts p { color: #b9c3c0; margin: 0; font-size: 15px; }
 .big-cta { margin: clamp(22px, 3vw, 30px) 0 0; display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; }
 .big-cta > span[aria-hidden] { display: none; }
-.big-cta .ads-cta { display: inline-flex; align-items: center; max-width: 100%; padding: 12px 18px; border: 1px solid rgba(var(--big-rgb), 0.5); border-radius: 6px;
-  background: rgba(var(--big-rgb), 0.08); color: var(--big); font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; transition: border-color .2s, background .2s, transform .2s; }
-.big-cta .ads-cta:first-child { background: var(--big); border-color: var(--big); color: #1a1004; font-weight: 500; }
-.big-cta .ads-cta:hover, .big-cta .ads-cta:focus-visible { border-color: var(--big); background: rgba(var(--big-rgb), 0.16); transform: translateY(-1px); }
-.big-cta .ads-cta:first-child:hover, .big-cta .ads-cta:first-child:focus-visible { background: #ffd28f; }
-.big-cta .ads-cta:focus-visible { outline: 2px solid var(--big); outline-offset: 2px; }
-.svc-big .price-from { color: var(--big); }
+.big-cta .ads-cta { display: inline-flex; align-items: center; max-width: 100%; padding: 12px 18px; border: 1px solid rgba(125, 255, 179, 0.45); border-radius: 6px;
+  background: rgba(125, 255, 179, 0.07); color: var(--acc); font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; transition: border-color .2s, background .2s, transform .2s; }
+.big-cta .ads-cta:first-child { background: var(--acc); border-color: var(--acc); color: #06110b; font-weight: 500; }
+.big-cta .ads-cta:hover, .big-cta .ads-cta:focus-visible { border-color: var(--acc); background: rgba(125, 255, 179, 0.14); transform: translateY(-1px); }
+.big-cta .ads-cta:first-child:hover, .big-cta .ads-cta:first-child:focus-visible { background: #9dffc6; }
+.big-cta .ads-cta:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
 @media (max-width: 900px) {
   .big-parts { grid-template-columns: 1fr; }
 }
@@ -579,7 +579,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     <a href="/#about">Apie mus</a>
     <a href="/#contact" class="nav-cta">Susisiekti</a>
   </nav>
-  <span class="top-tools"><a class="top-tool tool-check" href="/patikra/">Nemokama svetainės patikra</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Kalba"><span class="lm-cur">LT</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/work/fortuna-hostel/" hreflang="lt" lang="lt" aria-current="page"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/work/fortuna-hostel/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/work/fortuna-hostel/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/work/fortuna-hostel/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/work/fortuna-hostel/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/work/fortuna-hostel/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/work/fortuna-hostel/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/work/fortuna-hostel/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li></ul></div>
+  <span class="top-tools"><a class="top-tool tool-check" href="/patikra/">Nemokama svetainės patikra</a></span><div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Kalba"><span class="lm-cur">LT</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/work/fortuna-hostel/" hreflang="lt" lang="lt" aria-current="page"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/work/fortuna-hostel/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/work/fortuna-hostel/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/work/fortuna-hostel/" hreflang="en" lang="en"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/work/fortuna-hostel/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/work/fortuna-hostel/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/work/fortuna-hostel/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/work/fortuna-hostel/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li><li><a href="/uk/work/fortuna-hostel/" hreflang="uk" lang="uk"><span>Українська</span><span class="lm-code" aria-hidden="true">UK</span></a></li></ul></div>
 </header>
 
 <main id="main">
@@ -633,12 +633,12 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   <p class="mono small">© 2026 Projektai777. Visos teisės saugomos.</p>
   <p class="mono small">PVM mokėtojo kodas LT100020891511</p>
   <p class="mono small"><a href="/patikra/">Nemokama svetainės patikra</a></p>
-  <div class="langs" role="group" aria-label="Kalba"><a href="/work/fortuna-hostel/" hreflang="lt" lang="lt" aria-current="page" title="Lietuvių">LT</a><a href="/lv/work/fortuna-hostel/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/work/fortuna-hostel/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/work/fortuna-hostel/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/work/fortuna-hostel/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/work/fortuna-hostel/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/work/fortuna-hostel/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/work/fortuna-hostel/" hreflang="fi" lang="fi" title="Suomi">FI</a></div>
+  <div class="langs" role="group" aria-label="Kalba"><a href="/work/fortuna-hostel/" hreflang="lt" lang="lt" aria-current="page" title="Lietuvių">LT</a><a href="/lv/work/fortuna-hostel/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/work/fortuna-hostel/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/work/fortuna-hostel/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/work/fortuna-hostel/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/work/fortuna-hostel/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/work/fortuna-hostel/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/work/fortuna-hostel/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/work/fortuna-hostel/" hreflang="uk" lang="uk" title="Українська">UK</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"lt","work":{"next":"Kitas projektas","prev":"Ankstesnis projektas"},"hit":"https://projektai777-portfolio.projektai777.workers.dev/hit","g":"job"};</script>
 <script>(function(){try{var n=navigator,P=window.PF;if(n.webdriver||!n.sendBeacon||!P||!P.hit)return;var q=location.search,u=function(k){var m=new RegExp('[?&]'+k+'=([^&#]*)','i').exec(q);return m?decodeURIComponent(m[1].replace(/\+/g,' ')).toLowerCase():''},so=u('utm_source'),me=u('utm_medium'),s,h=(document.referrer.split('/')[2]||'').split(':')[0].toLowerCase().replace(/^www\./,'');if(/[?&](gclid|gbraid|wbraid)=/i.test(q)||(so==='google'&&/^(cpc|ppc|paid|paidsearch)$/.test(me)))s='ad-google';else if(/^(facebook|fb|instagram|ig)$/.test(so)&&/^(cpc|ppc|paid|paid_social|paidsocial|paid-social|social_paid)$/.test(me))s='ad-facebook';else if(me==='email'||so==='letter'||/[?&]b=demo(&|#|$)/i.test(q))s='letter';else if(!h)s='direct';else if(h===location.hostname.toLowerCase())s='internal';else if(/^(mail\.google\.com|com\.google\.android\.gm|outlook\.live\.com|outlook\.office\.com|mail\.yahoo\.com)$/.test(h))s='letter';else if(/(^|\.)google\./.test(h))s='google';else if(/(^|\.)bing\.com$/.test(h))s='bing';else if(/(^|\.)(facebook|fb)\.com$/.test(h))s='facebook';else if(/(^|\.)instagram\.com$/.test(h))s='instagram';else if(/(^|\.)linkedin\.com$/.test(h)||h==='lnkd.in')s='linkedin';else s='other-site';n.sendBeacon(P.hit,JSON.stringify({g:P.g,l:P.lang,s:s}))}catch(e){}})();</script>
-<script src="/app.js?v=d224bf86" defer></script>
+<script src="/app.js?v=5800703a" defer></script>
 </body>
 </html>
