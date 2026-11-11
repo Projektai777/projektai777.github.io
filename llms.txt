@@ -19,6 +19,10 @@ Projektai777 — Lithuania.
 - Business process automation: connecting the tools a business already uses: https://projektai777.eu/en/procesu-automatizavimas/
 - Websites and online shops: new builds, improving an existing site and adding new features: https://projektai777.eu/en/svetainiu-kurimas/
 - AI tools for small businesses: answering customers, sorting enquiries, reading documents: https://projektai777.eu/en/dirbtinio-intelekto-irankiai/
+- AI SEO audit: a check of whether ChatGPT, Google AI answers and other AI tools can reach and read a website, with a score and ranked fixes: https://projektai777.eu/en/di-seo-auditas/
+- AI helpers for a small business: set up in the buyer's own Google account to answer new customers, book visits and sort the inbox: https://projektai777.eu/en/di-asistentai/
+- Cold email set-up: a careful B2B cold email system set up on the buyer's own mailbox, so they stay the sender and keep full control: https://projektai777.eu/en/saltieji-laiskai/
+- Vertical clips from a long video: one long English video cut into 20 short vertical clips with word-by-word subtitles, plus a blog post and social posts: https://projektai777.eu/en/video-klipai/
 - Free website check (Lithuanian only: phone speed, secure address, title and description, broken links, crawler access): https://projektai777.eu/patikra/
 
 ## Questions
