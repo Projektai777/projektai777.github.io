@@ -30,6 +30,7 @@ Projektai777 — Lithuania.
 
 - Personalized printable mystery party games (three games written for your own guests' names, 4 to 16 players, in English, sold in our Etsy shop): https://projektai777.eu/en/printable-mystery-party-game/
 - Cafe website template for Framer: Tuesday Special (five pages, a weekly specials board you edit yourself, set-up in about an hour, sold on Gumroad): https://projektai777.eu/en/cafe-website-template-framer/
+- Plumber website template for Framer: Local Van (five pages, a price guide page you edit yourself, set-up in about an hour, sold on Gumroad): https://projektai777.eu/en/plumber-website-template-framer/
 
 ## Questions
 
