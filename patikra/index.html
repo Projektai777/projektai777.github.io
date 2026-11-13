@@ -547,6 +547,31 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   .top-tool { padding: 6px 10px; font-size: 12px; }
   .top-tool.tool-check { display: none; }
 }
+.ckbar {
+  position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 40;
+  display: flex; align-items: center; gap: 4px; width: max-content; max-width: calc(100% - 24px);
+  background: rgba(13, 18, 24, .96); border: 1px solid var(--acc); border-radius: 12px; box-shadow: 0 8px 28px rgba(0, 0, 0, .5);
+  font: 14px/1.4 var(--sans); color: var(--fg);
+}
+.ckbar-go { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-width: 0; padding: 12px 16px; text-decoration: none; color: inherit; border-radius: 11px; }
+.ckbar-go:hover .ckbar-cta, .ckbar-go:focus-visible .ckbar-cta { border-color: currentColor; }
+.ckbar-go:focus-visible, .ckbar-x:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+.ckbar-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--acc); }
+.ckbar-run .ckbar-dot { animation: ckbar-pulse 1.2s ease-in-out infinite; }
+.ckbar-fail { border-color: #ff8a7a; }
+.ckbar-fail .ckbar-dot { background: #ff8a7a; }
+.ckbar-t { min-width: 0; overflow-wrap: anywhere; }
+.ckbar-cta { font-family: var(--mono); font-weight: 500; font-size: 13px; color: var(--acc); border-bottom: 1px solid transparent; white-space: nowrap; }
+.ckbar-fail .ckbar-cta { color: #ff8a7a; }
+.ckbar-cta[hidden], .ckbar-x[hidden] { display: none; }
+.ckbar-x { flex: none; width: 40px; height: 40px; margin-right: 4px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--mute); font: 22px/1 var(--sans); cursor: pointer; }
+.ckbar-x:hover { color: var(--fg); }
+@keyframes ckbar-pulse { 0%, 100% { opacity: .3; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
+html.has-ckbar body { padding-bottom: 84px; }
+@media (max-width: 560px) {
+  .ckbar { width: calc(100% - 24px); }
+  .ckbar-go { flex: 1 1 auto; padding: 10px 12px; }
+}
   </style>
   <style>
     .ck-form{display:flex;flex-wrap:wrap;gap:.7rem;margin:1.2rem 0}
@@ -699,23 +724,27 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
   <div class="langs" role="group" aria-label="Kalba"><a href="/patikra/" hreflang="lt" lang="lt" aria-current="page" title="Lietuvių">LT</a><a href="/lv/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/" hreflang="uk" lang="uk" title="Українська">UK</a></div>
 </footer>
 
-<script>window.PF={"lang":"lt","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Siunčiama…","ok":"Gavome. Atsakysime per darbo dieną.","err":"Nepavyko išsiųsti. Parašykite tiesiai:","examples":["Pvz.: turime svetainę, bet užsakymai ateina tik telefonu; norėtume, kad klientai galėtų užsisakyti ar rezervuoti patys…","Pvz.: kasdien atsakinėjame į tuos pačius klientų klausimus; norėtume, kad dirbtinis intelektas atsakytų už mus…","Pvz.: duomenis iš laiškų ir užsakymų ranka perkeliame į Excel; norėtume, kad tai vyktų savaime…","Pvz.: mūsų svetainė pasenusi ir nepatogi telefone; norėtume ją atnaujinti…","Pvz.: kainų pasiūlymus klientams skaičiuojame ranka; norėtume įrankio, kuris juos paruoštų per kelias minutes…","Pvz.: gauname daug sąskaitų ir dokumentų; norėtume, kad sistema pati juos nuskaitytų ir surūšiuotų…","Pvz.: užsakymus, sandėlį ir darbus sekame skirtingose lentelėse; norėtume paprastos sistemos, kurioje viskas būtų kartu…"],"subject":"Užklausa iš svetainės","picks":"Domina"},"work":{"next":"Kitas projektas","prev":"Ankstesnis projektas"},"hit":"https://projektai777-portfolio.projektai777.workers.dev/hit","g":"check"};</script>
+<script>window.PF={"lang":"lt","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Siunčiama…","ok":"Gavome. Atsakysime per darbo dieną.","err":"Nepavyko išsiųsti. Parašykite tiesiai:","examples":["Pvz.: turime svetainę, bet užsakymai ateina tik telefonu; norėtume, kad klientai galėtų užsisakyti ar rezervuoti patys…","Pvz.: kasdien atsakinėjame į tuos pačius klientų klausimus; norėtume, kad dirbtinis intelektas atsakytų už mus…","Pvz.: duomenis iš laiškų ir užsakymų ranka perkeliame į Excel; norėtume, kad tai vyktų savaime…","Pvz.: mūsų svetainė pasenusi ir nepatogi telefone; norėtume ją atnaujinti…","Pvz.: kainų pasiūlymus klientams skaičiuojame ranka; norėtume įrankio, kuris juos paruoštų per kelias minutes…","Pvz.: gauname daug sąskaitų ir dokumentų; norėtume, kad sistema pati juos nuskaitytų ir surūšiuotų…","Pvz.: užsakymus, sandėlį ir darbus sekame skirtingose lentelėse; norėtume paprastos sistemos, kurioje viskas būtų kartu…"],"subject":"Užklausa iš svetainės","picks":"Domina"},"work":{"next":"Kitas projektas","prev":"Ankstesnis projektas"},"hit":"https://projektai777-portfolio.projektai777.workers.dev/hit","g":"check","ck":{"p":"/patikra/","run":"Tikriname jūsų svetainę. Galite toliau naršyti.","done":"Svetainės patikra baigta.","see":"Žiūrėti rezultatus","fail":"Svetainės patikra nepavyko.","again":"Bandyti dar kartą","close":"Uždaryti"}};</script>
 <script>(function(){try{var n=navigator,P=window.PF;if(n.webdriver||!n.sendBeacon||!P||!P.hit)return;var q=location.search,u=function(k){var m=new RegExp('[?&]'+k+'=([^&#]*)','i').exec(q);return m?decodeURIComponent(m[1].replace(/\+/g,' ')).toLowerCase():''},so=u('utm_source'),me=u('utm_medium'),s,h=(document.referrer.split('/')[2]||'').split(':')[0].toLowerCase().replace(/^www\./,'');if(/[?&](gclid|gbraid|wbraid)=/i.test(q)||(so==='google'&&/^(cpc|ppc|paid|paidsearch)$/.test(me)))s='ad-google';else if(/^(facebook|fb|instagram|ig)$/.test(so)&&/^(cpc|ppc|paid|paid_social|paidsocial|paid-social|social_paid)$/.test(me))s='ad-facebook';else if(me==='email'||so==='letter'||/[?&]b=demo(&|#|$)/i.test(q))s='letter';else if(!h)s='direct';else if(h===location.hostname.toLowerCase())s='internal';else if(/^(mail\.google\.com|com\.google\.android\.gm|outlook\.live\.com|outlook\.office\.com|mail\.yahoo\.com)$/.test(h))s='letter';else if(/(^|\.)google\./.test(h))s='google';else if(/(^|\.)bing\.com$/.test(h))s='bing';else if(/(^|\.)(facebook|fb)\.com$/.test(h))s='facebook';else if(/(^|\.)instagram\.com$/.test(h))s='instagram';else if(/(^|\.)linkedin\.com$/.test(h)||h==='lnkd.in')s='linkedin';else s='other-site';n.sendBeacon(P.hit,JSON.stringify({g:P.g,l:P.lang,s:s}))}catch(e){}})();</script>
 <script>
 (function () {
-  var C = {"stateLabel":"Būsena","states":{"pass":"Gerai","fail":"Reikia taisyti","unknown":"Nepavyko nustatyti"},"lines":{"phone":"Pagrindinis turinys atsiranda po {s} s.","httpsPass":"Svetainė atsidaro per saugų adresą.","httpsHttp":"Svetainė atsidaro be apsaugos (http).","httpsCert":"Svetainės saugos sertifikatas neteisingas.","metaPass":"Pavadinimas ir aprašymas yra.","metaMissing":"Trūksta {list}.","metaTitle":"pavadinimo","metaDescription":"aprašymo","linksPass":"Sugedusių nuorodų nerasta.","linksFail":"Sugedusių nuorodų: {n}.","crawlersPass":"Robotams leidžiama skaityti svetainę.","crawlersBlocked":"Šiems robotams neleidžiama skaityti svetainės: {list}."},"unknownLine":"Šio dalyko išmatuoti nepavyko: svetainė neatsakė arba jo išmatuoti negalima.","errUrl":"Šio adreso patikrinti negalime. Įveskite viešai pasiekiamos svetainės adresą, pavyzdžiui, pavyzdys.lt.","errBusy":"Šiuo metu patikrų daug. Pabandykite vėliau.","errLimit":"Šiandien iš šio interneto ryšio jau atliktos 3 nemokamos patikros. Kitą galėsite atlikti rytoj, o jei norite, kad svetainę peržiūrėtume dabar, parašykite mums.","errFailed":"Patikra nepavyko. Pabandykite dar kartą vėliau.","errTimeout":"Patikra trunka ilgiau nei įprastai. Pabandykite vėliau.","errNetwork":"Nepavyko susisiekti su patikros serveriu. Pabandykite vėliau.","working":"Tikriname. Tai gali užtrukti iki kelių minučių.","reusedLine":"Ši svetainė jau buvo tikrinta {date}, todėl rodome tą rezultatą. Nemokama tos pačios svetainės patikra atnaujinama kartą per 7 dienas. Ką nors sutvarkėte ir norite naujo patikrinimo? Parašykite mums."};
+  var C = {"stateLabel":"Būsena","states":{"pass":"Gerai","fail":"Reikia taisyti","unknown":"Nepavyko nustatyti"},"lines":{"phone":"Pagrindinis turinys atsiranda po {s} s.","httpsPass":"Svetainė atsidaro per saugų adresą.","httpsHttp":"Svetainė atsidaro be apsaugos (http).","httpsCert":"Svetainės saugos sertifikatas neteisingas.","metaPass":"Pavadinimas ir aprašymas yra.","metaMissing":"Trūksta {list}.","metaTitle":"pavadinimo","metaDescription":"aprašymo","linksPass":"Sugedusių nuorodų nerasta.","linksFail":"Sugedusių nuorodų: {n}.","crawlersPass":"Robotams leidžiama skaityti svetainę.","crawlersBlocked":"Šiems robotams neleidžiama skaityti svetainės: {list}."},"unknownLine":"Šio dalyko išmatuoti nepavyko: svetainė neatsakė arba jo išmatuoti negalima.","errUrl":"Šio adreso patikrinti negalime. Įveskite viešai pasiekiamos svetainės adresą, pavyzdžiui, pavyzdys.lt.","errBusy":"Šiuo metu patikrų daug. Pabandykite vėliau.","errLimit":"Šiandien iš šio interneto ryšio jau atliktos 3 nemokamos patikros. Kitą galėsite atlikti rytoj, o jei norite, kad svetainę peržiūrėtume dabar, parašykite mums.","errFailed":"Patikra nepavyko. Pabandykite dar kartą vėliau.","errTimeout":"Patikra trunka ilgiau nei įprastai. Pabandykite vėliau.","errNetwork":"Nepavyko susisiekti su patikros serveriu. Pabandykite vėliau.","working":"Tikriname. Tai gali užtrukti iki kelių minučių. Galite toliau naršyti svetainėje: apačioje esanti juosta parodys, kai patikra bus baigta.","reusedLine":"Ši svetainė jau buvo tikrinta {date}, todėl rodome tą rezultatą. Nemokama tos pačios svetainės patikra atnaujinama kartą per 7 dienas. Ką nors sutvarkėte ir norite naujo patikrinimo? Parašykite mums."};
   var origin = ''; try { origin = new URL(window.PF.contact).origin; } catch (e) {}
   var form = document.getElementById('ck-form'), input = document.getElementById('ck-url'), go = document.getElementById('ck-go');
   var busy = document.getElementById('ck-busy'), busyText = document.getElementById('ck-busy-text'), err = document.getElementById('ck-err');
   var results = document.getElementById('ck-results'), target = document.getElementById('ck-target'), reused = document.getElementById('ck-reused');
   var next = document.getElementById('ck-next'), nextFail = document.getElementById('ck-next-fail'), nextPass = document.getElementById('ck-next-pass');
   var failText = document.getElementById('ck-next-fail-text'), unknownText = document.getElementById('ck-next-unknown');
-  var timer = null, deadline = 0;
+  var timer = null, deadline = 0, curId = '';
+  var KEY = 'p777ck', DAY = 86400000, LIMIT = 1200000;
+  function load() { try { var v = JSON.parse(localStorage.getItem(KEY) || 'null'); return v && typeof v.id === 'string' && typeof v.t === 'number' && Date.now() - v.t < DAY ? v : null; } catch (e) { return null; } }
+  function save(v) { try { if (v) localStorage.setItem(KEY, JSON.stringify(v)); else localStorage.removeItem(KEY); } catch (e) {} }
+  function mark(s) { var v = load(); if (v && curId && v.id === curId) { v.s = s; v.seen = true; save(v); } }
   function say(el, text) { el.textContent = text; el.hidden = !text; }
   function stop() { if (timer) { clearInterval(timer); timer = null; } busy.hidden = true; go.disabled = false; }
   function showNext(which) { nextFail.hidden = which !== 'fail' && which !== 'unknown'; failText.hidden = which !== 'fail'; unknownText.hidden = which !== 'unknown'; nextPass.hidden = which !== 'pass'; next.hidden = false; }
   function day(ms) { var d = new Date(ms), p = function (n) { return (n < 10 ? '0' : '') + n; }; return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
-  function fail(key) { stop(); say(err, C[key]); }
+  function fail(key) { stop(); say(err, C[key]); if (key === 'errFailed' || key === 'errTimeout') mark('fail'); curId = ''; }
   function fill(tpl, vars) { return String(tpl).replace(/\{(\w+)\}/g, function (m, k) { return Object.prototype.hasOwnProperty.call(vars, k) ? String(vars[k]) : m; }); }
   function word(v) { return typeof v === 'string' ? v : ''; }
   function lineFor(key, e) {
@@ -753,25 +782,29 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
     }
     results.hidden = false;
     showNext(anyFail ? 'fail' : allPass ? 'pass' : 'unknown');
+    mark('done');
   }
-  function poll(id) {
-    deadline = Date.now() + 180000;
-    var inflight = false;
-    timer = setInterval(function () {
-      if (Date.now() > deadline) { fail('errTimeout'); return; }
+  function poll(id, started, restored, wasFail) {
+    curId = id; deadline = started + LIMIT;
+    var inflight = false, net = 0;
+    function tick() {
       if (inflight) return; inflight = true;
       fetch(origin + '/check/' + encodeURIComponent(id)).then(function (r) { return r.json().catch(function () { return null; }).then(function (j) { return { s: r.status, j: j }; }); }).then(function (x) {
-        inflight = false;
-        if (!x.j || !x.j.ok) { if (x.s === 404) fail('errFailed'); return; }
-        if (x.j.state === 'done') show(x.j.result);
-        else if (x.j.state === 'failed') fail('errFailed');
-      }, function () { inflight = false; });
-    }, 4000);
+        inflight = false; net = 0;
+        if (curId !== id) return;
+        if (x.s === 404) { if (restored) { save(null); curId = ''; if (wasFail) fail('errFailed'); else stop(); } else fail('errFailed'); return; }
+        if (x.j && x.j.ok && x.j.state === 'done') { show(x.j.result); if (restored) results.scrollIntoView({ block: 'start' }); return; }
+        if (x.j && x.j.ok && x.j.state === 'failed') { fail('errFailed'); if (restored) save(null); return; }
+        if (Date.now() > deadline) fail('errTimeout');
+      }, function () { inflight = false; if (curId === id && ++net >= 3 && Date.now() > deadline) fail('errTimeout'); });
+    }
+    timer = setInterval(tick, 4000); tick();
   }
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
     var url = input.value.trim();
     say(err, ''); say(reused, ''); results.hidden = true; next.hidden = true;
+    if (timer) { clearInterval(timer); timer = null; } curId = '';
     if (!url || !origin) { say(err, C.errUrl); return; }
     go.disabled = true; say(busyText, C.working); busy.hidden = false;
     fetch(origin + '/check', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url: url }) })
@@ -781,13 +814,23 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
           var old = x.j.reused === true && typeof x.j.at === 'number';
           target.textContent = old && typeof x.j.page === 'string' ? x.j.page : url;
           say(reused, old ? fill(C.reusedLine, { date: day(x.j.at) }) : '');
-          poll(x.j.id); return;
+          var now = Date.now();
+          save({ id: x.j.id, url: url, page: old && typeof x.j.page === 'string' ? x.j.page : '', at: old ? x.j.at : 0, t: now, s: 'run', seen: false });
+          poll(x.j.id, now, false); return;
         }
         if (x.j && x.j.why === 'url') fail('errUrl'); else if (x.j && x.j.why === 'limit') { fail('errLimit'); showNext(''); } else if (x.s === 429 || (x.j && x.j.why === 'busy')) fail('errBusy'); else fail('errNetwork');
       }, function () { fail('errNetwork'); });
   });
+  (function () {
+    var v = load(); if (!v || !origin) return;
+    input.value = typeof v.url === 'string' ? v.url : '';
+    target.textContent = v.page || input.value;
+    say(reused, v.at ? fill(C.reusedLine, { date: day(v.at) }) : '');
+    go.disabled = true; say(busyText, C.working); busy.hidden = false;
+    poll(v.id, Math.max(v.t, Date.now() - LIMIT + 300000), true, v.s === 'fail');
+  })();
 })();
 </script>
-<script src="/app.js?v=7b72c39f" defer></script>
+<script src="/app.js?v=3181a58a" defer></script>
 </body>
 </html>
