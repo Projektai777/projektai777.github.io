@@ -257,3 +257,50 @@
       .catch(function () { if (timer) clearTimeout(timer); fail(); });
   });
 })();
+
+(function () {
+  'use strict';
+  var PF = window.PF || {}, B = PF.ck;
+  if (!B || !B.p || PF.g === 'check' || !window.fetch) return;
+  var KEY = 'p777ck', DAY = 86400000, LIMIT = 1200000;
+  function load() { try { var v = JSON.parse(localStorage.getItem(KEY) || 'null'); return v && typeof v.id === 'string' && typeof v.t === 'number' && Date.now() - v.t < DAY ? v : null; } catch (e) { return null; } }
+  function save(v) { try { if (v) localStorage.setItem(KEY, JSON.stringify(v)); else localStorage.removeItem(KEY); } catch (e) {} }
+  var v = load();
+  if (!v || v.seen) return;
+  var origin = ''; try { origin = new URL(PF.hit).origin; } catch (e) { return; }
+  var bar = document.createElement('div'), go = document.createElement('a'), dot = document.createElement('span'), txt = document.createElement('span'), cta = document.createElement('b'), x = document.createElement('button');
+  bar.className = 'ckbar'; bar.setAttribute('role', 'status'); bar.setAttribute('aria-live', 'polite');
+  go.className = 'ckbar-go'; go.href = B.p + '#patikra';
+  dot.className = 'ckbar-dot'; dot.setAttribute('aria-hidden', 'true'); txt.className = 'ckbar-t'; cta.className = 'ckbar-cta';
+  x.className = 'ckbar-x'; x.type = 'button'; x.setAttribute('aria-label', B.close); x.title = B.close; x.textContent = '×';
+  go.appendChild(dot); go.appendChild(txt); go.appendChild(cta); bar.appendChild(go); bar.appendChild(x);
+  var timer = null, inflight = false, net = 0;
+  function draw() {
+    bar.className = 'ckbar ckbar-' + v.s;
+    txt.textContent = v.s === 'done' ? B.done : v.s === 'fail' ? B.fail : B.run;
+    cta.textContent = v.s === 'done' ? B.see : v.s === 'fail' ? B.again : '';
+    cta.hidden = v.s === 'run'; x.hidden = v.s === 'run';
+  }
+  function set(s) { var now = load(); if (!now || now.id !== v.id) { gone(); return; } now.s = s; v = now; save(v); draw(); if (s !== 'run') halt(); }
+  function halt() { if (timer) { clearInterval(timer); timer = null; } }
+  function gone() { halt(); if (bar.parentNode) bar.parentNode.removeChild(bar); document.documentElement.classList.remove('has-ckbar'); }
+  function tick() {
+    if (document.hidden || inflight) return;
+    var now = load(); if (!now || now.id !== v.id || now.seen) { gone(); return; }
+    if (now.s !== 'run') { v = now; draw(); halt(); return; }
+    inflight = true;
+    fetch(origin + '/check/' + encodeURIComponent(v.id)).then(function (r) { return r.json().catch(function () { return null; }).then(function (j) { return { s: r.status, j: j }; }); }).then(function (r) {
+      inflight = false; net = 0;
+      if (r.j && r.j.ok && r.j.state === 'done') { set('done'); return; }
+      if (r.s === 404 || (r.j && r.j.ok && r.j.state === 'failed')) { set('fail'); return; }
+      if (Date.now() - v.t > LIMIT) set('fail');
+    }, function () { inflight = false; if (++net >= 3 && Date.now() - v.t > LIMIT) set('fail'); });
+  }
+  x.addEventListener('click', function () { var now = load(); if (now && now.id === v.id) { if (now.s === 'fail') save(null); else { now.seen = true; save(now); } } gone(); });
+  window.addEventListener('storage', function (e) { if (e.key === KEY) tick(); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
+  draw();
+  document.body.appendChild(bar);
+  document.documentElement.classList.add('has-ckbar');
+  if (v.s === 'run') { timer = setInterval(tick, 5000); tick(); }
+})();
