@@ -87,8 +87,7 @@
     window.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(resize, 120); });
     if (window.visualViewport) window.visualViewport.addEventListener('resize', function () { clearTimeout(resizeT); resizeT = setTimeout(resize, 120); });
 
-    var hint = document.getElementById('hint'), hinted = false;
-    function touched() { input(); if (!hinted && hint) { hinted = true; setTimeout(function () { hint.classList.add('gone'); }, 2500); } }
+    function touched() { input(); }
     window.addEventListener('pointermove', function (e) {
       if (e.pointerType === 'touch') return;
       S.pvx = e.clientX - S.px; S.pvy = e.clientY - S.py; if (Math.abs(S.pvx) > 200) { S.pvx = 0; S.pvy = 0; }
@@ -259,6 +258,12 @@
 })();
 
 (function () {
+  var s = document.getElementById('stick'), c = document.getElementById('contact');
+  if (!s || !c || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (e) { s.classList.toggle('off', e[e.length - 1].isIntersecting); }).observe(c);
+})();
+
+(function () {
   'use strict';
   var PF = window.PF || {}, B = PF.ck;
   if (!B || !B.p || PF.g === 'check' || !window.fetch) return;
@@ -304,3 +309,4 @@
   document.documentElement.classList.add('has-ckbar');
   if (v.s === 'run') { timer = setInterval(tick, 5000); tick(); }
 })();
+
