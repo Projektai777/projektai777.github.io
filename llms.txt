@@ -4,6 +4,8 @@
 
 Projektai777 — Lithuania.
 
+Besides client work, Projektai777 makes and sells ready-made products, each listed under "Products" below with its own page: Tinystudy (a study planner web app); AI Workspace Kit Core for Claude Code; Personalized printable mystery party games; Cafe website template for Framer: Tuesday Special; Plumber website template for Framer: Local Van; Physiotherapy clinic website template for Framer: Back In Play; AI Answer Readiness Check.
+
 ## Services
 
 - Websites: A new site, an improvement of the one you have, or new features added to it.
@@ -23,15 +25,24 @@ Projektai777 — Lithuania.
 - AI helpers for a small business: set up in the buyer's own Google account to answer new customers, book visits and sort the inbox: https://projektai777.eu/en/di-asistentai/
 - Cold email set-up: a careful B2B cold email system set up on the buyer's own mailbox, so they stay the sender and keep full control: https://projektai777.eu/en/saltieji-laiskai/
 - Vertical clips from a long video: one long English video cut into 20 short vertical clips with word-by-word subtitles, plus a blog post and social posts: https://projektai777.eu/en/video-klipai/
+- GEO audit: what ChatGPT, Gemini and Perplexity say about a business compared with 3 rivals, and why, with the answers saved with their date and a ranked plan of what to publish: https://projektai777.eu/en/geo-audit/
 - Free website check (Lithuanian only: phone speed, secure address, title and description, broken links, crawler access): https://projektai777.eu/patikra/
 - Become a calling partner (phone companies in your own country for us, 20 % of every project the client pays for; one page per site language): https://projektai777.eu/en/callers/
 
 ## Products
 
+- Tinystudy (our own study planner web app for Moodle tests: pick your next test and the grade you want, and it turns your own course material into a short list of tasks and study pages; for students aged 18 or over, with a free plan, in 22 languages): https://tinystudy.projektai777.eu/
+- AI Workspace Kit Core for Claude Code (a ready-made Claude Code workspace for developers, solo builders and small teams: one dashboard for all projects, built-in usage saving, several Claude accounts, many tasks at once on one or more computers, key guards and backup points; Windows, macOS and Linux; one purchase for the whole team, sold on Gumroad): https://projektai777.eu/en/ai-workspace-kit-claude-code/
 - Personalized printable mystery party games (three games written for your own guests' names, 4 to 16 players, in English, sold in our Etsy shop): https://projektai777.eu/en/printable-mystery-party-game/
 - Cafe website template for Framer: Tuesday Special (five pages, a weekly specials board you edit yourself, set-up in about an hour, sold on Gumroad): https://projektai777.eu/en/cafe-website-template-framer/
 - Plumber website template for Framer: Local Van (five pages, a price guide page you edit yourself, set-up in about an hour, sold on Gumroad): https://projektai777.eu/en/plumber-website-template-framer/
 - Physiotherapy clinic website template for Framer: Back In Play (five pages, a rehab plan timeline you edit yourself, set-up in about an hour, sold on Gumroad): https://projektai777.eu/en/physiotherapy-website-template-framer/
+- Safety Pack for Claude Code (keeps API keys, tokens, e-mail addresses and phone numbers out of files and git history, plus backup points before risky changes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/safety-pack-claude-code/
+- Task and Question Tracker for Claude Code (a task list, a question list, waiting tasks and file holds as plain files, so several Claude Code sessions work side by side; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/task-tracker-claude-code/
+- Run Log for Claude Code (a plain-file log of script runs: what ran, whether it worked, how many things it handled; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/run-log-claude-code/
+- Letter Drafts for Claude Code (Claude writes letters, e-mails and messages as drafts in the project; the user sends them; it never sends anything; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/letter-drafts-claude-code/
+- Two-Computers Sync for Claude Code (one project on two or more computers through the user's own private git repository, with a secret check before every push and task claims; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/two-computers-sync-claude-code/
+- AI Answer Readiness Check (our tool on Apify for site owners, SEO consultants and web agencies: checks whether ChatGPT search, Perplexity, Claude, Gemini, Copilot and Google's AI answers can reach, read and understand a website, then gives a score out of 100 and a numbered list of fixes): https://apify.com/crystalius777/ai-answer-readiness-check
 
 ## Questions
 
@@ -60,7 +71,8 @@ Projektai777 — Lithuania.
 - Vila Evelina (finished): A Druskininkai guest house's WordPress website now takes bookings in the villa's own booking system instead of a Booking.com window, works fully in Lithuanian, English and Russian, has a gallery the staff manage themselves and is ready for search engines and AI answers. https://projektai777.eu/en/work/vila-evelina/
 - Fortuna Hostel (finished): A Vilnius hostel's three-language WordPress website gained a booking window inside the site, a photo gallery the staff manage themselves, Google review collection and a safe technical upgrade. https://projektai777.eu/en/work/fortuna-hostel/
 - Neramioji klasė (finished): A national creative platform for pupils got a new entry page, an English version and one registration form through which pupils upload their work straight into the organisation's own storage, with no account needed. https://projektai777.eu/en/work/neramioji-klase/
-- Tinystudy (in progress): Our own product in progress for adult students whose school or university uses Moodle: course materials become short study topics, and the plan picks what to learn and what to review each day before the next test. https://projektai777.eu/en/work/tinystudy/
+- Tinystudy (finished): Our own product, live as a web app for adult students whose school or university uses Moodle: you pick your next test and the grade you want, and Tinystudy turns your own course material into a short list of tasks and study pages, one test at a time. https://projektai777.eu/en/work/tinystudy/
+- 777games (in progress): Our own games website: original games that start right in the browser on phone and PC, with online play, in portrait and landscape.
 
 ## Contact
 

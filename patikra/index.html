@@ -572,6 +572,49 @@ html.has-ckbar body { padding-bottom: 84px; }
   .ckbar { width: calc(100% - 24px); }
   .ckbar-go { flex: 1 1 auto; padding: 10px 12px; }
 }
+
+.band {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(20px, 4vw, 48px); align-items: center;
+  margin: 8px 0 0; padding: clamp(24px, 4vw, 44px); border-radius: 14px; border: 1px solid rgba(125, 255, 179, .45);
+  background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, .16), transparent 60%), radial-gradient(120% 140% at 100% 100%, rgba(111, 211, 255, .14), transparent 60%), var(--bg-2);
+  box-shadow: 0 18px 60px rgba(125, 255, 179, .08);
+}
+.band h2 { font-size: clamp(28px, 3.6vw, 44px); margin: 0 0 12px; }
+.band-txt > p:last-child { margin: 0; color: #c7d0cd; font-size: clamp(16px, 1.4vw, 18px); max-width: 60ch; }
+.band-go { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.band-badge { margin: 0; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .04em; color: #06110b; background: linear-gradient(90deg, var(--acc), var(--acc-2)); padding: 8px 14px; border-radius: 999px; }
+.band .btn-acc { animation: bandGlow 2.6s ease-in-out infinite; }
+@keyframes bandGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(125, 255, 179, .45); } 50% { box-shadow: 0 0 0 10px rgba(125, 255, 179, 0); } }
+@media (max-width: 720px) { .band { grid-template-columns: minmax(0, 1fr); } }
+
+.prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 18px; }
+.prod {
+  border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--bg-2); min-width: 0;
+  display: flex; flex-direction: column; gap: 10px; transition: border-color .2s, transform .2s;
+}
+.prod:hover { border-color: var(--line-2); transform: translateY(-2px); }
+.prod .cat { margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--acc-2); }
+.prod h3 { margin: 0; font-size: 19px; overflow-wrap: break-word; }
+.prod p { margin: 0; color: #b9c3c0; font-size: 14.5px; overflow-wrap: break-word; }
+.prod > p:not(.cat):not(.prod-parts) { flex: 1; }
+.prod-pic { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 4px; background: var(--bg); }
+.prod .prod-parts { font-size: 13px; }
+.prod-parts span { color: var(--mute); }
+.prod-parts a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+.prod-parts a:hover, .prod-parts a:focus-visible { color: var(--acc); border-color: var(--acc); }
+.prod a.more { align-self: flex-start; color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
+.prod a.more:hover, .prod a.more:focus-visible { border-color: var(--acc); }
+.prod-go { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 4px; }
+.prod-app { grid-column: span 2; padding: clamp(20px, 3vw, 32px); border-color: rgba(125, 255, 179, .4); background: radial-gradient(100% 120% at 0% 0%, rgba(125, 255, 179, .12), transparent 60%), var(--bg-2); }
+.prod.prod-app { justify-content: center; }
+.prod.prod-app > p:not(.cat):not(.prod-parts) { flex: none; }
+.prod-app h3 { font-size: clamp(26px, 2.8vw, 34px); }
+.prod-app p { font-size: clamp(15px, 1.3vw, 17px); color: #c7d0cd; max-width: 60ch; }
+.prod-top { display: flex; align-items: center; gap: 12px; }
+.prod-logo { width: 48px; height: 48px; border-radius: 12px; flex: none; }
+.prod-tool { border-style: dashed; }
+@media (max-width: 720px) { .prod-app { grid-column: auto; } }
+@media (max-width: 860px) { .nav .nav-prod { display: none; } }
   </style>
   <style>
     .ck-form{display:flex;flex-wrap:wrap;gap:.7rem;margin:1.2rem 0}
@@ -613,6 +656,7 @@ html.has-ckbar body { padding-bottom: 84px; }
   </a>
   <nav class="nav" aria-label="Sections">
     <a href="/#services">Paslaugos</a>
+    <a href="/#products" class="nav-prod">Produktai</a>
     <a href="/#work">Darbai</a>
     <a href="/#about">Apie mus</a>
     <a href="#contact" class="nav-cta">Susisiekti</a>
@@ -720,7 +764,7 @@ html.has-ckbar body { padding-bottom: 84px; }
   <p class="mono small">PVM mokėtojo kodas LT100020891511</p>
   <p class="mono small"><a href="/patikra/">Nemokama svetainės patikra</a></p>
   <p class="mono small"><a href="/callers/">Tapkite skambinančiu partneriu</a></p>
-  <p class="mono small">Produktai: <a href="/printable-mystery-party-game/">Detektyviniai vakarėlio žaidimai</a> · <a href="/cafe-website-template-framer/">Kavinės svetainės šablonas</a> · <a href="/plumber-website-template-framer/">Santechniko svetainės šablonas</a> · <a href="/physiotherapy-website-template-framer/">Fizioterapijos svetainės šablonas</a></p>
+  <p class="mono small">Produktai: <a href="https://tinystudy.projektai777.eu/lt/" rel="noopener" target="_blank">Tinystudy</a> · <a href="/ai-workspace-kit-claude-code/">AI Workspace Kit</a> · <a href="/printable-mystery-party-game/">Detektyviniai vakarėlio žaidimai</a> · <a href="/cafe-website-template-framer/">Kavinės svetainės šablonas</a> · <a href="/plumber-website-template-framer/">Santechniko svetainės šablonas</a> · <a href="/physiotherapy-website-template-framer/">Fizioterapijos svetainės šablonas</a></p>
   <div class="langs" role="group" aria-label="Kalba"><a href="/patikra/" hreflang="lt" lang="lt" aria-current="page" title="Lietuvių">LT</a><a href="/lv/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/" hreflang="uk" lang="uk" title="Українська">UK</a></div>
 </footer>
 
@@ -831,6 +875,6 @@ html.has-ckbar body { padding-bottom: 84px; }
   })();
 })();
 </script>
-<script src="/app.js?v=3181a58a" defer></script>
+<script src="/app.js?v=59fce198" defer></script>
 </body>
 </html>

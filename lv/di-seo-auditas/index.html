@@ -590,6 +590,49 @@ html.has-ckbar body { padding-bottom: 84px; }
   .ckbar { width: calc(100% - 24px); }
   .ckbar-go { flex: 1 1 auto; padding: 10px 12px; }
 }
+
+.band {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(20px, 4vw, 48px); align-items: center;
+  margin: 8px 0 0; padding: clamp(24px, 4vw, 44px); border-radius: 14px; border: 1px solid rgba(125, 255, 179, .45);
+  background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, .16), transparent 60%), radial-gradient(120% 140% at 100% 100%, rgba(111, 211, 255, .14), transparent 60%), var(--bg-2);
+  box-shadow: 0 18px 60px rgba(125, 255, 179, .08);
+}
+.band h2 { font-size: clamp(28px, 3.6vw, 44px); margin: 0 0 12px; }
+.band-txt > p:last-child { margin: 0; color: #c7d0cd; font-size: clamp(16px, 1.4vw, 18px); max-width: 60ch; }
+.band-go { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.band-badge { margin: 0; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .04em; color: #06110b; background: linear-gradient(90deg, var(--acc), var(--acc-2)); padding: 8px 14px; border-radius: 999px; }
+.band .btn-acc { animation: bandGlow 2.6s ease-in-out infinite; }
+@keyframes bandGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(125, 255, 179, .45); } 50% { box-shadow: 0 0 0 10px rgba(125, 255, 179, 0); } }
+@media (max-width: 720px) { .band { grid-template-columns: minmax(0, 1fr); } }
+
+.prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 18px; }
+.prod {
+  border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--bg-2); min-width: 0;
+  display: flex; flex-direction: column; gap: 10px; transition: border-color .2s, transform .2s;
+}
+.prod:hover { border-color: var(--line-2); transform: translateY(-2px); }
+.prod .cat { margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--acc-2); }
+.prod h3 { margin: 0; font-size: 19px; overflow-wrap: break-word; }
+.prod p { margin: 0; color: #b9c3c0; font-size: 14.5px; overflow-wrap: break-word; }
+.prod > p:not(.cat):not(.prod-parts) { flex: 1; }
+.prod-pic { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 4px; background: var(--bg); }
+.prod .prod-parts { font-size: 13px; }
+.prod-parts span { color: var(--mute); }
+.prod-parts a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+.prod-parts a:hover, .prod-parts a:focus-visible { color: var(--acc); border-color: var(--acc); }
+.prod a.more { align-self: flex-start; color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
+.prod a.more:hover, .prod a.more:focus-visible { border-color: var(--acc); }
+.prod-go { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 4px; }
+.prod-app { grid-column: span 2; padding: clamp(20px, 3vw, 32px); border-color: rgba(125, 255, 179, .4); background: radial-gradient(100% 120% at 0% 0%, rgba(125, 255, 179, .12), transparent 60%), var(--bg-2); }
+.prod.prod-app { justify-content: center; }
+.prod.prod-app > p:not(.cat):not(.prod-parts) { flex: none; }
+.prod-app h3 { font-size: clamp(26px, 2.8vw, 34px); }
+.prod-app p { font-size: clamp(15px, 1.3vw, 17px); color: #c7d0cd; max-width: 60ch; }
+.prod-top { display: flex; align-items: center; gap: 12px; }
+.prod-logo { width: 48px; height: 48px; border-radius: 12px; flex: none; }
+.prod-tool { border-style: dashed; }
+@media (max-width: 720px) { .prod-app { grid-column: auto; } }
+@media (max-width: 860px) { .nav .nav-prod { display: none; } }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/lv/di-seo-auditas/#page","url":"https://projektai777.eu/lv/di-seo-auditas/","name":"AI SEO audits | Projektai777","description":"Pārbaudām, vai ChatGPT, Google AI atbildes un citi AI rīki var piekļūt Jūsu vietnei un to izlasīt. Vērtējums no 100 un labojumu saraksts 2 dienās.","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"},"breadcrumb":{"@id":"https://projektai777.eu/lv/di-seo-auditas/#crumbs"}},{"@type":"Service","@id":"https://projektai777.eu/lv/di-seo-auditas/#di-seo-auditas","name":"Uzziniet, vai AI rīki var izlasīt Jūsu vietni","description":"Der mazu uzņēmumu un vietņu īpašniekiem, kas vēlas, lai Google un AI rīki, piemēram, ChatGPT, izlasītu un citētu viņu vietni. 2 dienās saņemat vērtējumu no 100 un pēc svarīguma sakārtotu labojumu sarakstu, 4 dienās – gatavus ielīmējamus labojumus, 7 dienās – labojumus, kas ieviesti Jūsu vietnē. Lai sāktu, nosūtiet šīs lapas veidlapu ar sākumlapas adresi.","url":"https://projektai777.eu/lv/di-seo-auditas/#di-seo-auditas","provider":{"@id":"https://projektai777.eu/#business"},"areaServed":["LT","LV","EE","NO","GB","IE","SE","FI"]},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/lv/di-seo-auditas/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/lv/"},{"@type":"ListItem","position":2,"name":"Pakalpojumi","item":"https://projektai777.eu/lv/#services"},{"@type":"ListItem","position":3,"name":"AI SEO audits","item":"https://projektai777.eu/lv/di-seo-auditas/"}]},{"@type":"FAQPage","@id":"https://projektai777.eu/lv/di-seo-auditas/#faq","url":"https://projektai777.eu/lv/di-seo-auditas/","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/lv/di-seo-auditas/#page"},"mainEntity":[{"@type":"Question","name":"Vai augsts vērtējums nozīmē, ka AI rīki Jūs ieteiks?","acceptedAnswer":{"@type":"Answer","text":"Nē. Tas nozīmē, ka rīki var piekļūt Jūsu lapām un tās saprast. Vai rīks Jūs pieminēs, atkarīgs arī no Jūsu lapu satura un no citām vietnēm, kas Jūs min."}},{"@type":"Question","name":"Vai vajadzīga mana parole?","acceptedAnswer":{"@type":"Answer","text":"Nē. Ieviešanas darbam pievienojat mūs kā lietotāju ar redaktora tiesībām un pēc darba beigām mūs noņemat."}},{"@type":"Question","name":"Vai pārbaude mainīs vai palēninās manu vietni?","acceptedAnswer":{"@type":"Answer","text":"Nē. Tiek lasītas tikai publiskas lapas, tāpat kā meklētājprogrammu robotiem."}}]}]}</script>
 </head>
@@ -603,6 +646,7 @@ html.has-ckbar body { padding-bottom: 84px; }
   </a>
   <nav class="nav" aria-label="Sections">
     <a href="/lv/#services">Pakalpojumi</a>
+    <a href="/lv/#products" class="nav-prod">Produkti</a>
     <a href="/lv/#work">Darbi</a>
     <a href="/lv/#about">Par mums</a>
     <a href="#contact" class="nav-cta">Kontakts</a>
@@ -700,13 +744,13 @@ html.has-ckbar body { padding-bottom: 84px; }
   <p class="mono small">© 2026 Projektai777. Visas tiesības paturētas.</p>
   <p class="mono small">PVN maksātāja numurs LT100020891511</p>
   <p class="mono small"><a href="/lv/callers/">Kļūstiet par zvanošo partneri</a></p>
-  <p class="mono small">Produkti: <a href="/lv/printable-mystery-party-game/">Detektīvspēles ballītei</a> · <a href="/lv/cafe-website-template-framer/">Kafejnīcas mājaslapas veidne</a> · <a href="/lv/plumber-website-template-framer/">Santehniķa mājaslapas veidne</a> · <a href="/lv/physiotherapy-website-template-framer/">Fizioterapijas mājaslapas veidne</a></p>
+  <p class="mono small">Produkti: <a href="https://tinystudy.projektai777.eu/lv/" rel="noopener" target="_blank">Tinystudy</a> · <a href="/lv/ai-workspace-kit-claude-code/">AI Workspace Kit</a> · <a href="/lv/printable-mystery-party-game/">Detektīvspēles ballītei</a> · <a href="/lv/cafe-website-template-framer/">Kafejnīcas mājaslapas veidne</a> · <a href="/lv/plumber-website-template-framer/">Santehniķa mājaslapas veidne</a> · <a href="/lv/physiotherapy-website-template-framer/">Fizioterapijas mājaslapas veidne</a></p>
   <div class="langs" role="group" aria-label="Valoda"><a href="/di-seo-auditas/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/di-seo-auditas/" hreflang="lv" lang="lv" aria-current="page" title="Latviešu">LV</a><a href="/et/di-seo-auditas/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/di-seo-auditas/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/di-seo-auditas/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/di-seo-auditas/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/di-seo-auditas/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/di-seo-auditas/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/di-seo-auditas/" hreflang="uk" lang="uk" title="Українська">UK</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"lv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sūta…","ok":"Saņēmām. Atbildēsim darbadienas laikā.","err":"Nevarēja sūtīt. Rakstiet mums tieši:","examples":["Piem.: mums ir vietne, bet pasūtījumi nāk tikai telefoniski; gribētu, lai klienti paši varētu pasūtīt vai rezervēt…","Piem.: katru dienu atbildam uz vieniem un tiem pašiem klientu jautājumiem; gribētu, lai AI atbildētu mūsu vietā…","Piem.: datus no vēstulēm un pasūtījumiem ar rokām pārnesam uz Excel; gribētu, lai tas notiktu pats…","Piem.: mūsu mājaslapa ir novecojusi un neērta telefonā; gribētu to atjaunot…","Piem.: cenu piedāvājumus klientiem aprēķinām ar rokām; gribētu rīku, kas tos sagatavo dažu minūšu laikā…","Piem.: saņemam daudz rēķinu un dokumentu; gribētu, lai sistēma patstāvīgi tos nolasītu un kārtotu…","Piem.: pasūtījumus, noliktavu un darbus uzskaitām dažādās tabulās; gribētu vienkāršu sistēmu, kur viss būtu kopā…"],"subject":"Pieprasījums no mājaslapas","picks":"Kas interesē"},"work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"},"hit":"https://projektai777-portfolio.projektai777.workers.dev/hit","g":"service","ck":{"p":"/patikra/","run":"Pārbaudām jūsu vietni. Varat turpināt pārlūkot.","done":"Vietnes pārbaude ir pabeigta.","see":"Skatīt rezultātus","fail":"Vietnes pārbaude neizdevās.","again":"Mēģināt vēlreiz","close":"Aizvērt"}};</script>
 <script>(function(){try{var n=navigator,P=window.PF;if(n.webdriver||!n.sendBeacon||!P||!P.hit)return;var q=location.search,u=function(k){var m=new RegExp('[?&]'+k+'=([^&#]*)','i').exec(q);return m?decodeURIComponent(m[1].replace(/\+/g,' ')).toLowerCase():''},so=u('utm_source'),me=u('utm_medium'),s,h=(document.referrer.split('/')[2]||'').split(':')[0].toLowerCase().replace(/^www\./,'');if(/[?&](gclid|gbraid|wbraid)=/i.test(q)||(so==='google'&&/^(cpc|ppc|paid|paidsearch)$/.test(me)))s='ad-google';else if(/^(facebook|fb|instagram|ig)$/.test(so)&&/^(cpc|ppc|paid|paid_social|paidsocial|paid-social|social_paid)$/.test(me))s='ad-facebook';else if(me==='email'||so==='letter'||/[?&]b=demo(&|#|$)/i.test(q))s='letter';else if(!h)s='direct';else if(h===location.hostname.toLowerCase())s='internal';else if(/^(mail\.google\.com|com\.google\.android\.gm|outlook\.live\.com|outlook\.office\.com|mail\.yahoo\.com)$/.test(h))s='letter';else if(/(^|\.)google\./.test(h))s='google';else if(/(^|\.)bing\.com$/.test(h))s='bing';else if(/(^|\.)(facebook|fb)\.com$/.test(h))s='facebook';else if(/(^|\.)instagram\.com$/.test(h))s='instagram';else if(/(^|\.)linkedin\.com$/.test(h)||h==='lnkd.in')s='linkedin';else s='other-site';n.sendBeacon(P.hit,JSON.stringify({g:P.g,l:P.lang,s:s}))}catch(e){}})();</script>
-<script src="/app.js?v=3181a58a" defer></script>
+<script src="/app.js?v=59fce198" defer></script>
 </body>
 </html>
