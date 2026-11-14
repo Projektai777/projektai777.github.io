@@ -4,7 +4,7 @@
 
 Projektai777 — Lithuania.
 
-Besides client work, Projektai777 makes and sells ready-made products, each listed under "Products" below with its own page: Tinystudy (a study planner web app); AI Workspace Kit Core for Claude Code; Personalized printable mystery party games; Cafe website template for Framer: Tuesday Special; Plumber website template for Framer: Local Van; Physiotherapy clinic website template for Framer: Back In Play; AI Answer Readiness Check.
+Besides client work, Projektai777 makes and sells ready-made products, each listed under "Products" below with its own page: Tinystudy (a study planner web app); Claude Code Workflow Kit: AI Workspace Kit Core; Personalized printable mystery party games; Cafe website template for Framer: Tuesday Special; Plumber website template for Framer: Local Van; Physiotherapy clinic website template for Framer: Back In Play; AI Answer Readiness Check.
 
 ## Services
 
@@ -32,16 +32,16 @@ Besides client work, Projektai777 makes and sells ready-made products, each list
 ## Products
 
 - Tinystudy (our own study planner web app for Moodle tests: pick your next test and the grade you want, and it turns your own course material into a short list of tasks and study pages; for students aged 18 or over, with a free plan, in 22 languages): https://tinystudy.projektai777.eu/
-- AI Workspace Kit Core for Claude Code (a ready-made Claude Code workspace for developers, solo builders and small teams: one dashboard for all projects, built-in usage saving, several Claude accounts, many tasks at once on one or more computers, key guards and backup points; Windows, macOS and Linux; one purchase for the whole team, sold on Gumroad): https://projektai777.eu/en/ai-workspace-kit-claude-code/
+- Claude Code Workflow Kit: AI Workspace Kit Core (a ready-made Claude Code workspace for developers, solo builders and small teams: one dashboard for all projects, built-in usage saving, several Claude accounts, many tasks at once on one or more computers, key guards and backup points; ready in about 5 minutes on Windows, macOS and Linux; one purchase for the whole team, sold on Gumroad): https://projektai777.eu/en/ai-workspace-kit-claude-code/
 - Personalized printable mystery party games (three games written for your own guests' names, 4 to 16 players, in English, sold in our Etsy shop): https://projektai777.eu/en/printable-mystery-party-game/
 - Cafe website template for Framer: Tuesday Special (five pages, a weekly specials board you edit yourself, set-up in about an hour, sold on Gumroad): https://projektai777.eu/en/cafe-website-template-framer/
 - Plumber website template for Framer: Local Van (five pages, a price guide page you edit yourself, set-up in about an hour, sold on Gumroad): https://projektai777.eu/en/plumber-website-template-framer/
 - Physiotherapy clinic website template for Framer: Back In Play (five pages, a rehab plan timeline you edit yourself, set-up in about an hour, sold on Gumroad): https://projektai777.eu/en/physiotherapy-website-template-framer/
-- Safety Pack for Claude Code (keeps API keys, tokens, e-mail addresses and phone numbers out of files and git history, plus backup points before risky changes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/safety-pack-claude-code/
-- Task and Question Tracker for Claude Code (a task list, a question list, waiting tasks and file holds as plain files, so several Claude Code sessions work side by side; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/task-tracker-claude-code/
-- Run Log for Claude Code (a plain-file log of script runs: what ran, whether it worked, how many things it handled; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/run-log-claude-code/
-- Letter Drafts for Claude Code (Claude writes letters, e-mails and messages as drafts in the project; the user sends them; it never sends anything; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/letter-drafts-claude-code/
-- Two-Computers Sync for Claude Code (one project on two or more computers through the user's own private git repository, with a secret check before every push and task claims; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/two-computers-sync-claude-code/
+- Claude Code Secret Scanner and Backups: Safety Pack (blocks API keys, tokens, e-mail addresses and phone numbers in files and commits, plus backup points before risky changes; set up in about 10 minutes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/safety-pack-claude-code/
+- Claude Code Task List: Task and Question Tracker (a task list, a question list, waiting tasks and file holds as plain files, so several Claude Code sessions work side by side; set up in about 10 minutes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/task-tracker-claude-code/
+- Claude Code Script Logger: Run Log (a plain-file log of script runs: what ran, whether it worked, how many things it handled; set up in about 5 minutes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/run-log-claude-code/
+- Claude Code Email Drafts: Letter Drafts (Claude writes e-mails, letters and messages as drafts in the project; the user sends them; it never sends anything; set up in about 5 minutes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/letter-drafts-claude-code/
+- Claude Code Sync Across Computers: Two-Computers Sync (one project on two or more computers through the user's own private git repository, with a secret check before every push and task claims; set up in about 15 minutes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/two-computers-sync-claude-code/
 - AI Answer Readiness Check (our tool on Apify for site owners, SEO consultants and web agencies: checks whether ChatGPT search, Perplexity, Claude, Gemini, Copilot and Google's AI answers can reach, read and understand a website, then gives a score out of 100 and a numbered list of fixes): https://apify.com/crystalius777/ai-answer-readiness-check
 
 ## Questions
