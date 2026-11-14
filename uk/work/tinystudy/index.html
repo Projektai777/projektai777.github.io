@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <script>document.documentElement.classList.add("js")</script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Tinystudy: план навчання з матеріалів Moodle | Projektai777</title>
-  <meta name="description" content="Інструмент для дорослих студентів, який ми створюємо: слайди, документи й відеолекції з Moodle стають короткими темами та планом до найближчого заліку.">
+  <title>Tinystudy: планувальник навчання до тестів Moodle | Projektai777</title>
+  <meta name="description" content="Наш вебзастосунок для дорослих студентів: оберіть найближчий тест Moodle і бажану оцінку, а він перетворить матеріали курсу на завдання та сторінки для навчання.">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <meta name="theme-color" content="#070a0d">
   <link rel="canonical" href="https://projektai777.eu/uk/work/tinystudy/">
@@ -20,8 +20,8 @@
   <link rel="alternate" hreflang="uk" href="https://projektai777.eu/uk/work/tinystudy/">
   <link rel="alternate" hreflang="x-default" href="https://projektai777.eu/work/tinystudy/">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Tinystudy: план навчання з матеріалів Moodle | Projektai777">
-  <meta property="og:description" content="Інструмент для дорослих студентів, який ми створюємо: слайди, документи й відеолекції з Moodle стають короткими темами та планом до найближчого заліку.">
+  <meta property="og:title" content="Tinystudy: планувальник навчання до тестів Moodle | Projektai777">
+  <meta property="og:description" content="Наш вебзастосунок для дорослих студентів: оберіть найближчий тест Moodle і бажану оцінку, а він перетворить матеріали курсу на завдання та сторінки для навчання.">
   <meta property="og:url" content="https://projektai777.eu/uk/work/tinystudy/">
   <meta property="og:image" content="https://projektai777.eu/og.png">
   <meta property="og:image:width" content="1200">
@@ -39,8 +39,8 @@
   <meta property="og:locale:alternate" content="sv_SE">
   <meta property="og:locale:alternate" content="fi_FI">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Tinystudy: план навчання з матеріалів Moodle | Projektai777">
-  <meta name="twitter:description" content="Інструмент для дорослих студентів, який ми створюємо: слайди, документи й відеолекції з Moodle стають короткими темами та планом до найближчого заліку.">
+  <meta name="twitter:title" content="Tinystudy: планувальник навчання до тестів Moodle | Projektai777">
+  <meta name="twitter:description" content="Наш вебзастосунок для дорослих студентів: оберіть найближчий тест Moodle і бажану оцінку, а він перетворить матеріали курсу на завдання та сторінки для навчання.">
   <meta name="twitter:image" content="https://projektai777.eu/og.png">
   <meta name="twitter:image:alt" content="Projektai777: сайти, CRM, автоматизація та інструменти штучного інтелекту для бізнесу">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -590,8 +590,51 @@ html.has-ckbar body { padding-bottom: 84px; }
   .ckbar { width: calc(100% - 24px); }
   .ckbar-go { flex: 1 1 auto; padding: 10px 12px; }
 }
+
+.band {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(20px, 4vw, 48px); align-items: center;
+  margin: 8px 0 0; padding: clamp(24px, 4vw, 44px); border-radius: 14px; border: 1px solid rgba(125, 255, 179, .45);
+  background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, .16), transparent 60%), radial-gradient(120% 140% at 100% 100%, rgba(111, 211, 255, .14), transparent 60%), var(--bg-2);
+  box-shadow: 0 18px 60px rgba(125, 255, 179, .08);
+}
+.band h2 { font-size: clamp(28px, 3.6vw, 44px); margin: 0 0 12px; }
+.band-txt > p:last-child { margin: 0; color: #c7d0cd; font-size: clamp(16px, 1.4vw, 18px); max-width: 60ch; }
+.band-go { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.band-badge { margin: 0; font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .04em; color: #06110b; background: linear-gradient(90deg, var(--acc), var(--acc-2)); padding: 8px 14px; border-radius: 999px; }
+.band .btn-acc { animation: bandGlow 2.6s ease-in-out infinite; }
+@keyframes bandGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(125, 255, 179, .45); } 50% { box-shadow: 0 0 0 10px rgba(125, 255, 179, 0); } }
+@media (max-width: 720px) { .band { grid-template-columns: minmax(0, 1fr); } }
+
+.prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 18px; }
+.prod {
+  border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--bg-2); min-width: 0;
+  display: flex; flex-direction: column; gap: 10px; transition: border-color .2s, transform .2s;
+}
+.prod:hover { border-color: var(--line-2); transform: translateY(-2px); }
+.prod .cat { margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--acc-2); }
+.prod h3 { margin: 0; font-size: 19px; overflow-wrap: break-word; }
+.prod p { margin: 0; color: #b9c3c0; font-size: 14.5px; overflow-wrap: break-word; }
+.prod > p:not(.cat):not(.prod-parts) { flex: 1; }
+.prod-pic { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); margin-bottom: 4px; background: var(--bg); }
+.prod .prod-parts { font-size: 13px; }
+.prod-parts span { color: var(--mute); }
+.prod-parts a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line-2); }
+.prod-parts a:hover, .prod-parts a:focus-visible { color: var(--acc); border-color: var(--acc); }
+.prod a.more { align-self: flex-start; color: var(--acc); font-family: var(--mono); font-size: 12px; text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px; }
+.prod a.more:hover, .prod a.more:focus-visible { border-color: var(--acc); }
+.prod-go { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 4px; }
+.prod-app { grid-column: span 2; padding: clamp(20px, 3vw, 32px); border-color: rgba(125, 255, 179, .4); background: radial-gradient(100% 120% at 0% 0%, rgba(125, 255, 179, .12), transparent 60%), var(--bg-2); }
+.prod.prod-app { justify-content: center; }
+.prod.prod-app > p:not(.cat):not(.prod-parts) { flex: none; }
+.prod-app h3 { font-size: clamp(26px, 2.8vw, 34px); }
+.prod-app p { font-size: clamp(15px, 1.3vw, 17px); color: #c7d0cd; max-width: 60ch; }
+.prod-top { display: flex; align-items: center; gap: 12px; }
+.prod-logo { width: 48px; height: 48px; border-radius: 12px; flex: none; }
+.prod-tool { border-style: dashed; }
+@media (max-width: 720px) { .prod-app { grid-column: auto; } }
+@media (max-width: 860px) { .nav .nav-prod { display: none; } }
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/uk/work/tinystudy/#page","url":"https://projektai777.eu/uk/work/tinystudy/","name":"Tinystudy: план навчання з матеріалів Moodle | Projektai777","description":"Інструмент для дорослих студентів, який ми створюємо: слайди, документи й відеолекції з Moodle стають короткими темами та планом до найближчого заліку.","inLanguage":"uk","isPartOf":{"@id":"https://projektai777.eu/#website"},"mainEntity":{"@id":"https://projektai777.eu/uk/work/tinystudy/#work"},"breadcrumb":{"@id":"https://projektai777.eu/uk/work/tinystudy/#crumbs"}},{"@type":"CreativeWork","@id":"https://projektai777.eu/uk/work/tinystudy/#work","name":"Tinystudy: план навчання з матеріалів Moodle","description":"Наш власний продукт у розробці для дорослих студентів, чий навчальний заклад користується Moodle: матеріали курсів стають короткими темами для навчання, а план щодня підбирає, що вчити і що повторити перед найближчим заліком.","inLanguage":"uk","creator":{"@id":"https://projektai777.eu/#business"},"dateCreated":"2026-09","creativeWorkStatus":"In progress","keywords":"JavaScript, Python (Pyodide), Cloudflare Workers, Cloudflare D1, Workers AI, Whisper, Tesseract OCR, pdf.js, KaTeX"},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/uk/work/tinystudy/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/uk/"},{"@type":"ListItem","position":2,"name":"Роботи","item":"https://projektai777.eu/uk/#work"},{"@type":"ListItem","position":3,"name":"Tinystudy","item":"https://projektai777.eu/uk/work/tinystudy/"}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/uk/work/tinystudy/#page","url":"https://projektai777.eu/uk/work/tinystudy/","name":"Tinystudy: планувальник навчання до тестів Moodle | Projektai777","description":"Наш вебзастосунок для дорослих студентів: оберіть найближчий тест Moodle і бажану оцінку, а він перетворить матеріали курсу на завдання та сторінки для навчання.","inLanguage":"uk","isPartOf":{"@id":"https://projektai777.eu/#website"},"mainEntity":{"@id":"https://projektai777.eu/uk/work/tinystudy/#work"},"breadcrumb":{"@id":"https://projektai777.eu/uk/work/tinystudy/#crumbs"}},{"@type":"CreativeWork","@id":"https://projektai777.eu/uk/work/tinystudy/#work","name":"Tinystudy: планувальник навчання до тестів Moodle","description":"Наш власний продукт, доступний як вебзастосунок для дорослих студентів, чий навчальний заклад користується Moodle: ви обираєте найближчий тест і бажану оцінку, а Tinystudy перетворює ваші матеріали курсу на короткий список завдань і сторінки для навчання, по одному тесту за раз.","inLanguage":"uk","creator":{"@id":"https://projektai777.eu/#business"},"dateCreated":"2026-09","creativeWorkStatus":"Done","keywords":"JavaScript, Python (Pyodide), Cloudflare Workers, Cloudflare D1, Workers AI, Whisper, Tesseract OCR, pdf.js, KaTeX","temporalCoverage":"2026-09/2026-11","about":{"@type":"WebSite","name":"Tinystudy","url":"https://tinystudy.projektai777.eu/"}},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/uk/work/tinystudy/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/uk/"},{"@type":"ListItem","position":2,"name":"Роботи","item":"https://projektai777.eu/uk/#work"},{"@type":"ListItem","position":3,"name":"Tinystudy","item":"https://projektai777.eu/uk/work/tinystudy/"}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Перейти до вмісту</a>
@@ -603,6 +646,7 @@ html.has-ckbar body { padding-bottom: 84px; }
   </a>
   <nav class="nav" aria-label="Sections">
     <a href="/uk/#services">Послуги</a>
+    <a href="/uk/#products" class="nav-prod">Продукти</a>
     <a href="/uk/#work">Роботи</a>
     <a href="/uk/#about">Про нас</a>
     <a href="/uk/#contact" class="nav-cta">Зв’язатися</a>
@@ -614,14 +658,16 @@ html.has-ckbar body { padding-bottom: 84px; }
   <article class="sec job">
     <nav class="crumbs mono small" aria-label="Шлях навігації"><a href="/uk/">Projektai777</a><span aria-hidden="true"> / </span><a href="/uk/#work">Роботи</a><span aria-hidden="true"> / </span><span aria-current="page">Tinystudy</span></nav>
     <header class="job-head">
+      <img class="job-logo" src="/logos/tinystudy.png" alt="Tinystudy" width="192" height="192" loading="eager" decoding="async">
       <p class="kicker mono">ШІ-рішення</p>
-      <h1 class="job-h1">Tinystudy: план навчання з матеріалів Moodle</h1>
-      <p class="lead">Наш власний продукт у розробці для дорослих студентів, чий навчальний заклад користується Moodle: матеріали курсів стають короткими темами для навчання, а план щодня підбирає, що вчити і що повторити перед найближчим заліком.</p>
+      <h1 class="job-h1">Tinystudy: планувальник навчання до тестів Moodle</h1>
+      <p class="lead">Наш власний продукт, доступний як вебзастосунок для дорослих студентів, чий навчальний заклад користується Moodle: ви обираєте найближчий тест і бажану оцінку, а Tinystudy перетворює ваші матеріали курсу на короткий список завдань і сторінки для навчання, по одному тесту за раз.</p>
     </header>
     <ul class="facts job-facts">
-      <li><b>Період</b><span>вересень 2026 – зараз</span></li>
-      <li><b>Стан</b><span>Виконується</span></li>
+      <li><b>Період</b><span>вересень 2026 – листопад 2026</span></li>
+      <li><b>Стан</b><span>Завершено</span></li>
       <li><b>Технології</b><span>JavaScript, Python (Pyodide), Cloudflare Workers, Cloudflare D1, Workers AI, Whisper, Tesseract OCR, pdf.js, KaTeX</span></li>
+      <li><b>Сайт</b><span><a href="https://tinystudy.projektai777.eu/" rel="noopener" target="_blank">tinystudy.projektai777.eu ↗</a></span></li>
     </ul>
     <section class="job-part">
       <h2>Для кого він</h2>
@@ -629,17 +675,17 @@ html.has-ckbar body { padding-bottom: 84px; }
       <p>Інструмент призначений для дорослих (від 18 років) студентів, чия школа чи університет користується Moodle або системою, створеною на основі Moodle.</p>
     </section>
     <section class="job-part">
-      <h2>Що вже створено</h2>
+      <h2>Що він робить</h2>
       <ul class="job-list">
         <li>Перенесення матеріалів кнопкою «Tinystudy», яку студент запускає у власній вкладці Moodle, де він уже увійшов; пароля від Moodle Tinystudy ніколи не бачить.</li>
         <li>Вибір заліку й бажаної оцінки за шкалою оцінювання самого студента; усі завдання цього заліку показуються в одному місці, найімовірніші першими.</li>
         <li>Читання документів, слайдів, зображень, відсканованих аркушів і формул просто в браузері.</li>
         <li>Відеолекції: спершу використовуються субтитри, а якщо їх немає, звук короткими частинами перетворюється на текст, який не зберігається.</li>
         <li>Для кожного заліку: сторінка навчання з короткими темами, створена за допомогою штучного інтелекту й позначена як така.</li>
-        <li>Усе працює на сайті, нічого встановлювати не потрібно, а пробний режим працює і без облікового запису.</li>
+        <li>Усе працює на сайті, нічого встановлювати не потрібно, 22 мовами.</li>
       </ul>
     </section>
-    <p class="job-note mono small">Tinystudy ще розробляється і публічно недоступний. Він допомагає планувати й повторювати; оцінки залежать від студента, викладачів і навчального закладу. Moodle і Moodle Workplace є торговельними марками Moodle Pty Ltd; Totara, IOMAD і Open LMS є торговельними марками відповідних власників. Tinystudy не пов’язаний із ними й не схвалений ними.</p>
+    <p class="job-note mono small">Tinystudy допомагає планувати й повторювати; оцінки залежать від студента, викладачів і навчального закладу. Moodle і Moodle Workplace є торговельними марками Moodle Pty Ltd; Totara, IOMAD і Open LMS є торговельними марками відповідних власників. Tinystudy не пов’язаний із ними й не схвалений ними.</p>
     <div class="cta-row"><a class="btn btn-acc" href="/uk/#contact">Хочете щось подібне? Напишіть нам</a><a class="btn" href="/uk/#work">Усі роботи</a></div>
   </article>
 </main>
@@ -648,13 +694,13 @@ html.has-ckbar body { padding-bottom: 84px; }
   <p class="mono small">© 2026 Projektai777. Усі права захищено.</p>
   <p class="mono small">Код платника ПДВ LT100020891511</p>
   <p class="mono small"><a href="/uk/callers/">Станьте партнером із дзвінків</a></p>
-  <p class="mono small">Товари: <a href="/uk/printable-mystery-party-game/">Детективні ігри для вечірки</a> · <a href="/uk/cafe-website-template-framer/">Шаблон сайту кав'ярні</a> · <a href="/uk/plumber-website-template-framer/">Шаблон сайту сантехніка</a> · <a href="/uk/physiotherapy-website-template-framer/">Шаблон сайту фізіотерапії</a></p>
+  <p class="mono small">Товари: <a href="https://tinystudy.projektai777.eu/uk/" rel="noopener" target="_blank">Tinystudy</a> · <a href="/uk/ai-workspace-kit-claude-code/">AI Workspace Kit</a> · <a href="/uk/printable-mystery-party-game/">Детективні ігри для вечірки</a> · <a href="/uk/cafe-website-template-framer/">Шаблон сайту кав'ярні</a> · <a href="/uk/plumber-website-template-framer/">Шаблон сайту сантехніка</a> · <a href="/uk/physiotherapy-website-template-framer/">Шаблон сайту фізіотерапії</a></p>
   <div class="langs" role="group" aria-label="Мова"><a href="/work/tinystudy/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/work/tinystudy/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/work/tinystudy/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/work/tinystudy/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/work/tinystudy/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/work/tinystudy/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/work/tinystudy/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/work/tinystudy/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/work/tinystudy/" hreflang="uk" lang="uk" aria-current="page" title="Українська">UK</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"uk","work":{"next":"Наступний проєкт","prev":"Попередній проєкт"},"hit":"https://projektai777-portfolio.projektai777.workers.dev/hit","g":"job","ck":{"p":"/patikra/","run":"Перевіряємо ваш сайт. Можете й далі переглядати сторінки.","done":"Перевірку сайту завершено.","see":"Переглянути результати","fail":"Перевірка сайту не вдалася.","again":"Спробувати ще раз","close":"Закрити"}};</script>
 <script>(function(){try{var n=navigator,P=window.PF;if(n.webdriver||!n.sendBeacon||!P||!P.hit)return;var q=location.search,u=function(k){var m=new RegExp('[?&]'+k+'=([^&#]*)','i').exec(q);return m?decodeURIComponent(m[1].replace(/\+/g,' ')).toLowerCase():''},so=u('utm_source'),me=u('utm_medium'),s,h=(document.referrer.split('/')[2]||'').split(':')[0].toLowerCase().replace(/^www\./,'');if(/[?&](gclid|gbraid|wbraid)=/i.test(q)||(so==='google'&&/^(cpc|ppc|paid|paidsearch)$/.test(me)))s='ad-google';else if(/^(facebook|fb|instagram|ig)$/.test(so)&&/^(cpc|ppc|paid|paid_social|paidsocial|paid-social|social_paid)$/.test(me))s='ad-facebook';else if(me==='email'||so==='letter'||/[?&]b=demo(&|#|$)/i.test(q))s='letter';else if(!h)s='direct';else if(h===location.hostname.toLowerCase())s='internal';else if(/^(mail\.google\.com|com\.google\.android\.gm|outlook\.live\.com|outlook\.office\.com|mail\.yahoo\.com)$/.test(h))s='letter';else if(/(^|\.)google\./.test(h))s='google';else if(/(^|\.)bing\.com$/.test(h))s='bing';else if(/(^|\.)(facebook|fb)\.com$/.test(h))s='facebook';else if(/(^|\.)instagram\.com$/.test(h))s='instagram';else if(/(^|\.)linkedin\.com$/.test(h)||h==='lnkd.in')s='linkedin';else s='other-site';n.sendBeacon(P.hit,JSON.stringify({g:P.g,l:P.lang,s:s}))}catch(e){}})();</script>
-<script src="/app.js?v=3181a58a" defer></script>
+<script src="/app.js?v=59fce198" defer></script>
 </body>
 </html>
