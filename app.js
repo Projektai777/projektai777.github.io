@@ -234,6 +234,17 @@
   oldAdsAnchor();
   window.addEventListener('hashchange', oldAdsAnchor);
 
+  function openShop() {
+    var d = location.hash === '#products' && document.getElementById('shopD');
+    if (d) d.open = true;
+  }
+  openShop();
+  window.addEventListener('hashchange', openShop);
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a[href="#products"]'), d = a && document.getElementById('shopD');
+    if (d) d.open = true;
+  });
+
   if (form) form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!form.reportValidity()) return;
@@ -258,9 +269,11 @@
 })();
 
 (function () {
-  var s = document.getElementById('stick'), c = document.getElementById('contact');
+  var s = document.getElementById('stick'), c = document.getElementById('contact'), b = document.querySelector('main > .band');
   if (!s || !c || !('IntersectionObserver' in window)) return;
-  new IntersectionObserver(function (e) { s.classList.toggle('off', e[e.length - 1].isIntersecting); }).observe(c);
+  var seen = new Set();
+  var io = new IntersectionObserver(function (e) { e.forEach(function (x) { if (x.isIntersecting) seen.add(x.target); else seen.delete(x.target); }); s.classList.toggle('off', seen.size > 0); });
+  io.observe(c); if (b) io.observe(b);
 })();
 
 (function () {

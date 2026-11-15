@@ -592,7 +592,7 @@ html.has-ckbar body { padding-bottom: 84px; }
 
 .band {
   position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(20px, 4vw, 48px); align-items: center;
-  margin: 8px 0 0; padding: clamp(24px, 4vw, 44px); border-radius: 14px; border: 1px solid rgba(125, 255, 179, .45);
+  margin: clamp(40px, 6vw, 72px) 0 clamp(40px, 6vw, 72px); padding: clamp(24px, 4vw, 44px); border-radius: 14px; border: 1px solid rgba(125, 255, 179, .45);
   background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, .16), transparent 60%), radial-gradient(120% 140% at 100% 100%, rgba(111, 211, 255, .14), transparent 60%), var(--bg-2);
   box-shadow: 0 18px 60px rgba(125, 255, 179, .08);
 }
@@ -604,6 +604,23 @@ html.has-ckbar body { padding-bottom: 84px; }
 @keyframes bandGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(125, 255, 179, .45); } 50% { box-shadow: 0 0 0 10px rgba(125, 255, 179, 0); } }
 @media (max-width: 720px) { .band { grid-template-columns: minmax(0, 1fr); } }
 
+.shop-d > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; list-style: none;
+  padding: clamp(18px, 2.4vw, 28px) clamp(18px, 2.8vw, 32px); border: 1px solid var(--line); border-radius: 14px; background: var(--bg-2);
+  transition: border-color .2s ease;
+}
+.shop-d > summary::-webkit-details-marker { display: none; }
+.shop-d > summary:hover, .shop-d[open] > summary { border-color: rgba(125, 255, 179, .4); }
+.shop-d > summary:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
+.shop-head { min-width: 0; }
+.shop-head .kicker { display: block; margin: 0 0 8px; }
+.shop-head h2 { margin: 0; font-size: clamp(24px, 3.2vw, 38px); overflow-wrap: break-word; }
+.shop-pm { flex: none; position: relative; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--acc); transition: border-color .2s ease; }
+.shop-d > summary:hover .shop-pm { border-color: var(--acc); }
+.shop-pm::before, .shop-pm::after { content: ""; position: absolute; left: 50%; top: 50%; width: 16px; height: 2px; margin: -1px 0 0 -8px; border-radius: 1px; background: currentColor; transition: transform .25s ease; }
+.shop-pm::after { transform: rotate(90deg); }
+.shop-d[open] .shop-pm::after { transform: rotate(0deg); }
+.shop-d > .lead { margin: clamp(20px, 2.6vw, 28px) 0 clamp(20px, 3vw, 30px); }
 .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 18px; }
 .prod {
   border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--bg-2); min-width: 0;
@@ -657,6 +674,10 @@ html.has-ckbar body { padding-bottom: 84px; }
   <style>
 .job-shot { display: block; width: 100%; height: auto; margin: 0 0 clamp(24px, 3.5vw, 36px); border: 1px solid var(--line-2); border-radius: 10px; background: #0c1116; }
 .job-buy { margin: 0 0 clamp(36px, 5vw, 56px); }
+.job-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: clamp(12px, 2vw, 20px); }
+.job-pic { display: block; border: 1px solid var(--line-2); border-radius: 8px; overflow: hidden; background: #0c1116; }
+.job-pic img { display: block; width: 100%; height: auto; }
+.job-pic:hover, .job-pic:focus-visible { border-color: var(--acc, var(--line-2)); }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/ru/cafe-website-template-framer/#page","url":"https://projektai777.eu/ru/cafe-website-template-framer/","name":"Шаблон сайта кафе для Framer: Tuesday Special | Projektai777","description":"Шаблон сайта кафе для Framer с доской недельных предложений, меню с диетическими значками и пятью страницами. Настройка около часа, без кода.","inLanguage":"ru","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"},"mainEntity":{"@id":"https://projektai777.eu/ru/cafe-website-template-framer/#product"},"breadcrumb":{"@id":"https://projektai777.eu/ru/cafe-website-template-framer/#crumbs"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://projektai777.eu/products/cafe-website-template.jpg","width":1200,"height":900}},{"@type":"CreativeWork","@id":"https://projektai777.eu/ru/cafe-website-template-framer/#product","name":"Шаблон сайта кафе для Framer: Tuesday Special","description":"Яркий, игривый шаблон для кафе на весь день, построенный вокруг доски недельных предложений. Создан для районных кафе, мест для бранча и булочных на углу, где каждую неделю меняют несколько блюд.","url":"https://projektai777.eu/ru/cafe-website-template-framer/","image":["https://projektai777.eu/products/cafe-website-template.jpg"],"inLanguage":"ru","creator":{"@id":"https://projektai777.eu/#business"},"genre":"Шаблон сайта","offers":[{"@type":"Offer","url":"https://projektai777.gumroad.com/l/tuesday-special-cafe","availability":"https://schema.org/InStock","seller":{"@id":"https://projektai777.eu/#business"}},{"@type":"Offer","url":"https://www.framer.com/marketplace/templates/tuesday-special/","availability":"https://schema.org/InStock","seller":{"@id":"https://projektai777.eu/#business"}}]},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/ru/cafe-website-template-framer/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/ru/"},{"@type":"ListItem","position":2,"name":"Шаблон сайта кафе","item":"https://projektai777.eu/ru/cafe-website-template-framer/"}]},{"@type":"FAQPage","@id":"https://projektai777.eu/ru/cafe-website-template-framer/#faq","url":"https://projektai777.eu/ru/cafe-website-template-framer/","inLanguage":"ru","isPartOf":{"@id":"https://projektai777.eu/ru/cafe-website-template-framer/#page"},"mainEntity":[{"@type":"Question","name":"Сколько занимает настройка?","acceptedAnswer":{"@type":"Answer","text":"Около часа: откройте ссылку для ремикса, замените примеры текстов и картинок своими по руководству по настройке и опубликуйте сайт."}},{"@type":"Question","name":"Нужно ли уметь программировать?","acceptedAnswer":{"@type":"Answer","text":"Нет. Цвета и текст задаются именованными стилями, а меню и доска предложений редактируются как простые списки."}},{"@type":"Question","name":"Можно ли использовать его для сайта клиента?","acceptedAnswer":{"@type":"Answer","text":"Да, для одного сайта. Одна покупка рассчитана на один сайт: ваш собственный или одного клиента. Для другого сайта шаблон нужно купить снова. Сам шаблон нельзя перепродавать или передавать."}},{"@type":"Question","name":"Можно ли менять картинки и цвета?","acceptedAnswer":{"@type":"Answer","text":"Да. Нажмите на картинку, чтобы заменить её своей, и один раз измените цвет или стиль текста, чтобы обновить оформление всех страниц."}},{"@type":"Question","name":"Это настоящие фотографии?","acceptedAnswer":{"@type":"Answer","text":"Нет. Каждая картинка — оригинал, созданный ИИ специально для этого шаблона, на нём нет реальных людей, мест и брендов. Оставляйте их на сайте, который делаете с шаблоном, или замените своими фотографиями."}},{"@type":"Question","name":"Где его купить?","acceptedAnswer":{"@type":"Answer","text":"На Gumroad. Страница шаблона на Framer Marketplace ведёт к той же оплате. После оплаты вы получите ссылку для ремикса, руководство по настройке и файл лицензии."}}]}]}</script>
 </head>
@@ -750,13 +771,12 @@ html.has-ckbar body { padding-bottom: 84px; }
   <p class="mono small">© 2026 Projektai777. Все права защищены.</p>
   <p class="mono small">Код плательщика НДС LT100020891511</p>
   <p class="mono small"><a href="/ru/callers/">Станьте партнёром по звонкам</a></p>
-  <p class="mono small">Товары: <a href="https://tinystudy.projektai777.eu/ru/" rel="noopener" target="_blank">Tinystudy</a> · <a href="/ru/ai-workspace-kit-claude-code/">AI Workspace Kit</a> · <a href="/ru/printable-mystery-party-game/">Детективные игры для вечеринки</a> · <a href="/ru/cafe-website-template-framer/">Шаблон сайта кафе</a> · <a href="/ru/plumber-website-template-framer/">Шаблон сайта сантехника</a> · <a href="/ru/physiotherapy-website-template-framer/">Шаблон сайта физиотерапии</a></p>
   <div class="langs" role="group" aria-label="Язык"><a href="/cafe-website-template-framer/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/cafe-website-template-framer/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/cafe-website-template-framer/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/cafe-website-template-framer/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/cafe-website-template-framer/" hreflang="ru" lang="ru" aria-current="page" title="Русский">RU</a><a href="/nb/cafe-website-template-framer/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/cafe-website-template-framer/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/cafe-website-template-framer/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/cafe-website-template-framer/" hreflang="uk" lang="uk" title="Українська">UK</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"ru","hit":"https://projektai777-portfolio.projektai777.workers.dev/hit","g":"other","ck":{"p":"/patikra/","run":"Проверяем ваш сайт. Можете продолжать просмотр.","done":"Проверка сайта завершена.","see":"Посмотреть результаты","fail":"Проверка сайта не удалась.","again":"Попробовать снова","close":"Закрыть"}};</script>
 <script>(function(){try{var n=navigator,P=window.PF;if(n.webdriver||!n.sendBeacon||!P||!P.hit)return;var q=location.search,u=function(k){var m=new RegExp('[?&]'+k+'=([^&#]*)','i').exec(q);return m?decodeURIComponent(m[1].replace(/\+/g,' ')).toLowerCase():''},so=u('utm_source'),me=u('utm_medium'),s,h=(document.referrer.split('/')[2]||'').split(':')[0].toLowerCase().replace(/^www\./,'');if(/[?&](gclid|gbraid|wbraid)=/i.test(q)||(so==='google'&&/^(cpc|ppc|paid|paidsearch)$/.test(me)))s='ad-google';else if(/^(facebook|fb|instagram|ig)$/.test(so)&&/^(cpc|ppc|paid|paid_social|paidsocial|paid-social|social_paid)$/.test(me))s='ad-facebook';else if(me==='email'||so==='letter'||/[?&]b=demo(&|#|$)/i.test(q))s='letter';else if(!h)s='direct';else if(h===location.hostname.toLowerCase())s='internal';else if(/^(mail\.google\.com|com\.google\.android\.gm|outlook\.live\.com|outlook\.office\.com|mail\.yahoo\.com)$/.test(h))s='letter';else if(/(^|\.)google\./.test(h))s='google';else if(/(^|\.)bing\.com$/.test(h))s='bing';else if(/(^|\.)(facebook|fb)\.com$/.test(h))s='facebook';else if(/(^|\.)instagram\.com$/.test(h))s='instagram';else if(/(^|\.)linkedin\.com$/.test(h)||h==='lnkd.in')s='linkedin';else s='other-site';n.sendBeacon(P.hit,JSON.stringify({g:P.g,l:P.lang,s:s}))}catch(e){}})();</script>
-<script src="/app.js?v=460efecf" defer></script>
+<script src="/app.js?v=74c88dad" defer></script>
 </body>
 </html>
