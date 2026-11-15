@@ -4,7 +4,7 @@
 
 Projektai777 — Lithuania.
 
-Besides client work, Projektai777 makes and sells ready-made products, each listed under "Products" below with its own page: Tinystudy (a study planner web app); Claude Code Workflow Kit: AI Workspace Kit Core; Personalized printable mystery party games; Cafe website template for Framer: Tuesday Special; Plumber website template for Framer: Local Van; Physiotherapy clinic website template for Framer: Back In Play; AI Answer Readiness Check.
+Besides client work, Projektai777 makes and sells ready-made products, each listed under "Products" below with its own page: Tinystudy (a study planner web app); Claude Code Workflow Kit: AI Workspace Kit Core; Personalized printable mystery party games; Cafe website template for Framer: Tuesday Special; Plumber website template for Framer: Local Van; Physiotherapy clinic website template for Framer: Back In Play; Personalized pet storybook; AI Answer Readiness Check.
 
 ## Services
 
@@ -43,6 +43,7 @@ Besides client work, Projektai777 makes and sells ready-made products, each list
 - Claude Code Script Logger: Run Log (a plain-file log of script runs: what ran, whether it worked, how many things it handled; set up in about 5 minutes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/run-log-claude-code/
 - Claude Code Email Drafts: Letter Drafts (Claude writes e-mails, letters and messages as drafts in the project; the user sends them; it never sends anything; set up in about 5 minutes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/letter-drafts-claude-code/
 - Claude Code Sync Across Computers: Two-Computers Sync (one project on two or more computers through the user's own private git repository, with a secret check before every push and task claims; set up in about 15 minutes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/two-computers-sync-claude-code/
+- Personalized pet storybook (a 20-page illustrated children's book made from your pet's photos, with your pet's name in the story, in English, sold in our Etsy shop): https://projektai777.eu/en/personalized-pet-storybook/
 - AI Answer Readiness Check (our tool on Apify for site owners, SEO consultants and web agencies: checks whether ChatGPT search, Perplexity, Claude, Gemini, Copilot and Google's AI answers can reach, read and understand a website, then gives a score out of 100 and a numbered list of fixes): https://apify.com/crystalius777/ai-answer-readiness-check
 
 ## Questions
