@@ -159,7 +159,7 @@ header, main, footer { position: relative; z-index: 2; }
 }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--mono); font-size: 15px; letter-spacing: .02em; }
 .brand b { color: var(--acc); font-weight: 500; }
-.brand-logo { height: 17px; width: auto; flex: none; color: var(--fg); display: block; }
+.brand-logo { height: 19px; width: auto; flex: none; color: var(--fg); display: block; }
 .mark { fill: var(--fg); }
 .nav { display: flex; gap: 22px; margin-left: auto; font-size: 14px; }
 .nav a { text-decoration: none; color: var(--mute); padding: 6px 0; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
@@ -334,7 +334,7 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .facts li:last-child { border-bottom: 1px solid var(--line); }
 .facts b { display: block; font-family: var(--serif); font-style: italic; font-weight: 500; font-size: 22px; margin-bottom: 6px; color: var(--acc); }
 .facts b.facts-logo { margin-bottom: 4px; }
-.name-logo { display: block; height: 24px; width: auto; color: var(--fg); }
+.name-logo { display: block; height: 26px; width: auto; color: var(--fg); }
 .facts span { color: #b9c3c0; font-size: 15px; }
 
 
