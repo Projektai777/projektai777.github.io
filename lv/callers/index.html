@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <script>document.documentElement.classList.add("js")</script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Kļūstiet par zvanošo partneri | Projektai777</title>
+  <title>Attālināts zvanošā partnera darbs, 20 % | Projektai777</title>
   <meta name="description" content="Zvaniet uzņēmumiem savā valstī, pastāstiet, ko mēs darām, un saņemiet 20 % no katra apmaksātā projekta. Strādājiet, kad vēlaties, kā patstāvīgs partneris.">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <meta name="theme-color" content="#070a0d">
@@ -20,7 +20,7 @@
   <link rel="alternate" hreflang="uk" href="https://projektai777.eu/uk/callers/">
   <link rel="alternate" hreflang="x-default" href="https://projektai777.eu/callers/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Kļūstiet par zvanošo partneri | Projektai777">
+  <meta property="og:title" content="Attālināts zvanošā partnera darbs, 20 % | Projektai777">
   <meta property="og:description" content="Zvaniet uzņēmumiem savā valstī, pastāstiet, ko mēs darām, un saņemiet 20 % no katra apmaksātā projekta. Strādājiet, kad vēlaties, kā patstāvīgs partneris.">
   <meta property="og:url" content="https://projektai777.eu/lv/callers/">
   <meta property="og:image" content="https://projektai777.eu/og.png">
@@ -39,7 +39,7 @@
   <meta property="og:locale:alternate" content="fi_FI">
   <meta property="og:locale:alternate" content="uk_UA">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Kļūstiet par zvanošo partneri | Projektai777">
+  <meta name="twitter:title" content="Attālināts zvanošā partnera darbs, 20 % | Projektai777">
   <meta name="twitter:description" content="Zvaniet uzņēmumiem savā valstī, pastāstiet, ko mēs darām, un saņemiet 20 % no katra apmaksātā projekta. Strādājiet, kad vēlaties, kā patstāvīgs partneris.">
   <meta name="twitter:image" content="https://projektai777.eu/og.png">
   <meta name="twitter:image:alt" content="Projektai777: mājaslapas, CRM, automatizācija un AI rīki uzņēmumiem">
@@ -592,7 +592,7 @@ html.has-ckbar body { padding-bottom: 84px; }
 
 .band {
   position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(20px, 4vw, 48px); align-items: center;
-  margin: 8px 0 0; padding: clamp(24px, 4vw, 44px); border-radius: 14px; border: 1px solid rgba(125, 255, 179, .45);
+  margin: clamp(40px, 6vw, 72px) 0 clamp(40px, 6vw, 72px); padding: clamp(24px, 4vw, 44px); border-radius: 14px; border: 1px solid rgba(125, 255, 179, .45);
   background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, .16), transparent 60%), radial-gradient(120% 140% at 100% 100%, rgba(111, 211, 255, .14), transparent 60%), var(--bg-2);
   box-shadow: 0 18px 60px rgba(125, 255, 179, .08);
 }
@@ -604,6 +604,23 @@ html.has-ckbar body { padding-bottom: 84px; }
 @keyframes bandGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(125, 255, 179, .45); } 50% { box-shadow: 0 0 0 10px rgba(125, 255, 179, 0); } }
 @media (max-width: 720px) { .band { grid-template-columns: minmax(0, 1fr); } }
 
+.shop-d > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; list-style: none;
+  padding: clamp(18px, 2.4vw, 28px) clamp(18px, 2.8vw, 32px); border: 1px solid var(--line); border-radius: 14px; background: var(--bg-2);
+  transition: border-color .2s ease;
+}
+.shop-d > summary::-webkit-details-marker { display: none; }
+.shop-d > summary:hover, .shop-d[open] > summary { border-color: rgba(125, 255, 179, .4); }
+.shop-d > summary:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
+.shop-head { min-width: 0; }
+.shop-head .kicker { display: block; margin: 0 0 8px; }
+.shop-head h2 { margin: 0; font-size: clamp(24px, 3.2vw, 38px); overflow-wrap: break-word; }
+.shop-pm { flex: none; position: relative; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--acc); transition: border-color .2s ease; }
+.shop-d > summary:hover .shop-pm { border-color: var(--acc); }
+.shop-pm::before, .shop-pm::after { content: ""; position: absolute; left: 50%; top: 50%; width: 16px; height: 2px; margin: -1px 0 0 -8px; border-radius: 1px; background: currentColor; transition: transform .25s ease; }
+.shop-pm::after { transform: rotate(90deg); }
+.shop-d[open] .shop-pm::after { transform: rotate(0deg); }
+.shop-d > .lead { margin: clamp(20px, 2.6vw, 28px) 0 clamp(20px, 3vw, 30px); }
 .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 18px; }
 .prod {
   border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--bg-2); min-width: 0;
@@ -654,7 +671,7 @@ html.has-ckbar body { padding-bottom: 84px; }
   .card a.more::after, .card a.open::after, .foot p a::after { content: ""; position: absolute; left: -8px; right: -8px; top: 50%; height: 44px; transform: translateY(-50%); }
 }
   </style>
-  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/lv/callers/#page","url":"https://projektai777.eu/lv/callers/","name":"Kļūstiet par zvanošo partneri | Projektai777","description":"Zvaniet uzņēmumiem savā valstī, pastāstiet, ko mēs darām, un saņemiet 20 % no katra apmaksātā projekta. Strādājiet, kad vēlaties, kā patstāvīgs partneris.","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"},"breadcrumb":{"@id":"https://projektai777.eu/lv/callers/#crumbs"}},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/lv/callers/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/lv/"},{"@type":"ListItem","position":2,"name":"Zvanošais partneris","item":"https://projektai777.eu/lv/callers/"}]},{"@type":"FAQPage","@id":"https://projektai777.eu/lv/callers/#faq","url":"https://projektai777.eu/lv/callers/","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/lv/callers/#page"},"mainEntity":[{"@type":"Question","name":"Vai šis ir darbs pēc darba līguma?","acceptedAnswer":{"@type":"Answer","text":"Nē. Jūs esat patstāvīgs partneris: paši izvēlaties, kad un cik strādāt, un paši kārtojat savus nodokļus."}},{"@type":"Question","name":"Vai jāprot programmēt?","acceptedAnswer":{"@type":"Answer","text":"Nē. Visu izveidojam mēs, Jūs tikai pastāstāt uzņēmumiem, ko mēs darām."}},{"@type":"Question","name":"Kad tiek izmaksāta atlīdzība?","acceptedAnswer":{"@type":"Answer","text":"Kad klients mums samaksā: 20 % no katra projekta un no katra mēneša maksājuma par ikmēneša pakalpojumu, kamēr klients paliek."}}]}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://projektai777.eu/lv/callers/#page","url":"https://projektai777.eu/lv/callers/","name":"Attālināts zvanošā partnera darbs, 20 % | Projektai777","description":"Zvaniet uzņēmumiem savā valstī, pastāstiet, ko mēs darām, un saņemiet 20 % no katra apmaksātā projekta. Strādājiet, kad vēlaties, kā patstāvīgs partneris.","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/#website"},"about":{"@id":"https://projektai777.eu/#business"},"breadcrumb":{"@id":"https://projektai777.eu/lv/callers/#crumbs"}},{"@type":"BreadcrumbList","@id":"https://projektai777.eu/lv/callers/#crumbs","itemListElement":[{"@type":"ListItem","position":1,"name":"Projektai777","item":"https://projektai777.eu/lv/"},{"@type":"ListItem","position":2,"name":"Zvanošais partneris","item":"https://projektai777.eu/lv/callers/"}]},{"@type":"FAQPage","@id":"https://projektai777.eu/lv/callers/#faq","url":"https://projektai777.eu/lv/callers/","inLanguage":"lv","isPartOf":{"@id":"https://projektai777.eu/lv/callers/#page"},"mainEntity":[{"@type":"Question","name":"Vai šis ir darbs pēc darba līguma?","acceptedAnswer":{"@type":"Answer","text":"Nē. Jūs esat patstāvīgs partneris: paši izvēlaties, kad un cik strādāt, un paši kārtojat savus nodokļus."}},{"@type":"Question","name":"Vai var strādāt no mājām?","acceptedAnswer":{"@type":"Answer","text":"Jā. Darbs ir pilnībā attālināts: jūs zvanāt no mājām vai jebkuras vietas savā valstī, ar savu tālruni, sev ērtā laikā."}},{"@type":"Question","name":"Vai jāprot programmēt?","acceptedAnswer":{"@type":"Answer","text":"Nē. Visu izveidojam mēs, Jūs tikai pastāstāt uzņēmumiem, ko mēs darām."}},{"@type":"Question","name":"Kad tiek izmaksāta atlīdzība?","acceptedAnswer":{"@type":"Answer","text":"Kad klients mums samaksā: 20 % no katra projekta un no katra mēneša maksājuma par ikmēneša pakalpojumu, kamēr klients paliek."}}]},{"@type":"JobPosting","@id":"https://projektai777.eu/lv/callers/#job","url":"https://projektai777.eu/lv/callers/","title":"Zvanošais partneris","description":"Mēs veidojam mājaslapas, automatizāciju un mākslīgā intelekta rīkus maziem uzņēmumiem. Meklējam cilvēkus, kuri savā valstī zvanītu uzņēmumiem, pastāstītu, ko mēs darām, un saņemtu daļu no katra projekta.\nDarbs: Jūs zvanāt uzņēmumiem savā valstī to valodā un pastāstāt, ko mēs darām. Jūs strādājat, kad vēlaties: esat patstāvīgs partneris, nevis darbinieks, bez noteikta darba laika.\nAtlīdzība: 20 % no katra projekta, par kuru klients samaksā. Par ikmēneša pakalpojumu – 20 % no katra mēneša maksājuma, kamēr klients paliek. Atlīdzība tiek izmaksāta pēc tam, kad klients ir samaksājis. Ienākumus nesolām: peļņa ir atkarīga no Jūsu atvestajiem klientiem.\nKas nepieciešams: Tālrunis un tās valsts valoda, kurā zvanāt. Kvalificēts elektroniskais paraksts (piemēram, Smart-ID, Mobile-ID vai personas apliecība), ar ko paraksta partnera līgumu. Pirms pirmās izmaksas: reģistrēta darbība un rēķins mums. Nodokļus maksājat paši.\nKur iespējams strādāt: Pašlaik – Lietuvā. Citām valstīm ir gaidīšanas saraksts.","datePosted":"2026-11-11","employmentType":"CONTRACTOR","jobLocationType":"TELECOMMUTE","directApply":false,"applicantLocationRequirements":[{"@type":"Country","name":"Lithuania"}],"hiringOrganization":{"@type":"Organization","@id":"https://projektai777.eu/#business","name":"Projektai777","sameAs":"https://projektai777.eu/"},"mainEntityOfPage":{"@id":"https://projektai777.eu/lv/callers/#page"}}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Pāriet uz saturu</a>
@@ -716,7 +733,7 @@ html.has-ckbar body { padding-bottom: 84px; }
     <div class="job-part">
       <h2>Biežākie jautājumi</h2>
     </div>
-    <div class="faq-list job-part"><details class="faq-q"><summary>Vai šis ir darbs pēc darba līguma?</summary><p>Nē. Jūs esat patstāvīgs partneris: paši izvēlaties, kad un cik strādāt, un paši kārtojat savus nodokļus.</p></details><details class="faq-q"><summary>Vai jāprot programmēt?</summary><p>Nē. Visu izveidojam mēs, Jūs tikai pastāstāt uzņēmumiem, ko mēs darām.</p></details><details class="faq-q"><summary>Kad tiek izmaksāta atlīdzība?</summary><p>Kad klients mums samaksā: 20 % no katra projekta un no katra mēneša maksājuma par ikmēneša pakalpojumu, kamēr klients paliek.</p></details></div>
+    <div class="faq-list job-part"><details class="faq-q"><summary>Vai šis ir darbs pēc darba līguma?</summary><p>Nē. Jūs esat patstāvīgs partneris: paši izvēlaties, kad un cik strādāt, un paši kārtojat savus nodokļus.</p></details><details class="faq-q"><summary>Vai var strādāt no mājām?</summary><p>Jā. Darbs ir pilnībā attālināts: jūs zvanāt no mājām vai jebkuras vietas savā valstī, ar savu tālruni, sev ērtā laikā.</p></details><details class="faq-q"><summary>Vai jāprot programmēt?</summary><p>Nē. Visu izveidojam mēs, Jūs tikai pastāstāt uzņēmumiem, ko mēs darām.</p></details><details class="faq-q"><summary>Kad tiek izmaksāta atlīdzība?</summary><p>Kad klients mums samaksā: 20 % no katra projekta un no katra mēneša maksājuma par ikmēneša pakalpojumu, kamēr klients paliek.</p></details></div>
     <div class="cta-row"><a class="btn btn-acc" href="https://callers.projektai777.eu/?src=site&amp;lang=lv">Sākt</a></div>
   </section>
 
@@ -773,13 +790,12 @@ html.has-ckbar body { padding-bottom: 84px; }
   <p class="mono small">© 2026 Projektai777. Visas tiesības paturētas.</p>
   <p class="mono small">PVN maksātāja numurs LT100020891511</p>
   <p class="mono small"><a href="/lv/callers/">Kļūstiet par zvanošo partneri</a></p>
-  <p class="mono small">Produkti: <a href="https://tinystudy.projektai777.eu/lv/" rel="noopener" target="_blank">Tinystudy</a> · <a href="/lv/ai-workspace-kit-claude-code/">AI Workspace Kit</a> · <a href="/lv/printable-mystery-party-game/">Detektīvspēles ballītei</a> · <a href="/lv/cafe-website-template-framer/">Kafejnīcas mājaslapas veidne</a> · <a href="/lv/plumber-website-template-framer/">Santehniķa mājaslapas veidne</a> · <a href="/lv/physiotherapy-website-template-framer/">Fizioterapijas mājaslapas veidne</a></p>
   <div class="langs" role="group" aria-label="Valoda"><a href="/callers/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/callers/" hreflang="lv" lang="lv" aria-current="page" title="Latviešu">LV</a><a href="/et/callers/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/callers/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/callers/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/callers/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/callers/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/callers/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/callers/" hreflang="uk" lang="uk" title="Українська">UK</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"lv","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sūta…","ok":"Saņēmām. Atbildēsim darbadienas laikā.","err":"Nevarēja sūtīt. Rakstiet mums tieši:","examples":["Piem.: mums ir vietne, bet pasūtījumi nāk tikai telefoniski; gribētu, lai klienti paši varētu pasūtīt vai rezervēt…","Piem.: katru dienu atbildam uz vieniem un tiem pašiem klientu jautājumiem; gribētu, lai AI atbildētu mūsu vietā…","Piem.: datus no vēstulēm un pasūtījumiem ar rokām pārnesam uz Excel; gribētu, lai tas notiktu pats…","Piem.: mūsu mājaslapa ir novecojusi un neērta telefonā; gribētu to atjaunot…","Piem.: cenu piedāvājumus klientiem aprēķinām ar rokām; gribētu rīku, kas tos sagatavo dažu minūšu laikā…","Piem.: saņemam daudz rēķinu un dokumentu; gribētu, lai sistēma patstāvīgi tos nolasītu un kārtotu…","Piem.: pasūtījumus, noliktavu un darbus uzskaitām dažādās tabulās; gribētu vienkāršu sistēmu, kur viss būtu kopā…"],"subject":"Pieprasījums no mājaslapas","picks":"Kas interesē"},"work":{"next":"Nākamais projekts","prev":"Iepriekšējais projekts"},"hit":"https://projektai777-portfolio.projektai777.workers.dev/hit","g":"service","ck":{"p":"/patikra/","run":"Pārbaudām jūsu vietni. Varat turpināt pārlūkot.","done":"Vietnes pārbaude ir pabeigta.","see":"Skatīt rezultātus","fail":"Vietnes pārbaude neizdevās.","again":"Mēģināt vēlreiz","close":"Aizvērt"}};</script>
 <script>(function(){try{var n=navigator,P=window.PF;if(n.webdriver||!n.sendBeacon||!P||!P.hit)return;var q=location.search,u=function(k){var m=new RegExp('[?&]'+k+'=([^&#]*)','i').exec(q);return m?decodeURIComponent(m[1].replace(/\+/g,' ')).toLowerCase():''},so=u('utm_source'),me=u('utm_medium'),s,h=(document.referrer.split('/')[2]||'').split(':')[0].toLowerCase().replace(/^www\./,'');if(/[?&](gclid|gbraid|wbraid)=/i.test(q)||(so==='google'&&/^(cpc|ppc|paid|paidsearch)$/.test(me)))s='ad-google';else if(/^(facebook|fb|instagram|ig)$/.test(so)&&/^(cpc|ppc|paid|paid_social|paidsocial|paid-social|social_paid)$/.test(me))s='ad-facebook';else if(me==='email'||so==='letter'||/[?&]b=demo(&|#|$)/i.test(q))s='letter';else if(!h)s='direct';else if(h===location.hostname.toLowerCase())s='internal';else if(/^(mail\.google\.com|com\.google\.android\.gm|outlook\.live\.com|outlook\.office\.com|mail\.yahoo\.com)$/.test(h))s='letter';else if(/(^|\.)google\./.test(h))s='google';else if(/(^|\.)bing\.com$/.test(h))s='bing';else if(/(^|\.)(facebook|fb)\.com$/.test(h))s='facebook';else if(/(^|\.)instagram\.com$/.test(h))s='instagram';else if(/(^|\.)linkedin\.com$/.test(h)||h==='lnkd.in')s='linkedin';else s='other-site';n.sendBeacon(P.hit,JSON.stringify({g:P.g,l:P.lang,s:s}))}catch(e){}})();</script>
-<script src="/app.js?v=460efecf" defer></script>
+<script src="/app.js?v=74c88dad" defer></script>
 </body>
 </html>

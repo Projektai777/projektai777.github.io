@@ -592,7 +592,7 @@ html.has-ckbar body { padding-bottom: 84px; }
 
 .band {
   position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(20px, 4vw, 48px); align-items: center;
-  margin: 8px 0 0; padding: clamp(24px, 4vw, 44px); border-radius: 14px; border: 1px solid rgba(125, 255, 179, .45);
+  margin: clamp(40px, 6vw, 72px) 0 clamp(40px, 6vw, 72px); padding: clamp(24px, 4vw, 44px); border-radius: 14px; border: 1px solid rgba(125, 255, 179, .45);
   background: radial-gradient(120% 140% at 0% 0%, rgba(125, 255, 179, .16), transparent 60%), radial-gradient(120% 140% at 100% 100%, rgba(111, 211, 255, .14), transparent 60%), var(--bg-2);
   box-shadow: 0 18px 60px rgba(125, 255, 179, .08);
 }
@@ -604,6 +604,23 @@ html.has-ckbar body { padding-bottom: 84px; }
 @keyframes bandGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(125, 255, 179, .45); } 50% { box-shadow: 0 0 0 10px rgba(125, 255, 179, 0); } }
 @media (max-width: 720px) { .band { grid-template-columns: minmax(0, 1fr); } }
 
+.shop-d > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; list-style: none;
+  padding: clamp(18px, 2.4vw, 28px) clamp(18px, 2.8vw, 32px); border: 1px solid var(--line); border-radius: 14px; background: var(--bg-2);
+  transition: border-color .2s ease;
+}
+.shop-d > summary::-webkit-details-marker { display: none; }
+.shop-d > summary:hover, .shop-d[open] > summary { border-color: rgba(125, 255, 179, .4); }
+.shop-d > summary:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
+.shop-head { min-width: 0; }
+.shop-head .kicker { display: block; margin: 0 0 8px; }
+.shop-head h2 { margin: 0; font-size: clamp(24px, 3.2vw, 38px); overflow-wrap: break-word; }
+.shop-pm { flex: none; position: relative; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line-2); color: var(--acc); transition: border-color .2s ease; }
+.shop-d > summary:hover .shop-pm { border-color: var(--acc); }
+.shop-pm::before, .shop-pm::after { content: ""; position: absolute; left: 50%; top: 50%; width: 16px; height: 2px; margin: -1px 0 0 -8px; border-radius: 1px; background: currentColor; transition: transform .25s ease; }
+.shop-pm::after { transform: rotate(90deg); }
+.shop-d[open] .shop-pm::after { transform: rotate(0deg); }
+.shop-d > .lead { margin: clamp(20px, 2.6vw, 28px) 0 clamp(20px, 3vw, 30px); }
 .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 18px; }
 .prod {
   border: 1px solid var(--line); border-radius: 12px; padding: 20px; background: var(--bg-2); min-width: 0;
@@ -721,64 +738,6 @@ html.has-ckbar body { padding-bottom: 84px; }
     </div>
   </section>
 
-  <section class="sec shop" id="products" data-reveal>
-    <div class="sec-head">
-      <p class="kicker mono">Produkter</p>
-      <h2>Ferdige produkter du kan bruke i dag</h2>
-      <p class="lead">Ting vi har bygget én gang og selger klare til bruk: en app, nettsidemaler, pakker for utviklere og spill for gjestene dine.</p>
-    </div>
-    <div class="prod-grid">
-      <article class="prod prod-app">
-        <div class="prod-top"><img class="prod-logo" src="/logos/tinystudy.png" alt="Tinystudy" width="192" height="192" loading="lazy" decoding="async"><p class="cat">Nettapp</p></div>
-        <h3>Tinystudy</h3>
-        <p>Vår egen ferdige nettapp for voksne studenter: velg din neste Moodle-prøve og karakteren du vil ha, så gjør den kursmaterialet ditt om til oppgaver og studiesider.</p>
-        <div class="prod-go"><a class="btn btn-acc" href="https://tinystudy.projektai777.eu/" rel="noopener" target="_blank">Åpne appen <span aria-hidden="true">↗</span></a><a class="more" href="/nb/work/tinystudy/">Om prosjektet →</a></div>
-      </article>
-      <article class="prod">
-        <img class="prod-pic" src="/products/ai-workspace-kit.jpg" width="1200" height="900" alt="Omslaget til AI Workspace Kit: en avslappet utvikler ved et skrivebord med en lukket bærbar, et lysende skjold, en sjekkliste og en angrepil" loading="lazy" decoding="async">
-        <p class="cat">Claude Code-pakke</p>
-        <h3>Claude Code arbeidsflyt: AI Workspace Kit Core</h3>
-        <p>Claude Code arbeidsflyt: ett dashbord for alle prosjektene, innebygd forbruksbesparelse, mange oppgaver samtidig, nøkkelvern og sikkerhetskopier.</p>
-        <p class="prod-parts"><span>Selges også hver for seg:</span> <a href="/nb/safety-pack-claude-code/">Safety Pack</a> · <a href="/nb/task-tracker-claude-code/">Task and Question Tracker</a> · <a href="/nb/run-log-claude-code/">Run Log</a> · <a href="/nb/letter-drafts-claude-code/">Letter Drafts</a> · <a href="/nb/two-computers-sync-claude-code/">Two-Computers Sync</a></p>
-        <a class="more" href="/nb/ai-workspace-kit-claude-code/">Se produktet →</a>
-      </article>
-      <article class="prod">
-        <img class="prod-pic" src="/products/mystery-party-game.jpg" width="1200" height="900" alt="Fire utskrevne sider fra et eksempelspill: vertens veiledning, to invitasjoner, et rollehefte og et ark med ledetrådkort" loading="lazy" decoding="async">
-        <p class="cat">Utskrivbare selskapsspill</p>
-        <h3>Personlige utskrivbare kriminalspill til selskapet</h3>
-        <p>Utskrivbare kriminalspill til selskapet, skrevet med navnene på gjestene dine. Tre spill, 4 til 16 spillere, ca. 2 til 2,5 timer. Last ned med en gang på Etsy.</p>
-        <a class="more" href="/nb/printable-mystery-party-game/">Se produktet →</a>
-      </article>
-      <article class="prod">
-        <img class="prod-pic" src="/products/cafe-website-template.jpg" width="1200" height="900" alt="Forsiden på kafémalen Tuesday Special: en stor overskrift, et bilde av en bakervaredisk, to knapper og en tabell med åpningstider" loading="lazy" decoding="async">
-        <p class="cat">Framer-mal</p>
-        <h3>Nettstedsmal for kafé i Framer: Tuesday Special</h3>
-        <p>En nettstedsmal for kafé i Framer med ukens-tilbud-tavle, meny med kostholdsmerker og fem sider. Oppsettet tar rundt en time, helt uten kode.</p>
-        <a class="more" href="/nb/cafe-website-template-framer/">Se produktet →</a>
-      </article>
-      <article class="prod">
-        <img class="prod-pic" src="/products/plumber-website-template.jpg" width="1200" height="900" alt="Forsiden på rørleggermalen Local Van: en gul toppseksjon med en stor overskrift, et stort telefonnummer, to knapper og tre korte løfter" loading="lazy" decoding="async">
-        <p class="cat">Framer-mal</p>
-        <h3>Nettstedsmal for rørlegger i Framer: Local Van</h3>
-        <p>En nettstedsmal for rørlegger i Framer med en prisguide-side drevet av en CMS, et stort telefonnummer å trykke på og fem sider. Oppsettet tar rundt en time.</p>
-        <a class="more" href="/nb/plumber-website-template-framer/">Se produktet →</a>
-      </article>
-      <article class="prod">
-        <img class="prod-pic" src="/products/physiotherapy-website-template.jpg" width="1200" height="900" alt="Forsiden på fysioterapimalen Back In Play: en mørk toppseksjon med en stor overskrift, to knapper, et bilde av en idrettsutøver som trener med strikk og en rad med åpningstider" loading="lazy" decoding="async">
-        <p class="cat">Framer-mal</p>
-        <h3>Nettstedsmal for fysioterapiklinikk i Framer: Back In Play</h3>
-        <p>En nettstedsmal for fysioterapiklinikk i Framer med tidslinje for rehabiliteringsplan, sjekkliste for retur til idrett og fem sider. Oppsettet tar rundt en time.</p>
-        <a class="more" href="/nb/physiotherapy-website-template-framer/">Se produktet →</a>
-      </article>
-      <article class="prod prod-tool">
-        <p class="cat">KI-søkesjekk</p>
-        <h3>AI Answer Readiness Check</h3>
-        <p>Finn ut om ChatGPT-søk, Perplexity, Claude, Gemini, Copilot og Googles KI-svar kan nå, lese og forstå nettsiden din: en poengsum av 100 og en nummerert liste over hva som bør fikses først.</p>
-        <div class="prod-go"><a class="btn" href="https://apify.com/crystalius777/ai-answer-readiness-check" rel="noopener" target="_blank">Åpne på Apify <span aria-hidden="true">↗</span></a></div>
-      </article>
-    </div>
-  </section>
-
   <section class="sec work" id="work" data-reveal>
     <div class="sec-head">
       <p class="kicker mono">02 — Arbeid</p>
@@ -885,6 +844,75 @@ html.has-ckbar body { padding-bottom: 84px; }
       <details class="pd mono small" id="privacyMore"><summary>Mer om dataene dine</summary><p>Meldinger går til Projektai777 (Ignas, Kaunas, Litauen), info@projektai777.eu. Vi bruker navnet, e-postadressen, bedriften og meldingen din bare til å svare og til å drøfte henvendelsen din (personvernforordningen (GDPR) art. 6 nr. 1 bokstav b). Hvis du kom fra en annonse på Google, Facebook eller Instagram, ser vi bare annonsekampanjen og annonsen, og for en søkeannonse også søkeordet. Dette bruker vi bare til å telle hvor mange meldinger som kommer via annonser (berettiget interesse, personvernforordningen (GDPR) art. 6 nr. 1 bokstav f). Vi oppbevarer meldingen i 12 måneder etter den siste e-posten, eller så lenge loven krever det hvis vi inngår en avtale. Skjemaet og e-posten drives av Cloudflare, Google og Brevo. Hvis du skriver på Telegram eller Messenger, behandles meldingen av Telegram (et selskap utenfor EU) eller Meta etter egne regler, og vi bruker den bare til å svare; send avtaler og personlige dokumenter på e-post. Nettsiden bruker ingen informasjonskapsler; nettleseren din husker bare språket du valgte. Vi teller besøk uten informasjonskapsler og uten å lagre personopplysninger: bare daglige totaler lagres (hvor ofte en side ble åpnet og hvor besøkende kom fra, f.eks. Google). Du kan be om å få se, rette, slette eller få utlevert en kopi av dataene dine, eller om å begrense bruken av dem (info@projektai777.eu), og du kan klage til en personvernmyndighet.</p></details>
     </form>
   </section>
+
+  <aside class="band" aria-labelledby="band-h" data-reveal>
+    <div class="band-txt">
+      <p class="kicker mono">For partnere</p>
+      <h2 id="band-h">Bli partner som ringer</h2>
+      <p>Ring bedrifter i ditt eget land, fortell hva vi gjør og få 20 % av hvert betalt prosjekt. Jobb når du vil, som selvstendig partner.</p>
+    </div>
+    <div class="band-go">
+      <p class="band-badge">20 % av hvert betalt prosjekt</p>
+      <a class="btn btn-acc" href="/nb/callers/">Se hvordan det fungerer <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+  <section class="sec shop" id="products" data-reveal>
+    <details class="shop-d" id="shopD">
+      <summary><span class="shop-head"><span class="kicker mono">Produkter</span>
+      <h2>Ferdige produkter du kan bruke i dag</h2></span><span class="shop-pm" aria-hidden="true"></span></summary>
+      <p class="lead">Ting vi har bygget én gang og selger klare til bruk: en app, nettsidemaler, pakker for utviklere og spill for gjestene dine.</p>
+    <div class="prod-grid">
+      <article class="prod prod-app">
+        <div class="prod-top"><img class="prod-logo" src="/logos/tinystudy.png" alt="Tinystudy" width="192" height="192" loading="lazy" decoding="async"><p class="cat">Nettapp</p></div>
+        <h3>Tinystudy</h3>
+        <p>Vår egen ferdige nettapp for voksne studenter: velg din neste Moodle-prøve og karakteren du vil ha, så gjør den kursmaterialet ditt om til oppgaver og studiesider.</p>
+        <div class="prod-go"><a class="btn btn-acc" href="https://tinystudy.projektai777.eu/" rel="noopener" target="_blank">Åpne appen <span aria-hidden="true">↗</span></a><a class="more" href="/nb/work/tinystudy/">Om prosjektet →</a></div>
+      </article>
+      <article class="prod">
+        <img class="prod-pic" src="/products/ai-workspace-kit.jpg" width="1200" height="900" alt="Omslaget til AI Workspace Kit: en avslappet utvikler ved et skrivebord med en lukket bærbar, et lysende skjold, en sjekkliste og en angrepil" loading="lazy" decoding="async">
+        <p class="cat">Claude Code-pakke</p>
+        <h3>Claude Code arbeidsflyt: AI Workspace Kit Core</h3>
+        <p>Claude Code arbeidsflyt: ett dashbord for alle prosjektene, innebygd forbruksbesparelse, mange oppgaver samtidig, nøkkelvern og sikkerhetskopier.</p>
+        <p class="prod-parts"><span>Selges også hver for seg:</span> <a href="/nb/safety-pack-claude-code/">Safety Pack</a> · <a href="/nb/task-tracker-claude-code/">Task and Question Tracker</a> · <a href="/nb/run-log-claude-code/">Run Log</a> · <a href="/nb/letter-drafts-claude-code/">Letter Drafts</a> · <a href="/nb/two-computers-sync-claude-code/">Two-Computers Sync</a></p>
+        <a class="more" href="/nb/ai-workspace-kit-claude-code/">Se produktet →</a>
+      </article>
+      <article class="prod">
+        <img class="prod-pic" src="/products/mystery-party-game.jpg" width="1200" height="900" alt="Fire utskrevne sider fra et eksempelspill: vertens veiledning, to invitasjoner, et rollehefte og et ark med ledetrådkort" loading="lazy" decoding="async">
+        <p class="cat">Utskrivbare selskapsspill</p>
+        <h3>Personlige utskrivbare kriminalspill til selskapet</h3>
+        <p>Utskrivbare kriminalspill til selskapet, skrevet med navnene på gjestene dine. Tre spill, 4 til 16 spillere, ca. 2 til 2,5 timer. Last ned med en gang på Etsy.</p>
+        <a class="more" href="/nb/printable-mystery-party-game/">Se produktet →</a>
+      </article>
+      <article class="prod">
+        <img class="prod-pic" src="/products/cafe-website-template.jpg" width="1200" height="900" alt="Forsiden på kafémalen Tuesday Special: en stor overskrift, et bilde av en bakervaredisk, to knapper og en tabell med åpningstider" loading="lazy" decoding="async">
+        <p class="cat">Framer-mal</p>
+        <h3>Nettstedsmal for kafé i Framer: Tuesday Special</h3>
+        <p>En nettstedsmal for kafé i Framer med ukens-tilbud-tavle, meny med kostholdsmerker og fem sider. Oppsettet tar rundt en time, helt uten kode.</p>
+        <a class="more" href="/nb/cafe-website-template-framer/">Se produktet →</a>
+      </article>
+      <article class="prod">
+        <img class="prod-pic" src="/products/plumber-website-template.jpg" width="1200" height="900" alt="Forsiden på rørleggermalen Local Van: en gul toppseksjon med en stor overskrift, et stort telefonnummer, to knapper og tre korte løfter" loading="lazy" decoding="async">
+        <p class="cat">Framer-mal</p>
+        <h3>Nettstedsmal for rørlegger i Framer: Local Van</h3>
+        <p>En nettstedsmal for rørlegger i Framer med en prisguide-side drevet av en CMS, et stort telefonnummer å trykke på og fem sider. Oppsettet tar rundt en time.</p>
+        <a class="more" href="/nb/plumber-website-template-framer/">Se produktet →</a>
+      </article>
+      <article class="prod">
+        <img class="prod-pic" src="/products/physiotherapy-website-template.jpg" width="1200" height="900" alt="Forsiden på fysioterapimalen Back In Play: en mørk toppseksjon med en stor overskrift, to knapper, et bilde av en idrettsutøver som trener med strikk og en rad med åpningstider" loading="lazy" decoding="async">
+        <p class="cat">Framer-mal</p>
+        <h3>Nettstedsmal for fysioterapiklinikk i Framer: Back In Play</h3>
+        <p>En nettstedsmal for fysioterapiklinikk i Framer med tidslinje for rehabiliteringsplan, sjekkliste for retur til idrett og fem sider. Oppsettet tar rundt en time.</p>
+        <a class="more" href="/nb/physiotherapy-website-template-framer/">Se produktet →</a>
+      </article>
+      <article class="prod prod-tool">
+        <p class="cat">KI-søkesjekk</p>
+        <h3>AI Answer Readiness Check</h3>
+        <p>Finn ut om ChatGPT-søk, Perplexity, Claude, Gemini, Copilot og Googles KI-svar kan nå, lese og forstå nettsiden din: en poengsum av 100 og en nummerert liste over hva som bør fikses først.</p>
+        <div class="prod-go"><a class="btn" href="https://apify.com/crystalius777/ai-answer-readiness-check" rel="noopener" target="_blank">Åpne på Apify <span aria-hidden="true">↗</span></a></div>
+      </article>
+    </div>
+    </details>
+  </section>
 </main>
 <a class="btn btn-acc stick" id="stick" href="#contact">Fortell oss hva du trenger</a>
 
@@ -892,13 +920,12 @@ html.has-ckbar body { padding-bottom: 84px; }
   <p class="mono small">© 2026 Projektai777. Alle rettigheter forbeholdt.</p>
   <p class="mono small">MVA-nummer LT100020891511</p>
   <p class="mono small"><a href="/nb/callers/">Bli partner som ringer</a></p>
-  <p class="mono small">Produkter: <a href="https://tinystudy.projektai777.eu/" rel="noopener" target="_blank">Tinystudy</a> · <a href="/nb/ai-workspace-kit-claude-code/">AI Workspace Kit</a> · <a href="/nb/printable-mystery-party-game/">Kriminalspill til selskap</a> · <a href="/nb/cafe-website-template-framer/">Nettstedsmal for kafé</a> · <a href="/nb/plumber-website-template-framer/">Nettstedsmal for rørlegger</a> · <a href="/nb/physiotherapy-website-template-framer/">Nettstedsmal for fysioterapi</a></p>
   <div class="langs" role="group" aria-label="Språk"><a href="/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/" hreflang="en" lang="en" title="English">EN</a><a href="/ru/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/" hreflang="nb" lang="nb" aria-current="page" title="Norsk">NB</a><a href="/sv/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/" hreflang="uk" lang="uk" title="Українська">UK</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"nb","contact":"https://projektai777-portfolio.projektai777.workers.dev/contact","email":"info@projektai777.eu","form":{"sending":"Sender…","ok":"Mottatt. Vi svarer innen en arbeidsdag.","err":"Kunne ikke sende. Skriv til oss direkte:","examples":["F.eks.: vi har en nettside, men bestillingene kommer bare på telefon; vi vil at kundene selv skal kunne bestille eller reservere…","F.eks.: hver dag svarer vi på de samme kundespørsmålene; vi vil at KI skal svare for oss…","F.eks.: vi flytter data fra e-poster og bestillinger over i Excel for hånd; vi vil at det skal skje av seg selv…","F.eks.: nettsiden vår er utdatert og tungvint på mobil; vi vil gjerne fornye den…","F.eks.: vi regner ut tilbud til kunder for hånd; vi vil ha et verktøy som lager dem på noen minutter…","F.eks.: vi får mange fakturaer og dokumenter; vi vil at et system skal lese og sortere dem selv…","F.eks.: vi følger opp bestillinger, lager og oppdrag i separate regneark; vi vil ha et enkelt system der alt er samlet…"],"subject":"Henvendelse fra nettsiden","picks":"Interessert i"},"work":{"next":"Neste prosjekt","prev":"Forrige prosjekt"},"hit":"https://projektai777-portfolio.projektai777.workers.dev/hit","g":"home","ck":{"p":"/patikra/","run":"Vi sjekker nettstedet ditt. Du kan fortsette å bla.","done":"Sjekken av nettstedet er ferdig.","see":"Se resultatene","fail":"Sjekken av nettstedet mislyktes.","again":"Prøv igjen","close":"Lukk"}};</script>
 <script>(function(){try{var n=navigator,P=window.PF;if(n.webdriver||!n.sendBeacon||!P||!P.hit)return;var q=location.search,u=function(k){var m=new RegExp('[?&]'+k+'=([^&#]*)','i').exec(q);return m?decodeURIComponent(m[1].replace(/\+/g,' ')).toLowerCase():''},so=u('utm_source'),me=u('utm_medium'),s,h=(document.referrer.split('/')[2]||'').split(':')[0].toLowerCase().replace(/^www\./,'');if(/[?&](gclid|gbraid|wbraid)=/i.test(q)||(so==='google'&&/^(cpc|ppc|paid|paidsearch)$/.test(me)))s='ad-google';else if(/^(facebook|fb|instagram|ig)$/.test(so)&&/^(cpc|ppc|paid|paid_social|paidsocial|paid-social|social_paid)$/.test(me))s='ad-facebook';else if(me==='email'||so==='letter'||/[?&]b=demo(&|#|$)/i.test(q))s='letter';else if(!h)s='direct';else if(h===location.hostname.toLowerCase())s='internal';else if(/^(mail\.google\.com|com\.google\.android\.gm|outlook\.live\.com|outlook\.office\.com|mail\.yahoo\.com)$/.test(h))s='letter';else if(/(^|\.)google\./.test(h))s='google';else if(/(^|\.)bing\.com$/.test(h))s='bing';else if(/(^|\.)(facebook|fb)\.com$/.test(h))s='facebook';else if(/(^|\.)instagram\.com$/.test(h))s='instagram';else if(/(^|\.)linkedin\.com$/.test(h)||h==='lnkd.in')s='linkedin';else s='other-site';n.sendBeacon(P.hit,JSON.stringify({g:P.g,l:P.lang,s:s}))}catch(e){}})();</script>
-<script src="/app.js?v=460efecf" defer></script>
+<script src="/app.js?v=74c88dad" defer></script>
 </body>
 </html>
