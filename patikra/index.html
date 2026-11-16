@@ -402,8 +402,11 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .pd summary:hover, .pd[open] summary { color: var(--fg); }
 .pd summary:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
 .pd p { margin: 8px 0 0; max-width: 72ch; line-height: 1.6; }
-.rev-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 16px; }
-.rev { margin: 0; padding: clamp(20px, 2.6vw, 32px); border: 1px solid var(--line); border-radius: 10px; background: var(--bg-2); }
+.rev-box { padding: clamp(18px, 3vw, 36px); border: 1px solid var(--line); border-radius: 14px; background: var(--bg-2); min-width: 0; }
+.rev-box .sec-head { margin-bottom: 18px; }
+.cards > .rev { flex: 0 0 min(420px, 86%); scroll-snap-align: start; }
+.cards > .rev:only-child { flex-basis: min(620px, 100%); }
+.rev { margin: 0; padding: clamp(18px, 2.4vw, 28px); border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
 .rev blockquote { margin: 0 0 14px; }
 .rev blockquote p { margin: 0; font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.5; overflow-wrap: anywhere; }
 .rev figcaption { color: #b9c3c0; overflow-wrap: anywhere; }
@@ -913,6 +916,6 @@ html.has-ckbar body { padding-bottom: 84px; }
   })();
 })();
 </script>
-<script src="/app.js?v=087e7634" defer></script>
+<script src="/app.js?v=c4d7527b" defer></script>
 </body>
 </html>

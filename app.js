@@ -164,7 +164,7 @@
       var row = rail.querySelector('.cards');
       if (!row) return;
       function step(d) {
-        var c = row.querySelector('.card'), gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+        var c = row.querySelector('.card, .rev'), gap = parseFloat(getComputedStyle(row).columnGap) || 0;
         row.scrollBy({ left: d * ((c ? c.offsetWidth : row.clientWidth * 0.8) + gap), behavior: 'smooth' });
       }
       ['prev', 'next'].forEach(function (dir) {
