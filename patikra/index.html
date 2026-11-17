@@ -289,6 +289,8 @@ h3 { font-family: var(--sans); font-weight: 600; font-size: 21px; margin: 0 0 12
 .big-cta .ads-cta:hover, .big-cta .ads-cta:focus-visible { border-color: var(--big); background: rgba(var(--big-rgb), 0.1); transform: translateY(-1px); }
 .big-cta .ads-cta:focus-visible { outline: 2px solid var(--big); outline-offset: 2px; }
 .svc-big .price-from { color: var(--big); }
+.svc-social { --big: #ff7ab8; --big-rgb: 255, 122, 184; background: radial-gradient(120% 140% at 0% 0%, rgba(var(--big-rgb), 0.11), rgba(255, 90, 160, 0.03) 55%, transparent 80%), var(--bg-2); }
+.svc-social .social-networks { color: #b9c3c0; font-size: 15px; max-width: 70ch; margin: clamp(18px, 2.6vw, 26px) 0 0; overflow-wrap: break-word; }
 @media (max-width: 900px) {
   .big-parts { grid-template-columns: 1fr; }
 }
@@ -746,6 +748,7 @@ html.has-ckbar body { padding-bottom: 84px; }
         <li><a href="/reklama/#rinkodara">Reklama <span aria-hidden="true">→</span></a></li>
         <li><a href="/reklama/#verslo-profilis">„Google“ verslo profilis <span aria-hidden="true">→</span></a></li>
         <li><a href="/reklama/#klientu-paieska">Klientų paieška <span aria-hidden="true">→</span></a></li>
+        <li><a href="/socialiniai-tinklai/">Socialiniai tinklai <span aria-hidden="true">→</span></a></li>
       </ul>
       <div class="cta-row"><a class="btn" href="#contact">Parašykite mums</a></div>
     </div>
@@ -783,8 +786,9 @@ html.has-ckbar body { padding-bottom: 84px; }
         <label class="pick"><input type="checkbox" name="interest_ads" value="reklama"><span>Reklama</span></label>
         <label class="pick"><input type="checkbox" name="interest_gbp" value="„Google“ verslo profilis"><span>„Google“ verslo profilis</span></label>
         <label class="pick"><input type="checkbox" name="interest_leads" value="automatinė klientų paieška"><span>Klientų paieška</span></label>
+        <label class="pick"><input type="checkbox" name="interest_social" value="socialinių tinklų įrašai"><span>Socialiniai tinklai</span></label>
       </fieldset>
-      <script>(function(){function o(){var d=document.getElementById('moreD');if(d)d.open=true}function t(k){var b=k&&document.querySelector('#picks input[name="interest_'+k+'"]');if(b){b.checked=true;o()}}if(document.querySelector('#picks input:checked'))o();var m=/[?&]i=(website|crm|automation|ai_tools|ai|ads|gbp|leads)(?:&|$)/.exec(location.search);if(m)t(m[1]);var s=location.hash.length>1&&document.getElementById(location.hash.slice(1));if(s&&s.hasAttribute('data-tick'))t(s.getAttribute('data-tick'));document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[data-tick]');if(a)t(a.getAttribute('data-tick'))})})()</script>
+      <script>(function(){function o(){var d=document.getElementById('moreD');if(d)d.open=true}function t(k){var b=k&&document.querySelector('#picks input[name="interest_'+k+'"]');if(b){b.checked=true;o()}}if(document.querySelector('#picks input:checked'))o();var m=/[?&]i=(website|crm|automation|ai_tools|ai|ads|gbp|leads|social)(?:&|$)/.exec(location.search);if(m)t(m[1]);var s=location.hash.length>1&&document.getElementById(location.hash.slice(1));if(s&&s.hasAttribute('data-tick'))t(s.getAttribute('data-tick'));document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[data-tick]');if(a)t(a.getAttribute('data-tick'))})})()</script>
       </details>
       <label class="hp" aria-hidden="true"><input name="website" type="text" tabindex="-1" autocomplete="off"></label>
       <input type="hidden" name="lang" value="lt">
@@ -914,6 +918,6 @@ html.has-ckbar body { padding-bottom: 84px; }
   })();
 })();
 </script>
-<script src="/app.js?v=c4d7527b" defer></script>
+<script src="/app.js?v=ba70dac3" defer></script>
 </body>
 </html>
