@@ -411,6 +411,8 @@ html:not(.pf-swiped) .rail-btn.next:hover { background: #a3ffc9; color: #06110b;
 .job-head { margin-bottom: clamp(28px, 4vw, 44px); }
 .job-logo { display: block; height: 44px; width: auto; max-width: 60%; object-fit: contain; margin: 0 0 22px; padding: 7px 12px; background: #fff; border-radius: 6px; }
 .job-h1 { font-size: clamp(30px, 4.6vw, 54px); line-height: 1.08; max-width: 24ch; margin: 0 0 22px; }
+.callers-pic { display: block; margin: 0 0 clamp(32px, 4vw, 48px); }
+.callers-pic img { display: block; width: 100%; max-width: 440px; height: auto; aspect-ratio: 1 / 1; border-radius: 14px; }
 .job-facts { margin: 0 0 clamp(36px, 5vw, 56px); }
 .job-facts b { font-size: 18px; }
 .job-facts a { color: var(--fg); }
