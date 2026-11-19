@@ -35,12 +35,12 @@ Besides client work, Projektai777 makes and sells ready-made products, each list
 
 ## Guides
 
-- Guide (Lithuanian): whether a small company needs a CRM system, when it pays off and how to start without overbuying: https://projektai777.eu/gidai/crm-sistema-mazai-imonei/
-- Guide (Lithuanian): what an AI SEO audit of a small business website checks and how to read its result: https://projektai777.eu/gidai/di-seo-auditas-ka-tikrina/
-- Guide (Lithuanian): how to set up a Google Business Profile step by step so a local business is found on Google search and maps: https://projektai777.eu/gidai/google-verslo-profilis/
-- Guide (Lithuanian): how a small business gets named in ChatGPT and in Google AI answers, and what it can do about it: https://projektai777.eu/gidai/kaip-patekti-i-chatgpt-atsakymus/
-- Guide (Lithuanian): what a website costs in Lithuania in 2026, what drives the price and how to compare offers: https://projektai777.eu/gidai/kiek-kainuoja-svetaine/
-- Guide (Lithuanian): where a small company should start automating its processes, how to pick the first task and what to avoid: https://projektai777.eu/gidai/nuo-ko-pradeti-automatizavima/
+- Guide: whether a small company needs a CRM system, when it pays off and how to start without overbuying: https://projektai777.eu/en/gidai/crm-sistema-mazai-imonei/
+- Guide: what an AI SEO audit of a small business website checks and how to read its result: https://projektai777.eu/en/gidai/di-seo-auditas-ka-tikrina/
+- Guide: how to set up a Google Business Profile step by step so a local business is found on Google search and maps: https://projektai777.eu/en/gidai/google-verslo-profilis/
+- Guide: how a small business gets named in ChatGPT and in Google AI answers, and what it can do about it: https://projektai777.eu/en/gidai/kaip-patekti-i-chatgpt-atsakymus/
+- Guide: what a website costs in 2026, what drives the price and how to compare offers: https://projektai777.eu/en/gidai/kiek-kainuoja-svetaine/
+- Guide: where a small company should start automating its processes, how to pick the first task and what to avoid: https://projektai777.eu/en/gidai/nuo-ko-pradeti-automatizavima/
 
 ## Prices
 
