@@ -61,6 +61,7 @@ Besides client work, Projektai777 makes and sells ready-made products, each list
 - Claude Code Sync Across Computers: Two-Computers Sync (one project on two or more computers through the user's own private git repository, with a secret check before every push and task claims; set up in about 15 minutes; also part of the AI Workspace Kit, sold on Gumroad): https://projektai777.eu/en/two-computers-sync-claude-code/
 - Personalized pet storybook (a 20-page illustrated children's book made from your pet's photos, with your pet's name in the story, in English, sold in our Etsy shop): https://projektai777.eu/en/personalized-pet-storybook/
 - AI Answer Readiness Check (our tool on Apify for site owners, SEO consultants and web agencies: checks whether ChatGPT search, Perplexity, Claude, Gemini, Copilot and Google's AI answers can reach, read and understand a website, then gives a score out of 100 and a numbered list of fixes): https://apify.com/crystalius777/ai-answer-readiness-check
+- 777games (Our own games website: original games that start right in the browser on phone and PC, with online play, in portrait and landscape): https://777games.projektai777.eu/
 
 ## Questions
 
