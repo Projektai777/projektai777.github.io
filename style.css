@@ -186,9 +186,10 @@ header, main, footer { position: relative; z-index: 2; }
 .lm-list {
   list-style: none; margin: 0; padding: 4px; position: absolute; right: 0; top: calc(100% + 6px); z-index: 30;
   min-width: 168px; max-width: calc(100vw - 2 * var(--pad)); max-height: calc(100vh - 96px); max-height: calc(100svh - 96px); overflow-y: auto;
+  display: grid; grid-template-columns: repeat(2, 1fr); width: max-content; gap: 2px;
   background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 8px; box-shadow: 0 12px 32px rgba(0, 0, 0, .5);
 }
-.lm-list a { display: flex; justify-content: space-between; align-items: center; gap: 18px; min-height: 40px; padding: 8px 12px; border-radius: 5px; text-decoration: none; color: var(--fg); font-size: 14px; }
+.lm-list a { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 36px; padding: 7px 10px; border-radius: 5px; text-decoration: none; color: var(--fg); font-size: 14px; }
 .lm-list a:hover, .lm-list a:focus-visible { background: rgba(231, 236, 234, .07); }
 .lm-list a[aria-current="page"] { color: var(--acc); }
 .lm-code { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--mute); }

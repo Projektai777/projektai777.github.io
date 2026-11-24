@@ -18,6 +18,19 @@
   <link rel="alternate" hreflang="sv" href="https://projektai777.eu/sv/task-tracker-claude-code/">
   <link rel="alternate" hreflang="fi" href="https://projektai777.eu/fi/task-tracker-claude-code/">
   <link rel="alternate" hreflang="uk" href="https://projektai777.eu/uk/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="fr" href="https://projektai777.eu/fr/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="de" href="https://projektai777.eu/de/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="nl" href="https://projektai777.eu/nl/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="hr" href="https://projektai777.eu/hr/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="cs" href="https://projektai777.eu/cs/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="sl" href="https://projektai777.eu/sl/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="da" href="https://projektai777.eu/da/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="bg" href="https://projektai777.eu/bg/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="hu" href="https://projektai777.eu/hu/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="es" href="https://projektai777.eu/es/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="pt" href="https://projektai777.eu/pt/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="el" href="https://projektai777.eu/el/task-tracker-claude-code/">
+  <link rel="alternate" hreflang="mt" href="https://projektai777.eu/mt/task-tracker-claude-code/">
   <link rel="alternate" hreflang="x-default" href="https://projektai777.eu/task-tracker-claude-code/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Claude Code Task List: Task and Question Tracker | Projektai777">
@@ -38,6 +51,19 @@
   <meta property="og:locale:alternate" content="sv_SE">
   <meta property="og:locale:alternate" content="fi_FI">
   <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="sl_SI">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="pt_PT">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="mt_MT">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Claude Code Task List: Task and Question Tracker | Projektai777">
   <meta name="twitter:description" content="Claude Code task list for parallel sessions: tasks, questions, waiting tasks and file holds as plain files, so no two sessions take the same task.">
@@ -237,9 +263,10 @@ header, main, footer { position: relative; z-index: 2; }
 .lm-list {
   list-style: none; margin: 0; padding: 4px; position: absolute; right: 0; top: calc(100% + 6px); z-index: 30;
   min-width: 168px; max-width: calc(100vw - 2 * var(--pad)); max-height: calc(100vh - 96px); max-height: calc(100svh - 96px); overflow-y: auto;
+  display: grid; grid-template-columns: repeat(2, 1fr); width: max-content; gap: 2px;
   background: var(--bg-2); border: 1px solid var(--line-2); border-radius: 8px; box-shadow: 0 12px 32px rgba(0, 0, 0, .5);
 }
-.lm-list a { display: flex; justify-content: space-between; align-items: center; gap: 18px; min-height: 40px; padding: 8px 12px; border-radius: 5px; text-decoration: none; color: var(--fg); font-size: 14px; }
+.lm-list a { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 36px; padding: 7px 10px; border-radius: 5px; text-decoration: none; color: var(--fg); font-size: 14px; }
 .lm-list a:hover, .lm-list a:focus-visible { background: rgba(231, 236, 234, .07); }
 .lm-list a[aria-current="page"] { color: var(--acc); }
 .lm-code { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--mute); }
@@ -703,7 +730,7 @@ html.has-ckbar body { padding-bottom: 84px; }
     <a href="/en/#about">About us</a>
     <a href="/en/#contact" class="nav-cta">Contact</a>
   </nav>
-  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Language"><span class="lm-cur">EN</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/task-tracker-claude-code/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/task-tracker-claude-code/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/task-tracker-claude-code/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/task-tracker-claude-code/" hreflang="en" lang="en" aria-current="page"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/task-tracker-claude-code/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/task-tracker-claude-code/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/task-tracker-claude-code/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/task-tracker-claude-code/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li><li><a href="/uk/task-tracker-claude-code/" hreflang="uk" lang="uk"><span>Українська</span><span class="lm-code" aria-hidden="true">UK</span></a></li></ul></div>
+  <div class="lm" id="lm"><button type="button" class="lm-btn" id="lm-btn" aria-haspopup="true" aria-expanded="false" aria-controls="lm-list" aria-label="Language"><span class="lm-cur">EN</span><span class="lm-caret" aria-hidden="true"></span></button><ul class="lm-list" id="lm-list"><li><a href="/task-tracker-claude-code/" hreflang="lt" lang="lt"><span>Lietuvių</span><span class="lm-code" aria-hidden="true">LT</span></a></li><li><a href="/lv/task-tracker-claude-code/" hreflang="lv" lang="lv"><span>Latviešu</span><span class="lm-code" aria-hidden="true">LV</span></a></li><li><a href="/et/task-tracker-claude-code/" hreflang="et" lang="et"><span>Eesti</span><span class="lm-code" aria-hidden="true">ET</span></a></li><li><a href="/en/task-tracker-claude-code/" hreflang="en" lang="en" aria-current="page"><span>English</span><span class="lm-code" aria-hidden="true">EN</span></a></li><li><a href="/ru/task-tracker-claude-code/" hreflang="ru" lang="ru"><span>Русский</span><span class="lm-code" aria-hidden="true">RU</span></a></li><li><a href="/nb/task-tracker-claude-code/" hreflang="nb" lang="nb"><span>Norsk</span><span class="lm-code" aria-hidden="true">NB</span></a></li><li><a href="/sv/task-tracker-claude-code/" hreflang="sv" lang="sv"><span>Svenska</span><span class="lm-code" aria-hidden="true">SV</span></a></li><li><a href="/fi/task-tracker-claude-code/" hreflang="fi" lang="fi"><span>Suomi</span><span class="lm-code" aria-hidden="true">FI</span></a></li><li><a href="/uk/task-tracker-claude-code/" hreflang="uk" lang="uk"><span>Українська</span><span class="lm-code" aria-hidden="true">UK</span></a></li><li><a href="/fr/task-tracker-claude-code/" hreflang="fr" lang="fr"><span>Français</span><span class="lm-code" aria-hidden="true">FR</span></a></li><li><a href="/de/task-tracker-claude-code/" hreflang="de" lang="de"><span>Deutsch</span><span class="lm-code" aria-hidden="true">DE</span></a></li><li><a href="/nl/task-tracker-claude-code/" hreflang="nl" lang="nl"><span>Nederlands</span><span class="lm-code" aria-hidden="true">NL</span></a></li><li><a href="/hr/task-tracker-claude-code/" hreflang="hr" lang="hr"><span>Hrvatski</span><span class="lm-code" aria-hidden="true">HR</span></a></li><li><a href="/cs/task-tracker-claude-code/" hreflang="cs" lang="cs"><span>Čeština</span><span class="lm-code" aria-hidden="true">CS</span></a></li><li><a href="/sl/task-tracker-claude-code/" hreflang="sl" lang="sl"><span>Slovenščina</span><span class="lm-code" aria-hidden="true">SL</span></a></li><li><a href="/da/task-tracker-claude-code/" hreflang="da" lang="da"><span>Dansk</span><span class="lm-code" aria-hidden="true">DA</span></a></li><li><a href="/bg/task-tracker-claude-code/" hreflang="bg" lang="bg"><span>Български</span><span class="lm-code" aria-hidden="true">BG</span></a></li><li><a href="/hu/task-tracker-claude-code/" hreflang="hu" lang="hu"><span>Magyar</span><span class="lm-code" aria-hidden="true">HU</span></a></li><li><a href="/es/task-tracker-claude-code/" hreflang="es" lang="es"><span>Español</span><span class="lm-code" aria-hidden="true">ES</span></a></li><li><a href="/pt/task-tracker-claude-code/" hreflang="pt" lang="pt"><span>Português</span><span class="lm-code" aria-hidden="true">PT</span></a></li><li><a href="/el/task-tracker-claude-code/" hreflang="el" lang="el"><span>Ελληνικά</span><span class="lm-code" aria-hidden="true">EL</span></a></li><li><a href="/mt/task-tracker-claude-code/" hreflang="mt" lang="mt"><span>Malti</span><span class="lm-code" aria-hidden="true">MT</span></a></li></ul></div>
 </header>
 
 <main id="main" data-page="product">
@@ -762,11 +789,11 @@ html.has-ckbar body { padding-bottom: 84px; }
   <p class="mono small">© 2026 Projektai777. All rights reserved.</p>
   <p class="mono small">VAT number LT100020891511</p>
   <p class="mono small">Games: <a href="https://777games.projektai777.eu/" rel="noopener" target="_blank">777games</a></p>
-  <div class="langs" role="group" aria-label="Language"><a href="/task-tracker-claude-code/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/task-tracker-claude-code/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/task-tracker-claude-code/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/task-tracker-claude-code/" hreflang="en" lang="en" aria-current="page" title="English">EN</a><a href="/ru/task-tracker-claude-code/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/task-tracker-claude-code/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/task-tracker-claude-code/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/task-tracker-claude-code/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/task-tracker-claude-code/" hreflang="uk" lang="uk" title="Українська">UK</a></div>
+  <div class="langs" role="group" aria-label="Language"><a href="/task-tracker-claude-code/" hreflang="lt" lang="lt" title="Lietuvių">LT</a><a href="/lv/task-tracker-claude-code/" hreflang="lv" lang="lv" title="Latviešu">LV</a><a href="/et/task-tracker-claude-code/" hreflang="et" lang="et" title="Eesti">ET</a><a href="/en/task-tracker-claude-code/" hreflang="en" lang="en" aria-current="page" title="English">EN</a><a href="/ru/task-tracker-claude-code/" hreflang="ru" lang="ru" title="Русский">RU</a><a href="/nb/task-tracker-claude-code/" hreflang="nb" lang="nb" title="Norsk">NB</a><a href="/sv/task-tracker-claude-code/" hreflang="sv" lang="sv" title="Svenska">SV</a><a href="/fi/task-tracker-claude-code/" hreflang="fi" lang="fi" title="Suomi">FI</a><a href="/uk/task-tracker-claude-code/" hreflang="uk" lang="uk" title="Українська">UK</a><a href="/fr/task-tracker-claude-code/" hreflang="fr" lang="fr" title="Français">FR</a><a href="/de/task-tracker-claude-code/" hreflang="de" lang="de" title="Deutsch">DE</a><a href="/nl/task-tracker-claude-code/" hreflang="nl" lang="nl" title="Nederlands">NL</a><a href="/hr/task-tracker-claude-code/" hreflang="hr" lang="hr" title="Hrvatski">HR</a><a href="/cs/task-tracker-claude-code/" hreflang="cs" lang="cs" title="Čeština">CS</a><a href="/sl/task-tracker-claude-code/" hreflang="sl" lang="sl" title="Slovenščina">SL</a><a href="/da/task-tracker-claude-code/" hreflang="da" lang="da" title="Dansk">DA</a><a href="/bg/task-tracker-claude-code/" hreflang="bg" lang="bg" title="Български">BG</a><a href="/hu/task-tracker-claude-code/" hreflang="hu" lang="hu" title="Magyar">HU</a><a href="/es/task-tracker-claude-code/" hreflang="es" lang="es" title="Español">ES</a><a href="/pt/task-tracker-claude-code/" hreflang="pt" lang="pt" title="Português">PT</a><a href="/el/task-tracker-claude-code/" hreflang="el" lang="el" title="Ελληνικά">EL</a><a href="/mt/task-tracker-claude-code/" hreflang="mt" lang="mt" title="Malti">MT</a></div>
 </footer>
 
 
 <script>window.PF={"lang":"en","hit":"https://projektai777-portfolio.projektai777.workers.dev","g":"other","ck":{"p":"/patikra/","run":"Checking your website. You can keep browsing.","done":"Your website check is ready.","see":"See the results","fail":"The website check failed.","again":"Try again","close":"Close"}};</script>
-<script src="/app.js?v=37284b0d" defer></script>
+<script src="/app.js?v=c529d095" defer></script>
 </body>
 </html>
