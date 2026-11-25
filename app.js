@@ -227,6 +227,13 @@
   openFaq();
   window.addEventListener('hashchange', openFaq);
 
+  function openPrivacy() {
+    var d = location.hash === '#privacyMore' && document.getElementById('privacyMore');
+    if (d && d.tagName === 'DETAILS') { d.open = true; d.scrollIntoView({ block: 'start' }); }
+  }
+  openPrivacy();
+  window.addEventListener('hashchange', openPrivacy);
+
   function oldAdsAnchor() {
     var t = location.hash === '#reklama' && document.getElementById('rinkodara');
     if (t) { history.replaceState(null, '', '#rinkodara'); t.scrollIntoView(); }
